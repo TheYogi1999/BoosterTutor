@@ -229,7 +229,7 @@ function makeCardMarkup(card, packIndex, cardIndex, selected) {
     ? `<img src="${escapeHtml(card.image)}" alt="${escapeHtml(card.name)} – Kartenbild" loading="lazy" />`
     : '<div class="card-fallback-art" aria-hidden="true">✦</div>';
   const stat = isCreature(card) ? ` · ${escapeHtml(card.power || '?')}/${escapeHtml(card.toughness || '?')}` : '';
-  return `<button class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${escapeHtml(card.type_line)}, ${escapeHtml(card.mana_cost || 'Land')}${selected ? ', ausgewählt' : ''}">
+  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${escapeHtml(card.type_line)}, ${escapeHtml(card.mana_cost || 'Land')}${selected ? ', ausgewählt' : ''}">
     <div class="card-image-wrap">${image}<span class="card-cost card-mana-cost">${manaCostHtml(card)}</span></div>
     <span class="draft-card-name">${escapeHtml(card.name)}${stat}</span>
     <p class="draft-card-type">${escapeHtml(card.type_line)}</p>
@@ -237,9 +237,23 @@ function makeCardMarkup(card, packIndex, cardIndex, selected) {
   </button>`;
 }
 
+function selectedDraftCards() {
+  const requiredPacks = state.draftKind === 'starter' ? [0, 1, 2] : [0];
+  if (state.packs.length !== requiredPacks.length || state.selection.size !== requiredPacks.length) return null;
+  const cards = requiredPacks.map((packIndex) => {
+    const cardIndex = state.selection.get(packIndex);
+    return Number.isInteger(cardIndex) ? state.packs[packIndex]?.[cardIndex] : null;
+  });
+  return cards.every(Boolean) ? cards : null;
+}
+
 function renderDraft() {
   const starter = state.draftKind === 'starter';
-  const needed = starter ? 3 : 1;
+  const validPackIndexes = new Set(starter ? [0, 1, 2] : [0]);
+  for (const [packIndex, cardIndex] of state.selection) {
+    if (!validPackIndexes.has(packIndex) || !state.packs[packIndex]?.[cardIndex]) state.selection.delete(packIndex);
+  }
+  const picks = selectedDraftCards();
   $('#draft-step').textContent = starter ? '3 BOOSTER · 15 KARTEN' : `RUN ${String(state.node).padStart(2, '0')} / 04`;
   $('#draft-title').textContent = starter ? 'Drei Booster liegen bereit' : 'Booster-Beute';
   $('#draft-instruction').textContent = starter
@@ -254,31 +268,36 @@ function renderDraft() {
   $('#selection-status').textContent = starter
     ? `Gewählt: ${state.selection.size} / 3 Booster · Startdeck enthält danach 12 Draftkarten + 10 Länder.`
     : `Gewählt: ${state.selection.size} / 1 Karte · +4 Kopien`;
-  $('#draft-confirm').disabled = state.selection.size !== needed;
+  $('#draft-confirm').disabled = !picks;
   $('#draft-confirm').innerHTML = starter ? 'DECK BAUEN <span>→</span>' : 'KARTE HINZUFÜGEN <span>→</span>';
-  $('#draft-grid').querySelectorAll('.draft-option').forEach((button) => {
-    button.addEventListener('click', () => {
-      const packIndex = Number(button.dataset.packIndex);
-      const cardIndex = Number(button.dataset.cardIndex);
-      if (state.selection.get(packIndex) === cardIndex) state.selection.delete(packIndex);
-      else state.selection.set(packIndex, cardIndex);
-      renderDraft();
-      playSound(560, 0.045);
-    });
-  });
-  $('#draft-confirm').onclick = confirmDraft;
 }
 
+$('#draft-grid').addEventListener('click', (event) => {
+  const button = event.target.closest('.draft-option');
+  if (!button) return;
+  const packIndex = Number(button.dataset.packIndex);
+  const cardIndex = Number(button.dataset.cardIndex);
+  if (!Number.isInteger(packIndex) || !Number.isInteger(cardIndex) || !state.packs[packIndex]?.[cardIndex]) return;
+  if (state.selection.get(packIndex) === cardIndex) state.selection.delete(packIndex);
+  else state.selection.set(packIndex, cardIndex);
+  renderDraft();
+  playSound(560, 0.045);
+});
+
+$('#draft-confirm').addEventListener('click', confirmDraft);
+
 function confirmDraft() {
-  const selected = [...state.selection.entries()]
-    .sort(([a], [b]) => a - b)
-    .map(([packIndex, cardIndex]) => state.packs[packIndex]?.[cardIndex])
-    .filter(Boolean);
+  const starter = state.draftKind === 'starter';
+  const selected = selectedDraftCards();
+  if (!selected) {
+    showToast(starter ? 'Wähle genau eine Karte aus jedem der drei Booster.' : 'Wähle zuerst eine Karte aus dem Booster.');
+    return;
+  }
   const copies = 4;
   for (const card of selected) for (let i = 0; i < copies; i += 1) state.deck.push(card);
-  if (state.draftKind === 'starter') state.deck.push(...generateStarterLands(selected, 10));
+  if (starter) state.deck.push(...generateStarterLands(selected, 10));
   state.selection.clear();
-  if (state.draftKind === 'starter') beginBattle(1);
+  if (starter) beginBattle(1);
   else beginBattle(state.node);
 }
 
