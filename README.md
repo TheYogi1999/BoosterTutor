@@ -16,9 +16,11 @@ Anschließend `http://localhost:8000` im Browser öffnen. Beim Start lädt das S
 
 ## Spielsystem
 
-- Wähle zwei Karten aus dem Start-Booster. Jede kommt dreimal in dein Startdeck.
-- Spiele einmal pro Zug ein Land, um dein maximales Mana zu erhöhen.
-- Kreaturen greifen automatisch ab dem Zug nach ihrem Ausspielen an; Haste, Lifelink und Deathtouch haben eine einfache Umsetzung.
+- Starte mit drei Boostern zu je fünf Karten. Wähle eine Karte aus jedem Booster; jede Auswahl kommt viermal in dein Deck.
+- Zehn farblich passende Basisländer liegen ebenfalls im Deck. Ziehe ein Land auf dein Spielfeld und spiele pro Zug höchstens eines. Länder erzeugen Mana und werden beim Ausspielen von Zaubern automatisch passend zu deren farbigen und generischen Manakosten getappt.
+- Kreaturen kommen per Drag-and-drop auf dein Feld und greifen ab dem Zug nach ihrem Ausspielen an; Haste, Lifelink und Deathtouch haben eine einfache Umsetzung.
+- Deine Lebenspunkte starten vor jedem Kampf wieder bei 30.
+- Du kannst Karten aus der Hand ziehen und auf dein Feld oder das Feld des Gegners legen. Klicken spielt sie ebenfalls aus.
 - Einige Kartentexte werden über Muster für Schaden, Heilung, Kartenziehen, Kreaturenstärkung, Kontern und Spielsteine umgesetzt. Nicht erkannte Zaubereffekte erhalten eine einfache, manaabhängige Schadenswirkung. Das ist eine Roguelike-Interpretation und keine vollständige Magic-Regelsimulation.
 - Nach jedem besiegten Gegner wählst du eine Karte als Beute. Der vierte Kampf ist der Boss.
 
