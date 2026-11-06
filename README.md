@@ -2,6 +2,8 @@
 
 **Booster Tutor** ist ein browserbasiertes, inoffizielles Mana-Roguelike-Demo mit Booster-Draft, Kartenkampf und Boss-Run.
 
+**Demo-Version: 0.2**
+
 ## Spielen
 
 Das Projekt ist eine statische Website ohne Build-Schritt. Die Dateien können über GitHub Pages ausgeliefert werden. Der Workflow unter `.github/workflows/pages.yml` ist dafür vorbereitet und lässt sich manuell starten.
