@@ -4,7 +4,7 @@
 
 ## Spielen
 
-Das Projekt ist eine statische Website ohne Build-Schritt. Die Dateien können direkt über GitHub Pages ausgeliefert werden. Der Workflow unter `.github/workflows/pages.yml` veröffentlicht Änderungen am `main`-Branch.
+Das Projekt ist eine statische Website ohne Build-Schritt. Die Dateien können über GitHub Pages ausgeliefert werden. Der Workflow unter `.github/workflows/pages.yml` ist dafür vorbereitet und lässt sich manuell starten.
 
 Für lokale Vorschau einen einfachen statischen Webserver im Projektordner starten, zum Beispiel:
 
@@ -26,7 +26,7 @@ Anschließend `http://localhost:8000` im Browser öffnen. Beim Start lädt das S
 
 Kartendaten und Bilder werden zur Laufzeit von Scryfall geladen; sie sind nicht im Repository enthalten. Scryfall ist eine unabhängige Kartendatenbank, nicht die offizielle Wizards of the Coast Website. Die Kartenbilder und Kartentexte gehören ihren jeweiligen Rechteinhabern. Das Projekt ist nicht von Wizards of the Coast unterstützt oder gesponsert.
 
-Wizards' Fan-Content-Richtlinie enthält Beschränkungen für Wizards-IP in anderen Spielen, auch wenn sie kostenlos sind. Vor einer öffentlichen Verbreitung sollte diese Richtlinie geprüft werden; diese Demo beansprucht keine Erlaubnis von Wizards.
+Wizards' [Fan-Content-Richtlinie](https://company.wizards.com/en/legal/fancontentpolicy) enthält Beschränkungen für Wizards-IP in anderen Spielen, auch wenn sie kostenlos sind. Vor einer öffentlichen Verbreitung sollte diese Richtlinie geprüft werden; diese Demo beansprucht keine Erlaubnis von Wizards.
 
 ## GitHub Pages
 
