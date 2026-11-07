@@ -34,3 +34,10 @@
 .pack-shine-window{position:absolute;inset:20px 0;overflow:hidden;z-index:1;pointer-events:none;mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 9%,#000 91%,transparent 100%)}
 .game-shell .pack-shine-window .pack-foil{inset:0}
 .game-shell .sealed-pack{overflow:visible}
+
+/* Idle sheen moves across a stationary surface, so a moving light rectangle
+   cannot leave a cut-off edge inside the wrapper. The pack is 4% taller. */
+.game-shell .sealed-pack{height:312px}
+.game-shell .pack-shine-window .pack-foil{transform:none!important;background:linear-gradient(110deg,transparent 38%,#ffd49d22 44%,#fff0bf99 49%,#ffcf8a55 52%,transparent 60%);background-size:360% 100%;background-repeat:no-repeat;animation:idle-foil-sweep 4.8s ease-in-out infinite!important}
+@keyframes idle-foil-sweep{0%,35%{background-position:100% 0}85%,100%{background-position:0% 0}}
+@media(prefers-reduced-motion:reduce){.game-shell .pack-shine-window .pack-foil{animation:none!important;background-position:50% 0}}
