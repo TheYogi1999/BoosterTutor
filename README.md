@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.15** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.16** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -10,7 +10,7 @@ Play: https://theyogi1999.github.io/BoosterTutor/
 python3 -m http.server 8000
 ```
 
-No build step or runtime dependencies. The English interface uses a fixed 1600×900 canvas scaled to the window. Compact top/bottom bars leave more room for the arena: your cards left, monsters right, a large inspector at the edge, and a physical Library pile beside your hand. Fullscreen is available. Small windows scale the whole table down; desktop 16:9 is the primary target.
+No build step or runtime dependencies. The English desktop interface uses a 1600×900 canvas. Phones and tablets use a touch-friendly, scrollable layout with larger controls and swipeable card rows instead of shrinking the whole game. Fullscreen is available.
 
 ## Draft, deck and card zones
 
@@ -34,9 +34,9 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 ## Mana, hand and life
 
 - Only generic mana is required: pay the card's total mana value. Printed images retain their original symbols.
-- The starter deck contains four basic mana cards. Two begin untapped on the battlefield and two stay in the draw pile. Draw mana cards, then play one during your main phase; it enters untapped, taps to pay generic costs, and untaps at the start of your next turn. There is no automatic mana refill or colour requirement.
+- The starter deck contains four basic mana cards. Two begin untapped on the battlefield and two stay in the draw pile. Draw mana cards, then play one during your main phase; it enters untapped, taps to pay generic costs, and untaps at the start of your next turn. The mana display shows available mana against this turn’s total capacity; the capacity stays steady as you spend mana. There is no automatic mana refill or colour requirement.
 - Start each run at 20 life. Life carries between encounters. Aether Crystal adds one floating mana at the start of each later turn; Wayfinder’s Lens gives one extra opening card in each battle.
-- Draw seven opening cards and refill to at least seven each turn. Extra draws may grow the hand beyond seven without discarding excess. The fan adapts to its actual size. A free opening mulligan is available before your first action.
+- Draw seven opening cards, then draw one card at the start of each turn. Extra draw effects add their stated number of cards. The fan adapts to its actual size. A free opening mulligan is available before your first action.
 - Healing, resting and lifelink can raise life above 20. Life displays use numbers, not bars. Each enemy has its own life total and bar, plus damage output; enemies have no toughness stat. The game has no shield or damage-absorption mechanic.
 
 ## Individual attacks and retaliation
@@ -65,7 +65,7 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 
 ## Progression and limits
 
-Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session.
+Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session. Touch layouts reflow the arena and booster row for phones and tablets; on touch, queued or winding-up attacks can be withdrawn before they resolve.
 
 This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents use the stated roguelike interpretations. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system. This is a free, non-commercial fan demo for entertainment; it is not affiliated with or endorsed by Wizards of the Coast.
 
