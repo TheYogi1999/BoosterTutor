@@ -497,3 +497,137 @@ button.enemy-intent.selected { border-color: #f2d58d; box-shadow: 0 0 0 2px #f2d
   .block-total { font-size: 6px; }
   .creature-token.can-block:hover, .creature-token.blocker-target { transform: translateY(-2px); }
 }
+
+/* Arena-style full card permanents, individual enemy health, and global card preview. */
+.hand-card::after, .hand-card:hover::after, .hand-card:focus-visible::after { content: none; display: none; }
+.creature-row, .enemy-creatures-row { align-items: flex-start; justify-content: flex-start; min-height: 250px; gap: 10px; padding: 7px 4px 9px; overflow-x: auto; overflow-y: visible; }
+.creature-token, .enemy-creature {
+  display: flex;
+  flex: 0 0 132px;
+  flex-direction: column;
+  width: 132px;
+  min-height: 0;
+  gap: 6px;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  box-shadow: none;
+}
+.player-card-frame, .enemy-card-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2.5 / 3.5;
+  overflow: hidden;
+  border: 1px solid #e0cb8d;
+  border-radius: 9px;
+  background: #172126;
+  box-shadow: 0 5px 14px #0008;
+}
+.player-card-image, .enemy-creature-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #172126;
+}
+.creature-token .creature-symbol, .enemy-creature-art.fallback {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #f2d58d;
+  background: radial-gradient(circle at 40% 35%, #7e795b, #283c37 48%, #172127);
+  font-size: 36px;
+}
+.creature-meta, .enemy-creature-meta {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+  padding: 5px 6px 7px;
+  border: 1px solid #ffffff24;
+  border-radius: 6px;
+  background: #10191def;
+  text-align: left;
+}
+.creature-meta b, .enemy-creature-meta > b { overflow: hidden; color: #f5f0e0; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.creature-meta small, .enemy-creature-meta small { margin: 0; color: #b8c8bd; font-size: 7px; line-height: 1.3; }
+.creature-meta .creature-keywords, .enemy-creature-meta .enemy-keywords { color: #efd28b; }
+.creature-meta .summoning-sick { color: #e1c780 !important; }
+.creature-meta .creature-damage { color: #ee9a89; }
+.creature-stats, .enemy-creature-stats {
+  position: static;
+  justify-self: end;
+  padding: 2px 5px;
+  border: 1px solid #f3d38c;
+  border-radius: 5px;
+  color: #18211e;
+  background: #e6c67d;
+  font-size: 8px;
+  font-weight: 800;
+}
+.enemy-creature-meta { width: 100%; }
+.enemy-creature-meta .enemy-life-label { color: #eed8ac; font-size: 7px; font-weight: 800; letter-spacing: .4px; }
+.enemy-life-track { display: block; width: 100%; height: 5px; overflow: hidden; border-radius: 9px; background: #512f32; box-shadow: inset 0 1px 2px #0009; }
+.enemy-life-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #d66a5c, #f2c16d); transition: width .24s ease; }
+.enemy-creature.resting .enemy-card-frame { filter: saturate(.75); }
+.enemy-creature.selected .enemy-card-frame, .enemy-creature:not([aria-disabled="true"]):hover .enemy-card-frame { outline: 2px solid #f2d58d; outline-offset: 2px; }
+.enemy-creature[aria-disabled="true"] { cursor: default; }
+.enemy-creature-meta .enemy-block-status { color: #9ed8bd; }
+.enemy-attack-row { min-height: 28px; }
+.enemy-intent { color: #f0d1b4; }
+
+.graveyard-button { padding: 0; border: 0; color: #c8d1cb; background: transparent; cursor: pointer; font: inherit; }
+.graveyard-button:hover { color: #f0dba4; text-decoration: underline; }
+.graveyard-button span { margin-right: 4px; color: #d7c48e; }
+.graveyard-button b, .discard-info > b { margin-left: 4px; color: #e9e1cd; }
+.graveyard-dialog { width: min(760px, calc(100% - 28px)); max-height: min(82vh, 760px); padding: 22px; border: 1px solid #d8c38e; border-radius: 12px; color: var(--paper); background: #172126; box-shadow: 0 20px 60px #000b; }
+.graveyard-dialog::backdrop { background: #050a0ddd; backdrop-filter: blur(4px); }
+.graveyard-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.graveyard-heading h2 { margin: 5px 0 0; font: 500 26px var(--serif); }
+.graveyard-close { width: 34px; height: 34px; border: 1px solid #ffffff30; border-radius: 50%; color: #f5eedf; background: #ffffff0c; cursor: pointer; font-size: 24px; }
+.graveyard-note { color: var(--muted); font-size: 11px; }
+.graveyard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; max-height: 55vh; overflow-y: auto; padding: 5px 2px; }
+.graveyard-card { display: flex; align-items: center; gap: 9px; min-width: 0; padding: 7px; border: 1px solid #ffffff20; border-radius: 7px; color: var(--paper); background: #ffffff09; cursor: help; text-align: left; }
+.graveyard-card:hover { border-color: #ddc583; background: #ffffff14; }
+.graveyard-card img, .graveyard-fallback { display: block; flex: 0 0 43px; width: 43px; height: 60px; border-radius: 4px; object-fit: cover; }
+.graveyard-fallback { display: grid; place-items: center; color: #e6c67d; background: #293c39; font-size: 20px; }
+.graveyard-card > span:last-child { display: grid; min-width: 0; gap: 4px; }
+.graveyard-card b, .graveyard-card small { overflow: hidden; text-overflow: ellipsis; }
+.graveyard-card b { font-size: 10px; }
+.graveyard-card small { color: #aab8af; font-size: 8px; }
+.graveyard-empty { padding: 20px 0; color: #aab8af; font-size: 12px; text-align: center; }
+
+.card-preview[hidden] { display: none; }
+.card-preview { position: fixed; z-index: 1000; top: 74px; right: 20px; display: grid; grid-template-columns: 150px minmax(150px, 260px); gap: 11px; width: min(440px, calc(100vw - 32px)); padding: 10px; border: 1px solid #e2cc8d; border-radius: 10px; color: #f4efdf; background: #151f24f5; box-shadow: 0 14px 40px #000c; pointer-events: none; backdrop-filter: blur(9px); }
+.card-preview-image { display: block; width: 100%; aspect-ratio: 2.5 / 3.5; border-radius: 7px; object-fit: contain; background: #0d1519; }
+.card-preview-copy { align-self: center; min-width: 0; }
+.card-preview-copy > b { display: block; margin-bottom: 6px; font: 500 16px/1.2 var(--serif); }
+.card-preview-copy > small { color: #d7c48e; font-size: 9px; line-height: 1.4; }
+.card-preview-copy > p { max-height: 220px; overflow-y: auto; margin: 9px 0 0; color: #d4ded8; font-size: 10px; line-height: 1.5; white-space: pre-line; }
+.card-preview-fallback { display: grid; aspect-ratio: 2.5 / 3.5; place-items: center; border-radius: 7px; color: #e6c67d; background: #293c39; font-size: 36px; }
+
+@media (max-width: 900px) {
+  .creature-token, .enemy-creature { flex-basis: 108px; width: 108px; }
+  .creature-row, .enemy-creatures-row { min-height: 220px; gap: 7px; }
+  .card-preview { grid-template-columns: 112px minmax(120px, 1fr); max-width: min(350px, calc(100vw - 24px)); }
+}
+@media (max-width: 620px) {
+  .creature-token, .enemy-creature { flex-basis: 88px; width: 88px; gap: 4px; }
+  .creature-row, .enemy-creatures-row { min-height: 188px; gap: 5px; padding: 5px 2px; }
+  .creature-meta, .enemy-creature-meta { padding: 4px; }
+  .creature-meta b, .enemy-creature-meta > b { font-size: 7px; }
+  .creature-meta small, .enemy-creature-meta small { font-size: 6px; }
+  .enemy-life-track { height: 4px; }
+  .card-preview { top: 70px; right: 8px; grid-template-columns: 85px minmax(110px, 1fr); gap: 8px; width: min(285px, calc(100vw - 16px)); padding: 7px; }
+  .card-preview-copy > b { font-size: 13px; }
+  .card-preview-copy > p { max-height: 150px; font-size: 8px; }
+  .graveyard-dialog { padding: 16px; }
+  .graveyard-grid { grid-template-columns: 1fr; }
+}
+.player-card-frame .creature-stats { position: absolute; right: 5px; bottom: 5px; justify-self: auto; }
+.enemy-creature-meta .enemy-creature-stats { position: static; justify-self: end; }
