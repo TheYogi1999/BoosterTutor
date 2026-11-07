@@ -2,7 +2,7 @@
 
 **Booster Tutor** ist ein browserbasiertes, inoffizielles Mana-Roguelike-Demo mit Booster-Draft, Kartenkampf und Boss-Run.
 
-**Demo-Version: 0.2**
+**Demo-Version: 0.4**
 
 ## Spielen
 
@@ -20,7 +20,11 @@ Anschließend `http://localhost:8000` im Browser öffnen. Beim Start lädt das S
 
 - Starte mit drei Boostern zu je fünf Karten. Wähle eine Karte aus jedem Booster; jede Auswahl kommt viermal in dein Deck.
 - Zehn farblich passende Basisländer liegen ebenfalls im Deck. Ziehe ein Land auf dein Spielfeld und spiele pro Zug höchstens eines. Länder erzeugen Mana und werden beim Ausspielen von Zaubern automatisch passend zu deren farbigen und generischen Manakosten getappt.
-- Kreaturen kommen per Drag-and-drop auf dein Feld und greifen ab dem Zug nach ihrem Ausspielen an; Haste, Lifelink und Deathtouch haben eine einfache Umsetzung.
+- Zu Beginn ziehst du fünf Karten aus deinem Deck. Nach jeder Runde zieht das Spiel automatisch wieder auf fünf Karten auf; wenn die Bibliothek leer ist, wird der Friedhof neu gemischt.
+- Zu Beginn jedes Kampfes kannst du vor der ersten Aktion einmal kostenlos mulliganen und wieder fünf Karten ziehen.
+- Kreaturen kommen per Drag-and-drop auf dein Feld und greifen standardmäßig beim Zugende an. Klicke eine Kreatur an, um sie zum Blocken zurückzuhalten. In der Blockphase wählst du erst den Angreifer rechts und dann den Blocker links; alternativ kannst du den Blocker auf den Angreifer ziehen.
+- Der Gegner spielt echte Kreaturen aus dem Kartenpool, die angreifen und deine Angriffe blocken. Das Kampfmodell ist vereinfacht.
+- Die Boosteröffnung zeigt eine kurze Kartenenthüllung mit Synthesizer-Sound; der Ton lässt sich oben ausschalten.
 - Deine Lebenspunkte starten vor jedem Kampf wieder bei 30.
 - Du kannst Karten aus der Hand ziehen und auf dein Feld oder das Feld des Gegners legen. Klicken spielt sie ebenfalls aus.
 - Einige Kartentexte werden über Muster für Schaden, Heilung, Kartenziehen, Kreaturenstärkung, Kontern und Spielsteine umgesetzt. Nicht erkannte Zaubereffekte erhalten eine einfache, manaabhängige Schadenswirkung. Das ist eine Roguelike-Interpretation und keine vollständige Magic-Regelsimulation.
