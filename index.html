@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="combat.css" />
     <link rel="stylesheet" href="polish.css" />
     <link rel="stylesheet" href="adventure.css" />
+    <link rel="stylesheet" href="market.css" />
     <script src="cards.js" defer></script>
     <script src="sounds.js" defer></script>
     <script src="game.js" defer></script>
@@ -25,8 +26,8 @@
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
-      <div class="topbar-right"><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.12 · <span id="global-phase">START</span></span>
+      <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
+        <span class="pixel-label"><i class="status-dot"></i> v0.13 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -41,6 +42,7 @@
             <p class="subtitle">The Aether Expedition</p>
             <p class="intro">Open real Magic boosters, forge your strategy, and face the creatures of the Aether. Every card shapes your journey.</p>
             <button class="primary-button" id="start-button"><span>▶</span> BEGIN EXPEDITION</button>
+            <button class="quiet-button catalog-launch" id="card-catalog-button">Browse 48 verified cards →</button>
             <div class="start-note"><span class="keycap">ENTER</span> or click to begin</div>
           </div>
           <div class="hero-card-stack" aria-hidden="true"><img src="assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg" alt="" draggable="false"><img src="assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg" alt="" draggable="false"><img src="assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg" alt="" draggable="false"><span>REAL CARDS. YOUR DECISIONS.</span></div>
@@ -51,7 +53,7 @@
           <div class="feature"><span>02</span><b>Master your deck</b><small>One mana pool for every colour. Start with seven cards.</small></div>
           <div class="feature"><span>03</span><b>Conquer the Aether</b><small>Read monster intentions. Discover relics. Defeat the dragon.</small></div>
         </div>
-        <div class="api-status" id="start-api-status">CARD POOL: <span>32 REAL MAGIC CARDS · OFFLINE READY</span></div>
+        <div class="api-status" id="start-api-status">CARD POOL: <span>48 REAL MAGIC CARDS · OFFLINE READY</span></div>
       </section>
 
       <section class="screen loading-screen" id="loading-screen" aria-live="polite">
@@ -79,7 +81,7 @@
           <button class="quiet-button" id="pack-reroll" disabled>↻ Reroll pack · 1×</button>
           <button class="primary-button" id="draft-confirm" disabled>BUILD DECK <span>→</span></button>
         </div>
-        <div class="source-note">32 verified Magic cards · Original images bundled · 7 cards per pack</div>
+        <div class="source-note">48 verified Magic cards · Original images bundled · 7 cards per pack</div>
       </section>
 
       <section class="screen combat-screen" id="combat-screen" aria-labelledby="enemy-name">
@@ -151,8 +153,9 @@
 
       <section class="screen journey-screen" id="journey-screen" aria-labelledby="journey-title">
         <div class="eyebrow">THE AETHER EXPEDITION</div><h2 id="journey-title"></h2><p id="journey-description"></p>
-        <div class="journey-path" id="journey-path"></div><div class="journey-life" id="journey-life"></div><button class="quiet-button" id="journey-deck-button">▣ Review your deck</button><div class="journey-options" id="journey-options"></div>
+        <div class="journey-path" id="journey-path"></div><div class="journey-life" id="journey-life"></div><div class="camp-tools"><button class="quiet-button" id="journey-deck-button">▣ Review your deck</button><button class="quiet-button" id="return-shop" hidden>Return to shop</button></div><div class="journey-options" id="journey-options"></div>
       </section>
+      <section class="screen shop-screen" id="shop-screen" aria-labelledby="shop-title"><div class="shop-heading"><div><span class="eyebrow">BETWEEN ENCOUNTERS</span><h2 id="shop-title">The roadside card shop</h2><p>Three offers. Each purchase adds one copy to your run deck.</p></div><div class="shop-wallet"><span>YOUR COINS</span><b id="shop-coins">0</b></div></div><div class="shop-grid" id="shop-grid"></div><div class="shop-footer"><p>Defeating or exiling a monster earns its bounty once. Coins carry through this run.</p><button class="primary-button" id="shop-continue">Continue to camp →</button></div></section>
       <section class="screen end-screen" id="end-screen" aria-labelledby="end-title">
         <div class="end-emblem" id="end-emblem">✦</div>
         <div class="eyebrow" id="end-eyebrow">RUN OVER</div>
@@ -181,8 +184,9 @@
     </dialog>
     <dialog class="collection-dialog" id="collection-dialog" aria-labelledby="collection-title">
       <header><div><span class="eyebrow" id="collection-kind">RUN DECK</span><h2 id="collection-title">Your deck</h2></div><button id="collection-close" class="graveyard-close" aria-label="Close card collection">×</button></header>
-      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
+      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><select id="collection-type" aria-label="Filter by card type"><option value="">All types</option><option>Creature</option><option>Instant</option><option>Sorcery</option><option>Enchantment</option><option>Equipment</option><option>Artifact</option></select><select id="collection-mana" aria-label="Filter by mana value"><option value="">Any mana</option><option value="0">Mana 0</option><option value="1">Mana 1</option><option value="2">Mana 2</option><option value="3">Mana 3</option><option value="4">Mana 4</option><option value="5">Mana 5</option><option value="6">Mana 6</option></select><select id="collection-keyword" aria-label="Filter by printed keyword"><option value="">All keywords</option><option value="flying">Flying</option><option value="reach">Reach</option><option value="lifelink">Lifelink</option><option value="deathtouch">Deathtouch</option><option value="first strike">First Strike</option><option value="double strike">Double Strike</option><option value="haste">Haste</option><option value="vigilance">Vigilance</option><option value="trample">Trample</option><option value="menace">Menace</option><option value="defender">Defender</option><option value="flash">Flash</option><option value="equip">Equip</option><option value="enchant">Enchant</option><option value="scry">Scry</option></select><select id="collection-color" aria-label="Filter by printed color identity"><option value="">All colours</option><option value="W">White</option><option value="U">Blue</option><option value="B">Black</option><option value="R">Red</option><option value="G">Green</option><option value="C">Colourless</option></select><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
     </dialog>
+    <dialog class="scry-dialog" id="scry-dialog" aria-labelledby="scry-title"><span class="eyebrow">SCRY</span><h2 id="scry-title">Shape your next draw</h2><p>Click a card to send it to the bottom. Swap the cards to change their order.</p><div id="scry-grid"></div><div class="scry-actions"><button class="quiet-button" id="scry-swap">Swap order</button><button class="primary-button" id="scry-confirm">Confirm scry →</button></div></dialog>
     <dialog class="confirm-dialog" id="quit-dialog">
       <h2>Abandon this run?</h2>
       <p>Your current progress will be lost.</p>

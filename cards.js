@@ -1,4 +1,4 @@
-// Verified real Magic cards from Scryfall. Bundled images keep the starter and offline pool authentic.
+// Genuine normal-layout Magic cards verified against Scryfall. Original full-card images are bundled.
 const BUNDLED_CARDS = [
   {
     "id": "409f9b88-f03e-40b6-9883-68c14c37c0de",
@@ -12,6 +12,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [],
     "image": "assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/4/0/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg?1783943001",
     "uri": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
@@ -29,6 +30,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "W"
     ],
+    "keywords": [],
     "image": "assets/cards/9c9ac1bc-cdf3-4fa6-8319-a7ea164e9e47.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/9/c/9c9ac1bc-cdf3-4fa6-8319-a7ea164e9e47.jpg?1783909083",
     "uri": "https://scryfall.com/card/fdn/146/savannah-lions?utm_source=api",
@@ -45,6 +47,9 @@ const BUNDLED_CARDS = [
     "toughness": "2",
     "color_identity": [
       "U"
+    ],
+    "keywords": [
+      "Flying"
     ],
     "image": "assets/cards/5e227a63-abea-494e-9d66-6ff0a3da14ca.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/5/e/5e227a63-abea-494e-9d66-6ff0a3da14ca.jpg?1783937211",
@@ -63,6 +68,9 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [
+      "Reach"
+    ],
     "image": "assets/cards/213c9202-b6f4-43ab-b57f-b97a1da5e263.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/2/1/213c9202-b6f4-43ab-b57f-b97a1da5e263.jpg?1783918443",
     "uri": "https://scryfall.com/card/dmr/163/giant-spider?utm_source=api",
@@ -80,6 +88,11 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "B"
     ],
+    "keywords": [
+      "Deathtouch",
+      "Flying",
+      "Lifelink"
+    ],
     "image": "assets/cards/7aff07f9-9528-4149-9af0-f4e3c66c9dc5.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/7/a/7aff07f9-9528-4149-9af0-f4e3c66c9dc5.jpg?1787562825",
     "uri": "https://scryfall.com/card/fdn/757/vampire-nighthawk?utm_source=api",
@@ -95,6 +108,9 @@ const BUNDLED_CARDS = [
     "power": "0",
     "toughness": "2",
     "color_identity": [],
+    "keywords": [
+      "Flying"
+    ],
     "image": "assets/cards/305078a5-ac18-4721-bba2-3434eba5b1cf.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/3/0/305078a5-ac18-4721-bba2-3434eba5b1cf.jpg?1783918410",
     "uri": "https://scryfall.com/card/dmr/233/ornithopter?utm_source=api",
@@ -110,6 +126,7 @@ const BUNDLED_CARDS = [
     "power": "5",
     "toughness": "3",
     "color_identity": [],
+    "keywords": [],
     "image": "assets/cards/f4468fff-cd6f-428c-b7a0-ff89f5bbea2e.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/f/4/f4468fff-cd6f-428c-b7a0-ff89f5bbea2e.jpg?1783909048",
     "uri": "https://scryfall.com/card/fdn/255/juggernaut?utm_source=api",
@@ -127,6 +144,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [],
     "image": "assets/cards/6a0b230b-d391-4998-a3f7-7b158a0ec2cd.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/6/a/6a0b230b-d391-4998-a3f7-7b158a0ec2cd.jpg?1783909057",
     "uri": "https://scryfall.com/card/fdn/227/llanowar-elves?utm_source=api",
@@ -144,6 +162,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [],
     "image": "assets/cards/e8b67ee8-3189-4426-8b1a-b540267768fd.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/e/8/e8b67ee8-3189-4426-8b1a-b540267768fd.jpg?1783932966",
     "uri": "https://scryfall.com/card/m20/168/centaur-courser?utm_source=api",
@@ -160,6 +179,10 @@ const BUNDLED_CARDS = [
     "toughness": "4",
     "color_identity": [
       "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Vigilance"
     ],
     "image": "assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/b/8/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg?1787563091",
@@ -178,6 +201,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "R"
     ],
+    "keywords": [],
     "image": "assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/7/6/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg?1783903008",
     "uri": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
@@ -195,6 +219,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "R"
     ],
+    "keywords": [],
     "image": "assets/cards/b23900fb-efe9-43ab-9f67-4545dd01fb9c.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/b/2/b23900fb-efe9-43ab-9f67-4545dd01fb9c.jpg?1783903007",
     "uri": "https://scryfall.com/card/msc/809/shock?utm_source=api",
@@ -212,6 +237,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "R"
     ],
+    "keywords": [],
     "image": "assets/cards/88b13bc0-da54-4c3b-917c-7c8345a329f5.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/8/88b13bc0-da54-4c3b-917c-7c8345a329f5.jpg?1783902927",
     "uri": "https://scryfall.com/card/msh/142/lightning-strike?utm_source=api",
@@ -229,6 +255,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "W"
     ],
+    "keywords": [],
     "image": "assets/cards/a5ae9732-9332-4f53-8608-52ecea32c5d2.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/a/5/a5ae9732-9332-4f53-8608-52ecea32c5d2.jpg?1783908793",
     "uri": "https://scryfall.com/card/j25/244/revitalize?utm_source=api",
@@ -246,6 +273,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "U"
     ],
+    "keywords": [],
     "image": "assets/cards/cb3b35b8-f321-46d8-a441-6b9a6efa9021.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/c/b/cb3b35b8-f321-46d8-a441-6b9a6efa9021.jpg?1783934590",
     "uri": "https://scryfall.com/card/m19/51/divination?utm_source=api",
@@ -263,6 +291,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [],
     "image": "assets/cards/2b34e76b-86b3-464e-93e7-c3f2074028fb.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/2/b/2b34e76b-86b3-464e-93e7-c3f2074028fb.jpg?1783944536",
     "uri": "https://scryfall.com/card/mrd/113/battlegrowth?utm_source=api",
@@ -280,6 +309,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [],
     "image": "assets/cards/fd1f95bf-48ea-455a-8a6c-0249b11c8900.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/f/d/fd1f95bf-48ea-455a-8a6c-0249b11c8900.jpg?1783902918",
     "uri": "https://scryfall.com/card/msh/167/giant-growth?utm_source=api",
@@ -297,6 +327,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [],
     "image": "assets/cards/46917de3-5e98-4dd6-8950-fc10338515df.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/4/6/46917de3-5e98-4dd6-8950-fc10338515df.jpg?1783915076",
     "uri": "https://scryfall.com/card/woe/191/titanic-growth?utm_source=api",
@@ -314,6 +345,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "B"
     ],
+    "keywords": [],
     "image": "assets/cards/1f29d9e4-3100-43cb-9723-7d5c23f89b12.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/1/f/1f29d9e4-3100-43cb-9723-7d5c23f89b12.jpg?1783908723",
     "uri": "https://scryfall.com/card/j25/467/murder?utm_source=api",
@@ -331,6 +363,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "U"
     ],
+    "keywords": [],
     "image": "assets/cards/475bff39-220a-4490-9c2e-d311e306a6db.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/4/7/475bff39-220a-4490-9c2e-d311e306a6db.jpg?1783908966",
     "uri": "https://scryfall.com/card/fdn/505/cancel?utm_source=api",
@@ -349,6 +382,7 @@ const BUNDLED_CARDS = [
       "B",
       "W"
     ],
+    "keywords": [],
     "image": "assets/cards/6d0dea1b-43dc-4e76-aabd-f12e121a78af.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/6/d/6d0dea1b-43dc-4e76-aabd-f12e121a78af.jpg?1783940077",
     "uri": "https://scryfall.com/card/ddk/27/unmake?utm_source=api",
@@ -365,6 +399,9 @@ const BUNDLED_CARDS = [
     "toughness": "",
     "color_identity": [
       "W"
+    ],
+    "keywords": [
+      "Enchant"
     ],
     "image": "assets/cards/ac0987b8-755e-42f1-bd6d-1401fecd4171.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/a/c/ac0987b8-755e-42f1-bd6d-1401fecd4171.jpg?1783941836",
@@ -383,6 +420,9 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "B"
     ],
+    "keywords": [
+      "Enchant"
+    ],
     "image": "assets/cards/f42c9574-2f09-4cb0-80cb-10fb8c592e6f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/f/4/f42c9574-2f09-4cb0-80cb-10fb8c592e6f.jpg?1783938778",
     "uri": "https://scryfall.com/card/dvd/47/unholy-strength?utm_source=api",
@@ -400,6 +440,9 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "G"
     ],
+    "keywords": [
+      "Enchant"
+    ],
     "image": "assets/cards/86d6b411-4a31-4bfc-8dd6-e19f553bb29b.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/6/86d6b411-4a31-4bfc-8dd6-e19f553bb29b.jpg?1783921864",
     "uri": "https://scryfall.com/card/2x2/156/rancor?utm_source=api",
@@ -415,6 +458,9 @@ const BUNDLED_CARDS = [
     "power": "",
     "toughness": "",
     "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
     "image": "assets/cards/690972a8-72df-4050-a353-16e45589167c.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/6/9/690972a8-72df-4050-a353-16e45589167c.jpg?1783928693",
     "uri": "https://scryfall.com/card/cmr/458/bonesplitter?utm_source=api",
@@ -430,6 +476,9 @@ const BUNDLED_CARDS = [
     "power": "",
     "toughness": "",
     "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
     "image": "assets/cards/973c166e-3e93-4ed5-b4c5-84dc158a8e4f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/9/7/973c166e-3e93-4ed5-b4c5-84dc158a8e4f.jpg?1783930656",
     "uri": "https://scryfall.com/card/m21/236/short-sword?utm_source=api",
@@ -445,6 +494,9 @@ const BUNDLED_CARDS = [
     "power": "",
     "toughness": "",
     "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
     "image": "assets/cards/8554c2a8-d3cc-4ae9-a8ae-34815cf299db.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/5/8554c2a8-d3cc-4ae9-a8ae-34815cf299db.jpg?1783908821",
     "uri": "https://scryfall.com/card/j25/152/leonin-scimitar?utm_source=api",
@@ -460,6 +512,9 @@ const BUNDLED_CARDS = [
     "power": "",
     "toughness": "",
     "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
     "image": "assets/cards/86c9838e-aa72-49fc-bae2-f880bcbc9313.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/6/86c9838e-aa72-49fc-bae2-f880bcbc9313.jpg?1783942125",
     "uri": "https://scryfall.com/card/zen/209/trusty-machete?utm_source=api",
@@ -477,6 +532,7 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "W"
     ],
+    "keywords": [],
     "image": "assets/cards/17d154d3-7ae5-43ff-9978-d974285e2c89.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/1/7/17d154d3-7ae5-43ff-9978-d974285e2c89.jpg?1783930741",
     "uri": "https://scryfall.com/card/m21/21/glorious-anthem?utm_source=api",
@@ -492,6 +548,7 @@ const BUNDLED_CARDS = [
     "power": "",
     "toughness": "",
     "color_identity": [],
+    "keywords": [],
     "image": "assets/cards/26894980-8961-4479-85dd-5f01c899718b.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/2/6/26894980-8961-4479-85dd-5f01c899718b.jpg?1783934511",
     "uri": "https://scryfall.com/card/m19/235/fountain-of-renewal?utm_source=api",
@@ -508,6 +565,10 @@ const BUNDLED_CARDS = [
     "toughness": "",
     "color_identity": [
       "U"
+    ],
+    "keywords": [
+      "Flash",
+      "Scry"
     ],
     "image": "assets/cards/e7175448-d126-4402-96db-5392f95138b4.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/e/7/e7175448-d126-4402-96db-5392f95138b4.jpg?1783908763",
@@ -526,9 +587,328 @@ const BUNDLED_CARDS = [
     "color_identity": [
       "W"
     ],
+    "keywords": [],
     "image": "assets/cards/d9e966cb-bb42-49d8-b351-114619b31497.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/d/9/d9e966cb-bb42-49d8-b351-114619b31497.jpg?1783934847",
     "uri": "https://scryfall.com/card/bbd/87/angelic-chorus?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "1ddc3ccf-797d-45b2-a791-83d22481920c",
+    "name": "Fencing Ace",
+    "mana_cost": "{1}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Soldier",
+    "oracle_text": "Double strike (This creature deals both first-strike and regular combat damage.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Double strike"
+    ],
+    "image": "assets/cards/1ddc3ccf-797d-45b2-a791-83d22481920c.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/d/1ddc3ccf-797d-45b2-a791-83d22481920c.jpg?1783908807",
+    "uri": "https://scryfall.com/card/j25/199/fencing-ace?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "3d1a3fec-39de-4223-9da2-22749a58cd62",
+    "name": "Youthful Knight",
+    "mana_cost": "{1}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "First strike",
+    "power": "2",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "image": "assets/cards/3d1a3fec-39de-4223-9da2-22749a58cd62.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/d/3d1a3fec-39de-4223-9da2-22749a58cd62.jpg?1783932662",
+    "uri": "https://scryfall.com/card/eld/37/youthful-knight?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "6c37f680-770b-4d0e-8bf7-44ba3449d419",
+    "name": "Typhoid Rats",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Creature — Rat",
+    "oracle_text": "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Deathtouch"
+    ],
+    "image": "assets/cards/6c37f680-770b-4d0e-8bf7-44ba3449d419.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/c/6c37f680-770b-4d0e-8bf7-44ba3449d419.jpg?1783908707",
+    "uri": "https://scryfall.com/card/j25/497/typhoid-rats?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "069cfaa5-bba4-4503-b54e-b98fa9f0a0fc",
+    "name": "Healer's Hawk",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Bird",
+    "oracle_text": "Flying\nLifelink (Damage dealt by this creature also causes you to gain that much life.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Lifelink"
+    ],
+    "image": "assets/cards/069cfaa5-bba4-4503-b54e-b98fa9f0a0fc.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/6/069cfaa5-bba4-4503-b54e-b98fa9f0a0fc.jpg?1787563133",
+    "uri": "https://scryfall.com/card/fdn/734/healers-hawk?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "3480927c-10da-4817-9954-10aea2bc7100",
+    "name": "Raging Goblin",
+    "mana_cost": "{R}",
+    "cmc": 1.0,
+    "type_line": "Creature — Goblin Berserker",
+    "oracle_text": "Haste (This creature can attack and {T} as soon as it comes under your control.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "Haste"
+    ],
+    "image": "assets/cards/3480927c-10da-4817-9954-10aea2bc7100.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/4/3480927c-10da-4817-9954-10aea2bc7100.jpg?1783934405",
+    "uri": "https://scryfall.com/card/oana/43/raging-goblin?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "d432d17e-052b-4a81-bad8-14babf6e593f",
+    "name": "Deadly Recluse",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)\nDeathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "power": "1",
+    "toughness": "2",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Deathtouch"
+    ],
+    "image": "assets/cards/d432d17e-052b-4a81-bad8-14babf6e593f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/4/d432d17e-052b-4a81-bad8-14babf6e593f.jpg?1783915635",
+    "uri": "https://scryfall.com/card/cmm/282/deadly-recluse?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "1864e25e-f940-47e5-9439-ab721049c690",
+    "name": "Wall of Wood",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Wall",
+    "oracle_text": "Defender (This creature can't attack.)",
+    "power": "0",
+    "toughness": "3",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Defender"
+    ],
+    "image": "assets/cards/1864e25e-f940-47e5-9439-ab721049c690.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/8/1864e25e-f940-47e5-9439-ab721049c690.jpg?1783942988",
+    "uri": "https://scryfall.com/card/10e/309/wall-of-wood?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "9d0b52b3-2845-449c-a3af-fa471724b7ef",
+    "name": "Boggart Brute",
+    "mana_cost": "{2}{R}",
+    "cmc": 3.0,
+    "type_line": "Creature — Goblin Warrior",
+    "oracle_text": "Menace (This creature can't be blocked except by two or more creatures.)",
+    "power": "3",
+    "toughness": "2",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "Menace"
+    ],
+    "image": "assets/cards/9d0b52b3-2845-449c-a3af-fa471724b7ef.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/d/9d0b52b3-2845-449c-a3af-fa471724b7ef.jpg?1783908696",
+    "uri": "https://scryfall.com/card/j25/526/boggart-brute?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "053b59b4-a22c-4228-aadc-ae9da6bb465e",
+    "name": "Walking Corpse",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Creature — Zombie",
+    "oracle_text": "",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/053b59b4-a22c-4228-aadc-ae9da6bb465e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/5/053b59b4-a22c-4228-aadc-ae9da6bb465e.jpg?1783930696",
+    "uri": "https://scryfall.com/card/m21/128/walking-corpse?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "93a56610-482b-4ddf-88e1-e4a2edf4fa0f",
+    "name": "Rumbling Baloth",
+    "mana_cost": "{2}{G}{G}",
+    "cmc": 4.0,
+    "type_line": "Creature — Beast",
+    "oracle_text": "",
+    "power": "4",
+    "toughness": "4",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/93a56610-482b-4ddf-88e1-e4a2edf4fa0f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/3/93a56610-482b-4ddf-88e1-e4a2edf4fa0f.jpg?1783930355",
+    "uri": "https://scryfall.com/card/jmp/426/rumbling-baloth?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "bee08d2f-e875-473c-adc6-8dc286792ab5",
+    "name": "Colossal Dreadmaw",
+    "mana_cost": "{4}{G}{G}",
+    "cmc": 6.0,
+    "type_line": "Creature — Dinosaur",
+    "oracle_text": "Trample (This creature can deal excess combat damage to the player or planeswalker it's attacking.)",
+    "power": "6",
+    "toughness": "6",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Trample"
+    ],
+    "image": "assets/cards/bee08d2f-e875-473c-adc6-8dc286792ab5.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/e/bee08d2f-e875-473c-adc6-8dc286792ab5.jpg?1783908649",
+    "uri": "https://scryfall.com/card/j25/646/colossal-dreadmaw?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "01e7af76-e505-49ca-a91e-8167027560ff",
+    "name": "Sentinel Spider",
+    "mana_cost": "{3}{G}{G}",
+    "cmc": 5.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach, vigilance",
+    "power": "4",
+    "toughness": "4",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Vigilance"
+    ],
+    "image": "assets/cards/01e7af76-e505-49ca-a91e-8167027560ff.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/1/01e7af76-e505-49ca-a91e-8167027560ff.jpg?1783928785",
+    "uri": "https://scryfall.com/card/cmr/253/sentinel-spider?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "81ac7bdf-a722-4bed-b480-a1c2f80c5d64",
+    "name": "Air Elemental",
+    "mana_cost": "{3}{U}{U}",
+    "cmc": 5.0,
+    "type_line": "Creature — Elemental",
+    "oracle_text": "Flying",
+    "power": "4",
+    "toughness": "4",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "image": "assets/cards/81ac7bdf-a722-4bed-b480-a1c2f80c5d64.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/1/81ac7bdf-a722-4bed-b480-a1c2f80c5d64.jpg?1783908780",
+    "uri": "https://scryfall.com/card/j25/284/air-elemental?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "083ec3e7-950c-4e9d-aba5-02ed13d723f0",
+    "name": "Goblin Piker",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Creature — Goblin Warrior",
+    "oracle_text": "",
+    "power": "2",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/083ec3e7-950c-4e9d-aba5-02ed13d723f0.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/8/083ec3e7-950c-4e9d-aba5-02ed13d723f0.jpg?1783941070",
+    "uri": "https://scryfall.com/card/m12/141/goblin-piker?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "b8d8806c-43c5-4c6c-9420-6210a17ec2b0",
+    "name": "Garruk's Companion",
+    "mana_cost": "{G}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Beast",
+    "oracle_text": "Trample (This creature can deal excess combat damage to the player or planeswalker it's attacking.)",
+    "power": "3",
+    "toughness": "2",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Trample"
+    ],
+    "image": "assets/cards/b8d8806c-43c5-4c6c-9420-6210a17ec2b0.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/8/b8d8806c-43c5-4c6c-9420-6210a17ec2b0.jpg?1783941062",
+    "uri": "https://scryfall.com/card/m12/175/garruks-companion?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "adbf772f-ebdf-4c04-996f-0dbf1826049b",
+    "name": "Skyhunter Skirmisher",
+    "mana_cost": "{1}{W}{W}",
+    "cmc": 3.0,
+    "type_line": "Creature — Cat Knight",
+    "oracle_text": "Flying, double strike",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Double strike"
+    ],
+    "image": "assets/cards/adbf772f-ebdf-4c04-996f-0dbf1826049b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/d/adbf772f-ebdf-4c04-996f-0dbf1826049b.jpg?1783938424",
+    "uri": "https://scryfall.com/card/mm2/32/skyhunter-skirmisher?utm_source=api",
     "verified": true
   }
 ];
