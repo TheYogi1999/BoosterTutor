@@ -1,0 +1,15 @@
+/* Every scene uses the same 1600 × 900 frame, including on portrait devices.
+   The visible viewport sets one uniform scale; spare space becomes letterbox. */
+html.fixed-game,html.fixed-game body{width:100%;height:100%;overflow:hidden!important;overscroll-behavior:none;background:#070b10}
+html.fixed-game body{position:fixed;inset:0}
+html.fixed-game .game-shell{width:1600px;height:900px;min-height:0;left:var(--game-center-x,50%);top:var(--game-center-y,50%);transform:translate(-50%,-50%) scale(var(--game-scale));transform-origin:center;overflow:hidden}
+html.fixed-game .game-shell .avatar-picker{margin:12px 0 10px}
+/* Physical screen media queries must not shorten zones in the logical canvas. */
+html.fixed-game .game-shell .player-panel{grid-template-rows:94px 18px 252px 18px 88px!important}
+html.fixed-game .game-shell .player-panel .creature-row{height:252px!important}
+html.fixed-game .game-shell .player-panel .creature-group{height:250px!important}
+/* Deck, graveyard and scry windows share a smaller 16:9 frame. Content can
+   scroll inside a window without changing the scene or window aspect ratio. */
+html.fixed-game dialog{position:fixed;inset:auto;left:var(--game-center-x,50%);top:var(--game-center-y,50%);width:1120px!important;height:630px!important;max-width:none!important;max-height:none!important;box-sizing:border-box;margin:0;transform:translate(-50%,-50%) scale(var(--game-scale));transform-origin:center;overflow:auto}
+html.fixed-game .confirm-dialog{width:640px!important;height:360px!important}
+html.fixed-game .confirm-dialog[open]{display:flex;flex-direction:column;justify-content:center}

@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.19** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.20** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -10,7 +10,7 @@ Play: https://theyogi1999.github.io/BoosterTutor/
 python3 -m http.server 8000
 ```
 
-No build step or runtime dependencies. The English desktop interface uses a 1600×900 canvas. Combat always fits the viewport: portrait phones and tablets use opposing ranks, while landscape uses the wide tabletop. Enemies, all three creature slots, mana, permanents, the fanned hand and turn controls stay visible without scrolling. Start, draft, camp and shop screens keep their mobile page layouts. Fullscreen is available.
+No build step or runtime dependencies. Every scene uses the same 1600×900 (16:9) canvas: home, loading, sealed/open boosters, camp, shop, combat and the end screen. One uniform scale fits the entire frame inside the visible browser area, including phones and iPads in portrait orientation; spare space becomes letterboxing. Deck, graveyard, scry and confirmation dialogs also use 16:9 frames. Scenes do not scroll; longer dialog content can scroll inside its frame. Fullscreen is available.
 
 ## Draft, deck and card zones
 
@@ -42,7 +42,7 @@ No build step or runtime dependencies. The English desktop interface uses a 1600
 
 ## Individual attacks and retaliation
 
-- Every creature has its own target selector and **Attack now** button. Drag a ready creature onto a monster to attack immediately, or click its card to queue it for the global End turn action.
+- Every creature has its own target selector and **Queue attack** button. Clicking the button, clicking a ready creature, or dragging it onto a monster only queues its attack during Main phase. **Start combat** enters **Your attack**, where queued attacks resolve after the priority window or visible beat. Selecting or dragging an attacker does not deal damage, tap it or start an individual combat. Each queued creature keeps its chosen target.
 - Monsters deal their power back when legally able to block the attacking creature. Flying/reach and menace apply to retaliation. Normal damage in each duel is simultaneous. First strike may kill before retaliation; double strike uses two damage steps. Damage marked on allied creatures persists until turn cleanup.
 - A creature attacks at most once per turn. Attacking normally taps it. **Vigilance** leaves it untapped, so it can still block, but does not grant another attack.
 - Every creature, including artifact creatures and monsters, has summoning sickness unless it has haste. New creatures appear grey and may block immediately. Haste lets a creature join the current turn's combat phase. Tapped creature faces rotate sideways; vigilance attackers stay upright.
@@ -62,13 +62,13 @@ No build step or runtime dependencies. The English desktop interface uses a 1600
 - Auras choose an allied host when cast. Equipment pays its printed Equip cost in generic mana each time it is attached or moved, during your main phase. Casting and equipping are separate costs; dragging equipment directly from your hand onto a creature pays both. Attached cards sit physically beside their host in an overlapping rail; equipment can be dragged to another host. The free permanent zone holds unattached equipment and global enchantments.
 - **Green** stat chips show persistent modifiers, including counters, equipment and auras. **Amber EOT** chips show temporary bonuses. Total power/toughness reflects both; temporary bonuses expire at cleanup.
 - Hand tooltips show actual implemented effects and casting availability above the hovered card. Battlefield cards retain the large side inspector. Mouse/touch/pen dragging holds the card at the grabbed point; legal zones highlight and Escape cancels without spending mana.
-- Thirteen original stereo sound cues use a shared decoded sprite, category levels, compression, a voice cap and short fades. A mastered booster Foley plays with seven staggered reveal glints. Muting stops all sounds; reduced-motion settings disable reveal glints.
+- Selection uses a dedicated 85 ms bright UI tick (`assets/audio/select.wav`), replacing the percussion-like sprite slice. Other original stereo sound cues use the shared decoded sprite, category levels, compression, a voice cap and short fades. A mastered booster Foley plays with seven staggered reveal glints. Muting stops all sounds; reduced-motion settings disable reveal glints.
 - Four selectable player portraits and five opponent portraits use original painted fantasy spellcaster busts, cropped to head and upper torso. The shared WebP portrait sheet is about 407 KB. Booster foil, sparks and reveal light use a warm orange palette.
 - Attack arrows have rounded, glowing tips and a steady light trail. Each animated dash loop advances by one exact dash period. Existing SVG routes retain their nodes and animation timelines through redraws; adding or removing another route does not shift their curve. Reduced-motion settings keep static routes.
 
 ## Progression and limits
 
-Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session. The battlefield adapts when rotating a phone or resizing the browser, and the hand fan adjusts to the available width. On touch, queued or winding-up attacks can be withdrawn before they resolve. Portrait card details use an on-demand preview, with permanent activation controls, instead of a separate inspector column.
+Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session. The 16:9 frame rescales when rotating a phone or resizing the browser, and the hand fan adjusts to its logical row width. Queued or winding-up attacks can be withdrawn before they resolve. Withdrawing all attackers during Your attack continues the normal combat phases; it does not return to Main phase. The side inspector provides card details and permanent activation controls in every orientation.
 
 This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents use the stated roguelike interpretations. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system. This is a free, non-commercial fan demo for entertainment; it is not affiliated with or endorsed by Wizards of the Coast.
 
@@ -92,6 +92,7 @@ BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/market-browser.test.cjs
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/mobile-browser.test.cjs
 node tests/release-cache-browser.test.cjs
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/presentation-browser.test.cjs
+BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/turn-layout-browser.test.cjs
 ```
 
 The suites cover pointer drags, cancellation, large hands, uncapped healing, packs/rerolls, audio, layout bounds, English UI, card-zone inspection, individual attacks, retaliation, vigilance, priority windows, multi-blocks, exile and modifier expiry. The mobile suite runs without the external card API and checks booster facts, ten viewport sizes, all combat phases, a 15-card hand, rotation and touch blocking. The self-contained release-cache suite uses a real HTTP cache, upgrades a previous scrolling release, plays through all six boosters into combat, and checks iPad sizes and a simulated Safari visible viewport with browser bars. Temporary screenshots go into ignored `work/`.
@@ -102,4 +103,4 @@ Card metadata and original images were retrieved from [Scryfall](https://scryfal
 
 `.github/workflows/pages.yml` publishes changes pushed to `main` automatically, and can also be run manually.
 
-For a release, update the displayed version, README version, and every JavaScript/CSS `?v=` URL in `index.html` together. Versioned asset URLs prevent a newly loaded page from reusing a cached script or stylesheet from an older release. Changing only the page URL does not invalidate its cached assets. Combat follows the visible viewport (including browser bars) and fixes the page body in place while the battlefield is active; other screens keep normal page scrolling.
+For a release, update the displayed version, README version, and every JavaScript/CSS `?v=` URL in `index.html` together. Versioned asset URLs prevent a newly loaded page from reusing a cached script or stylesheet from an older release. Changing only the page URL does not invalidate its cached assets. Every scene follows the visible viewport (including browser bars), keeps its 16:9 aspect ratio and fixes the page body in place.

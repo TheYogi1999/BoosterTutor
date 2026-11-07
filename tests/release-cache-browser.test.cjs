@@ -103,10 +103,10 @@ const { chromium, devices } = require('playwright');
     await page.locator('.sealed-pack').tap();
     await page.evaluate(()=>scrollTo(0,500));
     await page.waitForTimeout(150);
-    assert.notEqual(await page.evaluate(()=>getComputedStyle(document.body).position),'fixed','leaving combat releases the page lock');
-    assert.ok(await page.evaluate(()=>scrollY>0),'booster details remain scrollable after combat');
+    assert.equal(await page.evaluate(()=>getComputedStyle(document.body).position),'fixed','draft keeps the same fixed scene frame');
+    assert.equal(await page.evaluate(()=>scrollY),0,'draft remains fitted without page scrolling');
     assert.deepEqual(errors,[]);
-    console.log('Passed: real browser cache upgrade, fresh versioned assets, full six-pack touch flow, four iPad viewports, visible browser area, no combat scrolling, and restored booster scrolling.');
+    console.log('Passed: real browser cache upgrade, fresh versioned assets, full six-pack touch flow, four iPad viewports, visible browser area, no combat scrolling, and fitted booster screens.');
   } finally {
     await browser.close();
     server.closeAllConnections();

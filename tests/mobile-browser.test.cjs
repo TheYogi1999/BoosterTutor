@@ -98,11 +98,11 @@ async function assertVisibleBoard(page) {
     await page.evaluate(()=>{state.battle.phase='main';state.battle.floatingMana=10;renderBattle()});
     const fountain=page.locator('#permanent-row .permanent-card').filter({has:page.locator('img[alt="Fountain of Renewal"]')});
     await fountain.tap();
-    await page.locator('#card-preview [data-activate-permanent]').tap();
-    assert.equal(await page.evaluate(()=>state.battle.permanents.some(p=>p.card.name==='Fountain of Renewal')),false,'portrait preview activates a permanent');
-    // Returning to drafting restores the normal mobile page layout and reward summaries.
+    await page.locator('#inspector-content [data-activate-permanent]').tap();
+    assert.equal(await page.evaluate(()=>state.battle.permanents.some(p=>p.card.name==='Fountain of Renewal')),false,'card inspector activates a permanent');
+    // Returning to drafting keeps the same fitted 16:9 frame and reward summaries.
     await page.evaluate(()=>{state.battle.phase='main';state.node=1;winBattle()});
-    assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('responsive-game')),true);
+    assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('fixed-game')),true);
     await page.locator('.sealed-pack').tap();
     assert.equal(await page.locator('.draft-card-summary').count(),7);
     assert.deepEqual(errors,[]);

@@ -1,8 +1,8 @@
 // Original, consistently mastered sound cues. No third-party samples.
-const SFX_CUES = {"select": {"start": 0.04, "duration": 0.12}, "grab": {"start": 0.26, "duration": 0.14}, "cancel": {"start": 0.5, "duration": 0.2}, "shuffle": {"start": 0.8, "duration": 0.62}, "creature": {"start": 1.52, "duration": 0.62}, "cast": {"start": 2.24, "duration": 0.55}, "attach": {"start": 2.89, "duration": 0.4}, "hit": {"start": 3.39, "duration": 0.34}, "heal": {"start": 3.83, "duration": 0.65}, "block": {"start": 4.58, "duration": 0.4}, "turn": {"start": 5.08, "duration": 0.38}, "victory": {"start": 5.56, "duration": 1.1}, "defeat": {"start": 6.76, "duration": 0.85}};
+const SFX_CUES = {"select": {"start": 0, "duration": 0.085, "file": "assets/audio/select.wav"}, "grab": {"start": 0.26, "duration": 0.14}, "cancel": {"start": 0.5, "duration": 0.2}, "shuffle": {"start": 0.8, "duration": 0.62}, "creature": {"start": 1.52, "duration": 0.62}, "cast": {"start": 2.24, "duration": 0.55}, "attach": {"start": 2.89, "duration": 0.4}, "hit": {"start": 3.39, "duration": 0.34}, "heal": {"start": 3.83, "duration": 0.65}, "block": {"start": 4.58, "duration": 0.4}, "turn": {"start": 5.08, "duration": 0.38}, "victory": {"start": 5.56, "duration": 1.1}, "defeat": {"start": 6.76, "duration": 0.85}};
 const soundEngine = {
-  context: null, bus: null, buffer: null, loading: null, voices: new Set(),
-  async unlock() {
+  context: null, bus: null, buffer: null, loading: null, selectBuffer: null, selectLoading: null, voices: new Set(),
+  async resume() {
     this.context ||= new (window.AudioContext || window.webkitAudioContext)();
     await this.context.resume();
     if (!this.bus) {
@@ -11,11 +11,22 @@ const soundEngine = {
       this.bus.attack.value = 0.003; this.bus.release.value = 0.12;
       this.bus.connect(this.context.destination);
     }
+  },
+  async unlock() {
+    await this.resume();
     if (!this.loading) this.loading = fetch('assets/audio/sfx-suite.mp3').then(response => {
       if (!response.ok) throw new Error('Sound asset unavailable');
       return response.arrayBuffer();
     }).then(bytes => this.context.decodeAudioData(bytes)).then(buffer => { this.buffer = buffer; return buffer; }).catch(error => { this.loading = null; throw error; });
     return this.loading;
+  },
+  async selection() {
+    await this.resume();
+    if (!this.selectLoading) this.selectLoading = fetch(SFX_CUES.select.file).then(response => {
+      if (!response.ok) throw new Error('Selection sound unavailable');
+      return response.arrayBuffer();
+    }).then(bytes => this.context.decodeAudioData(bytes)).then(buffer => { this.selectBuffer = buffer; return buffer; }).catch(error => { this.selectLoading = null; throw error; });
+    return this.selectLoading;
   },
   stop() {
     for (const voice of this.voices) { try { voice.stop(); } catch {} }
@@ -26,7 +37,7 @@ const soundEngine = {
 };
 function playSfx(name) {
   if (!state.soundOn || !SFX_CUES[name]) return;
-  soundEngine.unlock().then(buffer => {
+  (name === 'select' ? soundEngine.selection() : soundEngine.unlock()).then(buffer => {
     if (!state.soundOn) return;
     while (soundEngine.voices.size >= 8) {
       const oldest = soundEngine.voices.values().next().value;
@@ -40,6 +51,6 @@ function playSfx(name) {
     source.buffer = buffer; source.connect(gain); gain.connect(soundEngine.bus);
     source.onended = () => soundEngine.voices.delete(source);
     soundEngine.voices.add(source);
-    source.start(0, SFX_CUES[name].start, SFX_CUES[name].duration);
+    source.start(0, name === 'select' ? 0 : SFX_CUES[name].start, name === 'select' ? buffer.duration : SFX_CUES[name].duration);
   }).catch(() => {}); // Sound is optional; gameplay remains available.
 }

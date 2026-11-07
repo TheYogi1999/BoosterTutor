@@ -6,20 +6,21 @@
     <meta name="theme-color" content="#0b1015" />
     <meta name="description" content="Booster Tutor is a free, unofficial browser roguelike with a six-pack Magic draft, mana cards, and country-themed encounters." />
     <title>Booster Tutor — The Aether Expedition</title>
-    <link rel="stylesheet" href="style.css?v=0.19" />
-    <link rel="stylesheet" href="arena.css?v=0.19" />
-    <link rel="stylesheet" href="table.css?v=0.19" />
-    <link rel="stylesheet" href="expedition.css?v=0.19" />
-    <link rel="stylesheet" href="combat.css?v=0.19" />
-    <link rel="stylesheet" href="polish.css?v=0.19" />
-    <link rel="stylesheet" href="adventure.css?v=0.19" />
-    <link rel="stylesheet" href="market.css?v=0.19" />
-    <link rel="stylesheet" href="country.css?v=0.19" />
-    <link rel="stylesheet" href="mobile.css?v=0.19" />
-    <link rel="stylesheet" href="aether.css?v=0.19" />
-    <script src="cards.js?v=0.19" defer></script>
-    <script src="sounds.js?v=0.19" defer></script>
-    <script src="game.js?v=0.19" defer></script>
+    <link rel="stylesheet" href="style.css?v=0.20" />
+    <link rel="stylesheet" href="arena.css?v=0.20" />
+    <link rel="stylesheet" href="table.css?v=0.20" />
+    <link rel="stylesheet" href="expedition.css?v=0.20" />
+    <link rel="stylesheet" href="combat.css?v=0.20" />
+    <link rel="stylesheet" href="polish.css?v=0.20" />
+    <link rel="stylesheet" href="adventure.css?v=0.20" />
+    <link rel="stylesheet" href="market.css?v=0.20" />
+    <link rel="stylesheet" href="country.css?v=0.20" />
+    <link rel="stylesheet" href="mobile.css?v=0.20" />
+    <link rel="stylesheet" href="aether.css?v=0.20" />
+    <link rel="stylesheet" href="widescreen.css?v=0.20" />
+    <script src="cards.js?v=0.20" defer></script>
+    <script src="sounds.js?v=0.20" defer></script>
+    <script src="game.js?v=0.20" defer></script>
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
@@ -30,7 +31,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.19 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.20 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -149,7 +150,7 @@
           <div class="turn-footer">
             <div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div>
             <button class="mulligan-button" id="mulligan-button" type="button">FREE MULLIGAN <span>↻</span></button>
-            <button class="end-turn-button" id="end-turn-button">END TURN <span>→</span></button>
+            <button class="end-turn-button" id="end-turn-button">START COMBAT <span>→</span></button>
           </div>
         </div>
         <div class="source-note combat-source-note">Fan prototype · Adapted rules · Card data from Scryfall</div>
