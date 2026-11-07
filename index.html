@@ -6,19 +6,20 @@
     <meta name="theme-color" content="#0b1015" />
     <meta name="description" content="Booster Tutor is a free, unofficial browser roguelike with a six-pack Magic draft, mana cards, and country-themed encounters." />
     <title>Booster Tutor — The Aether Expedition</title>
-    <link rel="stylesheet" href="style.css?v=0.18" />
-    <link rel="stylesheet" href="arena.css?v=0.18" />
-    <link rel="stylesheet" href="table.css?v=0.18" />
-    <link rel="stylesheet" href="expedition.css?v=0.18" />
-    <link rel="stylesheet" href="combat.css?v=0.18" />
-    <link rel="stylesheet" href="polish.css?v=0.18" />
-    <link rel="stylesheet" href="adventure.css?v=0.18" />
-    <link rel="stylesheet" href="market.css?v=0.18" />
-    <link rel="stylesheet" href="country.css?v=0.18" />
-    <link rel="stylesheet" href="mobile.css?v=0.18" />
-    <script src="cards.js?v=0.18" defer></script>
-    <script src="sounds.js?v=0.18" defer></script>
-    <script src="game.js?v=0.18" defer></script>
+    <link rel="stylesheet" href="style.css?v=0.19" />
+    <link rel="stylesheet" href="arena.css?v=0.19" />
+    <link rel="stylesheet" href="table.css?v=0.19" />
+    <link rel="stylesheet" href="expedition.css?v=0.19" />
+    <link rel="stylesheet" href="combat.css?v=0.19" />
+    <link rel="stylesheet" href="polish.css?v=0.19" />
+    <link rel="stylesheet" href="adventure.css?v=0.19" />
+    <link rel="stylesheet" href="market.css?v=0.19" />
+    <link rel="stylesheet" href="country.css?v=0.19" />
+    <link rel="stylesheet" href="mobile.css?v=0.19" />
+    <link rel="stylesheet" href="aether.css?v=0.19" />
+    <script src="cards.js?v=0.19" defer></script>
+    <script src="sounds.js?v=0.19" defer></script>
+    <script src="game.js?v=0.19" defer></script>
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
@@ -29,7 +30,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.18 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.19 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -124,7 +125,7 @@
               </div>
               <div class="enemy-art" id="enemy-art" aria-hidden="true"><img id="enemy-art-image" alt="" /><span class="enemy-sprite">♟</span><div class="enemy-shadow"></div></div>
             </div>
-            <div class="arena-zone-header"><span>MONSTERS & INTENTIONS</span><small id="enemy-board-label">CREATURES</small></div>
+            <div class="arena-zone-header"><span>OPPONENTS & INTENTIONS</span><small id="enemy-board-label">CREATURES</small></div>
             <div class="enemy-board" id="enemy-board" aria-label="Enemy creatures and attacks"><div class="enemy-intent" id="enemy-intent"><span class="intent-icon">⚔</span><span>Enemies prepare to attack</span><b>0</b></div></div>
         <section class="blocking-panel" id="blocking-panel" aria-label="Assign blockers" hidden>
           <div class="blocking-heading"><div><span class="eyebrow">DEFENCE</span><h2>Who holds the line?</h2><p id="blocking-summary" aria-live="polite"></p></div><div class="block-tools"><button class="quiet-button" id="auto-block">Auto assign</button><button class="quiet-button" id="clear-blocks">Clear blocks</button></div></div>

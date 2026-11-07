@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.18** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.19** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -63,6 +63,8 @@ No build step or runtime dependencies. The English desktop interface uses a 1600
 - **Green** stat chips show persistent modifiers, including counters, equipment and auras. **Amber EOT** chips show temporary bonuses. Total power/toughness reflects both; temporary bonuses expire at cleanup.
 - Hand tooltips show actual implemented effects and casting availability above the hovered card. Battlefield cards retain the large side inspector. Mouse/touch/pen dragging holds the card at the grabbed point; legal zones highlight and Escape cancels without spending mana.
 - Thirteen original stereo sound cues use a shared decoded sprite, category levels, compression, a voice cap and short fades. A mastered booster Foley plays with seven staggered reveal glints. Muting stops all sounds; reduced-motion settings disable reveal glints.
+- Four selectable player portraits and five opponent portraits use original painted fantasy spellcaster busts, cropped to head and upper torso. The shared WebP portrait sheet is about 407 KB. Booster foil, sparks and reveal light use a warm orange palette.
+- Attack arrows have rounded, glowing tips and a steady light trail. Each animated dash loop advances by one exact dash period. Existing SVG routes retain their nodes and animation timelines through redraws; adding or removing another route does not shift their curve. Reduced-motion settings keep static routes.
 
 ## Progression and limits
 
@@ -89,13 +91,14 @@ BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/advanced-browser.test.cjs
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/market-browser.test.cjs
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/mobile-browser.test.cjs
 node tests/release-cache-browser.test.cjs
+BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/presentation-browser.test.cjs
 ```
 
 The suites cover pointer drags, cancellation, large hands, uncapped healing, packs/rerolls, audio, layout bounds, English UI, card-zone inspection, individual attacks, retaliation, vigilance, priority windows, multi-blocks, exile and modifier expiry. The mobile suite runs without the external card API and checks booster facts, ten viewport sizes, all combat phases, a 15-card hand, rotation and touch blocking. The self-contained release-cache suite uses a real HTTP cache, upgrades a previous scrolling release, plays through all six boosters into combat, and checks iPad sizes and a simulated Safari visible viewport with browser bars. Temporary screenshots go into ignored `work/`.
 
 ## Assets and publication
 
-Card metadata and original images were retrieved from [Scryfall](https://scryfall.com). The Library uses the original Magic card back supplied by Scryfall. Card images/text belong to their respective rights holders. Environmental SVGs, monster illustrations, and audio are original assets for this prototype. The project is not endorsed by Wizards of the Coast and does not claim permission under the [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy).
+Card metadata and original images were retrieved from [Scryfall](https://scryfall.com). The Library uses the original Magic card back supplied by Scryfall. Card images/text belong to their respective rights holders. Environmental SVGs, audio and the AI-generated spellcaster portrait art are original assets for this prototype. The portrait characters are original designs, not official Magic planeswalker portraits. The project is not endorsed by Wizards of the Coast and does not claim permission under the [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy).
 
 `.github/workflows/pages.yml` publishes changes pushed to `main` automatically, and can also be run manually.
 

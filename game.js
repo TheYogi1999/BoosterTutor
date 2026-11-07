@@ -74,10 +74,17 @@ function renderAvatarChoices() {
   document.querySelectorAll('.player-avatar, .hero-avatar').forEach(element => {
     element.dataset.avatar = selected.id;
     const symbol = element.querySelector('[data-avatar-symbol]');
-    if (symbol) symbol.textContent = selected.symbol;
+    if (symbol) {
+      symbol.textContent = '';
+      symbol.className = `walker-portrait portrait-${selected.id}`;
+    }
   });
   const choices = $('#avatar-choices');
-  if (choices) choices.innerHTML = AVATARS.map(avatar => `<button type="button" class="avatar-choice${avatar.id === selected.id ? ' selected' : ''}" data-avatar-choice="${avatar.id}" aria-pressed="${avatar.id === selected.id}" aria-label="Choose ${avatar.name}"><span>${avatar.symbol}</span><small>${avatar.name}</small></button>`).join('');
+  if (choices) choices.innerHTML = AVATARS.map(avatar => `<button type="button" class="avatar-choice${avatar.id === selected.id ? ' selected' : ''}" data-avatar-choice="${avatar.id}" aria-pressed="${avatar.id === selected.id}" aria-label="Choose ${avatar.name}">${walkerPortrait(avatar.id)}<small>${avatar.name}</small></button>`).join('');
+}
+
+function walkerPortrait(kind) {
+  return `<span class="walker-portrait portrait-${kind}" aria-hidden="true"></span>`;
 }
 
 function showScreen(id) {
@@ -724,7 +731,7 @@ function renderEnemyBoard() {
     const blocker = assignedBlockerName(battle, enemy.id);
     const keywords = creatureKeywordLabels(enemy);
     const healthPercent = Math.max(0, Math.min(100, enemy.health / enemy.maxHealth * 100));
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure">${walkerPortrait(enemy.kind || 'sprout')}</span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -1981,6 +1988,7 @@ function drawCombatArrows() {
   const rect = arena.getBoundingClientRect();
   const width = arena.clientWidth;
   const height = arena.clientHeight;
+  if (!width || !height || !rect.width || !rect.height) return;
   const sx = width / rect.width;
   const sy = height / rect.height;
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -1989,13 +1997,24 @@ function drawCombatArrows() {
     const box = element.getBoundingClientRect();
     return { x: ((edge === 'right' ? box.right : box.left + box.width / 2) - rect.left) * sx, y: ((edge === 'top' ? box.top - 4 : edge === 'bottom' ? box.bottom + 7 : box.top + box.height / 2) - rect.top) * sy };
   };
-  const paths = combatRoutes(battle).map((route, index) => {
+  if (!svg.querySelector('defs')) svg.innerHTML = combatArrowDefinitions();
+  const existing = new Map([...svg.querySelectorAll('.combat-route')].map(group => [group.dataset.routeKey, group]));
+  const retained = new Set();
+  const round = value => Math.round(value * 100) / 100;
+  const set = (element, name, value) => {
+    const next = String(value);
+    if (element.getAttribute(name) !== next) element.setAttribute(name, next);
+  };
+  for (const route of combatRoutes(battle)) {
+    const key = `${route.kind}:${route.from}:${route.to}`;
     const fromElement = route.kind === 'ally' ? document.querySelector(`[data-creature-id="${route.from}"] .player-card-frame`) : document.querySelector(`[data-enemy-attacker="${route.from}"] .monster-figure`);
     const toElement = route.to === 'player' ? $('#player-health-label') : route.kind === 'ally' ? document.querySelector(`[data-enemy-attacker="${route.to}"] .monster-figure`) : document.querySelector(`[data-creature-id="${route.to}"] .player-card-frame`);
     const from = center(fromElement, 'top');
     const to = center(toElement, route.to === 'player' ? 'bottom' : 'top');
-    if (!from || !to) return '';
-    const lift = 38 + index % 3 * 16;
+    if (!from || !to) continue;
+    // A route keeps its curve when another route is added or removed.
+    const lane = [...key].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3;
+    const lift = 38 + lane * 16;
     const c1 = { x: from.x + (route.kind === 'ally' ? 72 : -86), y: Math.max(30, from.y - lift) };
     const c2 = route.to === 'player' ? { x: to.x + 72, y: to.y + 18 } : { x: to.x + (route.kind === 'ally' ? -88 : 96), y: Math.max(30, to.y - lift) };
     const label = { x: (from.x + 3 * c1.x + 3 * c2.x + to.x) / 8, y: (from.y + 3 * c1.y + 3 * c2.y + to.y) / 8 };
@@ -2003,16 +2022,38 @@ function drawCombatArrows() {
     const fromName = units.find(unit => unit.id === route.from)?.card.name || '';
     const toName = route.to === 'player' ? 'Your life' : units.find(unit => unit.id === route.to)?.card.name || '';
     const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'blocked attack' : 'attack'}`;
-    const curve = `M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}`;
-    return `<g class="combat-route route-${route.kind}" data-arrow-kind="${route.kind}" data-from-id="${escapeHtml(route.from)}" data-to-id="${escapeHtml(route.to)}"><title>${escapeHtml(title)}</title><path class="route-glow" d="${curve}"/><circle class="route-target" cx="${to.x}" cy="${to.y}" r="6"/><path class="route-line" d="${curve}" marker-end="url(#arrow-${route.kind})"/><circle class="route-source" cx="${from.x}" cy="${from.y}" r="4"/><g class="route-damage" transform="translate(${label.x},${label.y})"><rect x="-20" y="-12" width="40" height="24" rx="12"/><text text-anchor="middle" dominant-baseline="central">${route.damage}</text></g></g>`;
-  }).join('');
+    const curve = `M ${round(from.x)} ${round(from.y)} C ${round(c1.x)} ${round(c1.y)}, ${round(c2.x)} ${round(c2.y)}, ${round(to.x)} ${round(to.y)}`;
+    let group = existing.get(key);
+    if (!group) {
+      group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.setAttribute('class', `combat-route route-${route.kind}`);
+      Object.assign(group.dataset, { routeKey: key, arrowKind: route.kind, fromId: route.from, toId: route.to });
+      group.innerHTML = `<title></title><path class="route-glow"/><path class="route-track"/><circle class="route-target" r="6"/><path class="route-line" marker-end="url(#arrow-${route.kind})"/><circle class="route-source" r="4"/><g class="route-damage"><rect x="-20" y="-12" width="40" height="24" rx="12"/><text text-anchor="middle" dominant-baseline="central"></text></g>`;
+      svg.append(group);
+    }
+    group.querySelector('title').textContent = title;
+    group.querySelector('text').textContent = route.damage;
+    for (const path of group.querySelectorAll('path')) set(path, 'd', curve);
+    for (const [selector, point] of [['.route-source', from], ['.route-target', to]]) {
+      const circle = group.querySelector(selector);
+      set(circle, 'cx', round(point.x));
+      set(circle, 'cy', round(point.y));
+    }
+    set(group.querySelector('.route-damage'), 'transform', `translate(${round(label.x)},${round(label.y)})`);
+    retained.add(key);
+  }
+  for (const [key, group] of existing) if (!retained.has(key)) group.remove();
+}
+
+function combatArrowDefinitions() {
   const gradients = {
     ally: '<linearGradient id="arrow-gradient-ally"><stop stop-color="#fff0b8"/><stop offset=".55" stop-color="#f0c36d"/><stop offset="1" stop-color="#ffe9a8"/></linearGradient>',
     enemy: '<linearGradient id="arrow-gradient-enemy"><stop stop-color="#ffd2bb"/><stop offset=".5" stop-color="#e77969"/><stop offset="1" stop-color="#ffb299"/></linearGradient>',
     block: '<linearGradient id="arrow-gradient-block"><stop stop-color="#d3fff2"/><stop offset=".5" stop-color="#70d6c2"/><stop offset="1" stop-color="#bbfff0"/></linearGradient>'
   };
-  const markers = ['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead-${kind}" d="M 1 1 L 9 5 L 1 9 Z"/></marker>`).join('');
-  svg.innerHTML = `<defs>${Object.values(gradients).join('')}<filter id="arrow-soft-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.5"/></filter>${markers}</defs>${paths}`;
+  const tip = 'M2.8 1.5 L10.2 5 Q12 6 10.2 7 L2.8 10.5 Q1 11.3 1.5 9.3 L2.4 6 L1.5 2.7 Q1 0.7 2.8 1.5 Z';
+  const markers = ['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 12 12" refX="10.5" refY="6" markerWidth="20" markerHeight="20" markerUnits="userSpaceOnUse" orient="auto" overflow="visible"><path class="arrowhead-${kind} arrowhead-glow" d="${tip}"/><path class="arrowhead-${kind}" d="${tip}"/></marker>`).join('');
+  return `<defs>${Object.values(gradients).join('')}<filter id="arrow-soft-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter>${markers}</defs>`;
 }
 window.addEventListener('resize', () => requestAnimationFrame(drawCombatArrows));
 
@@ -2055,7 +2096,7 @@ function renderCollection() {
   state.collectionCards = [...groups.values()].filter(card => matchesCardFilters(card,query)).sort((a, b) => (a.cmc || 0) - (b.cmc || 0) || a.name.localeCompare(b.name));
   const average = cards.length ? cards.reduce((sum, card) => sum + (card.cmc || 0), 0) / cards.length : 0;
   $('#collection-stats').textContent = `${cards.length} cards · ${state.collectionCards.length} shown · average mana ${average.toFixed(1)}`;
-  $('#collection-grid').innerHTML = state.collectionCards.length ? state.collectionCards.map((card, index) => card.enemyKind ? `<div class="collection-monster"><img src="assets/foes/${card.enemyKind}.svg" alt="${escapeHtml(card.name)}"><b>${escapeHtml(card.name)}</b><span>Exiled monster</span></div>` : `<article class="collection-entry"><button class="collection-card" data-preview-owner="collection" data-collection-index="${index}" aria-label="${card.count} copies of ${escapeHtml(card.name)}">${cardFace(card)}<span><b>${escapeHtml(card.name)}</b><strong>×${card.count}</strong></span></button>${kind==='catalog'?`<p class="catalog-keywords">${escapeHtml(printedKeywords(card).join(' · ')||'No printed keywords')}</p><p class="catalog-audit">${cardAudit(card).unknown.length?'Check keyword coverage':cardAudit(card).adapted?'Data verified · adapted counterspell':'Data verified · keywords supported'}</p><a class="catalog-source" href="${escapeHtml(card.uri)}" target="_blank" rel="noreferrer">Scryfall ↗</a>`:''}</article>`).join('') : '<p class="collection-empty">No cards in this zone.</p>';
+  $('#collection-grid').innerHTML = state.collectionCards.length ? state.collectionCards.map((card, index) => card.enemyKind ? `<div class="collection-monster">${walkerPortrait(card.enemyKind)}<b>${escapeHtml(card.name)}</b><span>Exiled monster</span></div>` : `<article class="collection-entry"><button class="collection-card" data-preview-owner="collection" data-collection-index="${index}" aria-label="${card.count} copies of ${escapeHtml(card.name)}">${cardFace(card)}<span><b>${escapeHtml(card.name)}</b><strong>×${card.count}</strong></span></button>${kind==='catalog'?`<p class="catalog-keywords">${escapeHtml(printedKeywords(card).join(' · ')||'No printed keywords')}</p><p class="catalog-audit">${cardAudit(card).unknown.length?'Check keyword coverage':cardAudit(card).adapted?'Data verified · adapted counterspell':'Data verified · keywords supported'}</p><a class="catalog-source" href="${escapeHtml(card.uri)}" target="_blank" rel="noreferrer">Scryfall ↗</a>`:''}</article>`).join('') : '<p class="collection-empty">No cards in this zone.</p>';
 }
 $('#deck-button').addEventListener('click', () => openCollection('deck'));
 $('#journey-deck-button').addEventListener('click', () => openCollection('deck'));

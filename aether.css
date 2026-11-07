@@ -1,0 +1,103 @@
+/* Original spellcaster busts: a single cached, nine-portrait sheet. */
+.walker-portrait{display:block;background-image:url('assets/portraits/walkers.webp')!important;background-size:300% 300%;background-repeat:no-repeat;background-position:var(--portrait-x,0%) var(--portrait-y,0%);aspect-ratio:1;user-select:none;pointer-events:none}
+.portrait-mage{--portrait-x:0%;--portrait-y:0%}
+.portrait-ranger{--portrait-x:50%;--portrait-y:0%}
+.portrait-guardian{--portrait-x:100%;--portrait-y:0%}
+.portrait-dragon{--portrait-x:0%;--portrait-y:50%}
+.monster-figure .portrait-dragon,.collection-monster .portrait-dragon{--portrait-x:100%;--portrait-y:100%}
+.portrait-sprout{--portrait-x:50%;--portrait-y:50%}
+.portrait-wisp{--portrait-x:100%;--portrait-y:50%}
+.portrait-raider{--portrait-x:0%;--portrait-y:100%}
+.portrait-wolf{--portrait-x:50%;--portrait-y:100%}
+.game-shell .avatar-choice{min-height:94px;padding:6px;gap:6px}
+.game-shell .avatar-choice>.walker-portrait{width:61px;height:66px;border:1px solid #ddb97677;border-radius:40% 40% 8px 8px;background-color:#121a22;background-size:300% 300%;background-position:var(--portrait-x,0%) var(--portrait-y,0%);box-shadow:0 4px 12px #0008}
+.game-shell .avatar-choice small{font-size:10px}
+.game-shell .avatar-choice.selected>.walker-portrait{border-color:#ffbf75;box-shadow:0 0 0 2px #ffaf5733,0 0 20px #ed9b4344}
+.game-shell .hero-avatar{width:154px;height:164px;border-radius:45% 45% 18px 18px;font-size:0;overflow:hidden;bottom:3%;box-shadow:0 0 0 5px #e4be7b18,0 0 30px #dd985244,inset 0 0 10px #ffc97644}
+.game-shell .hero-avatar .walker-portrait,.game-shell .player-avatar .walker-portrait{width:100%;height:100%;border-radius:inherit}
+.game-shell .player-avatar{width:68px!important;height:78px!important;left:0;top:1px;border-radius:42% 42% 10px 10px!important;font-size:0;box-shadow:0 0 0 2px #e6c38a22,0 0 18px #e4b36633}
+.game-shell .player-side-header .side-identity{padding-left:79px}
+.game-shell .mana-land-row{padding-left:78px}
+html.portrait-combat .game-shell .player-avatar{width:56px!important;height:58px!important;top:0;border-radius:40% 40% 7px 7px!important}
+html.portrait-combat .game-shell .player-side-header .side-identity{padding-left:66px}
+html.portrait-combat .game-shell .mana-land-row{padding-left:0}
+.game-shell .monster-figure{display:flex;align-items:center;justify-content:center}
+html.portrait-combat .game-shell .enemy-panel{grid-template-columns:minmax(0,1fr)!important}
+html.portrait-combat .game-shell #enemy-board,html.portrait-combat .game-shell .monster-rank,html.portrait-combat .game-shell .monster-figure{min-width:0}
+.game-shell .monster-figure .walker-portrait{height:100%;width:auto;max-width:100%;max-height:100%;flex:0 1 auto;border:1px solid #b6a28377;border-radius:40% 40% 9px 9px;background-color:#111a24;box-shadow:0 0 0 3px #cfb88915,0 0 24px #bf97632a;mask-image:linear-gradient(#000 90%,#000b)}
+.game-shell .monster.selected .walker-portrait{border-color:#ffc47e;box-shadow:0 0 0 2px #ffb86166,0 0 28px #ffaa4d55}
+.game-shell .monster.selected .monster-figure,.game-shell .monster:hover .monster-figure{transform:none;filter:none}
+.collection-monster .walker-portrait{width:180px;max-width:100%;border-radius:35% 35% 12px 12px}
+
+/* Warm foil, ember sparks and orange reveal light. */
+.game-shell .pack-stage:before{inset:1% 12%;background:radial-gradient(ellipse,#ff842b32,transparent 65%)}
+.game-shell .sealed-pack{border-color:#ffc07b;border-top-color:#d78a4b;border-bottom-color:#b86930;background:linear-gradient(115deg,#7f3a21 0%,#281b20 29%,#9c542c 49%,#40231d 70%,#161820);box-shadow:0 20px 55px #0009,0 0 50px #f4813433,inset 0 0 28px #ffad4722;color:#ffe4bb}
+.game-shell .sealed-pack:hover{box-shadow:0 25px 65px #0009,0 0 65px #ff8a3d55}
+.game-shell .pack-foil{background:linear-gradient(110deg,transparent 15%,#ffd18a88 45%,transparent 65%)}
+.game-shell .pack-emblem{color:#ffb25d;text-shadow:0 0 26px #ff9c3788}
+.game-shell .pack-particles{color:#ffb15e}
+.game-shell .pack-stage>p{color:#f7bc83}
+.game-shell .pack-ribbon{border-color:#ed994a66;background:linear-gradient(90deg,#93441b22,#f8922633,#93441b22);color:#ffc083}
+.game-shell .pack-ribbon span{color:#ffae58}
+.game-shell .booster-pack{border-color:#d5833c77;background:linear-gradient(120deg,#3d281fbb,#192027 50%,#4c2c1c66)}
+.game-shell .booster-pack header{color:#ffc389}
+.game-shell .draft-option.selected{border-color:#ffb267!important;box-shadow:0 0 0 3px #ff9b3d33!important}
+.game-shell .draft-option.selected .card-image-wrap{box-shadow:0 0 0 2px #ffad6166,0 0 22px #ff7d2333}
+.game-shell .draft-screen.opening .booster-pack{animation:ember-pack-reveal .65s ease-out both!important}
+.game-shell .draft-screen.opening .card-image-wrap:after{background:linear-gradient(110deg,transparent 12%,#ff9d38a6 42%,#ffe4b2dd 50%,transparent 78%)}
+.game-shell .reveal-sparks i{background:#ffb95f;box-shadow:0 0 12px 4px #ff7a3488}
+@keyframes ember-pack-reveal{from{filter:brightness(1.6);box-shadow:0 0 70px #ff8a3c88}to{filter:brightness(1);box-shadow:0 0 16px #e9852e22}}
+
+/* Each dash offset travels exactly one period; keyed SVG nodes keep time
+   through rerenders. A continuous underlay and rounded tip share the glow. */
+.game-shell .combat-route .route-track{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;opacity:.24}
+.game-shell .route-ally{color:#ffd38b;--route-flow-distance:-19}
+.game-shell .route-enemy{color:#ff9f7d;--route-flow-distance:-16}
+.game-shell .route-block{color:#a3efdb;--route-flow-distance:-9}
+.game-shell .combat-route .route-glow{stroke-width:11;opacity:.65;stroke-linecap:round;stroke-linejoin:round}
+.game-shell .combat-route .route-line{stroke-linecap:round;stroke-linejoin:round}
+.game-shell .route-ally .route-line{stroke-dasharray:12 7;animation:aether-route-flow 1.05s linear infinite}
+.game-shell .route-enemy .route-line{stroke-dasharray:8 8;animation:aether-route-flow 1s linear infinite}
+.game-shell .route-block .route-line{stroke-dasharray:4 5;animation:aether-route-flow .8s linear infinite}
+.game-shell .arrowhead-ally{fill:#ffdc97}
+.game-shell .arrowhead-enemy{fill:#ffac89}
+.game-shell .arrowhead-block{fill:#b4ffe8}
+.game-shell .arrowhead-glow{filter:blur(2.2px);opacity:.9}
+@keyframes aether-route-flow{from{stroke-dashoffset:0}to{stroke-dashoffset:var(--route-flow-distance)}}
+/* On squarer portrait tablets, reserve real space for card faces as well as
+   the busts instead of allowing flexible card images to collapse to a strip. */
+@media(orientation:portrait) and (min-aspect-ratio:2/3){
+  html.portrait-combat .game-shell .combat-screen.active{grid-template-rows:70px minmax(0,1fr) 240px}
+  html.portrait-combat .game-shell .combat-topline{height:70px;grid-template-rows:26px 38px}
+  html.portrait-combat .game-shell .phase-strip li{font-size:16px;padding:5px}
+  html.portrait-combat .game-shell .arena-table{grid-template-rows:minmax(0,.6fr) minmax(0,1fr)!important}
+  html.portrait-combat .game-shell .arena-table:has(.blocking-panel:not([hidden])){grid-template-rows:minmax(0,.7fr) minmax(0,1fr)!important}
+  html.portrait-combat .game-shell .enemy-panel{grid-template-rows:28px minmax(0,1fr) auto!important}
+  html.portrait-combat .game-shell .enemy-side-header{height:28px!important}
+  html.portrait-combat .game-shell .enemy-identity h2{line-height:28px!important}
+  html.portrait-combat .game-shell #enemy-board{padding:0!important}
+  html.portrait-combat .game-shell .monster{grid-template-rows:32px minmax(0,1fr) 24px 28px 6px 20px 0!important}
+  html.portrait-combat .game-shell .monster>small{display:none}
+  html.portrait-combat .game-shell .monster-intent{font-size:16px;line-height:22px}
+  html.portrait-combat .game-shell .monster>strong{font-size:19px;line-height:24px}
+  html.portrait-combat .game-shell .monster-keywords{font-size:16px;line-height:20px}
+  html.portrait-combat .game-shell .blocking-heading>div:first-child{flex:1;min-width:0}
+  html.portrait-combat .game-shell #blocking-summary{max-width:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px;line-height:24px}
+  html.portrait-combat .game-shell .block-tools{flex:none}
+  html.portrait-combat .game-shell .player-panel .creature-group{display:grid;grid-template-rows:minmax(0,1fr) 48px;gap:3px}
+  html.portrait-combat .game-shell .player-panel .creature-group>.creature-token{display:grid!important;grid-template-rows:minmax(0,1fr) auto;height:100%;max-height:none;gap:3px!important}
+  html.portrait-combat .game-shell .player-panel .creature-group .player-card-frame{width:auto!important;height:100%!important;max-width:100%;max-height:206px;justify-self:start}
+  html.portrait-combat .game-shell .field-caption>b{font-size:16px;line-height:20px!important}
+  html.portrait-combat .game-shell .field-caption>span:not(.stat-modifiers){font-size:20px;line-height:24px!important}
+  html.portrait-combat .game-shell .field-caption .keyword-strip:not(.stat-modifiers){font-size:14px!important;line-height:16px!important;max-height:16px}
+  html.portrait-combat .game-shell .field-caption>small{font-size:14px;line-height:16px!important;max-height:16px}
+  html.portrait-combat .game-shell .unit-controls{margin:0}
+  html.portrait-combat .game-shell .hand-panel{height:240px!important;grid-template-rows:40px 126px 50px}
+  html.portrait-combat .game-shell .phase-status{font-size:17px;line-height:20px}
+  html.portrait-combat .game-shell .hand-row{height:126px!important}
+  html.portrait-combat .game-shell .hand-card{--card-width:84px;width:84px!important;flex-basis:84px!important;margin-left:calc(var(--hand-step,65px) - 84px)!important}
+  html.portrait-combat .game-shell .library-stack{width:58px}
+  html.portrait-combat .game-shell .turn-footer{height:50px}
+  html.portrait-combat .game-shell .turn-footer button{height:48px!important}
+}
+@media(prefers-reduced-motion:reduce){.game-shell .route-ally .route-line,.game-shell .route-enemy .route-line,.game-shell .route-block .route-line,.game-shell .draft-screen.opening .booster-pack{animation:none!important}}
