@@ -11,7 +11,7 @@ const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
 const CARD_CACHE_KEY = 'booster-tutor-expanded-pool-v1';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
 const LAND_QUERY = 'game:paper lang:en t:basic t:land';
-const COMBAT_KEYWORDS = ['flying','reach','lifelink','deathtouch','first strike','double strike','haste','vigilance','trample','menace','defender'];
+const COMBAT_KEYWORDS = ['flying','reach','lifelink','deathtouch','first strike','double strike','haste','vigilance','trample','menace','defender','hexproof'];
 const SUPPORTED_KEYWORDS = [...COMBAT_KEYWORDS, 'flash', 'equip', 'enchant', 'scry'];
 const AVATARS = [
   { id: 'mage', name: 'Arcane Mage', symbol: '✦' },
@@ -112,7 +112,10 @@ function creatureKeywords(card) {
     reach: hasKeywordLine(text, 'reach'),
     haste: hasKeywordLine(text, 'haste'),
     vigilance: hasKeywordLine(text, 'vigilance'),
-    trample: hasKeywordLine(text, 'trample'), menace: hasKeywordLine(text, 'menace'), defender: hasKeywordLine(text, 'defender')
+    trample: hasKeywordLine(text, 'trample'),
+    menace: hasKeywordLine(text, 'menace'),
+    defender: hasKeywordLine(text, 'defender'),
+    hexproof: hasKeywordLine(text, 'hexproof')
   };
 }
 
@@ -136,7 +139,8 @@ function creatureKeywordLabels(creature) {
     ['double strike', 'Double strike'],
     ['first strike', 'First strike'],
     ['deathtouch', 'Deathtouch'],
-    ['reach', 'Reach'], ['vigilance', 'Vigilance'], ['haste', 'Haste'], ['trample', 'Trample'], ['menace', 'Menace'], ['defender', 'Defender']
+    ['reach', 'Reach'], ['vigilance', 'Vigilance'], ['haste', 'Haste'], ['trample', 'Trample'], ['menace', 'Menace'], ['defender', 'Defender'],
+    ['hexproof', 'Hexproof']
   ];
   return labels.filter(([keyword]) => hasCreatureKeyword(creature, keyword)).map(([, label]) => label).join(' · ');
 }
@@ -308,7 +312,7 @@ function parseStats(card) {
 
 const FOE_TYPES = {
   sprout: { name: 'Moss Sentinel', health: 13, power: 3, pattern: ['attack', 'guard', 'attack'], keywords: ['reach'], bounty: 10 },
-  wisp: { name: 'Aether Wisp', health: 10, power: 2, pattern: ['buff', 'attack', 'attack'], keywords: ['flying','lifelink'], bounty: 9 },
+  wisp: { name: 'Aether Wisp', health: 10, power: 2, pattern: ['buff', 'attack', 'attack'], keywords: ['flying','lifelink','hexproof'], bounty: 9 },
   raider: { name: 'Rune Raider', health: 22, power: 4, pattern: ['attack', 'buff', 'attack', 'guard'], keywords: ['first strike'], bounty: 15 },
   wolf: { name: 'Thornwolf', health: 20, power: 4, pattern: ['attack', 'attack', 'guard'], keywords: ['menace'], bounty: 14 },
   dragon: { name: 'Shard Dragon', health: 60, power: 7, pattern: ['guard', 'attack', 'buff', 'attack'], keywords: ['flying','trample'], bounty: 40 }
@@ -318,13 +322,14 @@ function createEnemyTeam(encounter) {
   return teams[state.node - 1].map(kind => {
     const template = FOE_TYPES[kind];
     const card = { name: template.name, type_line: 'Monster', oracle_text: template.keywords.join(', ') };
-    return { id: `enemy-${state.nextPermanentId++}`, kind, card, ...creatureKeywords(card), bounty: template.bounty, owner: 'enemy', health: template.health, maxHealth: template.health, power: template.power, toughness: template.health, shield: 0, pattern: template.pattern, summonedTurn: 1, summoningSick: true };
+    return { id: `enemy-${state.nextPermanentId++}`, kind, card, ...creatureKeywords(card), bounty: template.bounty, owner: 'enemy', health: template.health, maxHealth: template.health, power: template.power, pattern: template.pattern, summonedTurn: 1, summoningSick: true };
   });
 }
 function enemyIntent(enemy, turn = state.battle?.turn || 1) {
-  const kind = enemy.pattern ? enemy.pattern[(turn - 1) % enemy.pattern.length] : 'attack';
-  return { kind, damage: kind === 'attack' ? Math.max(0, enemy.power) : 0, shield: kind === 'guard' ? 5 : 0,
-    label: kind === 'attack' ? `Attack · ${enemy.power} damage` : kind === 'guard' ? 'Guard · 5 shield' : 'Strengthen · +1 power', icon: kind === 'attack' ? '⚔' : kind === 'guard' ? '⛨' : '✦' };
+  const pattern = enemy.pattern ? enemy.pattern[(turn - 1) % enemy.pattern.length] : 'attack';
+  const kind = pattern === 'guard' ? 'recover' : pattern;
+  return { kind, damage: kind === 'attack' ? Math.max(0, enemy.power) : 0,
+    label: kind === 'attack' ? `Attack · ${enemy.power} damage` : kind === 'recover' ? 'Recover · 3 life' : 'Strengthen · +1 damage', icon: kind === 'attack' ? '⚔' : kind === 'recover' ? '✚' : '✦' };
 }
 function resolveEnemyIntents() {
   const battle = state.battle;
@@ -332,8 +337,12 @@ function resolveEnemyIntents() {
   battle.intentsResolvedTurn = battle.turn;
   for (const enemy of battle.enemyCreatures) {
     const intent = enemyIntent(enemy);
-    if (intent.kind === 'guard') { enemy.shield = intent.shield; addLog(`${enemy.card.name} gains ${intent.shield} shield.`); }
-    if (intent.kind === 'buff') { enemy.power += 1; addLog(`${enemy.card.name} gains 1 power.`); }
+    if (intent.kind === 'recover') {
+      const recovered = Math.min(3, Math.max(0, enemy.maxHealth - enemy.health));
+      enemy.health += recovered;
+      if (recovered) addLog(`${enemy.card.name} recovers ${recovered} life.`);
+    }
+    if (intent.kind === 'buff') { enemy.power += 1; addLog(`${enemy.card.name} gains 1 damage.`); }
   }
 }
 
@@ -357,13 +366,13 @@ function cardEffects(card, creature = isCreature(card)) {
   if (counter) { const amount = ({a:1,one:1,two:2,three:3,four:4})[counter[1].toLowerCase()] || Number(counter[1]) || 1; effects.push({ kind: 'buff', power: amount, toughness: amount, temporary: false }); }
   if (buff) effects.push({ kind: 'buff', power: Number(buff[1]), toughness: Number(buff[2]), temporary: /until end of turn/i.test(text) });
   if (grant) {
-    const keywords = grant[1].match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste|vigilance|trample|menace|defender)\b/gi) || [];
+    const keywords = grant[1].match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste|vigilance|trample|menace|defender|hexproof)\b/gi) || [];
     if (keywords.length) effects.push({ kind: 'keywords', keywords: keywords.map(value => value.toLowerCase()) });
   }
-  if (/counter target/i.test(text)) effects.push({ kind: 'shield', amount: 5 });
+  if (/counter target/i.test(text)) effects.push({ kind: 'cancel' });
   if (/destroy target creature/i.test(text)) effects.push({ kind: 'destroy' });
   if (/exile target creature/i.test(text)) effects.push({ kind: 'exile' });
-  if (/prevent the next|prevent all damage/i.test(text)) effects.push({ kind: 'shield', amount: 6 });
+  if (/prevent the next|prevent all damage/i.test(text) && !life) effects.push({ kind: 'heal', amount: 4 });
   if (/create .*token/i.test(text)) effects.push({ kind: 'token' });
   if (!effects.length && !creature) effects.push({ kind: 'damage', amount: Math.max(3, Math.ceil((card.cmc || 0) * 2 + 2)) });
   return effects;
@@ -372,12 +381,11 @@ function permanentEffect(card) {
   const text = card.oracle_text || '';
   const buff = text.match(/gets?\s+([+-]\d+)\/([+-]\d+)/i);
   const attachment = isAttachment(card);
-  const keywords = attachment ? (text.match(/(?:has|have|gains?)\s+([^.;\n]+)/i)?.[1] || '').match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste|vigilance|trample|menace|defender)\b/gi) || [] : [];
+  const keywords = attachment ? (text.match(/(?:has|have|gains?)\s+([^.;\n]+)/i)?.[1] || '').match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste|vigilance|trample|menace|defender|hexproof)\b/gi) || [] : [];
   return {
     power: buff ? Number(buff[1]) : attachment ? 1 : 0,
     toughness: buff ? Number(buff[2]) : attachment ? 1 : 0,
-    keywords: keywords.map(value => value.toLowerCase()),
-    shield: !attachment && !buff && !['Fountain of Renewal','Omen of the Sea','Angelic Chorus'].includes(card.name) ? 1 : 0
+    keywords: keywords.map(value => value.toLowerCase())
   };
 }
 function signed(value) { return `${value >= 0 ? '+' : ''}${value}`; }
@@ -393,8 +401,8 @@ function effectDescriptions(card) {
       lines.push(isAura(card) ? 'Aura: choose an allied creature when casting.' : `Equipment: pay ${equipCost(card)} generic mana to equip or move it during your main phase.`);
       lines.push(`Its host gets ${signed(effect.power)}/${signed(effect.toughness)}${effect.keywords.length ? ' and ' + effect.keywords.join(', ') : ''}.`);
       lines.push(isAura(card) ? card.name==='Rancor' ? 'If its host leaves, Rancor returns to your hand instead of staying in the graveyard.' : 'When its host leaves the battlefield, the aura goes to your graveyard.' : 'When its host leaves, the equipment stays unattached.');
-    } else if (effect.shield) lines.push(`Gain ${effect.shield} shield on entry and at each turn start. Shield expires after enemy damage.`);
-    else lines.push(`All allied creatures get ${signed(effect.power)}/${signed(effect.toughness)} while this card remains.`);
+    } else if (effect.power || effect.toughness) lines.push(`All allied creatures get ${signed(effect.power)}/${signed(effect.toughness)} while this card remains.`);
+    else lines.push('Remains on the battlefield. No additional adapted effect is assigned to this card.');
     return lines;
   }
   const lines = [];
@@ -408,13 +416,13 @@ function effectDescriptions(card) {
     if(/attacks each combat if able/i.test(card.oracle_text||''))lines.push('Must attack at turn end if able. Walls cannot block it.');
   }
   for (const effect of cardEffects(card)) {
-    if (effect.kind === 'damage') lines.push(`Deal ${effect.amount} damage to the selected enemy, otherwise the first enemy. Shield absorbs damage; excess is lost.`);
+    if (effect.kind === 'damage') lines.push(`Deal ${effect.amount} damage to the selected enemy, otherwise the first enemy. Its life falls by the damage dealt.`);
     if (effect.kind === 'destroy') lines.push('Destroy the selected creature. It goes to its graveyard.');
     if (effect.kind === 'exile') lines.push('Exile the selected creature for this encounter. It cannot be recycled. Drop onto an ally to exile that ally instead.');
     if (effect.kind === 'heal') lines.push(`Gain ${effect.amount} life. There is no life cap.`);
     if (effect.kind === 'draw') lines.push(`Draw ${effect.amount} additional card(s). There is no hand-size cap.`);
-    if (effect.kind === 'shield') lines.push(`Gain ${effect.amount} shield until enemy damage finishes.`);
-    if (effect.kind === 'buff') lines.push(`Your selected ally, otherwise your strongest creature, gets ${signed(effect.power)}/${signed(effect.toughness)}${effect.temporary ? ' until end of turn (amber)' : ' for this encounter (green)'}. With no creature, gain 3 shield.`);
+    if (effect.kind === 'cancel') lines.push('Interrupt the selected monster: it cannot attack during this turn. This is the demo adaptation of a counterspell.');
+    if (effect.kind === 'buff') lines.push(`Your selected ally, otherwise your strongest creature, gets ${signed(effect.power)}/${signed(effect.toughness)}${effect.temporary ? ' until end of turn (amber)' : ' for this encounter (green)'}. Requires an allied creature.`);
     if (effect.kind === 'keywords') lines.push(`Your selected ally, otherwise your strongest creature, gains ${effect.keywords.join(', ')} until end of turn.`);
     if (effect.kind === 'token') lines.push('Create a 2/2 token if one of your three creature slots is free.');
   }
@@ -557,13 +565,13 @@ function beginBattle(node) {
     stage,
     enemyArt: enemyCreatures[0]?.card.art || '',
     enemyCreatures,
-    playerBlock: state.relic === 'ward' ? 4 : 0,
     mana: STARTING_MANA_IN_PLAY,
     maxMana: STARTING_MANA_IN_PLAY,
     floatingMana: 0,
     lands: startingManaCards.map(card => ({ id: `mana-${state.nextPermanentId++}`, card, tapped: false })),
     landAvailable: true,
     mulliganAvailable: true,
+    openingHandSize: HAND_SIZE + (state.relic === 'lens' ? 1 : 0),
     turn: 1,
     phase: 'main',
     deck: shuffledDeck.filter(card => !startingManaIds.has(card.instanceId)),
@@ -581,7 +589,8 @@ function beginBattle(node) {
     turnEffects: [],
     log: []
   };
-  drawToHand(HAND_SIZE);
+  drawToHand(state.battle.openingHandSize);
+  if (state.battle.phase === 'complete') return;
   syncMana(state.battle);
   addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures in ${stage.country}. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
   renderBattle();
@@ -603,20 +612,15 @@ function addLog(message) {
   state.battle.log = state.battle.log.slice(0, 4);
 }
 
-function reshuffleGraveyard() {
-  const battle = state.battle;
-  if (!battle || battle.deck.length || !battle.graveyard.length) return;
-  battle.deck = shuffle(battle.graveyard);
-  battle.graveyard = [];
-  addLog('Your graveyard was shuffled back into your library.');
-}
-
 function drawToHand(maxHand) {
   const battle = state.battle;
-  if (!battle) return;
+  if (!battle || battle.phase === 'complete') return;
   while (battle.hand.length < maxHand) {
-    reshuffleGraveyard();
-    if (!battle.deck.length) break;
+    if (!battle.deck.length) {
+      addLog('You tried to draw from an empty library.');
+      endRun(false, 'empty-library');
+      return;
+    }
     battle.hand.push(battle.deck.pop());
   }
 }
@@ -628,8 +632,9 @@ function freeMulligan() {
   battle.hand = [];
   battle.pendingAttachment = null;
   battle.mulliganAvailable = false;
-  drawToHand(HAND_SIZE);
-  addLog('Free mulligan: Your opening hand was shuffled back. Draw seven cards.');
+  drawToHand(battle.openingHandSize || HAND_SIZE);
+  if (battle.phase === 'complete') return;
+  addLog(`Free mulligan: Your opening hand was shuffled back. Draw ${battle.openingHandSize || HAND_SIZE} cards.`);
   renderBattle();
   playSfx('shuffle');
 }
@@ -679,6 +684,7 @@ function defaultTarget(card) {
 function creatureCanAttack(creature, turn) {
   if (hasCreatureKeyword(creature, 'defender')) return false;
   if (creature.owner === 'enemy' && creature.pattern) {
+    if (creature.attackCancelledTurn === turn) return false;
     const sick = Boolean(creature.summoningSick ?? isCreature(creature.card)) && turn <= creature.summonedTurn && !hasCreatureKeyword(creature, 'haste');
     return !sick && enemyIntent(creature, turn).kind === 'attack';
   }
@@ -701,7 +707,7 @@ function renderEnemyBoard() {
     const blocker = assignedBlockerName(battle, enemy.id);
     const keywords = creatureKeywordLabels(enemy);
     const healthPercent = Math.max(0, Math.min(100, enemy.health / enemy.maxHealth * 100));
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b>${enemy.shield ? `<span>⛨ ${enemy.shield}</span>` : ''}<span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -763,7 +769,7 @@ function showCardPreview(card, element) {
   const attached = permanent?.attachedTo ? battle.creatures.find(item => item.id === permanent.attachedTo)?.card.name : null;
   const cost = Math.ceil(card.cmc || 0);
   const lines = element.dataset.previewOwner === 'enemy'
-    ? [`Enemy: ${creature.power} attack · ${creature.health} life.`, `Attack ${creatureCanAttack(creature, battle.turn) ? 'this turn' : 'from next turn'}.`, creatureKeywordLabels(creature) || 'No special combat keywords.']
+    ? [`Enemy: ${creature.power} damage · ${creature.health} life.`, `Attack ${creatureCanAttack(creature, battle.turn) ? 'this turn' : 'from next turn'}.`, creatureKeywordLabels(creature) || 'No special combat keywords.']
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
@@ -788,7 +794,6 @@ function renderBattle() {
   hideCardPreview();
   if (battle.phase === 'main') for (const creature of battle.creatures) { if (creature.attackTargetId && !battle.enemyCreatures.some(enemy => enemy.id === creature.attackTargetId)) { creature.attackTargetId = null; creature.willAttack = false; } }
   const enemy = battle.enemy;
-  $('#shield-label').textContent = `${battle.playerBlock} shield`;
   $('#node-counter').textContent = String(state.node).padStart(2, '0');
   const stage = battle.stage || COUNTRY_STAGES[(state.node - 1) % COUNTRY_STAGES.length];
   $('#location-name').hidden = false;
@@ -911,7 +916,7 @@ function renderBlocking() {
   const attackers = battle.enemyCreatures.filter(creature => creatureCanAttack(creature, battle.turn));
   const unblocked = attackers.filter(creature => !legalBlockers(battle, creature).length);
   const damage = attackers.reduce((sum,creature)=>sum+incomingThreat(creature,legalBlockers(battle,creature)),0);
-  $('#blocking-summary').textContent = `${attackers.length - unblocked.length}/${attackers.length} attacks blocked · ${Math.max(0, damage - battle.playerBlock)} maximum direct damage after shield. Block order matters; menace needs two blockers.`;
+  $('#blocking-summary').textContent = `${attackers.length - unblocked.length}/${attackers.length} attacks blocked · ${damage} maximum direct damage. Block order matters; menace needs two blockers.`;
   $('#blocking-pairs').innerHTML = attackers.map(attacker => {
     const names = blockerIds(battle, attacker.id).map(id => battle.creatures.find(creature => creature.id === id)?.card.name).filter(Boolean);
     return `<button type="button" data-block-attacker="${attacker.id}" class="block-pair${names.length ? ' paired' : ''}${battle.selectedEnemyAttackerId === attacker.id ? ' selected' : ''}" aria-pressed="${battle.selectedEnemyAttackerId === attacker.id}"><b>${escapeHtml(attacker.card.name)}</b><span>${names.length ? names.map((name, index) => `${index + 1}. ${escapeHtml(name)}`).join('<br>') : 'Choose blockers →'}</span></button>`;
@@ -1135,11 +1140,11 @@ function drawOneExtra() {
 
 function damageFirstEnemy(amount, explicitTarget = null) {
   const battle = state.battle;
-  const enemy = explicitTarget || battle?.enemyCreatures.find(creature => creature.id === battle.selectedEnemyTargetId && creature.health > 0) || battle?.enemyCreatures.find(creature => creature.health > 0);
+  const spellTarget = battle?.resolvingSpellTarget?.side === 'enemy' ? battle.enemyCreatures.find(creature => creature.id === battle.resolvingSpellTarget.id) : null;
+  const selectedTarget = battle?.enemyCreatures.find(creature => creature.id === battle.selectedEnemyTargetId && creature.health > 0 && !hasCreatureKeyword(creature, 'hexproof'));
+  const enemy = explicitTarget || spellTarget || selectedTarget || battle?.enemyCreatures.find(creature => creature.health > 0 && !hasCreatureKeyword(creature, 'hexproof'));
   if (!enemy || amount <= 0) return 0;
-  const blocked = Math.min(enemy.shield || 0, amount);
-  enemy.shield = (enemy.shield || 0) - blocked;
-  const dealt = Math.min(enemy.health, amount - blocked);
+  const dealt = Math.min(enemy.health, amount);
   enemy.health = Math.max(0, enemy.health - dealt);
   if (dealt > 0) playSfx('hit');
   if (enemy.health <= 0) {
@@ -1155,13 +1160,21 @@ function applyOracle(card, creature = false) {
   const battle = state.battle;
   for (const effect of cardEffects(card, creature)) {
     if (effect.kind === 'damage') damageFirstEnemy(effect.amount);
+    if (effect.kind === 'cancel') {
+      const target = (battle.resolvingSpellTarget?.side === 'enemy' ? battle.enemyCreatures.find(enemy => enemy.id === battle.resolvingSpellTarget.id) : null)
+        || battle.enemyCreatures.find(enemy => enemy.id === battle.selectedEnemyTargetId && !hasCreatureKeyword(enemy, 'hexproof'))
+        || battle.enemyCreatures.find(enemy => !hasCreatureKeyword(enemy, 'hexproof'));
+      if (target) {
+        target.attackCancelledTurn = battle.turn;
+        addLog(`${target.card.name}'s attack is interrupted this turn.`);
+      }
+    }
     if (effect.kind === 'exile' || effect.kind === 'destroy') removeSpellTarget(effect.kind);
     if (effect.kind === 'heal') { state.playerHealth += effect.amount; playSfx('heal'); }
-    if (effect.kind === 'draw') for (let i = 0; i < effect.amount; i++) drawOneExtra();
-    if (effect.kind === 'shield') battle.playerBlock += effect.amount;
+    if (effect.kind === 'draw') for (let i = 0; i < effect.amount; i++) { drawOneExtra(); if (battle.phase === 'complete') return; }
     if (effect.kind === 'buff' || effect.kind === 'keywords') {
       const target = (battle.resolvingSpellTarget?.side === 'player' ? battle.creatures.find(creature => creature.id === battle.resolvingSpellTarget.id) : null) || battle.creatures.slice().sort((a, b) => b.power - a.power)[0];
-      if (!target) { if (effect.kind === 'buff') battle.playerBlock += 3; continue; }
+      if (!target) continue;
       if (effect.kind === 'buff') {
         target.power += effect.power;
         target.toughness += effect.toughness;
@@ -1280,6 +1293,14 @@ function playCard(index, targetSide = 'enemy') {
   if (targetSide === 'enemy' && isCreature(card)) return showToast('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
   if (!payment) return showToast('Not enough generic mana for this card.');
+  const targetsEnemy = !isPermanent(card) && cardEffects(card, isCreature(card)).some(effect => ['damage', 'cancel', 'destroy', 'exile'].includes(effect.kind));
+  if (targetsEnemy) {
+    const requestedId = battle.pendingSpellTarget?.side === 'enemy' ? battle.pendingSpellTarget.id : battle.selectedEnemyTargetId;
+    const enemyTarget = battle.enemyCreatures.find(enemy => enemy.id === requestedId) || battle.enemyCreatures.find(enemy => !hasCreatureKeyword(enemy, 'hexproof'));
+    if (!enemyTarget) return showToast('Every monster has Hexproof. These effects cannot target them.');
+    if (hasCreatureKeyword(enemyTarget, 'hexproof')) return showToast(`${enemyTarget.card.name} has Hexproof and cannot be targeted by your spells.`);
+    battle.resolvingSpellTarget = { side: 'enemy', id: enemyTarget.id };
+  }
   battle.mulliganAvailable = false;
   if (!payMana(card.cmc, battle)) return showToast('Not enough generic mana for this card.');
   battle.hand.splice(index, 1);
@@ -1307,7 +1328,6 @@ function playCard(index, targetSide = 'enemy') {
     applyOracle(card, true);
   } else if (isPermanent(card)) {
     battle.permanents.push({ id: `permanent-${state.nextPermanentId++}`, card, attachedTo: null });
-    battle.playerBlock += permanentEffect(card).shield;
     if (card.name === 'Omen of the Sea') beginScry(2, 1);
     refreshPermanentEffects();
     addLog(`${card.name} stays on the battlefield.`);
@@ -1315,6 +1335,7 @@ function playCard(index, targetSide = 'enemy') {
     battle.graveyard.push(card);
     applyOracle(card, false);
   }
+  if (battle.phase === 'complete') return;
   playSfx(isCreature(card) ? 'creature' : isPermanent(card) ? 'attach' : 'cast');
   if (!battle.enemyCreatures.length) return winBattle();
   renderBattle();
@@ -1382,9 +1403,6 @@ function dealCreatureDamage(source, target, controller, battle, amount = Math.ma
   if (amount <= 0) return;
   let dealt = amount;
   if (target.owner === 'enemy') {
-    const absorbed = Math.min(target.shield || 0, amount);
-    target.shield = (target.shield || 0) - absorbed;
-    dealt = Math.max(0, amount - absorbed);
     target.health = Math.max(0, target.health - dealt);
     if (dealt > 0 && hasCreatureKeyword(source, 'deathtouch')) target.health = 0;
   } else {
@@ -1425,7 +1443,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
       if (dealsInCombatStep(attacker, firstStep)) {
         let remaining = Math.max(0, attacker.power);
         blockers.forEach((blocker, index) => {
-          const lethal = hasCreatureKeyword(attacker, 'deathtouch') ? 1 + (blocker.owner === 'enemy' ? (blocker.shield || 0) : 0) : blocker.owner === 'enemy' ? Math.max(0, blocker.health + (blocker.shield || 0)) : Math.max(0, blocker.toughness - (blocker.damage || 0));
+          const lethal = hasCreatureKeyword(attacker, 'deathtouch') ? 1 : blocker.owner === 'enemy' ? Math.max(0, blocker.health) : Math.max(0, blocker.toughness - (blocker.damage || 0));
           const amount = index === blockers.length - 1 && !hasCreatureKeyword(attacker, 'trample') ? remaining : Math.min(remaining, lethal);
           if (amount > 0) exchanges.push({ source: attacker, target: blocker, controller: attackingSide, amount });
           remaining -= amount;
@@ -1555,19 +1573,12 @@ function resolveEnemyCombat() {
     if (blockers.length) assignments.set(attacker.id, blockers);
   }
   const { damageToPlayer, enemyLifelinkEvents } = resolveCombatDamage(attackers, assignments, 'enemy');
-  const prevented = Math.min(battle.playerBlock, damageToPlayer);
-  let shieldRemaining = prevented;
-  for (const event of enemyLifelinkEvents) {
-    const preventedFromThisHit = Math.min(shieldRemaining, event.damage);
-    shieldRemaining -= preventedFromThisHit;
-    gainLifelinkLife(event.creature, 'enemy', event.damage - preventedFromThisHit, battle);
-  }
-  const incoming = Math.max(0, damageToPlayer - prevented);
-  if (prevented) addLog(`Your shield absorbs ${prevented} damage.`);
+  for (const event of enemyLifelinkEvents) gainLifelinkLife(event.creature, 'enemy', event.damage, battle);
+  const incoming = damageToPlayer;
   if (incoming) {
     state.playerHealth -= incoming;
     addLog(`${incoming} damage gets through to you.`);
-  } else if (!prevented && attackers.length) {
+  } else if (attackers.length) {
     addLog('All enemy attacks were blocked.');
   }
   if (state.playerHealth <= 0) return endRun(false);
@@ -1576,7 +1587,6 @@ function resolveEnemyCombat() {
   battle.creatures.forEach(creature => { creature.damage = 0; creature.deathtouchDamage = false; });
   expireTurnEffects(battle);
   battle.creatures = removeDeadCreatures(battle.creatures, 'player');
-  battle.playerBlock = (battle.permanents || []).reduce((sum, permanent) => sum + permanentEffect(permanent.card).shield, 0);
   battle.turn += 1;
   battle.lands.forEach(land => { land.tapped = false; });
   battle.floatingMana = state.relic === 'crystal' ? 1 : 0;
@@ -1592,6 +1602,7 @@ function resolveEnemyCombat() {
   });
   for (const permanent of battle.permanents) if (permanent.card.name === 'Fountain of Renewal') state.playerHealth += 1;
   drawToHand(HAND_SIZE);
+  if (battle.phase === 'complete') return;
   renderBattle();
   playSfx('turn');
 }
@@ -1669,7 +1680,7 @@ function winBattle() {
   playSfx('victory');
 }
 
-function endRun(won) {
+function endRun(won, reason = null) {
   if (state.battle) { state.battle.phase = 'complete'; state.battle.priorityCallback = null; }
   const end = $('#end-screen');
   end.dataset.result = won ? 'win' : 'loss';
@@ -1678,7 +1689,7 @@ function endRun(won) {
   $('#end-title').textContent = won ? 'The mana path is yours.' : 'The path ends here.';
   $('#end-message').textContent = won
     ? 'You defeated the Shard Dragon and completed the run. Your booster deck came through.'
-    : `You fell in fight ${state.node}. Adjust your draft and try again.`;
+    : reason === 'empty-library' ? 'You tried to draw from an empty library. Your expedition ends here.' : `You fell in fight ${state.node}. Adjust your draft and try again.`;
   $('#run-summary').innerHTML = `<span>RUN <b>${state.node} / 4</b></span><span>DECK <b>${state.deck.length}</b></span><span>LIFE <b>${Math.max(0, state.playerHealth)}</b></span>`;
   showScreen('end-screen');
   playSfx(won ? 'victory' : 'defeat');
@@ -1778,7 +1789,7 @@ function showJourney() {
   $('#journey-description').textContent = first ? 'One relic. A different way to play. Your choice lasts for this run.' : 'Life carries between encounters. Prepare before you continue.';
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
   $('#journey-options').innerHTML = first
-    ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="ward"><span>⛨</span><h3>Ancient Ward</h3><p>Begin each battle with 4 shield.</p></button>'
+    ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="lens"><span>⌖</span><h3>Wayfinder’s Lens</h3><p>Begin each battle with one extra card.</p></button>'
     : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life. No life cap.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add Divination: draw two cards.</p></button>';
   $('#journey-life').textContent = `${state.playerHealth} LIFE · ${state.deck.length} CARDS · ${state.coins || 0} COINS`;
   $('#return-shop').hidden = first;
@@ -1902,17 +1913,24 @@ function drawCombatArrows() {
     const from = center(fromElement, 'top');
     const to = center(toElement, route.to === 'player' ? 'bottom' : 'top');
     if (!from || !to) return '';
-    const lift = 30 + index % 3 * 12;
-    const c1 = { x: from.x + (route.kind === 'ally' ? 50 : -70), y: Math.max(32, from.y - lift) };
-    const c2 = route.to === 'player' ? { x: to.x + 60, y: to.y + 18 } : { x: to.x + (route.kind === 'ally' ? -70 : 80), y: Math.max(32, to.y - lift) };
+    const lift = 38 + index % 3 * 16;
+    const c1 = { x: from.x + (route.kind === 'ally' ? 72 : -86), y: Math.max(30, from.y - lift) };
+    const c2 = route.to === 'player' ? { x: to.x + 72, y: to.y + 18 } : { x: to.x + (route.kind === 'ally' ? -88 : 96), y: Math.max(30, to.y - lift) };
     const label = { x: (from.x + 3 * c1.x + 3 * c2.x + to.x) / 8, y: (from.y + 3 * c1.y + 3 * c2.y + to.y) / 8 };
     const units = [...battle.creatures, ...battle.enemyCreatures];
     const fromName = units.find(unit => unit.id === route.from)?.card.name || '';
     const toName = route.to === 'player' ? 'Your life' : units.find(unit => unit.id === route.to)?.card.name || '';
     const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'blocked attack' : 'attack'}`;
-    return `<g class="combat-route route-${route.kind}" data-arrow-kind="${route.kind}" data-from-id="${escapeHtml(route.from)}" data-to-id="${escapeHtml(route.to)}"><title>${escapeHtml(title)}</title><path d="M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}" marker-end="url(#arrow-${route.kind})"/><g transform="translate(${label.x},${label.y})"><rect x="-14" y="-10" width="28" height="20" rx="10"/><text text-anchor="middle" dominant-baseline="central">${route.damage}</text></g></g>`;
+    const curve = `M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}`;
+    return `<g class="combat-route route-${route.kind}" data-arrow-kind="${route.kind}" data-from-id="${escapeHtml(route.from)}" data-to-id="${escapeHtml(route.to)}"><title>${escapeHtml(title)}</title><path class="route-glow" d="${curve}"/><circle class="route-target" cx="${to.x}" cy="${to.y}" r="6"/><path class="route-line" d="${curve}" marker-end="url(#arrow-${route.kind})"/><circle class="route-source" cx="${from.x}" cy="${from.y}" r="4"/><g class="route-damage" transform="translate(${label.x},${label.y})"><rect x="-20" y="-12" width="40" height="24" rx="12"/><text text-anchor="middle" dominant-baseline="central">${route.damage}</text></g></g>`;
   }).join('');
-  svg.innerHTML = `<defs>${['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrowhead-${kind}" d="M 1 1 L 9 5 L 1 9 Z"/></marker>`).join('')}</defs>${paths}`;
+  const gradients = {
+    ally: '<linearGradient id="arrow-gradient-ally"><stop stop-color="#fff0b8"/><stop offset=".55" stop-color="#f0c36d"/><stop offset="1" stop-color="#ffe9a8"/></linearGradient>',
+    enemy: '<linearGradient id="arrow-gradient-enemy"><stop stop-color="#ffd2bb"/><stop offset=".5" stop-color="#e77969"/><stop offset="1" stop-color="#ffb299"/></linearGradient>',
+    block: '<linearGradient id="arrow-gradient-block"><stop stop-color="#d3fff2"/><stop offset=".5" stop-color="#70d6c2"/><stop offset="1" stop-color="#bbfff0"/></linearGradient>'
+  };
+  const markers = ['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead-${kind}" d="M 1 1 L 9 5 L 1 9 Z"/></marker>`).join('');
+  svg.innerHTML = `<defs>${Object.values(gradients).join('')}<filter id="arrow-soft-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.5"/></filter>${markers}</defs>${paths}`;
 }
 window.addEventListener('resize', () => requestAnimationFrame(drawCombatArrows));
 
@@ -1939,7 +1957,7 @@ function openCollection(kind = 'deck') {
   for(const id of ['collection-type','collection-mana','collection-keyword','collection-color']) $('#'+id).value='';
   $('#collection-title').textContent = kind === 'catalog' ? 'Verified card collection' : kind === 'library' ? 'Your library' : kind === 'exile' ? 'Exile' : 'Your run deck';
   $('#collection-kind').textContent = kind.toUpperCase();
-  $('#collection-note').textContent = kind === 'catalog' ? 'Loading the curated Magic list and current card data from Scryfall. Printed keywords and adapted effects are described in each card inspector.' : kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters cannot return through graveyard recycling. Exile lasts for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
+  $('#collection-note').textContent = kind === 'catalog' ? 'Loading the curated Magic list and current card data from Scryfall. Printed keywords and adapted effects are described in each card inspector.' : kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters are removed for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
   renderCollection(); hideCardPreview(); $('#collection-dialog').showModal();
 }
 function renderCollection() {
