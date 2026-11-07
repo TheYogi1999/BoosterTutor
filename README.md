@@ -1,44 +1,44 @@
 # Booster Tutor
 
-**Booster Tutor** ist ein browserbasiertes, inoffizielles Mana-Roguelike-Demo mit Booster-Draft, Kartenkampf und Boss-Run.
+**Booster Tutor** is a browser-based, unofficial mana roguelike demo with booster drafting, creature combat, and a boss run.
 
-**Demo-Version: 0.5**
+**Demo version: 0.6**
 
-## Spielen
+## Play
 
-Das Projekt ist eine statische Website ohne Build-Schritt. Die Dateien können über GitHub Pages ausgeliefert werden. Der Workflow unter `.github/workflows/pages.yml` ist dafür vorbereitet und lässt sich manuell starten.
+This is a static website with no build step. GitHub Pages can serve the files; the workflow in `.github/workflows/pages.yml` is ready to run manually.
 
-Für lokale Vorschau einen einfachen statischen Webserver im Projektordner starten, zum Beispiel:
+For a local preview, start a static web server in the project folder:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Anschließend `http://localhost:8000` im Browser öffnen. Beim Start lädt das Spiel eine kleine Auswahl echter Karten aus der Scryfall API. Die Auswahl wird im Browser 12 Stunden zwischengespeichert; ohne Verbindung nutzt das Spiel ein paar eigens geschriebene Demo-Karten.
+Then open `http://localhost:8000`. On startup, the game loads real card data and images from the Scryfall API. The selection is cached in the browser for 12 hours; a small set of demo cards is available offline.
 
-## Spielsystem
+## Game systems
 
-- Starte mit drei Boostern zu je fünf Karten. Wähle eine Karte aus jedem Booster; jede Auswahl kommt viermal in dein Deck.
-- Zehn farblich passende Basisländer liegen ebenfalls im Deck. Ziehe ein Land auf dein Spielfeld und spiele pro Zug höchstens eines. Länder erzeugen Mana und werden beim Ausspielen von Zaubern automatisch passend zu deren farbigen und generischen Manakosten getappt.
-- Zu Beginn ziehst du fünf Karten aus deinem Deck. Nach jeder Runde zieht das Spiel automatisch wieder auf fünf Karten auf; wenn die Bibliothek leer ist, wird der Friedhof neu gemischt.
-- Zu Beginn jedes Kampfes kannst du vor der ersten Aktion einmal kostenlos mulliganen und wieder fünf Karten ziehen.
-- Kreaturen kommen per Drag-and-drop auf dein Feld und greifen standardmäßig beim Zugende an. Klicke eine Kreatur an, um sie zum Blocken zurückzuhalten. In der Blockphase wählst du erst den Angreifer rechts und dann den Blocker links; alternativ kannst du den Blocker auf den Angreifer ziehen.
-- Der Gegner spielt echte Kreaturen aus dem Kartenpool, die angreifen und deine Angriffe blocken. Das Kampfmodell ist vereinfacht.
-- Flugfähigkeit braucht zum Blocken Flugfähigkeit oder Reichweite. Erstschlag und Doppelschlag erhalten getrennte Schadensschritte; Todesberührung zerstört Kreaturen, und Lebensverknüpfung heilt den Besitzer. Erkannte Boni „bis zum Ende des Zuges“ laufen nach dem Kampf aus.
-- Die Boosteröffnung zeigt eine kurze Kartenenthüllung mit Synthesizer-Sound; der Ton lässt sich oben ausschalten.
-- Deine Lebenspunkte starten vor jedem Kampf wieder bei 30.
-- Du kannst Karten aus der Hand ziehen und auf dein Feld oder das Feld des Gegners legen. Klicken spielt sie ebenfalls aus.
-- Einige Kartentexte werden über Muster für Schaden, Heilung, Kartenziehen, Kreaturenstärkung, Kontern und Spielsteine umgesetzt. Nicht erkannte Zaubereffekte erhalten eine einfache, manaabhängige Schadenswirkung. Das ist eine Roguelike-Interpretation und keine vollständige Magic-Regelsimulation.
-- Nach jedem besiegten Gegner wählst du eine Karte als Beute. Der vierte Kampf ist der Boss.
+- Start with three boosters of five cards each. Choose one card from every booster; each pick adds four copies to your deck.
+- Your starter deck also contains ten basic lands. Play up to one land per turn. Every land adds one shared mana, and any land can pay any card's total mana value. Colored symbols remain visible on cards but do not restrict payment.
+- Draw five cards at the start of a fight and automatically refill to five cards after each turn. If your library runs out, your graveyard is shuffled back in.
+- Before your first action in each fight, you can take one free mulligan and draw five new cards.
+- Play creatures by dragging them onto your battlefield or clicking them in your hand. Creatures attack at the end of your turn unless you click one to hold it back. Held-back creatures can block enemy attackers. Click an enemy attacker, then click one of your creatures to block it; you can also drag your blocker onto an attacker.
+- Each encounter starts with a team of creature-card enemies. They do not draw or cast cards. Every enemy has its own life bar and can be defeated by combat or spell damage. Enemies with summoning sickness wait until the next turn before attacking; haste can attack immediately. Artifact creatures are exempt from summoning sickness in this prototype.
+- Creatures that die go to your graveyard. Spells go there after you cast them. Open the Graveyard button to inspect the pile.
+- Flying can only be blocked by flying or reach. First strike and double strike use separate damage steps; deathtouch destroys creatures, and lifelink restores life. Recognized “until end of turn” effects expire after combat.
+- The booster opening has a card reveal animation and synthesized sound. You can turn sound off in the top bar.
+- Your life resets to 30 before every fight.
+- Some card text is interpreted through patterns for damage, healing, card draw, creature buffs, counterspells, and tokens. Unrecognized spell effects use a simple mana-based damage effect. This is a roguelike interpretation, not a complete Magic rules simulation.
+- After each encounter, choose a card as a reward. The fourth fight is the boss.
 
-## Kartendaten, Bilder und Fan-Projekt-Hinweis
+## Card data, images, and fan project notice
 
-Kartendaten und Bilder werden zur Laufzeit von Scryfall geladen; sie sind nicht im Repository enthalten. Scryfall ist eine unabhängige Kartendatenbank, nicht die offizielle Wizards of the Coast Website. Die Kartenbilder und Kartentexte gehören ihren jeweiligen Rechteinhabern. Das Projekt ist nicht von Wizards of the Coast unterstützt oder gesponsert.
+Card data and images are loaded from Scryfall at runtime; they are not stored in this repository. Scryfall is an independent card database, not the official Wizards of the Coast website. Card images and text belong to their respective rights holders. This project is not endorsed or sponsored by Wizards of the Coast.
 
-Wizards' [Fan-Content-Richtlinie](https://company.wizards.com/en/legal/fancontentpolicy) enthält Beschränkungen für Wizards-IP in anderen Spielen, auch wenn sie kostenlos sind. Vor einer öffentlichen Verbreitung sollte diese Richtlinie geprüft werden; diese Demo beansprucht keine Erlaubnis von Wizards.
+The Wizards [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy) has limits on the use of Wizards IP in games, including free games. Review the policy before distributing the demo publicly; this project does not claim permission from Wizards.
 
 ## GitHub Pages
 
-1. In den Repository-Einstellungen unter **Pages** als Build-Quelle **GitHub Actions** auswählen, falls GitHub das nicht schon automatisch getan hat.
-2. Änderungen nach `main` übertragen oder den Workflow manuell mit **Actions → Deploy GitHub Pages → Run workflow** starten.
-3. Die veröffentlichte URL wird im Workflow-Lauf unter **Deploy** angezeigt.
+1. In the repository settings under **Pages**, select **GitHub Actions** as the build source if it is not already selected.
+2. Push changes to `main` or manually run the workflow under **Actions → Deploy GitHub Pages → Run workflow**.
+3. The published URL is shown in the workflow run under **Deploy**.
