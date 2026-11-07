@@ -17,8 +17,8 @@
         <span>BOOSTER TUTOR <small>Mana Roguelike</small></span>
       </a>
       <div class="topbar-right">
-        <span class="pixel-label"><i class="status-dot"></i> DEMO BUILD 0.2</span>
-        <button class="icon-button" id="sound-toggle" aria-label="Ton umschalten" title="Ton umschalten">♪ <span>TON AUS</span></button>
+        <span class="pixel-label"><i class="status-dot"></i> DEMO BUILD 0.4</span>
+        <button class="icon-button" id="sound-toggle" aria-label="Ton ausschalten" title="Ton ausschalten">♪ <span>TON AN</span></button>
       </div>
     </header>
 
@@ -97,7 +97,7 @@
             <div class="arena-zone-header"><span>DEINE LÄNDER</span><small id="land-count">0</small></div>
             <div class="land-row drop-zone" id="land-row" data-zone="lands" aria-label="Länderzone. Landkarten hier ablegen."></div>
             <div class="arena-zone-header creatures-zone-header"><span>DEINE KREATUREN</span><small id="creature-count">0 / 3</small></div>
-            <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Kreaturenfeld. Kreaturen hier ablegen."><div class="empty-board">Kreaturen hier ablegen oder eine Karte ausspielen.</div></div>
+            <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Kreaturenfeld. Kreaturen hier ablegen. Klicke eine Kreatur an, um sie zum Blocken zurückzuhalten."><div class="empty-board">Kreaturen hier ablegen oder eine Karte ausspielen.</div></div>
             <div class="drop-hint">Kreaturen und Länder hier ablegen</div>
           </section>
 
@@ -113,8 +113,8 @@
               <div class="enemy-art" id="enemy-art" aria-hidden="true"><img id="enemy-art-image" alt="" /><span class="enemy-sprite">♟</span><div class="enemy-shadow"></div></div>
             </div>
             <div class="arena-zone-header"><span>GEGNERISCHES SPIELFELD</span><small>GEGENSPIELER</small></div>
-            <div class="enemy-board" id="enemy-board"><div class="enemy-intent" id="enemy-intent"><span class="intent-icon">⚔</span><span>Angriff geplant</span><b>4</b></div></div>
-            <div class="drop-hint">Zauber auf den Gegner ablegen</div>
+            <div class="enemy-board" id="enemy-board" aria-label="Gegnerische Kreaturen und Angriffe"><div class="enemy-intent" id="enemy-intent"><span class="intent-icon">⚔</span><span>Angriff geplant</span><b>4</b></div></div>
+            <div class="drop-hint">Gegnerische Angreifer wählen, um Blocker zuzuweisen</div>
           </section>
         </div>
 
@@ -124,10 +124,11 @@
         </div>
 
         <div class="hand-panel">
-          <div class="hand-heading"><div><span>DEINE HAND</span><small id="hand-count">0 KARTEN</small></div><div class="hand-help">Karte ziehen und auf dein oder das gegnerische Feld legen</div></div>
+          <div class="hand-heading"><div><span>DEINE HAND</span><small id="hand-count">0 KARTEN</small></div><div class="hand-help" id="combat-action-hint">Karten aus deinem Deck · ziehe auf ein Feld oder klicke zum Spielen</div></div>
           <div class="hand-row" id="hand-row"></div>
           <div class="turn-footer">
             <div class="discard-info"><span>⬇</span> Friedhof <b id="discard-count">0</b><span class="library-count">Bibliothek</span> <b id="library-count">0</b></div>
+            <button class="mulligan-button" id="mulligan-button" type="button">KOSTENLOSER MULLIGAN <span>↻</span></button>
             <button class="end-turn-button" id="end-turn-button">ZUG BEENDEN <span>→</span></button>
           </div>
         </div>
