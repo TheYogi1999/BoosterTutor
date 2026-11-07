@@ -13,6 +13,8 @@ html:not(.responsive-game) .game-shell .draft-option .card-image-wrap{height:210
 /* The combat canvas always fits the screen. Portrait uses opposing ranks so
    the whole board remains visible without horizontal or vertical scrolling. */
 html.combat-game,html.combat-game body{width:100%;height:100%;overflow:hidden!important;overscroll-behavior:none}
+html.combat-game body{position:fixed;inset:0}
+html.combat-game .game-shell{left:var(--game-center-x,50%);top:var(--game-center-y,50%)}
 html.combat-game:not(.portrait-combat) .game-shell .player-panel .creature-group>.creature-token{width:114px!important;flex-basis:114px!important}
 html.portrait-combat .game-shell{width:760px;height:var(--combat-height);display:grid;grid-template-rows:64px minmax(0,1fr);padding:0 10px}
 html.portrait-combat .game-shell .topbar{width:100%;height:64px;gap:8px;padding:0;flex-wrap:nowrap}

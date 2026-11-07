@@ -1904,12 +1904,19 @@ function inspectBattlefieldCard(card, element) {
 function fitGameCanvas() {
   const root = document.documentElement;
   const combat = state.screen === 'combat-screen';
+  const viewport = window.visualViewport;
+  // Safari can report a slightly rounded scale at normal zoom. Its visible
+  // viewport can also be shorter than the layout viewport while bars are open.
+  const useVisibleViewport = viewport && Math.abs(viewport.scale - 1) < 0.01;
+  const width = useVisibleViewport ? viewport.width : window.innerWidth;
+  const height = useVisibleViewport ? viewport.height : window.innerHeight;
   const smallScreen = window.matchMedia('(max-width: 1200px), (pointer: coarse) and (max-width: 1400px)').matches;
-  const portrait = combat && smallScreen && window.innerHeight > window.innerWidth;
-  const height = window.visualViewport?.scale === 1 ? window.visualViewport.height : window.innerHeight;
+  const portrait = combat && smallScreen && height > width;
   const canvasWidth = portrait ? 760 : 1600;
-  const scale = Math.min(window.innerWidth / canvasWidth, height / (portrait ? 1100 : 900));
+  const scale = Math.min(width / canvasWidth, height / (portrait ? 1100 : 900));
   root.style.setProperty('--game-scale', smallScreen && !combat ? 1 : scale);
+  root.style.setProperty('--game-center-x', `${(useVisibleViewport ? viewport.offsetLeft : 0) + width / 2}px`);
+  root.style.setProperty('--game-center-y', `${(useVisibleViewport ? viewport.offsetTop : 0) + height / 2}px`);
   root.style.setProperty('--combat-height', `${Math.max(1100, height / scale)}px`);
   root.classList.toggle('responsive-game', smallScreen && !combat);
   root.classList.toggle('combat-game', combat);
@@ -1918,6 +1925,7 @@ function fitGameCanvas() {
 }
 window.addEventListener('resize', fitGameCanvas);
 window.visualViewport?.addEventListener('resize', fitGameCanvas);
+window.visualViewport?.addEventListener('scroll', () => { if (state.screen === 'combat-screen') fitGameCanvas(); });
 fitGameCanvas();
 
 $('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Fullscreen is unavailable in this browser.')); });
