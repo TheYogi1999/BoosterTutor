@@ -196,6 +196,7 @@ h1 span { display: inline-block; color: #dfc38a; font-style: italic; }
 .creature-meta { min-width: 0; padding-top: 5px; }
 .creature-meta b { display: block; overflow: hidden; color: #faf5e8; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
 .creature-meta small { display: block; margin-top: 3px; color: #b7c9b8; font-size: 7px; line-height: 1.3; }
+.creature-meta .creature-keywords { overflow: hidden; color: #efd28b; font-size: 6px; text-overflow: ellipsis; white-space: nowrap; }
 .creature-stats { position: absolute; right: 4px; bottom: 4px; padding: 3px 5px; border: 1px solid #f3d38c; border-radius: 5px; color: #18211e; background: #e6c67d; font-size: 8px; font-weight: 800; }
 .summoning-sick { color: #e1c780 !important; }
 .empty-board { width: 100%; color: #9bb1a1; font-size: 10px; line-height: 1.5; text-align: center; }
@@ -370,7 +371,7 @@ h1 span { display: inline-block; color: #dfc38a; font-style: italic; }
   .run-summary { gap: 14px; font-size: 9px; }
 }
 
-/* Booster Tutor 0.4: card-sized hand, attack choices and block phase. */
+/* Booster Tutor 0.5: card-sized hand, attack choices and block phase. */
 .draft-screen.opening .booster-pack {
   animation: booster-pack-reveal .62s cubic-bezier(.18,.8,.25,1) both;
   animation-delay: calc(var(--pack-index, 0) * 110ms);
@@ -434,7 +435,7 @@ h1 span { display: inline-block; color: #dfc38a; font-style: italic; }
   position: relative;
   display: grid;
   flex: 0 0 92px;
-  grid-template-rows: 54px auto auto;
+  grid-template-rows: 54px auto auto auto;
   gap: 3px;
   min-height: 104px;
   padding: 4px;
@@ -455,6 +456,8 @@ h1 span { display: inline-block; color: #dfc38a; font-style: italic; }
 .enemy-creature > b { display: block; overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
 .enemy-creature-stats { position: absolute; top: 5px; right: 5px; padding: 2px 4px; border-radius: 4px; color: #211c18; background: #e7c780; font-size: 7px; font-weight: 800; }
 .enemy-creature > small { display: block; overflow: hidden; color: #dfb3a3; font-size: 6px; text-overflow: ellipsis; white-space: nowrap; }
+.enemy-creature > .enemy-keywords { color: #efd28b; }
+.enemy-creature > .enemy-block-status { color: #9ed8bd; }
 .empty-enemy-board { align-self: center; max-width: 190px; padding: 10px; color: #bd9d91; font-size: 9px; text-align: center; }
 .enemy-attack-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 7px; }
 .enemy-intent { min-height: 36px; font: inherit; }
@@ -484,10 +487,11 @@ button.enemy-intent.selected { border-color: #f2d58d; box-shadow: 0 0 0 2px #f2d
   .hand-card:hover, .hand-card:focus-visible { transform: translateY(-13px) rotate(0) scale(1.06); }
   .enemy-board { min-height: 160px; gap: 5px; padding: 4px 1px; }
   .enemy-creatures-row { min-height: 102px; gap: 3px; justify-content: flex-start; }
-  .enemy-creature { flex-basis: 66px; grid-template-rows: 42px auto auto; min-height: 88px; padding: 3px; }
+  .enemy-creature { flex-basis: 66px; grid-template-rows: 42px auto auto auto; min-height: 88px; padding: 3px; }
   .enemy-creature-art { height: 42px; }
   .enemy-creature > b { font-size: 6px; }
   .enemy-creature > small { font-size: 5px; }
+  .creature-meta .creature-keywords { font-size: 5px; }
   .enemy-intent { min-height: 30px; gap: 3px; padding: 5px 6px; font-size: 6px; }
   .enemy-intent small { font-size: 5px; }
   .block-total { font-size: 6px; }
