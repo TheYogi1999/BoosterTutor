@@ -16,7 +16,6 @@
 .game-shell .player-side-header{position:relative!important;height:94px!important;grid-template-columns:minmax(0,1fr) 108px!important;grid-template-rows:40px 48px!important;column-gap:12px!important;row-gap:4px!important;margin:0!important}
 .game-shell .player-side-header .side-identity{grid-column:1;grid-row:1;display:flex!important;align-items:center!important;gap:11px!important;min-width:0;padding-left:51px}
 .game-shell .player-side-header .health-label{display:flex!important;align-items:center;gap:6px;white-space:nowrap}
-.game-shell .player-side-header .shield-label{white-space:nowrap}
 .game-shell .player-side-header .mana-display{grid-column:2;grid-row:1;width:108px!important;min-width:108px!important;height:40px!important;margin:0!important}
 .game-shell .mana-land-row{grid-column:1/-1;grid-row:2;display:flex;align-items:center;gap:6px;height:48px;min-width:0;padding:0 2px;overflow:visible}
 .game-shell .mana-land{position:relative;display:block;flex:0 0 34px;width:34px;height:47px;margin:0;padding:0;overflow:hidden;border:1px solid #d8c18a88;border-radius:4px;background:#101a20;box-shadow:0 3px 9px #0008;cursor:help;transition:transform .2s,filter .2s,box-shadow .2s}
@@ -47,11 +46,27 @@
 .game-shell .monster-health-track{display:block;width:100%;height:5px;overflow:hidden;border:1px solid #e7e4d833;border-radius:999px;background:#14191d;box-shadow:inset 0 1px 2px #0008}
 .game-shell .monster-health-track>i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#698f72,#b3cc8d);box-shadow:0 0 9px #9ac57a88;transition:width .4s ease}
 .game-shell .monster-life{white-space:nowrap}
-.game-shell .route-ally>path{stroke:#f4d895;stroke-width:3;stroke-dasharray:10 5;filter:drop-shadow(0 0 5px #f0cc78aa);animation:combat-arrow-flow 1.05s linear infinite}
-.game-shell .route-enemy>path{stroke:#ec927e;stroke-width:2.8;filter:drop-shadow(0 0 5px #e8817099);animation:combat-arrow-flow 1.5s linear infinite}
-.game-shell .route-block>path{stroke:#a6e4d6;stroke-width:3.2;stroke-dasharray:3 4;filter:drop-shadow(0 0 5px #83dfc188)}
-.game-shell .combat-route rect{stroke-width:1.5;filter:drop-shadow(0 0 6px #0009)}
-.game-shell .combat-route text{font-size:12px;font-weight:800}
-@keyframes combat-arrow-flow{to{stroke-dashoffset:-30}}
-@media(prefers-reduced-motion:reduce){.game-shell .route-ally>path,.game-shell .route-enemy>path{animation:none}}
+.game-shell .intent-recover{border-color:#9ed3a5;background:linear-gradient(120deg,#1e3d31,#2e573d);color:#d8f0c9}
+.game-shell .intent-buff{border-color:#90bce4;color:#c8ddf4}
+.game-shell .combat-route .route-glow{fill:none;stroke-width:12;opacity:.48;filter:url(#arrow-soft-glow)}
+.game-shell .combat-route .route-line{fill:none;stroke-linecap:round;stroke-width:3.3;stroke-dasharray:12 7;filter:drop-shadow(0 0 4px #000b)}
+.game-shell .route-ally .route-glow,.game-shell .route-ally .route-source,.game-shell .route-ally .route-target{stroke:#f6d57f}
+.game-shell .route-ally .route-line{stroke:url(#arrow-gradient-ally);animation:combat-arrow-flow .92s linear infinite}
+.game-shell .route-enemy .route-glow,.game-shell .route-enemy .route-source,.game-shell .route-enemy .route-target{stroke:#f08a78}
+.game-shell .route-enemy .route-line{stroke:url(#arrow-gradient-enemy);stroke-dasharray:8 8;animation:combat-arrow-flow 1.15s linear infinite}
+.game-shell .route-block .route-glow,.game-shell .route-block .route-source,.game-shell .route-block .route-target{stroke:#8de0ce}
+.game-shell .route-block .route-line{stroke:url(#arrow-gradient-block);stroke-dasharray:4 5}
+.game-shell .combat-route .route-glow{stroke-opacity:.75}
+.game-shell .combat-route .route-source{fill:#121a1d;stroke-width:2.5}
+.game-shell .combat-route .route-target{fill:#182126;stroke-width:2.6}
+.game-shell .route-damage rect{fill:#101a21ef;stroke-width:1.5;filter:drop-shadow(0 3px 6px #000b)}
+.game-shell .route-ally .route-damage rect{stroke:#f2d18c}
+.game-shell .route-enemy .route-damage rect{stroke:#ef9884}
+.game-shell .route-block .route-damage rect{stroke:#8fddcc}
+.game-shell .combat-route text{fill:#fff6dc;font:800 12px var(--sans);paint-order:stroke;stroke:#091116;stroke-width:2px;stroke-linejoin:round}
+.game-shell .arrowhead-ally{fill:#f2d18c}
+.game-shell .arrowhead-enemy{fill:#ef9884}
+.game-shell .arrowhead-block{fill:#8fddcc}
+@keyframes combat-arrow-flow{to{stroke-dashoffset:-38}}
+@media(prefers-reduced-motion:reduce){.game-shell .route-ally .route-line,.game-shell .route-enemy .route-line{animation:none}}
 @media(max-width:650px){.game-shell .hero-avatar{right:7%;bottom:4%;width:70px;height:70px;font-size:36px}.game-shell .avatar-choice{min-height:58px}.game-shell .avatar-choice small{font-size:8px}.game-shell .player-panel{grid-template-rows:94px 18px 220px 18px 88px!important}.game-shell .player-panel .creature-row{height:220px!important}.game-shell .player-panel .creature-group{height:218px!important}.game-shell .player-panel .creature-group>.creature-token{width:103px!important;flex-basis:103px!important}}
