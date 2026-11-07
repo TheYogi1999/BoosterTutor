@@ -8,3 +8,10 @@
 @media(prefers-reduced-motion:reduce){.game-shell .draft-screen.opening .card-image-wrap,.game-shell .draft-screen.opening .draft-grid:after{animation:none!important}.game-shell .arena-table{transition:none}.rule-dialog #rule-options .selected{transform:none}}
 
 .game-shell .hand-panel:has(#copy-spell-status:not([hidden])) .phase-status{left:490px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px}
+
+/* Keep travelling foil, reveal flares and raised cards out of scroll layout. */
+.game-shell .draft-grid{overflow:clip!important;overflow-clip-margin:22px}
+/* An engraved gold crest, aligned with the centre of the printed card. */
+.new-card-badge{top:-12px;left:50%;transform:translateX(-50%);min-width:76px;box-sizing:border-box;padding:6px 18px 7px;border:1px solid #f8db9a;border-radius:2px;background:linear-gradient(180deg,#fbdda2 0%,#ba843b 9%,#4c301b 17%,#80532b 48%,#392316 82%,#d7ab62 94%,#ffe6ae 100%);color:#fff0c5;font:700 12px/1 Georgia,'Times New Roman',serif;letter-spacing:2px;text-align:center;text-shadow:0 1px 2px #160b05,0 0 8px #ffc36966;box-shadow:inset 0 0 0 2px #2d1b1466,inset 0 0 8px #f7cf6a33,0 0 0 1px #5e3b22,0 0 14px #f4a13b66,0 3px 9px #0009;filter:drop-shadow(0 0 5px #ffc45b33)}
+.new-card-badge:before,.new-card-badge:after{content:'';position:absolute;top:50%;width:5px;height:5px;background:#ffe6ad;box-shadow:0 0 5px #f7b85c;transform:translateY(-50%) rotate(45deg)}
+.new-card-badge:before{left:7px}.new-card-badge:after{right:7px}
