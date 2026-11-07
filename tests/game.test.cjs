@@ -135,12 +135,12 @@ test('mulligan cancels pending aura targets before the hand changes',()=>{
  run("state.battle.creatures=[{id:'p',owner:'player',card:{name:'Guard'},power:2,toughness:3}];state.battle.hand=[FIXTURES.find(card=>card.id==='fixture-aura')];playCard(0);freeMulligan();selectAttachmentTarget('p');");
  assert.equal(run('state.battle.pendingAttachment'),null);assert.equal(run('state.battle.permanents.length'),0);assert.equal(run('state.battle.mana'),20);assert.equal(run('state.battle.hand.length'),7);
 });
-test('the shipped pool contains 60 real cards with locally available JPEGs',()=>{
+test('the shipped pool contains 81 real cards with locally available JPEGs',()=>{
  const run=game();
- assert.equal(run('BUNDLED_CARDS.length'),60);
+ assert.equal(run('BUNDLED_CARDS.length'),81);
  assert.equal(run("BUNDLED_CARDS.every(card=>card.verified && /^[a-f0-9-]{36}$/.test(card.id) && !card.id.startsWith('demo-'))"),true);
  const cards=JSON.parse(run('JSON.stringify(BUNDLED_CARDS)'));
- assert.equal(new Set(cards.map(card=>card.id)).size,60);
+ assert.equal(new Set(cards.map(card=>card.id)).size,81);
  for(const card of cards){assert.equal(fs.readFileSync(card.image).readUInt16BE(0),0xffd8);}
  assert.equal(cards.find(card=>card.name==='Grizzly Bears').power,'2');
 });

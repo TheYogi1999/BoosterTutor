@@ -8,7 +8,7 @@ const STARTING_LIFE = 20;
 const CARD_POOL_FILE = 'card-pool.txt';
 const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
 const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
-const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v2';
+const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v3';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
 const SEEN_CARD_KEY = 'booster-tutor-seen-cards-v1';
 const seenCardKeys = new Set();
@@ -1940,6 +1940,7 @@ async function openCurrentBooster() {
       if (state.screen === 'draft-screen') {
         $('#pack-reroll').disabled = Boolean(state.rerolledPacks?.has(travel.index));
         $('#selection-status').textContent = 'Choose one of seven cards.';
+        if (typeof syncBoosterConfirm27 === 'function') syncBoosterConfirm27();
       }
     }
   }
@@ -2253,6 +2254,7 @@ function openCollection(kind = 'deck') {
   $('#collection-search').value = '';
   for(const id of ['collection-type','collection-mana','collection-keyword','collection-color','collection-seen','collection-rules']) $('#'+id).value='';
   $('#collection-seen').hidden = kind !== 'catalog';
+  $('#collection-rules').hidden = kind !== 'catalog';
   $('#collection-dialog').dataset.kind = kind;
   $('#collection-title').textContent = kind === 'catalog' ? 'Verified card collection' : kind === 'library' ? 'Your library' : kind === 'exile' ? 'Exile' : 'Your run deck';
   $('#collection-kind').textContent = kind.toUpperCase();

@@ -387,3 +387,38 @@ Secluded Steppe
 Terramorphic Expanse
 Tranquil Thicket
 Zoetic Cavern
+
+Village Rites
+Thrill of Possibility
+Cathartic Reunion
+Altar's Reap
+Raise Dead
+Doublecast
+Clone
+Snakeskin Veil
+Hunger of the Howlpack
+Invigorating Surge
+Duress
+Reverberate
+
+Brainstorm
+Opt
+Preordain
+Serum Visions
+Quick Study
+Concentrate
+Harmonize
+Veteran Cavalier
+Vigilant Baloth
+Abbey Griffin
+Serra Sphinx
+Armored Griffin
+Tomakul Honor Guard
+Waterfall Aerialist
+Rimeshield Frost Giant
+Su-Chi Cave Guard
+Scour from Existence
+Iona's Judgment
+Angelic Edict
+Final Judgment
+Booster Tutor

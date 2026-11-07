@@ -1117,5 +1117,387 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/5996feb4-02ac-45e8-a7f2-966cf74391dc.jpg",
     "uri": "https://scryfall.com/card/m13/145/reverberate?utm_source=api",
     "verified": true
+  },
+  {
+    "id": "1ede3080-8c47-48a0-b757-92c3fa91fac0",
+    "name": "Brainstorm",
+    "mana_cost": "{U}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Draw three cards, then put two cards from your hand on top of your library in any order.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/1ede3080-8c47-48a0-b757-92c3fa91fac0.jpg",
+    "uri": "https://scryfall.com/card/trc/434/brainstorm?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "bbc99a51-1501-4525-a3cc-f48249b64bed",
+    "name": "Opt",
+    "mana_cost": "{U}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Scry 1. (Look at the top card of your library. You may put that card on the bottom.)\nDraw a card.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Scry"
+    ],
+    "image": "assets/cards/bbc99a51-1501-4525-a3cc-f48249b64bed.jpg",
+    "uri": "https://scryfall.com/card/tdc/158/opt?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "dd29a0e5-c1de-4e8a-8866-715e9f9cde1f",
+    "name": "Preordain",
+    "mana_cost": "{U}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Scry 2, then draw a card. (To scry 2, look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Scry"
+    ],
+    "image": "assets/cards/dd29a0e5-c1de-4e8a-8866-715e9f9cde1f.jpg",
+    "uri": "https://scryfall.com/card/tdc/161/preordain?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "5b75eb6b-d76c-4b92-b042-13493f9ef164",
+    "name": "Serum Visions",
+    "mana_cost": "{U}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Draw a card. Scry 2.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Scry"
+    ],
+    "image": "assets/cards/5b75eb6b-d76c-4b92-b042-13493f9ef164.jpg",
+    "uri": "https://scryfall.com/card/otc/112/serum-visions?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "2d4f0bc7-da7c-4749-a24c-b01f3eb5860c",
+    "name": "Quick Study",
+    "mana_cost": "{2}{U}",
+    "cmc": 3.0,
+    "type_line": "Instant",
+    "oracle_text": "Draw two cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/2d4f0bc7-da7c-4749-a24c-b01f3eb5860c.jpg",
+    "uri": "https://scryfall.com/card/sos/65/quick-study?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "c2ce12b6-2a6e-4179-9056-3eae7e5e7aab",
+    "name": "Concentrate",
+    "mana_cost": "{2}{U}{U}",
+    "cmc": 4.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Draw three cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/c2ce12b6-2a6e-4179-9056-3eae7e5e7aab.jpg",
+    "uri": "https://scryfall.com/card/j25/301/concentrate?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "4e9c9e24-7f41-402c-b346-e553cee90c58",
+    "name": "Harmonize",
+    "mana_cost": "{2}{G}{G}",
+    "cmc": 4.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Draw three cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/4e9c9e24-7f41-402c-b346-e553cee90c58.jpg",
+    "uri": "https://scryfall.com/card/trc/464/harmonize?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "31072355-0b20-4830-9d46-ca71783af84b",
+    "name": "Veteran Cavalier",
+    "mana_cost": "{W}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "Vigilance (Attacking doesn't cause this creature to tap.)",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Vigilance"
+    ],
+    "image": "assets/cards/31072355-0b20-4830-9d46-ca71783af84b.jpg",
+    "uri": "https://scryfall.com/card/9ed/52/veteran-cavalier?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "34ad8e5d-0c26-4588-8161-b22197715d63",
+    "name": "Vigilant Baloth",
+    "mana_cost": "{3}{G}{G}",
+    "cmc": 5.0,
+    "type_line": "Creature — Beast",
+    "oracle_text": "Vigilance (Attacking doesn't cause this creature to tap.)",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Vigilance"
+    ],
+    "image": "assets/cards/34ad8e5d-0c26-4588-8161-b22197715d63.jpg",
+    "uri": "https://scryfall.com/card/m19/206/vigilant-baloth?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "bf87803b-e7c6-4122-add4-72e596167b7e",
+    "name": "Abbey Griffin",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Griffin",
+    "oracle_text": "Flying, vigilance",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Vigilance"
+    ],
+    "image": "assets/cards/bf87803b-e7c6-4122-add4-72e596167b7e.jpg",
+    "uri": "https://scryfall.com/card/isd/1/abbey-griffin?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "4fb01cf8-9bca-4446-9e56-62777c6dfbe8",
+    "name": "Serra Sphinx",
+    "mana_cost": "{3}{U}{U}",
+    "cmc": 5.0,
+    "type_line": "Creature — Sphinx",
+    "oracle_text": "Flying, vigilance",
+    "power": "4",
+    "toughness": "4",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Flying",
+      "Vigilance"
+    ],
+    "image": "assets/cards/4fb01cf8-9bca-4446-9e56-62777c6dfbe8.jpg",
+    "uri": "https://scryfall.com/card/2xm/68/serra-sphinx?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "1af85ada-7d0c-4b0c-bbff-d294318d3d9f",
+    "name": "Armored Griffin",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Griffin",
+    "oracle_text": "Flying, vigilance",
+    "power": "2",
+    "toughness": "3",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Vigilance"
+    ],
+    "image": "assets/cards/1af85ada-7d0c-4b0c-bbff-d294318d3d9f.jpg",
+    "uri": "https://scryfall.com/card/pca/1/armored-griffin?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "c7745439-f40b-4647-8bff-53751d511bbd",
+    "name": "Tomakul Honor Guard",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Soldier",
+    "oracle_text": "Ward {2} (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player pays {2}.)",
+    "power": "3",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "image": "assets/cards/c7745439-f40b-4647-8bff-53751d511bbd.jpg",
+    "uri": "https://scryfall.com/card/bro/195/tomakul-honor-guard?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "7bc6966c-18d9-4675-9594-6f0b2d11c405",
+    "name": "Waterfall Aerialist",
+    "mana_cost": "{3}{U}",
+    "cmc": 4.0,
+    "type_line": "Creature — Djinn Wizard",
+    "oracle_text": "Flying\nWard {2} (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player pays {2}.)",
+    "power": "3",
+    "toughness": "1",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Flying",
+      "Ward"
+    ],
+    "image": "assets/cards/7bc6966c-18d9-4675-9594-6f0b2d11c405.jpg",
+    "uri": "https://scryfall.com/card/stx/61/waterfall-aerialist?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "767b499e-3bdb-4809-b430-6e965bd100d4",
+    "name": "Rimeshield Frost Giant",
+    "mana_cost": "{3}{U}{U}",
+    "cmc": 5.0,
+    "type_line": "Creature — Giant Warrior",
+    "oracle_text": "Ward {3} (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player pays {3}.)",
+    "power": "4",
+    "toughness": "5",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "image": "assets/cards/767b499e-3bdb-4809-b430-6e965bd100d4.jpg",
+    "uri": "https://scryfall.com/card/afr/69/rimeshield-frost-giant?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "bb04dad2-4561-4cef-9cee-80d6f1a44bee",
+    "name": "Su-Chi Cave Guard",
+    "mana_cost": "{8}",
+    "cmc": 8.0,
+    "type_line": "Artifact Creature — Construct",
+    "oracle_text": "Vigilance\nWard {4} (Whenever this creature becomes the target of a spell or ability an opponent controls, counter it unless that player pays {4}.)\nWhen this creature dies, add eight {C}. Until end of turn, you don't lose this mana as steps and phases end.",
+    "power": "8",
+    "toughness": "8",
+    "color_identity": [],
+    "keywords": [
+      "Vigilance",
+      "Ward"
+    ],
+    "image": "assets/cards/bb04dad2-4561-4cef-9cee-80d6f1a44bee.jpg",
+    "uri": "https://scryfall.com/card/bro/249/su-chi-cave-guard?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "6e47edb2-e43d-479f-a911-e72b67a06c3b",
+    "name": "Scour from Existence",
+    "mana_cost": "{7}",
+    "cmc": 7.0,
+    "type_line": "Instant",
+    "oracle_text": "Exile target permanent.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "image": "assets/cards/6e47edb2-e43d-479f-a911-e72b67a06c3b.jpg",
+    "uri": "https://scryfall.com/card/bfz/13/scour-from-existence?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "e792e689-0cf8-4bd0-b2f1-4edff9972e18",
+    "name": "Iona's Judgment",
+    "mana_cost": "{4}{W}",
+    "cmc": 5.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Exile target creature or enchantment.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/e792e689-0cf8-4bd0-b2f1-4edff9972e18.jpg",
+    "uri": "https://scryfall.com/card/cmr/25/ionas-judgment?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "7f8ea0f4-277d-48d3-b36b-066409ddb159",
+    "name": "Angelic Edict",
+    "mana_cost": "{4}{W}",
+    "cmc": 5.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Exile target creature or enchantment.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/7f8ea0f4-277d-48d3-b36b-066409ddb159.jpg",
+    "uri": "https://scryfall.com/card/j25/164/angelic-edict?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "2503e136-031f-498a-b042-4077baebe8f8",
+    "name": "Final Judgment",
+    "mana_cost": "{4}{W}{W}",
+    "cmc": 6.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Exile all creatures.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/2503e136-031f-498a-b042-4077baebe8f8.jpg",
+    "uri": "https://scryfall.com/card/bok/4/final-judgment?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "0a5718db-e67d-468a-95ba-11a08fcf9fea",
+    "name": "Booster Tutor",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Open a sealed Magic booster pack, reveal the cards, and put one of them into your hand. (Remove that card from your deck before beginning a new game.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/0a5718db-e67d-468a-95ba-11a08fcf9fea.jpg",
+    "uri": "https://scryfall.com/card/und/33/booster-tutor?utm_source=api",
+    "verified": true
   }
 ];

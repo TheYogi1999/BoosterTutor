@@ -1,5 +1,27 @@
 # Booster Tutor — The Aether Expedition
 
+## Library expansion and boosters (v0.27)
+
+The bundled source catalog contains **81 real cards**: 77 eligible for ordinary packs/shops, three banned stack/hand-dependent cards, and Booster Tutor as a start-deck-only card. The online curated list remains audited by the same rules. The collection now shows full in-game rules beside each card, with expandable printed Oracle text; only the outer list scrolls. Type, mana, keyword (including Ward), colour, discovery and ban filters remain available.
+
+- **Brainstorm:** draw three, then select any two cards from your current hand and return them in a chosen order. The first selected is the next draw. This is not discard. Mandatory return choices cannot be cancelled after the spell has resolved. Copies complete their own draw/return sequence one at a time.
+- **Opt / Preordain / Serum Visions:** scry and draw in printed order, with the existing top/bottom chooser. Quick Study, Concentrate and Harmonize add simple draw options. Five more vigilance creatures and four numeric-Ward creatures join the pool. Su-Chi Cave Guard’s death trigger adds eight generic mana through the rest of the current turn; exile does not trigger it.
+- **Exile:** Scour from Existence targets any permanent, including a mana card; Iona’s Judgment and Angelic Edict target a creature or enchantment; Final Judgment exiles every creature without targeting. Ward and Hexproof do not stop a nontargeted sweep. Attachments and Clone source identities follow their existing leave rules.
+- **Ward:** after the casting and additional costs are paid, an opposing targeted Ward creature asks for its extra generic-mana payment. Declining counters that spell resolution, without a refund. Every spell copy triggers Ward separately. Own spells, combat, Mill and nontargeted effects do not trigger it. Elites and the boss may have Ward. Rune Raider also has a targeted two-damage Rune bolt with one mana available for Ward; allied Ward can counter it.
+- **Enemy-only Mill:** wisps can put the top two library cards (three in the boss encounter) into your graveyard. Mill resolves once per enemy action and never goes into a player pack. Milling an empty library alone does not lose the run; a later failed draw does. Opponents have no artificial library or player Mill cards.
+- **Booster Tutor:** every completed starter deck contains exactly one copy, making the starter deck 17 cards including its four mana cards. It pauses the current encounter and response window, opens a seven-card pack, puts one chosen card into your current hand, then resumes the same battle. The other six cards stay outside this game; the selected card is not permanently added to the run deck. Doublecast opens two sequential packs. Booster Tutor is excluded from ordinary packs and shop offers.
+- **Shop booster:** alongside the three single-card offers, each camp sells one sealed pack for 30 coins. All seven revealed cards (six nonlands and one mana card) join the run deck, once, with no extra selection cost. Sold status persists when returning from camp. Tutor packs also include one mana-card option. The regular six-pack starter draft is unchanged.
+
+Card choices, Ward payments, mandatory library ordering and interrupted packs work with controller focus. An automatic combat continuation cannot run through a card-choice or booster interruption.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs
+node tests/expansion-browser.test.cjs
+node tests/controller-browser.test.cjs
+node tests/rules-effects-browser.test.cjs
+node tests/pack-scroll-browser.test.cjs
+```
+
 ## Controller support (v0.26)
 
 Xbox, PlayStation and other controllers with standard Gamepad API mapping can operate the menus, boosters, shops, card choices and combat. Connect the controller and press a button; release held inputs before confirming. Open **Controls** or Menu / Options for the in-game guide.
@@ -41,7 +63,7 @@ node tests/rules-effects-browser.test.cjs
 The earlier UI test scripts describe older releases; use the reviewed-rules suite for the new target and cost dialogs.
 
 
-**Version 0.26** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.27** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 

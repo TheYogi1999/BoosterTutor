@@ -2,7 +2,7 @@
 const controller = {
   index:null, id:'', connected:false, active:false, ready:false, previous:[], direction:'', nextRepeat:0,
   focused:null, key:'', context:'', editing:false, memory:new Map(), dirty:true, lastFrame:0,
-  buttons:'button,select,input:not([type="hidden"]),a[href],[tabindex]:not([tabindex="-1"])',
+  buttons:'button,summary,select,input:not([type="hidden"]),a[href],[tabindex]:not([tabindex="-1"])',
   modal(){return document.activeElement?.closest('dialog[open]')||[...document.querySelectorAll('dialog[open]')].at(-1)||null;},
   scope(){return this.modal()||document.querySelector('.screen.active');},
   contextKey(){return this.modal()?.id||`${state.screen||'start-screen'}:${state.screen==='draft-screen'?state.activePack||0:''}`;},
@@ -14,13 +14,14 @@ const controller = {
   },
   elementKey(element){
     if(element.id)return`id:${element.id}`;
-    for(const attribute of ['data-rule-pick','data-scry-index','data-hand-index','data-creature-id','data-unit-target','data-unit-attack','data-unit-withdraw','data-unit-mana','data-enemy-attacker','data-permanent-id','data-buy-card','data-relic','data-camp','data-avatar-choice','data-block-attacker','data-activate-permanent','data-open-pack','data-collection-index'])if(element.hasAttribute(attribute))return`${attribute}:${element.getAttribute(attribute)}`;
+    const entry=element.closest('.collection-entry')?.querySelector('[data-collection-index]');if(element.tagName==='SUMMARY'&&entry)return`printed:${entry.dataset.collectionIndex}`;
+    for(const attribute of ['data-rule-pick','data-library-pick','data-scry-index','data-hand-index','data-creature-id','data-unit-target','data-unit-attack','data-unit-withdraw','data-unit-mana','data-enemy-attacker','data-permanent-id','data-buy-card','data-relic','data-camp','data-avatar-choice','data-block-attacker','data-activate-permanent','data-open-pack','data-collection-index'])if(element.hasAttribute(attribute))return`${attribute}:${element.getAttribute(attribute)}`;
     if(element.hasAttribute('data-card-index'))return`draft:${element.dataset.packIndex}:${element.dataset.cardIndex}`;
     return`item:${element.tagName}:${element.getAttribute('href')||element.getAttribute('aria-label')||element.textContent.trim().slice(0,80)}`;
   },
   initial(items){
     const modal=this.modal();
-    if(modal)return items.find(element=>element.matches('[data-rule-pick],[data-scry-index],.collection-card,.graveyard-card'))||items.find(element=>element.id==='quit-cancel')||items[0];
+    if(modal)return items.find(element=>element.matches('[data-rule-pick],[data-library-pick],[data-scry-index],.collection-card,.graveyard-card'))||items.find(element=>element.id==='quit-cancel')||items[0];
     const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','journey-screen':'[data-relic],[data-camp]','shop-screen':'[data-buy-card]','end-screen':'#restart-button' }[state.screen||'start-screen'];
     return items.find(element=>preferred&&element.matches(preferred))||items[0];
   },
@@ -58,7 +59,7 @@ const controller = {
     if(element.closest('#inspector-content'))return'details';
     if(element.closest('.topbar'))return'system';
     if(element.closest('.collection-tools'))return'filters';
-    if(element.matches('[data-rule-pick],[data-scry-index],.collection-card,.draft-option,.graveyard-card'))return'cards';
+    if(element.matches('[data-rule-pick],[data-library-pick],[data-scry-index],.collection-card,.draft-option,.graveyard-card'))return'cards';
     if(element.closest('.turn-footer,.rule-actions,.scry-actions,.draft-footer,.shop-footer')||element.closest('dialog'))return'actions';
     return'menu';
   },
