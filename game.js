@@ -10,6 +10,9 @@ const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
 const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
 const CARD_CACHE_KEY = 'booster-tutor-expanded-pool-v1';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
+const SEEN_CARD_KEY = 'booster-tutor-seen-cards-v1';
+const seenCardKeys = new Set();
+const discoveryViews = new WeakMap();
 const LAND_QUERY = 'game:paper lang:en t:basic t:land';
 const COMBAT_KEYWORDS = ['flying','reach','lifelink','deathtouch','first strike','double strike','haste','vigilance','trample','menace','defender','hexproof'];
 const SUPPORTED_KEYWORDS = [...COMBAT_KEYWORDS, 'flash', 'equip', 'enchant', 'scry'];
@@ -68,6 +71,35 @@ try {
   const savedAvatar = localStorage.getItem('booster-tutor-avatar');
   if (AVATARS.some(avatar => avatar.id === savedAvatar)) state.selectedAvatar = savedAvatar;
 } catch { /* Avatar selection remains available without browser storage. */ }
+
+try {
+  const saved = JSON.parse(localStorage.getItem(SEEN_CARD_KEY) || '[]');
+  if (Array.isArray(saved)) for (const name of saved) {
+    if (typeof name === 'string' && name.trim() && name.length <= 200) seenCardKeys.add(name.trim().toLowerCase());
+  }
+} catch { /* Discovery tracking still works for this page session. */ }
+
+function cardDiscoveryKey(card) { return (card.name || '').trim().toLowerCase(); }
+function hasSeenCard(card) { return seenCardKeys.has(cardDiscoveryKey(card)); }
+function discoveryView(cards, view = cards) {
+  if (!discoveryViews.has(view)) discoveryViews.set(view, new Set(cards.filter(card => !hasSeenCard(card)).map(cardDiscoveryKey)));
+  return discoveryViews.get(view);
+}
+function recordSeenCards(cards) {
+  let changed = false;
+  for (const card of cards) {
+    const key = cardDiscoveryKey(card);
+    if (key && !seenCardKeys.has(key)) { seenCardKeys.add(key); changed = true; }
+  }
+  if (changed) {
+    try { localStorage.setItem(SEEN_CARD_KEY, JSON.stringify([...seenCardKeys])); } catch { /* Storage is optional. */ }
+    updateDiscoveryProgress();
+  }
+}
+function updateDiscoveryProgress() {
+  const counter = $('#discovery-progress');
+  if (counter) counter.textContent = String(seenCardKeys.size);
+}
 
 function renderAvatarChoices() {
   const selected = AVATARS.find(avatar => avatar.id === state.selectedAvatar) || AVATARS[0];
@@ -248,6 +280,7 @@ function ensureCardPool() {
     state.poolPromise = loadCardPool().then(result => {
       state.pool = result.cards;
       state.landPool = result.lands;
+      updateDiscoveryProgress();
       return result;
     }).finally(() => { state.poolPromise = null; });
   }
@@ -456,11 +489,17 @@ function draftAbilitySummary(card) {
   const summary = lines.join(' ');
   return summary.length > 110 ? `${summary.slice(0, 107).trimEnd()}…` : summary;
 }
-function makeCardMarkup(card, packIndex, cardIndex, selected) {
+function cardFactsMarkup(card) {
   const keywords = printedKeywords(card).join(', ') || 'None';
   const stats = isCreature(card) ? `${card.power ?? '—'}/${card.toughness ?? '—'}` : '—';
   const ability = draftAbilitySummary(card);
-  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}"><span class="card-image-wrap">${cardFace(card)}</span><span class="draft-card-name">${escapeHtml(card.name)}</span><span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">P/T ${escapeHtml(stats)}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span></button>`;
+  return `<span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">P/T ${escapeHtml(stats)}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span>`;
+}
+function cardImageMarkup(card, isNew = false) {
+  return `<span class="card-image-wrap">${cardFace(card)}${isNew ? '<span class="new-card-badge" aria-label="New card discovery">NEW</span>' : ''}</span>`;
+}
+function makeCardMarkup(card, packIndex, cardIndex, selected, isNew = false) {
+  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}">${cardImageMarkup(card, isNew)}<span class="draft-card-name">${escapeHtml(card.name)}</span>${cardFactsMarkup(card)}</button>`;
 }
 
 function selectedDraftCards() {
@@ -479,6 +518,9 @@ function renderDraft() {
   const packIndex = state.activePack || 0;
   const chosen = state.selection.has(packIndex);
   const last = !starter || packIndex === STARTER_BOOSTER_COUNT - 1;
+  const pack = state.packs[packIndex];
+  const newCards = state.boosterSealed ? new Set() : discoveryView(pack);
+  if (!state.boosterSealed && !boosterTravel) recordSeenCards(pack);
   $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF ${STARTER_BOOSTER_COUNT}` : 'REWARD';
   $('#draft-title').textContent = state.boosterSealed ? 'Your next booster' : 'Which card joins your journey?';
   $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : `Choose one of seven cards. Receive ${COPIES_PER_DRAFT_PICK} copies. Type, power/toughness and keywords are listed below each card.`;
@@ -486,7 +528,7 @@ function renderDraft() {
   $('#deck-count').textContent = String(state.deck.length + state.selection.size * COPIES_PER_DRAFT_PICK);
   $('#draft-grid').innerHTML = state.boosterSealed
     ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-foil"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
-    : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${state.packs[packIndex].map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex)).join('')}</div></section>`;
+    : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${pack.map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex, newCards.has(cardDiscoveryKey(card)))).join('')}</div></section>`;
   $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'The tooltip shows costs and actual in-game effects.';
   $('#pack-reroll').disabled = state.boosterSealed || Boolean(state.rerolledPacks?.has(packIndex));
   $('#pack-reroll').textContent = state.rerolledPacks?.has(packIndex) ? '↻ Reroll used' : '↻ Reroll pack · 1×';
@@ -1890,6 +1932,7 @@ async function openCurrentBooster() {
 }
 
 function animateBoosterOpening() {
+  recordSeenCards(state.packs[state.activePack || 0]);
   const screen = $('#draft-screen');
   clearTimeout(state.openingTimer);
   screen.classList.remove('opening');
@@ -1941,6 +1984,7 @@ $('#avatar-choices').addEventListener('click', event => {
   playSfx('select');
 });
 renderAvatarChoices();
+updateDiscoveryProgress();
 $('#end-turn-button').addEventListener('click', handleCombatAction);
 $('#mulligan-button').addEventListener('click', freeMulligan);
 $('#sound-toggle').addEventListener('click', () => {
@@ -2193,10 +2237,12 @@ function openCollection(kind = 'deck') {
   if (state.screen === 'combat-screen' && ['attack', 'enemy', 'damage'].includes(battle?.phase) && !battle.priorityCallback) return;
   state.collectionKind = kind;
   $('#collection-search').value = '';
-  for(const id of ['collection-type','collection-mana','collection-keyword','collection-color']) $('#'+id).value='';
+  for(const id of ['collection-type','collection-mana','collection-keyword','collection-color','collection-seen']) $('#'+id).value='';
+  $('#collection-seen').hidden = kind !== 'catalog';
+  $('#collection-dialog').dataset.kind = kind;
   $('#collection-title').textContent = kind === 'catalog' ? 'Verified card collection' : kind === 'library' ? 'Your library' : kind === 'exile' ? 'Exile' : 'Your run deck';
   $('#collection-kind').textContent = kind.toUpperCase();
-  $('#collection-note').textContent = kind === 'catalog' ? 'Loading the curated Magic list and current card data from Scryfall. Printed keywords and adapted effects are described in each card inspector.' : kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters are removed for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
+  $('#collection-note').textContent = kind === 'catalog' ? 'Track cards discovered in boosters and shops. Filter by card details or discovery status.' : kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters are removed for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
   renderCollection(); hideCardPreview(); $('#collection-dialog').showModal();
 }
 function renderCollection() {
@@ -2209,10 +2255,18 @@ function renderCollection() {
     if (groups.has(key)) groups.get(key).count += 1; else groups.set(key, { ...card, count: 1 });
   }
   const query = $('#collection-search').value.trim().toLowerCase();
-  state.collectionCards = [...groups.values()].filter(card => matchesCardFilters(card,query)).sort((a, b) => (a.cmc || 0) - (b.cmc || 0) || a.name.localeCompare(b.name));
+  const seenFilter = kind === 'catalog' ? $('#collection-seen').value : '';
+  state.collectionCards = [...groups.values()].filter(card => matchesCardFilters(card,query) && (!seenFilter || hasSeenCard(card) === (seenFilter === 'seen'))).sort((a, b) => (a.cmc || 0) - (b.cmc || 0) || a.name.localeCompare(b.name));
   const average = cards.length ? cards.reduce((sum, card) => sum + (card.cmc || 0), 0) / cards.length : 0;
-  $('#collection-stats').textContent = `${cards.length} cards · ${state.collectionCards.length} shown · average mana ${average.toFixed(1)}`;
-  $('#collection-grid').innerHTML = state.collectionCards.length ? state.collectionCards.map((card, index) => card.enemyKind ? `<div class="collection-monster">${walkerPortrait(card.enemyKind)}<b>${escapeHtml(card.name)}</b><span>Exiled monster</span></div>` : `<article class="collection-entry"><button class="collection-card" data-preview-owner="collection" data-collection-index="${index}" aria-label="${card.count} copies of ${escapeHtml(card.name)}">${cardFace(card)}<span><b>${escapeHtml(card.name)}</b><strong>×${card.count}</strong></span></button>${kind==='catalog'?`<p class="catalog-keywords">${escapeHtml(printedKeywords(card).join(' · ')||'No printed keywords')}</p><p class="catalog-audit">${cardAudit(card).unknown.length?'Check keyword coverage':cardAudit(card).adapted?'Data verified · adapted counterspell':'Data verified · keywords supported'}</p><a class="catalog-source" href="${escapeHtml(card.uri)}" target="_blank" rel="noreferrer">Scryfall ↗</a>`:''}</article>`).join('') : '<p class="collection-empty">No cards in this zone.</p>';
+  const seenCount = [...groups.values()].filter(hasSeenCard).length;
+  $('#collection-stats').textContent = `${cards.length} cards · ${state.collectionCards.length} shown${kind === 'catalog' ? ` · ${seenCount} seen` : ''} · average mana ${average.toFixed(1)}`;
+  $('#collection-grid').innerHTML = state.collectionCards.length ? state.collectionCards.map((card, index) => collectionEntryMarkup(card, index, kind)).join('') : '<p class="collection-empty">No cards in this zone.</p>';
+}
+function collectionEntryMarkup(card, index, kind) {
+  if (card.enemyKind) return `<div class="collection-monster">${walkerPortrait(card.enemyKind)}<b>${escapeHtml(card.name)}</b><span>Exiled monster</span></div>`;
+  const seen = hasSeenCard(card);
+  const catalog = kind === 'catalog' ? `<p class="catalog-discovery ${seen ? 'is-seen' : 'is-unseen'}" data-discovery-status="${seen ? 'seen' : 'unseen'}">${seen ? '✓ Seen' : '◌ Not seen'}</p><p class="catalog-keywords">${escapeHtml(printedKeywords(card).join(' · ') || 'No printed keywords')}</p><p class="catalog-audit">${cardAudit(card).unknown.length ? 'Check keyword coverage' : cardAudit(card).adapted ? 'Data verified · adapted counterspell' : 'Data verified · keywords supported'}</p><a class="catalog-source" href="${escapeHtml(card.uri)}" target="_blank" rel="noreferrer">Scryfall ↗</a>` : '';
+  return `<article class="collection-entry"><button class="collection-card" data-preview-owner="collection" data-collection-index="${index}" aria-label="${card.count} copies of ${escapeHtml(card.name)}">${cardFace(card)}<span><b>${escapeHtml(card.name)}</b><strong>×${card.count}</strong></span></button>${catalog}</article>`;
 }
 $('#deck-button').addEventListener('click', () => openCollection('deck'));
 $('#journey-deck-button').addEventListener('click', () => openCollection('deck'));
@@ -2259,11 +2313,15 @@ function showShop() {
     const offers=affordable?[affordable,...candidates.filter(card=>card.id!==affordable.id).slice(0,2)]:candidates.slice(0,3);
     state.shop={node:state.node,offers:offers.map(card=>({card,price:shopPrice(card),sold:false}))};
   }
+  state.shopDiscoveryView = {};
   renderShop();showScreen('shop-screen');
 }
 function renderShop(){
   syncCoins();
-  $('#shop-grid').innerHTML=state.shop.offers.map((offer,index)=>`<article class="shop-offer${offer.sold?' sold':''}"><div class="shop-card-face" data-preview-owner="shop" data-offer-index="${index}" tabindex="0">${cardFace(offer.card)}</div><h3>${escapeHtml(offer.card.name)}</h3><p>${Math.ceil(offer.card.cmc||0)} generic mana · one copy</p><button class="primary-button" data-buy-card="${index}" ${offer.sold||(state.coins||0)<offer.price?'disabled':''}>${offer.sold?'SOLD':`Buy · ${offer.price} coins`}</button></article>`).join('');
+  const cards = state.shop.offers.map(offer => offer.card);
+  const newCards = discoveryView(cards, state.shopDiscoveryView ||= {});
+  recordSeenCards(cards);
+  $('#shop-grid').innerHTML=state.shop.offers.map((offer,index)=>`<article class="shop-offer${offer.sold?' sold':''}"><div class="shop-card-face" data-preview-owner="shop" data-offer-index="${index}" tabindex="0" aria-label="Inspect ${escapeHtml(offer.card.name)}">${cardImageMarkup(offer.card, newCards.has(cardDiscoveryKey(offer.card)))}</div><h3 class="draft-card-name">${escapeHtml(offer.card.name)}</h3>${cardFactsMarkup(offer.card)}<button class="primary-button" data-buy-card="${index}" ${offer.sold||(state.coins||0)<offer.price?'disabled':''}>${offer.sold?'SOLD':`Buy · ${offer.price} coins`}</button></article>`).join('');
 }
 function buyShopCard(index){
   if(state.screen!=='shop-screen')return false;
@@ -2321,7 +2379,7 @@ $('#card-catalog-button').addEventListener('click',()=>{
     $('#collection-note').textContent=result.warning||'Card names, mana costs, rules text and images are loaded from Scryfall for this curated list.';
   });
 });
-for(const id of ['collection-type','collection-mana','collection-keyword','collection-color'])$('#'+id).addEventListener('change',renderCollection);
+for(const id of ['collection-type','collection-mana','collection-keyword','collection-color','collection-seen'])$('#'+id).addEventListener('change',renderCollection);
 $('#scry-swap').addEventListener('click',()=>{if(state.battle?.scry){state.battle.scry.cards.reverse();renderScry();}});
 
 function hasInvalidMenaceBlock(battle){return battle.enemyCreatures.some(enemy=>hasCreatureKeyword(enemy,'menace') && blockerIds(battle,enemy.id).filter(id=>battle.creatures.some(creature=>creature.id===id&&!creature.tapped)).length===1);}
