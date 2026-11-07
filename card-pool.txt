@@ -1,0 +1,389 @@
+Deftblade Elite
+Doomed Traveler
+Frontline Strategist
+Gustcloak Runner
+Isamaru, Hound of Konda
+Savannah Lions
+Soul Warden
+Suntail Hawk
+Armored Pegasus
+Auriok Steelshaper
+Disciple of Grace
+Freewind Falcon
+Samurai of the Pale Curtain
+White Knight
+Glowrider
+Gustcloak Harrier
+Shield Dancer
+Soltari Visionary
+Village Bell-Ringer
+Wingbeat Warrior
+Kongming, "Sleeping Dragon"
+Northern Paladin
+Skyhunter Patrol
+Windborn Muse
+Blinding Angel
+Karmic Guide
+Karona's Zealot
+Serra Angel
+Timeless Dragon
+Noble Templar
+Yosei, the Morning Star
+Konda, Lord of Eiganjo
+Akroma, Angel of Wrath
+Reya Dawnbringer
+Condemn
+Clear
+Disenchant
+Raise the Alarm
+Oblation
+Wing Shards
+Angelic Favor
+Open the Armory
+Breath of Life
+Decree of Justice
+Resurrection
+Wrath of God
+Akroma's Vengeance
+Crusade
+Pacifism
+Reprobation
+Arrest
+Ghostly Prison
+Mobilization
+Oblivion Ring
+Promise of Bunrei
+Faith's Fetters
+Gudul Lurker
+Hapless Researcher
+Aquamoeba
+Dragon's Eye Savants
+Fathom Seer
+Spiketail Hatchling
+Thought Courier
+Voidmage Apprentice
+Voidmage Prodigy
+Willbender
+Cephalid Looter
+Disruptive Pitmage
+Echo Tracer
+Puppeteer
+Spiketail Drakeling
+Wind Drake
+Archaeomancer
+Archivist
+Clone
+Ninja of the Deep Hours
+Chromeshell Crab
+Mystic of the Hidden Way
+Spiketail Drake
+Vesuvan Shapeshifter
+Arcanis the Omnipotent
+Keiga, the Tide Star
+Quicksilver Dragon
+Shoreline Ranger
+Vizzerdrix
+Repeal
+Unsummon
+Boomerang
+Mana Leak
+Remove Soul
+Catalog
+Exclude
+Repulse
+Choking Tethers
+Dismiss
+Fact or Fiction
+Gifts Ungiven
+Evacuation
+Spelljack
+Time Stop
+Index
+Serum Visions
+Divination
+Concentrate
+Deep Analysis
+Phantom Wings
+Standstill
+Frozen Solid
+Think Tank
+Flight of Fancy
+Future Sight
+Confiscate
+Carrion Feeder
+Nested Shambler
+Ruthless Ripper
+Apprentice Necromancer
+Grimclaw Bats
+Mesmeric Fiend
+Nezumi Graverobber
+Ravenous Rats
+Undertaker
+Wall of Corpses
+Bone Shredder
+Doomed Necromancer
+Hypnotic Specter
+Midnight Reaper
+Mindstab Thrull
+Nantuko Husk
+Phyrexian Ghoul
+Phyrexian Rager
+Rotlung Reanimator
+Royal Assassin
+Stronghold Rats
+Undead Gladiator
+Bane of the Living
+Deathmark Prelate
+Faceless Butcher
+Gravedigger
+Hell's Caretaker
+Marsh Flitter
+Nekrataal
+Order of Yawgmoth
+Sling-Gang Lieutenant
+Fallen Angel
+Phyrexian Plaguelord
+Twisted Abomination
+Visara the Dreadful
+Scion of Darkness
+Scare Tactics
+Diabolic Edict
+Terror
+Dark Banishing
+Cabal Therapy
+Duress
+Unearth
+Cannibalize
+Chainer's Edict
+Exhume
+Night's Whisper
+Infest
+Read the Bones
+Victimize
+Dread Return
+Zombify
+Beacon of Unrest
+Vampiric Rites
+Seal of Doom
+Pestilence
+Goblin Bushwhacker
+Goblin Fireslinger
+Goblin Sledder
+Goblins of the Flarg
+Mogg Sentry
+Skirk Prospector
+Mogg War Marshal
+Skirk Marauder
+Aether Membrane
+Arms Dealer
+Goblin King
+Goblin Medics
+Goblin Warchief
+Guttersnipe
+Hellraiser Goblin
+Ironclaw Buzzardiers
+Skirk Commando
+Spikeshot Goblin
+Beetleback Chief
+Blistering Firecat
+Goblin Snowman
+Rukh Egg
+Fortune Thief
+Siege-Gang Commander
+Bloodshot Cyclops
+Chartooth Cougar
+Ryusei, the Falling Star
+Shivan Dragon
+Two-Headed Dragon
+Akroma, Angel of Fury
+Lightning Bolt
+Shock
+Fling
+Guerrilla Tactics
+Incinerate
+Lightning Strike
+Puppet's Verdict
+Dead // Gone
+Lightning Blast
+Inferno
+Blaze
+Faithless Looting
+Fireball
+Meteor Shower
+Reckless Charge
+Dragon Fodder
+Pyroclasm
+Volcanic Hammer
+Arc Lightning
+Rift Bolt
+Goblin Rally
+Seal of Fire
+Goblin Bombardment
+Goblin Warrens
+Sulfuric Vortex
+Bedlam
+Birds of Paradise
+Druid Lyrist
+Llanowar Elves
+Taunting Elf
+Tukatongue Thallid
+Ainok Survivalist
+Broodhatch Nantuko
+Sakura-Tribe Elder
+Satyr Wayfinder
+Viridian Zealot
+Wild Mongrel
+Bloated Toad
+Eternal Witness
+Krosan Restorer
+Wood Elves
+Elvish Piper
+Forgotten Ancient
+Acidic Slime
+Deep Forest Hermit
+Genesis
+Silklash Spider
+Elvish Aberration
+Jugan, the Rising Star
+Rhox
+Silvos, Rogue Elemental
+Symbiotic Beast
+Krosan Tusker
+Living Hive
+Verdant Force
+Fog
+Giant Growth
+Vitalize
+Naturalize
+Scatter the Seeds
+Elephant Resurgence
+Farseek
+Nature's Lore
+Rampant Growth
+Cultivate
+Kodama's Reach
+Acorn Harvest
+Explosive Vegetation
+Harmonize
+Migration Path
+Overrun
+Tooth and Nail
+Rancor
+Utopia Sprawl
+Fertile Ground
+Primal Rage
+Fecundity
+Lure
+Squirrel Nest
+Greater Good
+Saproling Burst
+Epic Proportions
+Copper Myr
+Gold Myr
+Iron Myr
+Leaden Myr
+Silver Myr
+Bottle Gnomes
+Solemn Simulacrum
+Razormane Masticore
+Duplicant
+Pentavus
+Bonesplitter
+Leonin Scimitar
+Sai of the Shinobi
+Wayfarer's Bauble
+Kitesail
+Swiftfoot Boots
+Fireshrieker
+Grafted Wargear
+Loxodon Warhammer
+Icy Manipulator
+Nevinyrral's Disk
+Azorius Signet
+Detention Sphere
+Grand Arbiter Augustin IV
+Thunderclap Wyvern
+Drogskol Reaver
+Dimir Signet
+Dimir Doppelganger
+Psychatog
+Recoil
+Shadowmage Infiltrator
+Rakdos Signet
+Lyzolda, the Blood Witch
+Chainer, Nightmare Adept
+Murderous Redcap
+Cauldron Dance
+Gruul Signet
+Fires of Yavimaya
+Bloodbraid Elf
+Borborygmos
+Borborygmos Enraged
+Avacyn's Pilgrim
+Selesnya Signet
+King Darien XLVIII
+Armada Wurm
+Pollenbright Wings
+Orzhov Signet
+Lingering Souls
+Pillory of the Sleepless
+Unburial Rites
+Angel of Despair
+Izzet Signet
+Razorfin Hunter
+Gelectrode
+Prophetic Bolt
+Djinn Illuminatus
+Golgari Signet
+Grisly Salvage
+Lotleth Troll
+Life // Death
+Vigor Mortis
+Boros Charm
+Boros Guildmage
+Boros Signet
+Goblin Trenches
+Sunforger
+Coiling Oracle
+Simic Signet
+Mystic Snake
+Urban Evolution
+Sagu Mauler
+Adarkar Wastes
+Azorius Chancery
+Tranquil Cove
+Dimir Aqueduct
+Dismal Backwater
+Underground River
+Bloodfell Caves
+Rakdos Carnarium
+Sulfurous Springs
+Gruul Turf
+Karplusan Forest
+Rugged Highlands
+Blossoming Sands
+Brushland
+Selesnya Sanctuary
+Caves of Koilos
+Orzhov Basilica
+Scoured Barrens
+Izzet Boilerworks
+Shivan Reef
+Swiftwater Cliffs
+Golgari Rot Farm
+Jungle Hollow
+Llanowar Wastes
+Battlefield Forge
+Boros Garrison
+Wind-Scarred Crag
+Simic Growth Chamber
+Thornwood Falls
+Yavimaya Coast
+Barren Moor
+City of Brass
+Forgotten Cave
+Lonely Sandbar
+Secluded Steppe
+Terramorphic Expanse
+Tranquil Thicket
+Zoetic Cavern
