@@ -1,7 +1,39 @@
 const HAND_SIZE = 7;
 const PACK_SIZE = 7;
+const STARTER_BOOSTER_COUNT = 6;
+const COPIES_PER_DRAFT_PICK = 2;
+const STARTING_MANA_CARDS = 4;
+const STARTING_MANA_IN_PLAY = 2;
+const STARTING_LIFE = 20;
+const CARD_POOL_FILE = 'card-pool.txt';
+const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
+const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
+const CARD_CACHE_KEY = 'booster-tutor-expanded-pool-v1';
+const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
+const LAND_QUERY = 'game:paper lang:en t:basic t:land';
 const COMBAT_KEYWORDS = ['flying','reach','lifelink','deathtouch','first strike','double strike','haste','vigilance','trample','menace','defender'];
 const SUPPORTED_KEYWORDS = [...COMBAT_KEYWORDS, 'flash', 'equip', 'enchant', 'scry'];
+const AVATARS = [
+  { id: 'mage', name: 'Arcane Mage', symbol: '✦' },
+  { id: 'ranger', name: 'Wild Scout', symbol: '➶' },
+  { id: 'guardian', name: 'Iron Guardian', symbol: '⛨' },
+  { id: 'dragon', name: 'Ember Adept', symbol: '♨' }
+];
+const COUNTRY_STAGES = [
+  { country: 'Iceland', region: 'The Crystal Fjord', color: '#67b8d8' },
+  { country: 'Morocco', region: 'The Amber Dunes', color: '#db9861' },
+  { country: 'Japan', region: 'The Blossom Highlands', color: '#d98595' },
+  { country: 'Kenya', region: 'The Sunlit Savanna', color: '#d6b95f' },
+  { country: 'Brazil', region: 'The Emerald Canopy', color: '#64b887' },
+  { country: 'Greece', region: 'The Aegean Cliffs', color: '#68a9d1' },
+  { country: 'Norway', region: 'The Northern Reach', color: '#7b98d1' },
+  { country: 'India', region: 'The Saffron Valley', color: '#d88a54' },
+  { country: 'New Zealand', region: 'The Mistbound Range', color: '#80b6a2' },
+  { country: 'Peru', region: 'The Cloud Forest', color: '#c67a65' }
+];
+const FALLBACK_LANDS = [
+  ['Plains', 'W'], ['Island', 'U'], ['Swamp', 'B'], ['Mountain', 'R'], ['Forest', 'G']
+].map(([name, color]) => ({ id: `offline-${name.toLowerCase()}`, name, mana_cost: '', cmc: 0, type_line: `Basic Land — ${name}`, oracle_text: '{T}: Add one mana.', power: '', toughness: '', color_identity: [color], keywords: [], image: '', art: '', uri: `https://scryfall.com/search?q=!${name}`, verified: true }));
 const ENCOUNTERS = [
   { name: 'Mosswood Ambush', rank: 'SKIRMISH', location: 'THE FORGOTTEN GLADE', foeCount: 2 },
   { name: 'Rune Hunter Patrol', rank: 'ELITE', location: 'THE BROKEN PASS', foeCount: 3 },
@@ -11,15 +43,18 @@ const ENCOUNTERS = [
 
 const state = {
   pool: [],
+  landPool: [],
   deck: [],
   packs: [],
   selection: new Map(),
   draftKind: 'starter',
-  playerHealth: 30,
+  playerHealth: STARTING_LIFE,
   coins: 0,
   shop: null,
   node: 1,
   battle: null,
+  stageLocations: [],
+  selectedAvatar: 'mage',
   soundOn: true,
   toastTimer: null,
   openingTimer: null,
@@ -28,6 +63,22 @@ const state = {
 
 const $ = (selector) => document.querySelector(selector);
 const screens = ['start-screen', 'loading-screen', 'draft-screen', 'combat-screen', 'journey-screen', 'shop-screen', 'end-screen'];
+
+try {
+  const savedAvatar = localStorage.getItem('booster-tutor-avatar');
+  if (AVATARS.some(avatar => avatar.id === savedAvatar)) state.selectedAvatar = savedAvatar;
+} catch { /* Avatar selection remains available without browser storage. */ }
+
+function renderAvatarChoices() {
+  const selected = AVATARS.find(avatar => avatar.id === state.selectedAvatar) || AVATARS[0];
+  document.querySelectorAll('.player-avatar, .hero-avatar').forEach(element => {
+    element.dataset.avatar = selected.id;
+    const symbol = element.querySelector('[data-avatar-symbol]');
+    if (symbol) symbol.textContent = selected.symbol;
+  });
+  const choices = $('#avatar-choices');
+  if (choices) choices.innerHTML = AVATARS.map(avatar => `<button type="button" class="avatar-choice${avatar.id === selected.id ? ' selected' : ''}" data-avatar-choice="${avatar.id}" aria-pressed="${avatar.id === selected.id}" aria-label="Choose ${avatar.name}"><span>${avatar.symbol}</span><small>${avatar.name}</small></button>`).join('');
+}
 
 function showScreen(id) {
   state.screen = id;
@@ -90,9 +141,104 @@ function creatureKeywordLabels(creature) {
   return labels.filter(([keyword]) => hasCreatureKeyword(creature, keyword)).map(([, label]) => label).join(' · ');
 }
 
+function normalizeScryfallCard(card) {
+  const face = card.card_faces?.[0] || {};
+  const images = card.image_uris || face.image_uris || {};
+  return {
+    id: card.id,
+    name: card.name || face.name || 'Unknown card',
+    mana_cost: card.mana_cost || face.mana_cost || '',
+    cmc: Number(card.cmc ?? face.cmc ?? 0),
+    type_line: card.type_line || face.type_line || 'Magic card',
+    oracle_text: card.oracle_text || face.oracle_text || '',
+    power: card.power || face.power || '',
+    toughness: card.toughness || face.toughness || '',
+    color_identity: card.color_identity || [],
+    keywords: card.keywords || [],
+    image: images.normal || images.large || '',
+    art: images.art_crop || '',
+    uri: card.scryfall_uri || '',
+    verified: true
+  };
+}
+
+async function apiCollect(names) {
+  const response = await fetch(COLLECTION_API, {
+    method: 'POST',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identifiers: names.map(name => ({ name })) })
+  });
+  if (!response.ok) throw new Error(`Scryfall collection request returned ${response.status}`);
+  return response.json();
+}
+
+async function apiSearch(query) {
+  const response = await fetch(`${SEARCH_API}${encodeURIComponent(query)}&order=name&unique=cards`, { headers: { Accept: 'application/json' } });
+  if (!response.ok) throw new Error(`Scryfall search returned ${response.status}`);
+  return response.json();
+}
+
 async function loadCardPool() {
-  // Audited, normal-layout cards and original images are shipped with the game.
-  return { cards: BUNDLED_CARDS.map(card => ({ ...card })) };
+  let cached = null;
+  try { cached = localStorage.getItem(CARD_CACHE_KEY); } catch { /* Browser storage is optional. */ }
+  if (cached) {
+    try {
+      const value = JSON.parse(cached);
+      if (Date.now() - value.savedAt < CARD_CACHE_TTL && value.cards?.length > BUNDLED_CARDS.length && value.lands?.length >= 5) {
+        return { cards: value.cards, lands: value.lands, cached: true, missingCount: value.missingCount || 0, sourceCount: value.sourceCount || 0 };
+      }
+    } catch { /* Ignore a malformed card cache. */ }
+  }
+
+  try {
+    $('#loading-message').textContent = 'Reading the curated list of Magic cards.';
+    const poolResponse = await fetch(CARD_POOL_FILE, { headers: { Accept: 'text/plain' } });
+    if (!poolResponse.ok) throw new Error(`Card list returned ${poolResponse.status}`);
+    const names = [...new Set((await poolResponse.text()).split(/\r?\n/).map(name => name.trim()).filter(name => name && !name.startsWith('#')))];
+    if (!names.length) throw new Error('The curated card list is empty.');
+    const batches = [];
+    for (let index = 0; index < names.length; index += 75) batches.push(names.slice(index, index + 75));
+    const rawCards = [];
+    let missingCount = 0;
+    for (let index = 0; index < batches.length; index += 1) {
+      $('#loading-message').textContent = `Loading cards from Scryfall · ${index + 1} / ${batches.length}`;
+      const result = await apiCollect(batches[index]);
+      rawCards.push(...(result.data || []));
+      missingCount += (result.not_found || []).length;
+      if (index < batches.length - 1) await new Promise(resolve => setTimeout(resolve, 130));
+    }
+    await new Promise(resolve => setTimeout(resolve, 130));
+    $('#loading-message').textContent = 'Finding basic land cards for your deck.';
+    const landResult = await apiSearch(LAND_QUERY);
+    const scryfallCards = rawCards.map(normalizeScryfallCard).filter(card => card.name && !isLand(card));
+    const merged = new Map(BUNDLED_CARDS.filter(card => !isLand(card)).map(card => [card.name.toLowerCase(), card]));
+    for (const card of scryfallCards) if (!merged.has(card.name.toLowerCase())) merged.set(card.name.toLowerCase(), card);
+    const cards = [...merged.values()];
+    const lands = (landResult.data || []).map(normalizeScryfallCard).filter(card => /Basic Land/i.test(card.type_line));
+    if (cards.length <= BUNDLED_CARDS.length || lands.length < 5) throw new Error('Scryfall returned an incomplete card pool.');
+    try { localStorage.setItem(CARD_CACHE_KEY, JSON.stringify({ savedAt: Date.now(), cards, lands, missingCount, sourceCount: names.length })); } catch { /* Continue without caching. */ }
+    return { cards, lands, cached: false, missingCount, sourceCount: names.length };
+  } catch (error) {
+    if (cached) {
+      try {
+        const value = JSON.parse(cached);
+        if (value.cards?.length && value.lands?.length) return { cards: value.cards, lands: value.lands, cached: true, missingCount: value.missingCount || 0, sourceCount: value.sourceCount || 0, warning: 'Offline: using the saved Scryfall pool.' };
+      } catch { /* Fall through to the bundled cards. */ }
+    }
+    return { cards: BUNDLED_CARDS.filter(card => !isLand(card)).map(card => ({ ...card })), lands: FALLBACK_LANDS, cached: false, fallback: true, missingCount: 0, sourceCount: 0, warning: 'Scryfall is unavailable. The bundled demo card pool is ready offline.' };
+  }
+}
+
+function ensureCardPool() {
+  if (state.pool.length) return Promise.resolve({ cards: state.pool, lands: state.landPool, cached: true });
+  if (!state.poolPromise) {
+    state.poolPromise = loadCardPool().then(result => {
+      state.pool = result.cards;
+      state.landPool = result.lands;
+      return result;
+    }).finally(() => { state.poolPromise = null; });
+  }
+  return state.poolPromise;
 }
 
 function shuffle(items) {
@@ -112,25 +258,30 @@ function chooseRandomCards(source, count) {
 
 function makeStarterPacks() {
   const cards = shuffle(state.pool);
-  while (cards.length < PACK_SIZE * 3) cards.push(...shuffle(BUNDLED_CARDS));
-  return Array.from({ length: 3 }, (_, index) => cards.slice(index * PACK_SIZE, (index + 1) * PACK_SIZE));
+  while (cards.length < PACK_SIZE * STARTER_BOOSTER_COUNT) cards.push(...shuffle(BUNDLED_CARDS));
+  return Array.from({ length: STARTER_BOOSTER_COUNT }, (_, index) => cards.slice(index * PACK_SIZE, (index + 1) * PACK_SIZE));
 }
 
 function startNewRun() {
   if (state.soundOn) soundEngine.unlock().catch(() => {});
   state.deck = [];
   state.relic = null;
-  state.playerHealth = 30;
+  state.playerHealth = STARTING_LIFE;
   state.coins = 0; state.shop = null; syncCoins();
   state.node = 1;
   state.battle = null;
+  state.stageLocations = shuffle(COUNTRY_STAGES).slice(0, ENCOUNTERS.length);
   state.selection.clear();
   showScreen('loading-screen');
-  loadCardPool().then(({ cards }) => {
+  ensureCardPool().then(({ cards, lands, fallback, missingCount, sourceCount, warning }) => {
     state.pool = cards;
+    state.landPool = lands;
     const status = $('#start-api-status span');
-    status.textContent = `${BUNDLED_CARDS.length} REAL MAGIC CARDS · OFFLINE READY`;
-    status.style.color = '#b7d9c2';
+    status.textContent = fallback ? `${BUNDLED_CARDS.length} BUNDLED CARDS · OFFLINE` : `${cards.length} MAGIC CARDS · SCRYFALL`;
+    status.style.color = fallback ? '#e5b18e' : '#b7d9c2';
+    if (warning) showToast(warning);
+    else if (missingCount) showToast(`${missingCount} card names could not be matched on Scryfall.`);
+    if (sourceCount) $('#start-api-status').title = `${sourceCount} names in your curated card list`;
     state.packs = makeStarterPacks();
     state.draftKind = 'starter';
     state.activePack = 0;
@@ -167,7 +318,7 @@ function createEnemyTeam(encounter) {
   return teams[state.node - 1].map(kind => {
     const template = FOE_TYPES[kind];
     const card = { name: template.name, type_line: 'Monster', oracle_text: template.keywords.join(', ') };
-    return { id: `enemy-${state.nextPermanentId++}`, kind, card, ...creatureKeywords(card), bounty: template.bounty, owner: 'enemy', health: template.health, maxHealth: template.health, power: template.power, toughness: template.health, shield: 0, pattern: template.pattern, summonedTurn: 0, summoningSick: false };
+    return { id: `enemy-${state.nextPermanentId++}`, kind, card, ...creatureKeywords(card), bounty: template.bounty, owner: 'enemy', health: template.health, maxHealth: template.health, power: template.power, toughness: template.health, shield: 0, pattern: template.pattern, summonedTurn: 1, summoningSick: true };
   });
 }
 function enemyIntent(enemy, turn = state.battle?.turn || 1) {
@@ -231,6 +382,7 @@ function permanentEffect(card) {
 }
 function signed(value) { return `${value >= 0 ? '+' : ''}${value}`; }
 function effectDescriptions(card) {
+  if (isLand(card)) return ['Mana card: play one during your main phase; it enters untapped.', 'Mana from this card can pay any generic card cost. It untaps at the start of your next turn.'];
   if(card.name==='Fountain of Renewal')return ['At each turn start, gain 1 life.','Pay 3 generic mana and sacrifice this artifact: draw a card. This can respond during combat.'];
   if(card.name==='Omen of the Sea')return ['Flash: cast in any combat phase.','On entry: scry 2, then draw a card. Choose top/bottom and order in the scry window.','Pay 3 generic mana and sacrifice: scry 2.'];
   if(card.name==='Angelic Chorus')return ['Whenever an allied creature enters, gain life equal to its current toughness.'];
@@ -250,7 +402,7 @@ function effectDescriptions(card) {
     const stats = parseStats(card);
     const keywords = creatureKeywordLabels(creatureKeywords(card));
     lines.push(`Creature: ${stats.power} power / ${stats.toughness} toughness.${keywords ? ' Keywords: ' + keywords + '.' : ''}`);
-    lines.push(creatureKeywords(card).defender ? 'Defender: cannot attack.' : creatureKeywords(card).haste ? 'Haste: may attack immediately.' : 'Summoning sickness: may block now, but attacks from your next turn.');
+    lines.push(creatureKeywords(card).defender ? 'Defender: cannot attack.' : creatureKeywords(card).haste ? 'Haste: can join this turn’s combat phase.' : 'Summoning sickness: may block now, but attacks from your next turn.');
     lines.push('Monsters retaliate if they can block this creature. Flying, reach and menace apply. First/double strike use separate steps.');
     if(/\{T\}: Add/i.test(card.oracle_text||''))lines.push('Tap this creature to add 1 generic mana. Summoning sickness applies.');
     if(/attacks each combat if able/i.test(card.oracle_text||''))lines.push('Must attack at turn end if able. Walls cannot block it.');
@@ -281,7 +433,7 @@ function makeCardMarkup(card, packIndex, cardIndex, selected) {
 }
 
 function selectedDraftCards() {
-  const requiredPacks = state.draftKind === 'starter' ? [0, 1, 2] : [0];
+  const requiredPacks = state.draftKind === 'starter' ? Array.from({ length: STARTER_BOOSTER_COUNT }, (_, index) => index) : [0];
   if (state.packs.length !== requiredPacks.length || state.selection.size !== requiredPacks.length) return null;
   const cards = requiredPacks.map((packIndex) => {
     const cardIndex = state.selection.get(packIndex);
@@ -294,14 +446,14 @@ function renderDraft() {
   const starter = state.draftKind === 'starter';
   const packIndex = state.activePack || 0;
   const chosen = state.selection.has(packIndex);
-  const last = !starter || packIndex === 2;
-  $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF 3` : 'REWARD';
+  const last = !starter || packIndex === STARTER_BOOSTER_COUNT - 1;
+  $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF ${STARTER_BOOSTER_COUNT}` : 'REWARD';
   $('#draft-title').textContent = state.boosterSealed ? 'Your next booster' : 'Which card joins your journey?';
-  $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : 'Choose one of seven cards. Receive four copies. Hover a card to read its actual game effect.';
-  $('#pack-number').textContent = `${packIndex + 1} / ${starter ? 3 : 1}`;
-  $('#deck-count').textContent = String(state.deck.length + state.selection.size * 4);
+  $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : `Choose one of seven cards. Receive ${COPIES_PER_DRAFT_PICK} copies. Hover a card to read its actual game effect.`;
+  $('#pack-number').textContent = `${packIndex + 1} / ${starter ? STARTER_BOOSTER_COUNT : 1}`;
+  $('#deck-count').textContent = String(state.deck.length + state.selection.size * COPIES_PER_DRAFT_PICK);
   $('#draft-grid').innerHTML = state.boosterSealed
-    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-foil"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 CARDS</span></button><p>Click to open</p></div>`
+    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-foil"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
     : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${state.packs[packIndex].map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex)).join('')}</div></section>`;
   $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'The tooltip shows costs and actual in-game effects.';
   $('#pack-reroll').disabled = state.boosterSealed || Boolean(state.rerolledPacks?.has(packIndex));
@@ -373,7 +525,7 @@ $('#creature-row').addEventListener('click', (event) => {
 
 function confirmDraft() {
   const starter = state.draftKind === 'starter';
-  if (starter && (state.activePack || 0) < 2) {
+  if (starter && (state.activePack || 0) < STARTER_BOOSTER_COUNT - 1) {
     if (!state.selection.has(state.activePack || 0)) return;
     state.activePack = (state.activePack || 0) + 1;
     state.boosterSealed = true;
@@ -383,11 +535,11 @@ function confirmDraft() {
   }
   const selected = selectedDraftCards();
   if (!selected) {
-    showToast(starter ? 'Choose exactly one card from each of the three boosters.' : 'Choose a card from the booster first.');
+    showToast(starter ? `Choose exactly one card from each of the ${STARTER_BOOSTER_COUNT} boosters.` : 'Choose a card from the booster first.');
     return;
   }
-  for (const card of selected) for (let i = 0; i < 4; i += 1) state.deck.push(card);
-  if (starter) state.deck.push(...BUNDLED_CARDS.filter(card => ['Grizzly Bears', 'Savannah Lions'].includes(card.name)).flatMap(card => [card, card]));
+  for (const card of selected) for (let i = 0; i < COPIES_PER_DRAFT_PICK; i += 1) state.deck.push(card);
+  if (starter) state.deck.push(...generateStarterManaCards(STARTING_MANA_CARDS));
   state.selection.clear();
   if (starter) showJourney(); else showShop();
 }
@@ -395,18 +547,26 @@ function confirmDraft() {
 function beginBattle(node) {
   state.node = node;
   const enemy = ENCOUNTERS[node - 1];
+  const stage = state.stageLocations[node - 1] || COUNTRY_STAGES[(node - 1) % COUNTRY_STAGES.length];
   const enemyCreatures = createEnemyTeam(enemy);
+  const shuffledDeck = shuffle(state.deck);
+  const startingManaCards = shuffledDeck.filter(card => card.runMana).slice(0, STARTING_MANA_IN_PLAY);
+  const startingManaIds = new Set(startingManaCards.map(card => card.instanceId));
   state.battle = {
     enemy,
+    stage,
     enemyArt: enemyCreatures[0]?.card.art || '',
     enemyCreatures,
     playerBlock: state.relic === 'ward' ? 4 : 0,
-    mana: state.relic === 'crystal' ? 4 : 3,
-    maxMana: state.relic === 'crystal' ? 4 : 3,
+    mana: STARTING_MANA_IN_PLAY,
+    maxMana: STARTING_MANA_IN_PLAY,
+    floatingMana: 0,
+    lands: startingManaCards.map(card => ({ id: `mana-${state.nextPermanentId++}`, card, tapped: false })),
+    landAvailable: true,
     mulliganAvailable: true,
     turn: 1,
     phase: 'main',
-    deck: shuffle(state.deck),
+    deck: shuffledDeck.filter(card => !startingManaIds.has(card.instanceId)),
     graveyard: [],
     enemyGraveyard: [],
     exile: [],
@@ -422,10 +582,19 @@ function beginBattle(node) {
     log: []
   };
   drawToHand(HAND_SIZE);
-  addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures. Your generic mana refills each turn. Defeat every enemy to advance.`);
+  syncMana(state.battle);
+  addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures in ${stage.country}. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
   renderBattle();
   showScreen('combat-screen');
   playSfx('turn');
+}
+
+function generateStarterManaCards(count) {
+  const pool = state.landPool.length ? state.landPool : FALLBACK_LANDS;
+  return Array.from({ length: count }, () => {
+    const card = pool[Math.floor(Math.random() * pool.length)];
+    return { ...card, runMana: true, instanceId: `run-mana-${state.nextPermanentId++}` };
+  });
 }
 
 function addLog(message) {
@@ -465,8 +634,41 @@ function freeMulligan() {
   playSfx('shuffle');
 }
 
-function paymentPlan(card) {
-  return state.battle && state.battle.mana >= Math.ceil(card.cmc || 0) ? [] : null;
+function syncMana(battle = state.battle) {
+  if (!battle) return;
+  battle.floatingMana ||= 0;
+  battle.mana = battle.lands.filter(land => !land.tapped).length + battle.floatingMana;
+  battle.maxMana = battle.lands.length + battle.floatingMana;
+}
+
+function payMana(amount, battle = state.battle) {
+  const cost = Math.max(0, Math.ceil(amount || 0));
+  if (!battle) return false;
+  syncMana(battle);
+  if (battle.mana < cost) return false;
+  let remaining = cost;
+  const floating = Math.min(remaining, battle.floatingMana);
+  battle.floatingMana -= floating;
+  remaining -= floating;
+  const lands = battle.lands.filter(land => !land.tapped).slice(0, remaining);
+  if (lands.length < remaining) return false;
+  lands.forEach(land => { land.tapped = true; });
+  syncMana(battle);
+  return true;
+}
+
+function paymentPlan(card, battle = state.battle) {
+  if (!battle) return null;
+  if (isLand(card)) return battle.phase === 'main' && battle.landAvailable ? [] : null;
+  syncMana(battle);
+  return battle.mana >= Math.ceil(card.cmc || 0) ? [] : null;
+}
+
+function renderManaLands() {
+  const battle = state.battle;
+  if (!battle) return;
+  const lands = battle.lands.map(land => `<button type="button" class="mana-land${land.tapped ? ' tapped' : ''}" data-preview-owner="mana" data-preview-id="${escapeHtml(land.id)}" aria-label="${escapeHtml(land.card.name)}, ${land.tapped ? 'tapped' : 'untapped'} mana card">${cardFace(land.card)}</button>`).join('');
+  $('#mana-land-row').innerHTML = `${lands}<span class="mana-land-meta"><b id="land-count">${battle.lands.length}</b><small id="land-status">${battle.landAvailable ? 'Land drop ready' : 'Played this turn'}</small></span>`;
 }
 
 function defaultTarget(card) {
@@ -476,7 +678,10 @@ function defaultTarget(card) {
 
 function creatureCanAttack(creature, turn) {
   if (hasCreatureKeyword(creature, 'defender')) return false;
-  if (creature.owner === 'enemy' && creature.pattern) return enemyIntent(creature, turn).kind === 'attack';
+  if (creature.owner === 'enemy' && creature.pattern) {
+    const sick = Boolean(creature.summoningSick ?? isCreature(creature.card)) && turn <= creature.summonedTurn && !hasCreatureKeyword(creature, 'haste');
+    return !sick && enemyIntent(creature, turn).kind === 'attack';
+  }
   const cardHasSickness = isCreature(creature.card);
   const sick = creature.summoningSick ?? cardHasSickness;
   return !sick || turn > creature.summonedTurn || hasCreatureKeyword(creature, 'haste');
@@ -489,11 +694,14 @@ function assignedBlockerName(battle, attackerId) {
 function renderEnemyBoard() {
   const battle = state.battle;
   $('#enemy-board').innerHTML = `<div class="monster-rank">${battle.enemyCreatures.map(enemy => {
-    const intent = enemyIntent(enemy);
+    const rawIntent = enemyIntent(enemy);
+    const recovering = rawIntent.kind === 'attack' && isSummoningSick(enemy, battle.turn);
+    const intent = recovering && rawIntent.kind === 'attack' ? { ...rawIntent, label: 'Summoning sick · no attack', icon: '⌛', kind: 'rest' } : rawIntent;
     const selected = battle.phase === 'blocks' ? battle.selectedEnemyAttackerId === enemy.id : battle.selectedEnemyTargetId === enemy.id;
     const blocker = assignedBlockerName(battle, enemy.id);
     const keywords = creatureKeywordLabels(enemy);
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} life">♥ <b>${enemy.health}</b>${enemy.shield ? `<span>⛨ ${enemy.shield}</span>` : ''}<span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : ''}</small></button>`;
+    const healthPercent = Math.max(0, Math.min(100, enemy.health / enemy.maxHealth * 100));
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b>${enemy.shield ? `<span>⛨ ${enemy.shield}</span>` : ''}<span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -514,6 +722,7 @@ function previewCardFor(element) {
   const battle = state.battle;
   if (!battle) return null;
   if (owner === 'hand') return battle.hand[Number(element.dataset.handIndex)] || null;
+  if (owner === 'mana') return battle.lands.find(land => land.id === element.dataset.previewId)?.card || null;
   if (owner === 'player') return battle.creatures.find(creature => creature.id === element.dataset.previewId)?.card || null;
   if (owner === 'enemy') return battle.enemyCreatures.find(creature => creature.id === element.dataset.previewId)?.card || null;
   if (owner === 'permanent') return battle.permanents.find(permanent => permanent.id === element.dataset.previewId)?.card || null;
@@ -558,8 +767,8 @@ function showCardPreview(card, element) {
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
-  if (element.dataset.previewOwner === 'hand') lines.push(!canCastNow(card, battle) ? 'Only instants can be cast outside the main phase.' : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
-  const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: only flying or reach can block it.', reach:'Reach: can block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: may attack immediately.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
+  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? 'Only instants can be cast outside the main phase.' : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
+  const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: only flying or reach can block it.', reach:'Reach: can block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
   preview.hidden = false;
@@ -581,7 +790,10 @@ function renderBattle() {
   const enemy = battle.enemy;
   $('#shield-label').textContent = `${battle.playerBlock} shield`;
   $('#node-counter').textContent = String(state.node).padStart(2, '0');
-  $('#location-name').textContent = enemy.location;
+  const stage = battle.stage || COUNTRY_STAGES[(state.node - 1) % COUNTRY_STAGES.length];
+  $('#location-name').hidden = false;
+  $('#location-name').textContent = `${stage.country} · ${stage.region}`;
+  $('.arena-table').style.setProperty('--stage-accent', stage.color);
   $('#enemy-rank').textContent = enemy.rank;
   $('#enemy-name').textContent = enemy.name;
   const enemyCount = battle.enemyCreatures.length;
@@ -589,6 +801,7 @@ function renderBattle() {
   $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)}`;
   const availableMana = battle.mana;
   $('#mana-label').textContent = `${availableMana} / ${battle.maxMana}`;
+  renderManaLands();
   $('#enemy-art-image').src = battle.enemyArt || '';
   $('#enemy-art-image').hidden = !battle.enemyArt;
   $('#enemy-art .enemy-sprite').hidden = Boolean(battle.enemyArt);
@@ -597,7 +810,7 @@ function renderBattle() {
   $('#end-turn-button').innerHTML = battle.priorityCallback ? 'CONTINUE <span>→</span>' : battle.phase === 'blocks' ? 'CONFIRM BLOCKS <span>✓</span>' : resolving ? 'RESOLVING COMBAT …' : 'END TURN <span>→</span>';
   $('#combat-action-hint').textContent = battle.pendingAttachment ? 'Choose an allied creature. Cancelling is free.' : battle.phase === 'blocks'
     ? 'Choose an attacker, then add blockers. You can drag blockers onto attackers.'
-    : 'Click a creature to queue it, choose its target, or use Attack now.';
+    : 'Play one mana card each turn. Queue attacks or choose Attack now; combat resolves in the attack phase.';
   if (battle.priorityCallback) $('#combat-action-hint').textContent = 'Response window: cast an instant, then Continue.';
   else if (resolving) $('#combat-action-hint').textContent = phaseInfo(battle.phase).description;
   $('#combat-action-hint').classList.toggle('blocking', battle.phase === 'blocks');
@@ -779,6 +992,7 @@ function handleCardDrop(payload, target) {
   if (payload.kind !== 'hand') return false;
   const card = battle.hand[payload.index];
   if (!card || !canCastNow(card, battle) || (payload.cardId && card.id !== payload.cardId)) return false;
+  if (isLand(card) && !onPlayer) return false;
   if ((isCreature(card) || isPermanent(card)) && !onPlayer) return false;
   if (!onPlayer && !onEnemy) return false;
   if (enemy) battle.selectedEnemyTargetId = enemy.dataset.enemyAttacker;
@@ -811,6 +1025,7 @@ function dropFeedback(payload, target) {
   if (payload.kind === 'equipment') return battle.phase === 'main' && Boolean(own && ally);
   const card = battle.hand[payload.index];
   if (!card || !canCastNow(card, battle) || !paymentPlan(card)) return false;
+  if (isLand(card)) return Boolean(own);
   if (isCreature(card)) return Boolean(own) && battle.creatures.length < 3;
   if (isAura(card)) return Boolean(own && ally);
   if (/Equipment/.test(card.type_line) && ally) return Boolean(own) && battle.mana >= Math.ceil(card.cmc || 0) + (equipCost(card) ?? Infinity);
@@ -1014,8 +1229,7 @@ function selectAttachmentTarget(creatureId) {
   if (pending.handIndex !== undefined) {
     const card = battle.hand[pending.handIndex];
     if (!card || !isAura(card)) { battle.pendingAttachment = null; renderBattle(); return; }
-    if (!paymentPlan(card)) return showToast('Not enough generic mana.');
-    battle.mana -= Math.ceil(card.cmc || 0);
+    if (!paymentPlan(card) || !payMana(card.cmc, battle)) return showToast('Not enough generic mana.');
     battle.hand.splice(pending.handIndex, 1);
     battle.permanents.push({ id: `permanent-${state.nextPermanentId++}`, card, attachedTo: creatureId });
     battle.mulliganAvailable = false;
@@ -1024,8 +1238,7 @@ function selectAttachmentTarget(creatureId) {
     if (!permanent) return;
     if (permanent.attachedTo === creatureId) { battle.pendingAttachment = null; renderBattle(); return; }
     const cost = equipCost(permanent.card);
-    if (cost === null || battle.mana < cost) return showToast(`Equipping requires ${cost ?? '?'} generic mana.`);
-    battle.mana -= cost;
+    if (cost === null || battle.mana < cost || !payMana(cost, battle)) return showToast(`Equipping requires ${cost ?? '?'} generic mana.`);
     battle.mulliganAvailable = false;
     permanent.attachedTo = creatureId;
   }
@@ -1040,7 +1253,7 @@ function playCard(index, targetSide = 'enemy') {
   const battle = state.battle;
   const card = battle?.hand[index];
   if (!card) return;
-  if (!canCastNow(card, battle)) return showToast('Only instants can be cast outside your main phase.');
+  if (!canCastNow(card, battle)) return showToast(isLand(card) ? 'You may play one mana card during your main phase.' : 'Only instants can be cast outside your main phase.');
   if (isAura(card)) {
     if (!battle.creatures.length) return showToast('This aura requires an allied creature.');
     if (!paymentPlan(card)) return showToast('Not enough generic mana.');
@@ -1051,13 +1264,24 @@ function playCard(index, targetSide = 'enemy') {
   battle.pendingAttachment = null;
   battle.resolvingSpellTarget = battle.pendingSpellTarget || null;
   battle.pendingSpellTarget = null;
-  if (isLand(card)) return showToast('This game does not require lands.');
+  if (isLand(card)) {
+    if (!battle.landAvailable || battle.phase !== 'main') return showToast('You may play one mana card during your main phase.');
+    battle.mulliganAvailable = false;
+    battle.hand.splice(index, 1);
+    battle.lands.push({ id: `mana-${state.nextPermanentId++}`, card, tapped: false });
+    battle.landAvailable = false;
+    syncMana(battle);
+    addLog(`${card.name} enters untapped and adds one generic mana.`);
+    renderBattle();
+    playSfx('select');
+    return;
+  }
   if (isCreature(card) && battle.creatures.length >= 3) return showToast('Your creature board is full.');
   if (targetSide === 'enemy' && isCreature(card)) return showToast('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
   if (!payment) return showToast('Not enough generic mana for this card.');
   battle.mulliganAvailable = false;
-  battle.mana -= Math.ceil(card.cmc || 0);
+  if (!payMana(card.cmc, battle)) return showToast('Not enough generic mana for this card.');
   battle.hand.splice(index, 1);
   if (isCreature(card)) {
     const stats = parseStats(card);
@@ -1280,7 +1504,9 @@ function assignBlocker(attackerId, blockerId) {
 }
 function isInstant(card) { return /\bInstant\b/i.test(card?.type_line || ''); }
 function canCastNow(card, battle = state.battle) {
-  return Boolean(battle && (battle.phase === 'main' || ((isInstant(card) || hasFlash(card)) && ['attack', 'enemy', 'blocks', 'damage'].includes(battle.phase))));
+  if (!battle) return false;
+  if (isLand(card)) return battle.phase === 'main' && battle.landAvailable;
+  return battle.phase === 'main' || ((isInstant(card) || hasFlash(card)) && ['attack', 'enemy', 'blocks', 'damage'].includes(battle.phase));
 }
 function hasInstantResponse(battle) {
   const extra = battle.creatures.filter(creature => canTapForMana(creature, battle)).length;
@@ -1352,8 +1578,10 @@ function resolveEnemyCombat() {
   battle.creatures = removeDeadCreatures(battle.creatures, 'player');
   battle.playerBlock = (battle.permanents || []).reduce((sum, permanent) => sum + permanentEffect(permanent.card).shield, 0);
   battle.turn += 1;
-  battle.maxMana = Math.min(6, 3 + Math.floor((battle.turn - 1) / 2) + (state.relic === 'crystal' ? 1 : 0));
-  battle.mana = battle.maxMana;
+  battle.lands.forEach(land => { land.tapped = false; });
+  battle.floatingMana = state.relic === 'crystal' ? 1 : 0;
+  battle.landAvailable = true;
+  syncMana(battle);
   battle.phase = 'main';
   battle.blockAssignments.clear();
   battle.selectedEnemyAttackerId = null;
@@ -1505,6 +1733,16 @@ document.addEventListener('focusout', (event) => {
 });
 $('#start-button').addEventListener('click', startNewRun);
 $('#restart-button').addEventListener('click', startNewRun);
+$('#avatar-choices').addEventListener('click', event => {
+  const button = event.target.closest('[data-avatar-choice]');
+  const avatar = AVATARS.find(item => item.id === button?.dataset.avatarChoice);
+  if (!avatar) return;
+  state.selectedAvatar = avatar.id;
+  try { localStorage.setItem('booster-tutor-avatar', avatar.id); } catch { /* Keep the selection for this page session. */ }
+  renderAvatarChoices();
+  playSfx('select');
+});
+renderAvatarChoices();
 $('#end-turn-button').addEventListener('click', handleCombatAction);
 $('#mulligan-button').addEventListener('click', freeMulligan);
 $('#sound-toggle').addEventListener('click', () => {
@@ -1531,7 +1769,7 @@ $('#back-link').addEventListener('click', (event) => {
 });
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') { if (pointerDrag) { finishDrag(); playSfx('cancel'); } hideCardPreview(); if (state.battle?.pendingAttachment) { state.battle.pendingAttachment = null; renderBattle(); } }
-  if (event.key === 'Enter' && $('#start-screen').classList.contains('active')) startNewRun();
+  if (event.key === 'Enter' && $('#start-screen').classList.contains('active') && !event.target.closest('button, a, input, select, textarea')) startNewRun();
 });
 
 function showJourney() {
@@ -1540,7 +1778,7 @@ function showJourney() {
   $('#journey-description').textContent = first ? 'One relic. A different way to play. Your choice lasts for this run.' : 'Life carries between encounters. Prepare before you continue.';
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
   $('#journey-options').innerHTML = first
-    ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>+1 generic mana every turn.</p></button><button data-relic="ward"><span>⛨</span><h3>Ancient Ward</h3><p>Begin each battle with 4 shield.</p></button>'
+    ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="ward"><span>⛨</span><h3>Ancient Ward</h3><p>Begin each battle with 4 shield.</p></button>'
     : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life. No life cap.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add Divination: draw two cards.</p></button>';
   $('#journey-life').textContent = `${state.playerHealth} LIFE · ${state.deck.length} CARDS · ${state.coins || 0} COINS`;
   $('#return-shop').hidden = first;
@@ -1701,13 +1939,13 @@ function openCollection(kind = 'deck') {
   for(const id of ['collection-type','collection-mana','collection-keyword','collection-color']) $('#'+id).value='';
   $('#collection-title').textContent = kind === 'catalog' ? 'Verified card collection' : kind === 'library' ? 'Your library' : kind === 'exile' ? 'Exile' : 'Your run deck';
   $('#collection-kind').textContent = kind.toUpperCase();
-  $('#collection-note').textContent = kind === 'catalog' ? 'Scryfall metadata and original images are verified. Printed keywords are implemented; tooltips describe the adapted monster-combat effects. All colours still use generic mana.' : kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters cannot return through graveyard recycling. Exile lasts for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
+  $('#collection-note').textContent = kind === 'catalog' ? 'Loading the curated Magic list and current card data from Scryfall. Printed keywords and adapted effects are described in each card inspector.' : kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters cannot return through graveyard recycling. Exile lasts for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
   renderCollection(); hideCardPreview(); $('#collection-dialog').showModal();
 }
 function renderCollection() {
   hideCardPreview();
   const kind = state.collectionKind;
-  const cards = kind === 'catalog' ? BUNDLED_CARDS : kind === 'library' ? state.battle?.deck || [] : kind === 'exile' ? [...(state.battle?.exile || []), ...(state.battle?.enemyExile || [])] : state.deck;
+  const cards = kind === 'catalog' ? (state.pool.length ? state.pool : BUNDLED_CARDS) : kind === 'library' ? state.battle?.deck || [] : kind === 'exile' ? [...(state.battle?.exile || []), ...(state.battle?.enemyExile || [])] : state.deck;
   const groups = new Map();
   for (const card of cards) {
     const key = card.id || card.name;
@@ -1782,12 +2020,12 @@ $('#shop-continue').addEventListener('click',showJourney);
 $('#return-shop').addEventListener('click',showShop);
 
 function canTapForMana(creature,battle=state.battle){return Boolean(battle && creature && /\{T\}: Add/i.test(creature.card.oracle_text||'') && !creature.tapped && !isSummoningSick(creature,battle.turn) && ['main','attack','enemy','blocks','damage'].includes(battle.phase));}
-function tapForMana(id){const battle=state.battle;const creature=battle?.creatures.find(item=>item.id===id);if(!canTapForMana(creature,battle))return false;creature.tapped=true;for(const [id] of battle.blockAssignments){const keep=blockerIds(battle,id).filter(item=>item!==creature.id);if(keep.length)battle.blockAssignments.set(id,keep);else battle.blockAssignments.delete(id);}battle.mana+=1;battle.mulliganAvailable=false;renderBattle();playSfx('select');return true;}
+function tapForMana(id){const battle=state.battle;const creature=battle?.creatures.find(item=>item.id===id);if(!canTapForMana(creature,battle))return false;creature.tapped=true;for(const [id] of battle.blockAssignments){const keep=blockerIds(battle,id).filter(item=>item!==creature.id);if(keep.length)battle.blockAssignments.set(id,keep);else battle.blockAssignments.delete(id);}battle.floatingMana=(battle.floatingMana||0)+1;syncMana(battle);battle.mulliganAvailable=false;renderBattle();playSfx('select');return true;}
 function permanentActivationCost(card){return card.name==='Fountain of Renewal'?3:card.name==='Omen of the Sea'?3:null;}
 function canActivatePermanent(permanent,battle=state.battle){const cost=permanentActivationCost(permanent.card);return Boolean(battle && cost!==null && battle.mana>=cost && ['main','attack','enemy','blocks','damage'].includes(battle.phase));}
 function activatePermanent(id){
  const battle=state.battle;const permanent=battle?.permanents.find(item=>item.id===id);if(!permanent||!canActivatePermanent(permanent,battle))return false;
- battle.mulliganAvailable=false;battle.mana-=permanentActivationCost(permanent.card);battle.permanents=battle.permanents.filter(item=>item!==permanent);battle.graveyard.push(permanent.card);
+ battle.mulliganAvailable=false;if(!payMana(permanentActivationCost(permanent.card),battle))return false;battle.permanents=battle.permanents.filter(item=>item!==permanent);battle.graveyard.push(permanent.card);
  if(permanent.card.name==='Fountain of Renewal')drawOneExtra();else beginScry(2,0);
  renderBattle();playSfx('cast');return true;
 }
@@ -1816,7 +2054,15 @@ function matchesCardFilters(card,query=''){
  const type=$('#collection-type').value;const mana=$('#collection-mana').value;const keyword=$('#collection-keyword').value;const color=$('#collection-color').value;
  return `${card.name} ${card.type_line} ${card.oracle_text||''}`.toLowerCase().includes(query) && (!type||(card.type_line||'').includes(type)) && (!mana||Math.ceil(card.cmc||0)===Number(mana)) && (!keyword||printedKeywords(card).includes(keyword)) && (!color||(color==='C'?!(card.color_identity||[]).length:(card.color_identity||[]).includes(color)));
 }
-$('#card-catalog-button').addEventListener('click',()=>openCollection('catalog'));
+$('#card-catalog-button').addEventListener('click',()=>{
+  openCollection('catalog');
+  if (state.pool.length) return;
+  $('#collection-note').textContent='Loading the curated card list and Scryfall card details…';
+  ensureCardPool().then(result=>{
+    renderCollection();
+    $('#collection-note').textContent=result.warning||'Card names, mana costs, rules text and images are loaded from Scryfall for this curated list.';
+  });
+});
 for(const id of ['collection-type','collection-mana','collection-keyword','collection-color'])$('#'+id).addEventListener('change',renderCollection);
 $('#scry-swap').addEventListener('click',()=>{if(state.battle?.scry){state.battle.scry.cards.reverse();renderScry();}});
 
