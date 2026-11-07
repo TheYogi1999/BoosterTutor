@@ -17,7 +17,6 @@ const state = {
   node: 1,
   battle: null,
   soundOn: true,
-  audio: null,
   toastTimer: null,
   openingTimer: null,
   nextPermanentId: 1
@@ -110,12 +109,7 @@ function makeStarterPacks() {
 }
 
 function startNewRun() {
-  if (state.soundOn) {
-    try {
-      state.audio ||= new (window.AudioContext || window.webkitAudioContext)();
-      state.audio.resume().catch(() => {});
-    } catch { /* Sound is optional. */ }
-  }
+  if (state.soundOn) soundEngine.unlock().catch(() => {});
   state.deck = [];
   state.relic = null;
   state.playerHealth = 30;
@@ -135,7 +129,7 @@ function startNewRun() {
     state.boosterSealed = true;
     renderDraft();
     showScreen('draft-screen');
-    playSound(440, 0.07);
+    playSfx('shuffle');
   });
 }
 
@@ -197,7 +191,7 @@ function cardEffects(card, creature = isCreature(card)) {
   const grant = text.match(/gains?\s+([^.;\n]+?)\s+until end of turn/i);
   if (damage) effects.push({ kind: 'damage', amount: Number(damage[1]) });
   if (life) effects.push({ kind: 'heal', amount: Number(life[1]) });
-  if (draw) effects.push({ kind: 'draw', amount: Math.min(3, ({ a: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 })[draw[1].toLowerCase()] || Number(draw[1]) || 1) });
+  if (draw) effects.push({ kind: 'draw', amount: ({ a: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 })[draw[1].toLowerCase()] || Number(draw[1]) || 1 });
   if (buff) effects.push({ kind: 'buff', power: Number(buff[1]), toughness: Number(buff[2]), temporary: /until end of turn/i.test(text) });
   if (grant) {
     const keywords = grant[1].match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste)\b/gi) || [];
@@ -244,8 +238,8 @@ function effectDescriptions(card) {
   }
   for (const effect of cardEffects(card)) {
     if (effect.kind === 'damage') lines.push(`${effect.amount} Schaden am gewählten Gegner, sonst am ersten Gegner. Schild fängt Schaden ab; Überschuss verfällt.`);
-    if (effect.kind === 'heal') lines.push(`Heilt dich um ${effect.amount} Leben, höchstens auf 30.`);
-    if (effect.kind === 'draw') lines.push(`Zieht ${effect.amount} Karte(n), bis zu ${HAND_SIZE} Handkarten.`);
+    if (effect.kind === 'heal') lines.push(`Heilt dich um ${effect.amount} Leben. Keine Lebensobergrenze.`);
+    if (effect.kind === 'draw') lines.push(`Zieht ${effect.amount} zusätzliche Karte(n). Keine Handkartenobergrenze.`);
     if (effect.kind === 'shield') lines.push(`Gibt ${effect.amount} Schild bis nach dem nächsten gegnerischen Angriff.`);
     if (effect.kind === 'buff') lines.push(`Stärkste eigene Kreatur: ${signed(effect.power)}/${signed(effect.toughness)}${effect.temporary ? ' bis Zugende' : ' für diesen Kampf'}. Ohne Kreatur: 3 Schild.`);
     if (effect.kind === 'keywords') lines.push(`Stärkste eigene Kreatur erhält ${effect.keywords.join(', ')} bis Zugende. Ohne Kreatur kein Effekt.`);
@@ -313,7 +307,7 @@ $('#draft-grid').addEventListener('click', (event) => {
   clearTimeout(state.openingTimer);
   $('#draft-screen').classList.remove('opening');
   renderDraft();
-  playSound(560, 0.045);
+  playSfx('select');
 });
 
 $('#draft-confirm').addEventListener('click', confirmDraft);
@@ -347,7 +341,7 @@ $('#creature-row').addEventListener('click', (event) => {
   creature.willAttack = creature.willAttack === false;
   addLog(creature.willAttack ? `${creature.card.name} will attack.` : `${creature.card.name} will stay back to block.`);
   renderBattle();
-  playSound(creature.willAttack ? 570 : 420, 0.055);
+  playSfx('select');
 });
 
 
@@ -402,7 +396,7 @@ function beginBattle(node) {
   addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures. Your generic mana refills each turn. Defeat every enemy to advance.`);
   renderBattle();
   showScreen('combat-screen');
-  playSound(330, 0.1);
+  playSfx('turn');
 }
 
 function addLog(message) {
@@ -439,7 +433,7 @@ function freeMulligan() {
   drawToHand(HAND_SIZE);
   addLog('Free mulligan: Your opening hand was shuffled back. Draw seven cards.');
   renderBattle();
-  playSound(740, 0.14);
+  playSfx('shuffle');
 }
 
 function paymentPlan(card) {
@@ -469,7 +463,7 @@ function renderEnemyBoard() {
     const intent = enemyIntent(enemy);
     const selected = battle.phase === 'blocks' ? battle.selectedEnemyAttackerId === enemy.id : battle.selectedEnemyTargetId === enemy.id;
     const blocker = assignedBlockerName(battle, enemy.id);
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${blocker ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} Leben, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-health"><i style="width:${Math.max(0, enemy.health / enemy.maxHealth * 100)}%"></i><b>${enemy.health} / ${enemy.maxHealth}</b></span><small>${enemy.shield ? '⛨ ' + enemy.shield + ' Schild · ' : ''}${blocker ? 'Blockiert von ' + escapeHtml(blocker) : selected ? 'Aktuelles Ziel' : 'Klicken oder Zauber hierher ziehen'}</small></button>`;
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${blocker ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} Leben, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} Leben">♥ <b>${enemy.health}</b>${enemy.shield ? `<span>⛨ ${enemy.shield}</span>` : ''}</span><small>${blocker ? 'Blockiert von ' + escapeHtml(blocker) : selected ? 'Aktuelles Ziel' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -514,6 +508,7 @@ function positionCardPreview() {
 }
 function showCardPreview(card, element) {
   if (!card || !element) return hideCardPreview();
+  if (element.dataset.previewOwner === 'draft' && $('#draft-screen').classList.contains('opening') && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return hideCardPreview();
   if (['player', 'permanent'].includes(element.dataset.previewOwner)) { inspectBattlefieldCard(card, element); hideCardPreview(); return; }
   const preview = $('#card-preview');
   preview.dataset.mode = element.dataset.previewOwner;
@@ -527,7 +522,7 @@ function showCardPreview(card, element) {
   const attached = permanent?.attachedTo ? battle.creatures.find(item => item.id === permanent.attachedTo)?.card.name : null;
   const cost = Math.ceil(card.cmc || 0);
   const lines = element.dataset.previewOwner === 'enemy'
-    ? [`Gegner: ${creature.power} Angriff · ${creature.health}/${creature.maxHealth} Leben.`, `Angriff ${creatureCanAttack(creature, battle.turn) ? 'in diesem Zug' : 'ab dem nächsten Zug'}.`, creatureKeywordLabels(creature) || 'Keine besonderen Kampffähigkeiten.']
+    ? [`Gegner: ${creature.power} Angriff · ${creature.health} Leben.`, `Angriff ${creatureCanAttack(creature, battle.turn) ? 'in diesem Zug' : 'ab dem nächsten Zug'}.`, creatureKeywordLabels(creature) || 'Keine besonderen Kampffähigkeiten.']
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Aktuell: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Schaden · ${creature.tapped ? 'hat angegriffen, kann nicht blocken' : 'kann blocken'}.`);
   if (permanent) lines.push(attached ? `Verbunden mit: ${attached}.` : isAttachment(card) ? 'Noch nicht angelegt.' : 'Aktiv auf dem Spielfeld.');
@@ -558,8 +553,7 @@ function renderBattle() {
   $('#enemy-name').textContent = enemy.name;
   const enemyCount = battle.enemyCreatures.length;
   $('#enemy-count-label').textContent = `${enemyCount} VERBLEIBEND`;
-  $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)} / 30`;
-  $('#player-health-fill').style.width = `${Math.max(0, state.playerHealth / 30 * 100)}%`;
+  $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)}`;
   const availableMana = battle.mana;
   $('#mana-label').textContent = `${availableMana} / ${battle.maxMana}`;
   $('#enemy-art-image').src = battle.enemyArt || '';
@@ -602,11 +596,13 @@ function renderBattle() {
 function renderHand() {
   const battle = state.battle;
   const center = (battle.hand.length - 1) / 2;
+  const spacing = Math.min(87, 980 / Math.max(1, battle.hand.length - 1));
+  $('#hand-row').style.setProperty('--hand-step', `${spacing}px`);
   $('#hand-row').innerHTML = battle.hand.map((card, index) => {
     const position = index - center;
     const canPay = Boolean(paymentPlan(card));
     const selected = battle.pendingAttachment?.handIndex === index;
-    return `<button type="button" class="hand-card${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * 4}deg;--fan-lift:${position * position * 3}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${battle.phase === 'main'}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
+    return `<button type="button" class="hand-card${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${battle.phase === 'main'}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
   }).join('');
   $('#hand-row').querySelectorAll('.hand-card').forEach(button => {
     button.addEventListener('click', () => { if (Date.now() < (state.suppressClickUntil || 0)) return; hideCardPreview(); playCard(Number(button.dataset.handIndex), defaultTarget(battle.hand[Number(button.dataset.handIndex)])); });
@@ -624,7 +620,7 @@ function renderCreatures() {
     const legal = blocking && !creature.tapped && (!selectedAttacker || canBlockCreature(creature, selectedAttacker));
     const willAttack = !waiting && creature.willAttack !== false;
     const targeting = Boolean(battle.pendingAttachment);
-    const status = targeting ? '✦ Als Ziel auswählen' : blocking ? attacker ? `↔ Blockt ${attacker.card.name}` : creature.tapped ? 'Hat angegriffen' : legal ? 'Zum Blocken auswählen' : 'Kann diesen Angriff nicht blocken' : waiting ? 'Wartet · kann blocken' : willAttack ? '⚔ Greift an · klicken zum Zurückhalten' : '⛨ Bleibt zum Blocken zurück';
+    const status = targeting ? '✦ Als Ziel auswählen' : blocking ? attacker ? `↔ Blockt ${attacker.card.name}` : creature.tapped ? 'Hat angegriffen' : legal ? 'Zum Blocken auswählen' : 'Kann diesen Angriff nicht blocken' : waiting ? 'Wartet · kann blocken' : willAttack ? '⚔ Greift an' : '⛨ Blockbereit';
     const attachments = battle.permanents.filter(permanent => permanent.attachedTo === creature.id);
     return `<div class="creature-group" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="An ${escapeHtml(creature.card.name)} angelegte Karten">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${entry ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${!blocking && !waiting && !willAttack ? ' held-back' : ''}${targeting ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(entry) : !waiting && !willAttack}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${blocking && !creature.tapped}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ' · ' + creature.damage + ' Schaden' : ''}</span><small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} Karten angelegt">↔ ${attachments.length}</span>` : ''}</div>`;
   }).join('') : '<div class="empty-board">Spiele eine Kreatur aus deiner Hand.<br>Bis zu drei Kreaturen können hier liegen.</div>';
@@ -738,14 +734,47 @@ function handleCardDrop(payload, target) {
   }
   return true;
 }
+let pointerDrag = null;
+let dragClickGuard = null;
+function dropFeedback(payload, target) {
+  const battle = state.battle;
+  if (!battle || !payload || !target) return false;
+  const own = target.closest('#player-drop-zone');
+  const enemy = target.closest('[data-enemy-attacker]');
+  const ally = target.closest('[data-creature-id], [data-host-id]');
+  if (payload.kind === 'blocker') return battle.phase === 'blocks' && Boolean(enemy);
+  if (payload.kind === 'equipment') return battle.phase === 'main' && Boolean(own && ally);
+  const card = battle.hand[payload.index];
+  if (battle.phase !== 'main' || !card || !paymentPlan(card)) return false;
+  if (isCreature(card)) return Boolean(own) && battle.creatures.length < 3;
+  if (isAura(card)) return Boolean(own && ally);
+  if (isPermanent(card)) return Boolean(own);
+  return Boolean(own || target.closest('#enemy-drop-zone'));
+}
+function updateDragFeedback(payload, target) {
+  document.querySelectorAll('.drop-ready, .drop-invalid').forEach(zone => zone.classList.remove('drop-ready', 'drop-invalid'));
+  const zone = target?.closest('[data-creature-id], [data-enemy-attacker], .drop-zone');
+  const allowed = dropFeedback(payload, target);
+  if (zone) zone.classList.add(allowed ? 'drop-ready' : 'drop-invalid');
+  const ghost = $('#drag-ghost');
+  if (ghost) { ghost.classList.toggle('valid-drop', allowed); ghost.classList.toggle('invalid-drop', Boolean(zone) && !allowed); }
+}
 function finishDrag() {
+  if (pointerDrag?.source) {
+    dragClickGuard = pointerDrag.source;
+    pointerDrag.source.classList.remove('is-grabbed');
+    try { pointerDrag.source.releasePointerCapture(pointerDrag.pointerId); } catch {}
+  }
+  pointerDrag = null;
   state.dragPayload = null;
-  state.suppressClickUntil = Date.now() + 250;
+  state.suppressClickUntil = Date.now() + 300;
   document.body.classList.remove('drag-active');
-  document.querySelectorAll('.drop-ready').forEach(zone => zone.classList.remove('drop-ready'));
+  document.querySelectorAll('.drop-ready, .drop-invalid, .drop-possible').forEach(zone => zone.classList.remove('drop-ready', 'drop-invalid', 'drop-possible'));
   $('#drag-ghost')?.remove();
 }
+// Native drag remains a fallback for browser/assistive drag APIs.
 document.addEventListener('dragstart', event => {
+  if (pointerDrag) { event.preventDefault(); return; }
   const payload = dragPayloadFor(event.target);
   if (!payload) return;
   state.dragPayload = payload;
@@ -756,56 +785,71 @@ document.addEventListener('dragstart', event => {
   document.body.classList.add('drag-active');
 });
 document.addEventListener('dragover', event => {
-  if (!state.dragPayload || !event.target.closest('.arena-table')) return;
+  if (!state.dragPayload) return;
   event.preventDefault();
-  event.dataTransfer.dropEffect = 'move';
-  document.querySelectorAll('.drop-ready').forEach(zone => zone.classList.remove('drop-ready'));
-  event.target.closest('[data-creature-id], [data-enemy-attacker], .drop-zone')?.classList.add('drop-ready');
+  event.dataTransfer.dropEffect = dropFeedback(state.dragPayload, event.target) ? 'move' : 'none';
+  updateDragFeedback(state.dragPayload, event.target);
 });
 document.addEventListener('drop', event => {
   if (!state.dragPayload) return;
   event.preventDefault();
-  const payload = state.dragPayload;
-  if (!handleCardDrop(payload, event.target)) showToast('Ziehe Kreaturen und bleibende Karten nach links, Zauber auf ein Ziel rechts.');
+  const allowed = dropFeedback(state.dragPayload, event.target);
+  if (allowed) handleCardDrop(state.dragPayload, event.target);
+  else playSfx('cancel');
   finishDrag();
 });
-document.addEventListener('dragend', finishDrag);
-let touchDrag = null;
+document.addEventListener('dragend', () => { if (!pointerDrag) finishDrag(); });
 document.addEventListener('pointerdown', event => {
-  if (event.pointerType === 'mouse') return;
+  if (event.button !== 0 || pointerDrag) return;
+  dragClickGuard = null;
   const payload = dragPayloadFor(event.target);
-  if (payload) touchDrag = { payload, x: event.clientX, y: event.clientY, source: event.target.closest('button'), active: false };
+  const source = event.target.closest('button');
+  if (!payload || !source) return;
+  const face = source.querySelector('.player-card-frame, .permanent-card-frame') || source;
+  const box = face.getBoundingClientRect();
+  pointerDrag = { payload, source, face, pointerId: event.pointerId, x: event.clientX, y: event.clientY, offsetX: Math.max(0, Math.min(box.width, event.clientX - box.left)), offsetY: Math.max(0, Math.min(box.height, event.clientY - box.top)), width: box.width, height: box.height, active: false };
+  source.setPointerCapture(event.pointerId);
 });
 document.addEventListener('pointermove', event => {
-  if (!touchDrag) return;
-  if (!touchDrag.active && Math.hypot(event.clientX - touchDrag.x, event.clientY - touchDrag.y) < 9) return;
-  if (!touchDrag.active) {
-    touchDrag.active = true;
-    state.dragPayload = touchDrag.payload;
+  if (!pointerDrag || event.pointerId !== pointerDrag.pointerId) return;
+  if (!pointerDrag.active && Math.hypot(event.clientX - pointerDrag.x, event.clientY - pointerDrag.y) < 7) return;
+  if (!pointerDrag.active) {
+    pointerDrag.active = true;
+    state.dragPayload = pointerDrag.payload;
     hideCardPreview();
-    const ghost = touchDrag.source.cloneNode(true);
-    ghost.id = 'drag-ghost';
+    pointerDrag.source.style.setProperty('--grabbed-transform', getComputedStyle(pointerDrag.source).transform);
+    pointerDrag.source.classList.add('is-grabbed');
+    const ghost = document.createElement('div');
+    ghost.id = 'drag-ghost'; ghost.className = 'drag-card';
+    const image = pointerDrag.face.querySelector('img, .printed-card');
+    if (image) ghost.append(image.cloneNode(true));
+    ghost.style.setProperty('--drag-width', `${pointerDrag.width}px`);
+    ghost.style.setProperty('--drag-height', `${pointerDrag.height}px`);
     document.body.append(ghost);
     document.body.classList.add('drag-active');
+    document.querySelectorAll('.drop-zone').forEach(zone => { if (dropFeedback(state.dragPayload, zone)) zone.classList.add('drop-possible'); });
+    playSfx('grab');
   }
   event.preventDefault();
   const ghost = $('#drag-ghost');
-  ghost.style.left = `${event.clientX - 55}px`;
-  ghost.style.top = `${event.clientY - 75}px`;
+  ghost.style.left = `${event.clientX - pointerDrag.offsetX}px`;
+  ghost.style.top = `${event.clientY - pointerDrag.offsetY}px`;
+  updateDragFeedback(pointerDrag.payload, document.elementFromPoint(event.clientX, event.clientY));
 }, { passive: false });
 document.addEventListener('pointerup', event => {
-  if (!touchDrag) return;
-  if (touchDrag.active) {
-    handleCardDrop(touchDrag.payload, document.elementFromPoint(event.clientX, event.clientY));
-    finishDrag();
-  }
-  touchDrag = null;
+  if (!pointerDrag || event.pointerId !== pointerDrag.pointerId) return;
+  if (!pointerDrag.active) { pointerDrag = null; return; }
+  const target = document.elementFromPoint(event.clientX, event.clientY);
+  if (dropFeedback(pointerDrag.payload, target)) handleCardDrop(pointerDrag.payload, target);
+  else playSfx('cancel');
+  finishDrag();
 });
-document.addEventListener('pointercancel', () => { if (!touchDrag) return; touchDrag = null; finishDrag(); });
+document.addEventListener('pointercancel', () => { if (pointerDrag) finishDrag(); });
+window.addEventListener('blur', () => { if (pointerDrag) finishDrag(); });
 
 function drawOneExtra() {
   const battle = state.battle;
-  if (battle.hand.length < HAND_SIZE) drawToHand(battle.hand.length + 1);
+  drawToHand(battle.hand.length + 1);
 }
 
 function damageFirstEnemy(amount) {
@@ -816,6 +860,7 @@ function damageFirstEnemy(amount) {
   enemy.shield = (enemy.shield || 0) - blocked;
   const dealt = Math.min(enemy.health, amount - blocked);
   enemy.health = Math.max(0, enemy.health - dealt);
+  if (dealt > 0) playSfx('hit');
   if (enemy.health <= 0) {
     battle.enemyCreatures = battle.enemyCreatures.filter((creature) => creature !== enemy);
     battle.enemyGraveyard.push(enemy.card);
@@ -828,7 +873,7 @@ function applyOracle(card, creature = false) {
   const battle = state.battle;
   for (const effect of cardEffects(card, creature)) {
     if (effect.kind === 'damage') damageFirstEnemy(effect.amount);
-    if (effect.kind === 'heal') state.playerHealth = Math.min(30, state.playerHealth + effect.amount);
+    if (effect.kind === 'heal') { state.playerHealth += effect.amount; playSfx('heal'); }
     if (effect.kind === 'draw') for (let i = 0; i < effect.amount; i++) drawOneExtra();
     if (effect.kind === 'shield') battle.playerBlock += effect.amount;
     if (effect.kind === 'buff' || effect.kind === 'keywords') {
@@ -905,6 +950,7 @@ function selectAttachmentTarget(creatureId) {
   battle.pendingAttachment = null;
   refreshPermanentEffects();
   battle.creatures = removeDeadCreatures(battle.creatures, 'player');
+  playSfx('attach');
   renderBattle();
 }
 
@@ -957,7 +1003,7 @@ function playCard(index, targetSide = 'enemy') {
     battle.graveyard.push(card);
     applyOracle(card, false);
   }
-  playSound(680 - Math.min(5, card.cmc) * 60, 0.065);
+  playSfx(isCreature(card) ? 'creature' : isPermanent(card) ? 'attach' : 'cast');
   if (!battle.enemyCreatures.length) return winBattle();
   renderBattle();
 }
@@ -1016,8 +1062,8 @@ function dealsInCombatStep(creature, firstStep) {
 
 function gainLifelinkLife(creature, controller, amount, battle) {
   if (amount <= 0 || !hasCreatureKeyword(creature, 'lifelink')) return;
-  if (controller === 'player') state.playerHealth = Math.min(30, state.playerHealth + amount);
-  else creature.health = Math.min(creature.maxHealth || creature.toughness, (creature.health || 0) + amount);
+  if (controller === 'player') state.playerHealth += amount;
+  else creature.health = (creature.health || 0) + amount;
 }
 
 function dealCreatureDamage(source, target, controller, battle) {
@@ -1110,7 +1156,7 @@ function assignBlocker(attackerId, blockerId) {
   }
   battle.selectedEnemyAttackerId = null;
   renderBattle();
-  playSound(490, 0.055);
+  playSfx('block');
 }
 
 function expireTurnEffects(battle) {
@@ -1176,7 +1222,7 @@ function resolveEnemyCombat() {
   });
   drawToHand(HAND_SIZE);
   renderBattle();
-  playSound(230, 0.08);
+  playSfx('turn');
 }
 
 function afterCombatBeat(battle, phase, callback) {
@@ -1237,7 +1283,7 @@ function winBattle() {
   renderDraft();
   showScreen('draft-screen');
   showToast(`${state.battle.enemy.name} defeated. Choose a reward, then rest before the next encounter.`);
-  playSound(760, 0.16);
+  playSfx('victory');
 }
 
 function endRun(won) {
@@ -1251,7 +1297,7 @@ function endRun(won) {
     : `You fell in fight ${state.node}. Adjust your draft and try again.`;
   $('#run-summary').innerHTML = `<span>RUN <b>${state.node} / 4</b></span><span>DECK <b>${state.deck.length}</b></span><span>LIFE <b>${Math.max(0, state.playerHealth)}</b></span>`;
   showScreen('end-screen');
-  playSound(won ? 880 : 145, 0.18);
+  playSfx(won ? 'victory' : 'defeat');
 }
 
 function showToast(message) {
@@ -1260,23 +1306,6 @@ function showToast(message) {
   toast.classList.add('visible');
   clearTimeout(state.toastTimer);
   state.toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000);
-}
-
-function playSound(frequency, duration) {
-  if (!state.soundOn) return;
-  try {
-    state.audio ||= new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = state.audio.createOscillator();
-    const gain = state.audio.createGain();
-    oscillator.type = 'triangle';
-    oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(0.025, state.audio.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, state.audio.currentTime + duration);
-    oscillator.connect(gain);
-    gain.connect(state.audio.destination);
-    oscillator.start();
-    oscillator.stop(state.audio.currentTime + duration);
-  } catch { /* Sound is optional. */ }
 }
 
 function playBoosterOpeningSound() {
@@ -1324,13 +1353,13 @@ $('#end-turn-button').addEventListener('click', handleCombatAction);
 $('#mulligan-button').addEventListener('click', freeMulligan);
 $('#sound-toggle').addEventListener('click', () => {
   state.soundOn = !state.soundOn;
-  if (!state.soundOn) { $('#booster-audio').pause(); $('#booster-audio').currentTime = 0; }
+  if (!state.soundOn) soundEngine.stop();
   $('#sound-toggle span').textContent = state.soundOn ? 'SOUND ON' : 'SOUND OFF';
   $('#sound-toggle').setAttribute('aria-label', state.soundOn ? 'Turn sound off' : 'Turn sound on');
   $('#sound-toggle').title = state.soundOn ? 'Turn sound off' : 'Turn sound on';
   if (state.soundOn) {
-    try { state.audio ||= new (window.AudioContext || window.webkitAudioContext)(); state.audio.resume().catch(() => {}); } catch { /* Sound is optional. */ }
-    playSound(600, 0.08);
+    soundEngine.unlock().catch(() => {});
+    playSfx('select');
   }
 });
 $('#quit-button').addEventListener('click', () => $('#quit-dialog').showModal());
@@ -1345,7 +1374,7 @@ $('#back-link').addEventListener('click', (event) => {
   showScreen('start-screen');
 });
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') { hideCardPreview(); if (state.battle?.pendingAttachment) { state.battle.pendingAttachment = null; renderBattle(); } }
+  if (event.key === 'Escape') { if (pointerDrag) { finishDrag(); playSfx('cancel'); } hideCardPreview(); if (state.battle?.pendingAttachment) { state.battle.pendingAttachment = null; renderBattle(); } }
   if (event.key === 'Enter' && $('#start-screen').classList.contains('active')) startNewRun();
 });
 
@@ -1356,15 +1385,15 @@ function showJourney() {
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
   $('#journey-options').innerHTML = first
     ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>+1 generic mana every turn.</p></button><button data-relic="ward"><span>⛨</span><h3>Ancient Ward</h3><p>Begin each battle with 4 shield.</p></button>'
-    : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life, up to 30.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Divination hinzufügen: bis zu 2 Karten ziehen.</p></button>';
-  $('#journey-life').textContent = `${state.playerHealth} / 30 LIFE · ${state.deck.length} CARDS`;
+    : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>10 Leben wiederherstellen. Ohne Obergrenze.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Divination hinzufügen: bis zu 2 Karten ziehen.</p></button>';
+  $('#journey-life').textContent = `${state.playerHealth} LEBEN · ${state.deck.length} CARDS`;
   showScreen('journey-screen');
 }
 $('#journey-options').addEventListener('click', event => {
   const choice = event.target.closest('button');
   if (!choice) return;
   if (choice.dataset.relic) state.relic = choice.dataset.relic;
-  if (choice.dataset.camp === 'rest') state.playerHealth = Math.min(30, state.playerHealth + 10);
+  if (choice.dataset.camp === 'rest') state.playerHealth += 10;
   if (choice.dataset.camp === 'study') state.deck.push(BUNDLED_CARDS.find(card => card.name === 'Divination'));
   beginBattle(state.node);
 });
@@ -1413,7 +1442,7 @@ fitGameCanvas();
 $('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Vollbild ist in diesem Browser nicht verfügbar.')); });
 
 const COMBAT_PHASES = [
-  { id: 'main', label: 'Karten spielen', description: 'Spiele Karten aus und wähle, welche Kreaturen angreifen.' },
+  { id: 'main', label: 'Karten spielen', description: 'Karten ausspielen · Kreatur anklicken: angreifen oder zurückhalten.' },
   { id: 'attack', label: 'Dein Angriff', description: 'Deine angreifenden Kreaturen treffen ihre angezeigten Ziele.' },
   { id: 'enemy', label: 'Gegneraktion', description: 'Die Gegner verstärken oder schützen sich und bereiten ihre Angriffe vor.' },
   { id: 'blocks', label: 'Blocken', description: 'Weise den Angreifern eigene Blocker zu oder lasse Angriffe durch.' },
@@ -1424,6 +1453,7 @@ function updatePhaseDisplay() {
   const screen = state.screen || 'start-screen';
   const labels = { 'start-screen': 'START', 'loading-screen': 'DECK VORBEREITEN', 'draft-screen': state.boosterSealed ? 'BOOSTER ÖFFNEN' : 'KARTE WÄHLEN', 'journey-screen': state.node === 1 ? 'RELIKT WÄHLEN' : 'RAST', 'end-screen': 'RUN BEENDET' };
   const phase = phaseInfo(state.battle?.phase);
+  $('.arrow-legend').dataset.phase = phase.id;
   $('#global-phase').textContent = screen === 'combat-screen' ? phase.label.toUpperCase() : labels[screen] || 'EXPEDITION';
   if (!state.battle) return;
   $('#phase-strip').innerHTML = COMBAT_PHASES.map((item, index) => `<li class="${phase.id === item.id ? 'current' : ''}" ${phase.id === item.id ? 'aria-current="step"' : ''} data-phase="${item.id}"><span>${index + 1}</span>${item.label}</li>`).join('');
@@ -1432,11 +1462,12 @@ function updatePhaseDisplay() {
 function combatRoutes(battle) {
   const routes = [];
   const target = battle.enemyCreatures.find(enemy => enemy.id === battle.selectedEnemyTargetId) || battle.enemyCreatures[0];
-  if (target && ['main', 'attack'].includes(battle.phase)) {
+  if (target && battle.phase === 'attack') {
     for (const creature of battle.creatures) {
       if (creatureCanAttack(creature, battle.turn) && creature.willAttack !== false && !creature.tapped) routes.push({ kind: 'ally', from: creature.id, to: target.id, damage: Math.max(0, creature.power) * (hasCreatureKeyword(creature, 'double strike') ? 2 : 1) });
     }
   }
+  if (!['enemy', 'blocks', 'damage'].includes(battle.phase)) return routes;
   for (const enemy of battle.enemyCreatures) {
     if (!creatureCanAttack(enemy, battle.turn)) continue;
     const blockerId = ['blocks', 'damage'].includes(battle.phase) ? battle.blockAssignments.get(enemy.id) : null;
@@ -1480,3 +1511,9 @@ function drawCombatArrows() {
   svg.innerHTML = `<defs>${['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrowhead-${kind}" d="M 1 1 L 9 5 L 1 9 Z"/></marker>`).join('')}</defs>${paths}`;
 }
 window.addEventListener('resize', () => requestAnimationFrame(drawCombatArrows));
+
+document.addEventListener('click', event => {
+  if (!dragClickGuard) return;
+  const source = dragClickGuard; dragClickGuard = null;
+  if (event.detail && (event.target === source || source.contains(event.target))) { event.preventDefault(); event.stopImmediatePropagation(); }
+}, true);

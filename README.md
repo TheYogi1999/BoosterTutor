@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.10** · An unofficial browser roguelike using real Magic cards and a simplified, explicitly described ruleset.
+**Version 0.11** · An unofficial browser roguelike using real Magic cards and a simplified, explicitly described ruleset.
 
 ## Play
 
@@ -23,14 +23,14 @@ There is no build step and no runtime dependency. The interface uses a fixed **1
 ## Combat and progression
 
 - Start with 3 mana and refill it every turn. Capacity grows by one every two turns, up to 6. Aether Crystal adds one initial mana; Ancient Ward supplies four starting shield instead.
-- Draw **seven hand cards**, refill to seven each turn, and recycle the graveyard when the library runs out. One free opening mulligan is available before the first action.
+- Draw **seven opening hand cards**, refill to at least seven each turn without discarding excess, and recycle the graveyard when the library runs out. One free opening mulligan is available before the first action.
 - A fanned hand lifts on hover/focus. A text bubble directly above the hand card explains what it actually does in this game, its generic cost and casting availability. Battlefield cards use the separate large inspector, including their current values.
 - Drag or click to play. Creatures and permanents go to the left battlefield. Drag a spell onto a monster to select its target. Drop an aura/equipment directly on an allied creature to attach it. Equipment already on the battlefield can also be dragged onto a different creature. Mouse drag and touch/pen drag use separate event lifecycles.
 - Noncreature enchantments and artifacts remain for the encounter. Recognized stat bonuses affect allied creatures; other unattached permanents give 1 shield immediately and at each turn start. Attachments use recognized stat/keyword bonuses, otherwise +1/+1. Equipment can be moved for free. Auras die with their host; equipment remains.
 - Monsters have independent illustrations, health, shield and visible **attack / guard / strengthen intentions**. They are not Magic-card enemies. Guard grants 5 shield; strengthen adds 1 attack. Their deterministic action cycles are shown before ending the turn.
 - Allied creatures attack the selected monster. Monsters do not automatically block those attacks or retaliate. During enemy attacks, creatures held back can be assigned as blockers by dragging or clicking. Flying, reach, first strike, double strike, deathtouch, haste and lifelink have simplified implementations. Artifact creatures retain the prototype's immediate-attack rule.
 - The blocking panel shows pairs, direct incoming damage after shield, auto-assignment and reset. Used spells, dead creatures and their auras enter the visible graveyard/gallery.
-- Four encounters lead to the Shard Dragon. Life carries between fights. After a reward, rest for 10 life or study to add a real Divination card.
+- Four encounters lead to the Shard Dragon. Life carries between fights. Healing, resting and lifelink can exceed the starting 30 life; there is no life cap. After a reward, rest for 10 life or study to add a real Divination card.
 - This is **not the complete Magic rules engine**. Effect descriptions and execution share one effect plan. Unsupported spells become generic damage; permanent effects use the interpretation stated in their inspector. Run progress is held for the current page session.
 
 ## Combat presentation (0.10)
@@ -40,12 +40,22 @@ There is no build step and no runtime dependency. The interface uses a fixed **1
 - Gold arrows show allied attackers and their selected target. Red dashed arrows show enemies attacking your life total; assigned blocks turn the arrow turquoise and point to the blocking creature. Damage badges and route names describe each plan. Guarding or strengthening enemies do not get attack arrows. The SVG overlay does not capture clicks or drops and rescales with the 16:9 canvas.
 - `assets/audio/booster-open.mp3` is an original 2.15-second stereo Foley asset. Playback starts on opening/rerolling a pack, tracks the card reveals, and stops immediately when sound is muted. It replaces the old musical opening chirp. No third-party audio samples are used.
 
+## Interaction and audio polish (0.11)
+
+- Draw effects have no hand-size ceiling and use their full recognized draw count. The fan adapts spacing and angles to the actual hand size; cards above seven remain through the next turn. Life is displayed as a plain number for players and monsters, without life bars or a maximum-life denominator.
+- Attack routes are phase-specific: no arrows while playing cards, allied arrows only during your attack, and enemy/block routes only during enemy action, blocking and damage resolution.
+- Mouse, touch and pen use a pointer-captured card ghost anchored to the point where the face was grabbed. The original slot fades, legal zones highlight, and invalid drops/Escape cancel without spending mana. Native HTML drag remains a fallback.
+- Battlefield headers, status captions and hand controls have separate layout tracks. Card status labels are shorter; the fan stays above the action bar even with a large hand.
+- Thirteen original, pre-rendered sound cues cover selection, grabbing/cancelling, shuffling, creatures, spells, attachments, hits, healing, blocks, turns, victory and defeat. A shared decoded audio sprite supplies category levels, an eight-voice cap, short fades and a compressor bus. The booster Foley is remastered; muting stops both the sprite and the pack.
+- Every booster card receives one short staggered glint. Motion-sensitive users get an immediate reveal without the glint, and unrevealed cards do not show spoiler tooltips during the opening animation.
+
 ## Validation
 
 Logic tests require Node.js 20+:
 
 ```sh
 node --check game.js
+node --check sounds.js
 node --check cards.js
 node --test tests/game.test.cjs
 ```
@@ -56,7 +66,7 @@ The browser regression requires Playwright and Chromium, plus a running static s
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/browser.test.cjs
 ```
 
-It checks seven-card packs, rerolls, image loading, the anchored hand bubble, the large inspector, native mouse drags for creatures/auras/equipment/spells/blockers, moving physically attached equipment, phase transitions, route arrows, audio playback/muting, turn refill, console errors, and 1280×720 / 1920×1080 viewport boundaries. Temporary screenshots go into `work/`.
+It checks seven-card packs, rerolls, image loading, the anchored hand bubble, the large inspector, mouse drags for creatures/auras/equipment/spells/blockers, moving physically attached equipment, phase transitions, route arrows, audio playback/muting, turn refill, console errors, and 1280×720 / 1920×1080 viewport boundaries. Temporary screenshots go into `work/`.
 
 ## Assets and fan project notice
 

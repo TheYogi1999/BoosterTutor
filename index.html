@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="table.css" />
     <link rel="stylesheet" href="expedition.css" />
     <link rel="stylesheet" href="combat.css" />
+    <link rel="stylesheet" href="polish.css" />
     <script src="cards.js" defer></script>
+    <script src="sounds.js" defer></script>
     <script src="game.js" defer></script>
   </head>
   <body>
@@ -23,7 +25,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><button class="quiet-button" id="fullscreen-button">⛶ 16:9 Vollbild</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.10 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.11 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -93,8 +95,8 @@
               <div class="player-avatar" aria-hidden="true"><div class="avatar-cape"></div><div class="avatar-head"></div><div class="avatar-eye"></div><div class="avatar-staff">✦</div></div>
               <div class="side-identity" id="player-target">
                 <span class="player-rank">PLANESWALKER</span><h2>Dein Spielfeld</h2>
-                <div class="health-label"><span>LEBEN</span><b id="player-health-label">30 / 30</b></div>
-                <div class="shield-label" id="shield-label">0 Schild</div><div class="health-bar player-health-bar"><i id="player-health-fill"></i></div>
+                <div class="health-label"><span>LEBEN</span><b id="player-health-label">30</b></div>
+                <div class="shield-label" id="shield-label">0 Schild</div>
               </div>
               <div class="mana-display"><span class="mana-symbol">◆</span><div><small>MANA</small><b id="mana-label">0 / 0</b></div></div>
             </div>

@@ -18,9 +18,10 @@ const FIXTURES = [
 function game() {
   const elements = new Map();
   const queuedTimers = [];
-  function element(key) { if (!elements.has(key)) elements.set(key, {textContent:'',innerHTML:'',style:{},dataset:{},classList:{toggle(){},add(){},remove(){},contains(){return false}},addEventListener(){},querySelectorAll(){return []},setAttribute(){},removeAttribute(){},append(){},closest(){return null},isConnected:true,offsetWidth:380,offsetHeight:180,getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}}); return elements.get(key); }
+  function element(key) { if (!elements.has(key)) elements.set(key, {textContent:'',innerHTML:'',style:{setProperty(){}},dataset:{},classList:{toggle(){},add(){},remove(){},contains(){return false}},addEventListener(){},querySelectorAll(){return []},setAttribute(){},removeAttribute(){},append(){},closest(){return null},isConnected:true,offsetWidth:380,offsetHeight:180,getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}}); return elements.get(key); }
   const context = vm.createContext({document:{documentElement:{style:{setProperty(){}}},body:{append(){}},querySelector:element,querySelectorAll:()=>[],addEventListener(){}},requestAnimationFrame(){},window:{scrollTo(){},addEventListener(){},innerWidth:1200,innerHeight:900},queuedTimers,setTimeout:callback=>{queuedTimers.push(callback);return queuedTimers.length},clearTimeout(){},console,AbortSignal});
   vm.runInContext(fs.readFileSync('cards.js','utf8'),context);
+  vm.runInContext(fs.readFileSync('sounds.js','utf8'),context);
   vm.runInContext(fs.readFileSync('game.js','utf8'),context);
   vm.runInContext(`globalThis.FIXTURES = ${JSON.stringify(FIXTURES)}`,context);
   return code => vm.runInContext(code,context);
@@ -77,11 +78,11 @@ test('all starter packs contain seven cards and are opened sequentially',()=>{
  run('state.boosterSealed=false;state.selection.set(1,0);confirmDraft();');assert.equal(run('state.activePack'),2);
  run('state.boosterSealed=false;state.selection.set(2,0);confirmDraft();');assert.equal(run('state.deck.length'),16);
 });
-test('opening and mulligan both draw seven, with a seven-card ceiling',()=>{
+test('opening and mulligan draw seven while extra draws may grow beyond seven',()=>{
  const run=game();prepare(run);assert.equal(run('state.battle.hand.length'),7);
  run('freeMulligan()');assert.equal(run('state.battle.hand.length'),7);
- run('drawOneExtra()');assert.equal(run('state.battle.hand.length'),7);
- run('state.battle.hand.pop();drawOneExtra()');assert.equal(run('state.battle.hand.length'),7);
+ run('drawOneExtra()');assert.equal(run('state.battle.hand.length'),8);
+ run('state.battle.hand.pop();drawOneExtra()');assert.equal(run('state.battle.hand.length'),8);
 });
 test('enchantment remains on board and its shield renews each turn',()=>{
  const run=game();prepare(run);
@@ -199,10 +200,28 @@ test('resolution callbacks cannot alter another run after abandonment',()=>{
 });
 test('planned arrows reflect the selected enemy, held-back allies and legal blockers',()=>{
  const run=game();prepare(run);
- run("state.battle.turn=2;state.battle.creatures=[{id:'p',owner:'player',card:FIXTURES[4],power:2,toughness:3,summonedTurn:1,summoningSick:true,willAttack:true,tapped:false}];state.battle.selectedEnemyTargetId=state.battle.enemyCreatures[1].id;");
+ run("state.battle.turn=2;state.battle.creatures=[{id:'p',owner:'player',card:FIXTURES[4],power:2,toughness:3,summonedTurn:1,summoningSick:true,willAttack:true,tapped:false}];state.battle.selectedEnemyTargetId=state.battle.enemyCreatures[1].id;state.battle.phase='attack';");
  assert.equal(run("combatRoutes(state.battle).find(route=>route.kind==='ally').to"),run('state.battle.enemyCreatures[1].id'));
  run('state.battle.creatures[0].willAttack=false');assert.equal(run("combatRoutes(state.battle).filter(route=>route.kind==='ally').length"),0);
  run("state.battle.turn=1;state.battle.phase='blocks';state.battle.blockAssignments.set(state.battle.enemyCreatures[0].id,'p')");
  assert.equal(run("combatRoutes(state.battle).find(route=>route.kind==='block').to"),'p');
  assert.equal(run("combatRoutes(state.battle).some(route=>route.from===state.battle.enemyCreatures[1].id)"),false);
+});
+test('draw effects can exceed seven and keep every card through the next refill',()=>{
+ const run=game();prepare(run);
+ run("state.battle.hand=Array.from({length:7},()=>FIXTURES[4]);state.battle.deck=Array.from({length:20},()=>FIXTURES[4]);applyOracle({name:'Draw test',cmc:2,type_line:'Sorcery',oracle_text:'Draw ten cards.'});");
+ assert.equal(run('state.battle.hand.length'),17);run('drawToHand(HAND_SIZE)');assert.equal(run('state.battle.hand.length'),17);
+});
+test('healing, lifelink and rest-style gains can exceed starting life',()=>{
+ const run=game();prepare(run);run("state.playerHealth=35;applyOracle({name:'Heal',type_line:'Instant',cmc:1,oracle_text:'You gain 5 life.'});gainLifelinkLife({lifelink:true},'player',4,state.battle)");
+ assert.equal(run('state.playerHealth'),44);
+});
+test('arrows are restricted to their matching combat phase',()=>{
+ const run=game();prepare(run);run("state.battle.turn=3;state.battle.creatures=[{id:'p',owner:'player',card:FIXTURES[4],power:2,toughness:3,summonedTurn:1,willAttack:true,tapped:false}]");
+ for(const phase of ['main','attack','enemy','blocks','damage']){
+  run(`state.battle.phase='${phase}'`);
+  if(phase==='main')assert.equal(run('combatRoutes(state.battle).length'),0);
+  else if(phase==='attack')assert.equal(run("combatRoutes(state.battle).every(route=>route.kind==='ally')"),true);
+  else assert.equal(run("combatRoutes(state.battle).every(route=>route.kind!=='ally')"),true);
+ }
 });
