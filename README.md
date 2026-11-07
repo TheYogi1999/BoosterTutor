@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.13** · An unofficial browser roguelike with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.14** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -14,8 +14,8 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 
 ## Draft, deck and card zones
 
-- The 48-card pool in `cards.js` contains verified, normal-layout Magic cards and bundled original JPEGs. It includes **Unmake** for exile, **Battlegrowth** for +1/+1 counters and **Serra Angel** for vigilance. No invented cards enter packs or the starter deck.
-- Open three packs individually, with seven cards each. Pick one card per pack to receive four copies. Two Grizzly Bears and two Savannah Lions complete a 16-card starter deck.
+- The curated list in `card-pool.txt` contains 389 Magic card names. At the start of a run, the game resolves the list through Scryfall and loads card text, mana values, keywords and original images. The verified bundled cards remain available as the offline fallback.
+- Open six packs individually, with seven cards each. Pick one card per pack and receive two copies of each pick. Four basic mana cards complete the 16-card starter deck; there are no extra starter creatures.
 - Each opened pack has one free reroll. It replaces seven cards and clears only that pack's selection. Reward packs also contain seven cards.
 - The global Deck button and the camp's **Review your deck** button show grouped copies, mana statistics and a card search. Deck inspection works between encounters and turns.
 - The Library is a physical face-down stack to the right of the hand. Click it to inspect remaining cards grouped and sorted; upcoming draw order is not exposed.
@@ -26,7 +26,7 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 
 - Every defeated or exiled monster pays its displayed bounty once. Coins persist through the run and reset with a new run.
 - After a reward pack, visit a shop with exactly three distinct cards. Each offer sells one extra copy for your run deck; sold offers stay sold when returning from camp. Prices are 6 + 3 × mana value. You can leave without buying.
-- The start screen opens the 48-card verified catalog, with name/text search, type, mana, printed keyword and colour filters. Each card links to its Scryfall source. Sixteen additional real cards include Fencing Ace, Typhoid Rats, Healer’s Hawk, Deadly Recluse, Boggart Brute and Colossal Dreadmaw.
+- The start screen opens the curated card catalog, with name/text search, type, mana, printed keyword and colour filters. Cards link to their Scryfall source. The catalog and boosters use the same dynamically loaded pool.
 - Printed keywords in this pool have explicit support: flying, reach, lifelink, deathtouch, first/double strike, haste, vigilance, trample, menace, defender, flash, enchant, equip and scry. Monsters can have combat keywords, shown under their intentions.
 - Scry opens an ordered top-card chooser: keep cards on top, move them to the bottom, or swap their order. Omen scries before its draw and can be sacrificed for 3 mana to scry again. Fountain of Renewal gains life each upkeep and can be sacrificed for 3 mana to draw. Angelic Chorus gains life equal to an entering creature’s toughness; Llanowar Elves taps for generic mana after sickness ends. Rancor returns to hand when its host leaves. Juggernaut must attack when able and cannot be blocked by Walls.
 - Data verification means source metadata and original images match Scryfall. Combat remains an adapted monster-duel ruleset; Cancel is explicitly marked as an adapted counterspell that grants shield, without a full stack.
@@ -34,17 +34,18 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 ## Mana, hand and life
 
 - Only generic mana is required: pay the card's total mana value. Printed images retain their original symbols.
-- Start with 3 mana. Refill each turn; capacity grows by 1 every two turns, up to 6. Aether Crystal adds 1 initial mana. Ancient Ward grants 4 starting shield instead.
+- The starter deck contains four basic mana cards. Two begin untapped on the battlefield and two stay in the draw pile. Draw mana cards, then play one during your main phase; it enters untapped, taps to pay generic costs, and untaps at the start of your next turn. There is no automatic mana refill or colour requirement.
+- Start each run at 20 life. Life carries between encounters. Aether Crystal adds one floating mana at the start of each later turn; Ancient Ward grants 4 shield at the start of each battle.
 - Draw seven opening cards and refill to at least seven each turn. Extra draws may grow the hand beyond seven without discarding excess. The fan adapts to its actual size. A free opening mulligan is available before your first action.
-- Life starts at 30, carries between encounters and has no upper cap. Healing, resting and lifelink can exceed 30. Life displays use numbers, not bars.
+- Healing, resting and lifelink can raise life above 20. Life displays use numbers, not bars. Each enemy has its own life total and bar.
 
 ## Individual attacks and retaliation
 
 - Every creature has its own target selector and **Attack now** button. Drag a ready creature onto a monster to attack immediately, or click its card to queue it for the global End turn action.
 - Monsters deal their power back when legally able to block the attacking creature. Flying/reach and menace apply to retaliation. Normal damage in each duel is simultaneous. First strike may kill before retaliation; double strike uses two damage steps. Damage marked on allied creatures persists until turn cleanup.
 - A creature attacks at most once per turn. Attacking normally taps it. **Vigilance** leaves it untapped, so it can still block, but does not grant another attack.
-- Every creature, including artifact creatures, has summoning sickness unless it has haste. New creatures appear grey and may block immediately. Tapped creature faces rotate sideways; vigilance attackers stay upright.
-- Planned attack arrows remain visible throughout combat. Each allied arrow uses that creature's own target. Enemy routes point at your life or the assigned blockers. These SVG routes do not intercept clicks or drops.
+- Every creature, including artifact creatures and monsters, has summoning sickness unless it has haste. New creatures appear grey and may block immediately. Haste lets a creature join the current turn's combat phase. Tapped creature faces rotate sideways; vigilance attackers stay upright.
+- Planned attack arrows remain visible throughout combat. Each allied arrow uses that creature's own target. Enemy routes point at your life or the assigned blockers. Animated, glowing SVG routes do not intercept clicks or drops.
 
 ## Blocking and instant responses
 
@@ -64,9 +65,9 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 
 ## Progression and limits
 
-Four encounters lead to the Shard Dragon. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session.
+Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session.
 
-This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents use the stated roguelike interpretations. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system.
+This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents use the stated roguelike interpretations. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system. This is a free, non-commercial fan demo for entertainment; it is not affiliated with or endorsed by Wizards of the Coast.
 
 ## Validation
 
