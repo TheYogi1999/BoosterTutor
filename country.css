@@ -1,0 +1,57 @@
+/* Country stage dressing, avatar selection and the physical mana row. */
+.game-shell .avatar-picker{display:flex;flex-direction:column;gap:8px;margin:18px 0 15px;max-width:370px}
+.game-shell .avatar-picker>span{font:700 9px/1.2 var(--sans);letter-spacing:2px;color:#d4c094}
+.game-shell #avatar-choices{display:flex;gap:8px;align-items:stretch}
+.game-shell .avatar-choice{display:flex;flex:1 1 0;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 4px;border:1px solid #bdad8244;border-radius:8px;background:linear-gradient(155deg,#1a2b31dd,#11191fdd);color:#e8e0d0;cursor:pointer}
+.game-shell .avatar-choice>span{display:grid;place-items:center;width:31px;height:31px;border:1px solid #d8c18a77;border-radius:50%;background:radial-gradient(circle at 42% 30%,#f6e5b044,transparent 63%),#293b3d;font:20px Georgia;color:#f3d599;text-shadow:0 0 9px #f3d59966}
+.game-shell .avatar-choice small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:9px/1.2 var(--sans);color:#c4cbd1}
+.game-shell .avatar-choice:hover,.game-shell .avatar-choice.selected{border-color:#e7ce91;box-shadow:0 0 0 1px #e7ce9144,0 0 18px #dac28019;transform:translateY(-2px)}
+.game-shell .avatar-choice.selected>span{box-shadow:0 0 0 2px #f0d99c33,0 0 16px #e4c57b55}
+.game-shell .hero-avatar{position:absolute;z-index:4;right:15%;bottom:6%;display:grid;place-items:center;width:96px;height:96px;border:2px solid #e8d59b;border-radius:50%;color:#fff1c2;background:radial-gradient(circle at 50% 30%,#fff7cf66,transparent 46%),linear-gradient(145deg,#527760,#263f4a 65%,#1b2730);box-shadow:0 0 0 6px #d7bd7b18,0 0 34px #dfcb8a55,inset 0 0 16px #ffffff22;font:48px Georgia;text-shadow:0 2px 9px #000b}
+.game-shell .hero-avatar[data-avatar="ranger"],.game-shell .player-avatar[data-avatar="ranger"]{background:radial-gradient(circle at 50% 30%,#c4e3aa66,transparent 45%),linear-gradient(145deg,#668354,#2c4a39 58%,#182b27)}
+.game-shell .hero-avatar[data-avatar="guardian"],.game-shell .player-avatar[data-avatar="guardian"]{background:radial-gradient(circle at 50% 30%,#d7e7ff66,transparent 45%),linear-gradient(145deg,#657b91,#394957 58%,#1c2733)}
+.game-shell .hero-avatar[data-avatar="dragon"],.game-shell .player-avatar[data-avatar="dragon"]{background:radial-gradient(circle at 50% 30%,#ffe5aa77,transparent 45%),linear-gradient(145deg,#aa6d4c,#643b42 58%,#2a2029)}
+.game-shell .player-avatar{position:absolute!important;left:1px;top:0;z-index:2;display:grid!important;flex:0 0 44px!important;width:44px!important;height:44px!important;place-items:center;overflow:hidden;border:2px solid #e3cb90!important;border-radius:50%!important;color:#fff1c2;box-shadow:0 0 0 3px #d7bd7b18,0 0 15px #dfcb8a33,inset 0 0 12px #ffffff1f;font:24px Georgia;text-shadow:0 2px 7px #000a}
+.game-shell .player-avatar>*:not([data-avatar-symbol]){display:none!important}
+.game-shell .player-side-header{position:relative!important;height:94px!important;grid-template-columns:minmax(0,1fr) 108px!important;grid-template-rows:40px 48px!important;column-gap:12px!important;row-gap:4px!important;margin:0!important}
+.game-shell .player-side-header .side-identity{grid-column:1;grid-row:1;display:flex!important;align-items:center!important;gap:11px!important;min-width:0;padding-left:51px}
+.game-shell .player-side-header .health-label{display:flex!important;align-items:center;gap:6px;white-space:nowrap}
+.game-shell .player-side-header .shield-label{white-space:nowrap}
+.game-shell .player-side-header .mana-display{grid-column:2;grid-row:1;width:108px!important;min-width:108px!important;height:40px!important;margin:0!important}
+.game-shell .mana-land-row{grid-column:1/-1;grid-row:2;display:flex;align-items:center;gap:6px;height:48px;min-width:0;padding:0 2px;overflow:visible}
+.game-shell .mana-land{position:relative;display:block;flex:0 0 34px;width:34px;height:47px;margin:0;padding:0;overflow:hidden;border:1px solid #d8c18a88;border-radius:4px;background:#101a20;box-shadow:0 3px 9px #0008;cursor:help;transition:transform .2s,filter .2s,box-shadow .2s}
+.game-shell .mana-land img{display:block;width:100%;height:100%;object-fit:cover;border-radius:3px}
+.game-shell .mana-land:hover,.game-shell .mana-land:focus-visible{z-index:8;transform:translateY(-5px) scale(1.08);box-shadow:0 0 0 2px #f1d79b,0 8px 16px #0009}
+.game-shell .mana-land.tapped{transform:rotate(90deg) scale(.76);filter:saturate(.55) brightness(.8);border-color:#b6a16e66}
+.game-shell .mana-land.tapped:hover{transform:rotate(90deg) scale(.84)}
+.game-shell .mana-land-meta{display:flex;align-items:center;margin-left:auto}
+.game-shell .player-panel{grid-template-rows:94px 18px 252px 18px 88px!important;gap:4px!important;padding:7px 14px!important}
+.game-shell .player-panel .arena-zone-header{height:18px!important;margin:0!important;line-height:18px!important}
+.game-shell .player-panel .creature-row{height:252px!important;min-height:0!important;padding:3px!important;gap:13px!important;overflow:visible!important}
+.game-shell .player-panel .creature-group{height:250px!important;flex-basis:196px;width:196px}
+.game-shell .player-panel .creature-group>.creature-token{width:120px!important;flex-basis:120px!important}
+.game-shell .player-panel .creature-group .player-card-frame{width:100%!important;height:auto!important;aspect-ratio:488/680!important}
+.game-shell .player-panel .drop-hint{display:none!important}
+.game-shell .player-panel .permanent-row{height:88px!important;min-height:0!important;gap:10px!important;padding:2px 4px!important;overflow:visible!important}
+.game-shell .player-panel .permanent-row .permanent-card{--card-width:48px!important;width:48px!important;flex-basis:48px!important;gap:1px!important}
+.game-shell .player-panel .permanent-row .permanent-card .field-caption{min-height:15px!important}
+.game-shell .player-panel .permanent-row .permanent-card .field-caption>b{font-size:8px!important;line-height:10px!important}
+.game-shell .player-panel .permanent-row .permanent-card .field-caption small{font-size:7px!important;line-height:9px!important}
+.game-shell #land-status{margin-left:auto;color:#b8c9bd;font:9px/1.2 var(--sans);white-space:nowrap}
+.game-shell #land-count{display:none}
+
+.game-shell .arena-table{background-image:linear-gradient(120deg,color-mix(in srgb,var(--stage-accent,#78998a) 8%,transparent),transparent 52%),linear-gradient(90deg,#10202be8,#243236c9 50%,#13242bd9),url('assets/expedition.svg')!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--stage-accent,#78998a) 34%,transparent),inset 0 0 0 4px #bfa9740b,inset 0 0 80px #0008,0 20px 45px #0006!important}
+.game-shell #location-name{display:inline-flex!important;align-items:center;max-width:235px;padding:4px 9px;border:1px solid color-mix(in srgb,var(--stage-accent,#78998a) 42%,transparent);border-radius:999px;background:color-mix(in srgb,var(--stage-accent,#78998a) 8%,#10171e);color:#d9d8ca;font:700 9px/1.2 var(--sans);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.game-shell .monster{grid-template-rows:30px 132px 20px 22px 6px 14px 20px!important}
+.game-shell .monster-figure{height:132px!important}
+.game-shell .monster-health-track{display:block;width:100%;height:5px;overflow:hidden;border:1px solid #e7e4d833;border-radius:999px;background:#14191d;box-shadow:inset 0 1px 2px #0008}
+.game-shell .monster-health-track>i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#698f72,#b3cc8d);box-shadow:0 0 9px #9ac57a88;transition:width .4s ease}
+.game-shell .monster-life{white-space:nowrap}
+.game-shell .route-ally>path{stroke:#f4d895;stroke-width:3;stroke-dasharray:10 5;filter:drop-shadow(0 0 5px #f0cc78aa);animation:combat-arrow-flow 1.05s linear infinite}
+.game-shell .route-enemy>path{stroke:#ec927e;stroke-width:2.8;filter:drop-shadow(0 0 5px #e8817099);animation:combat-arrow-flow 1.5s linear infinite}
+.game-shell .route-block>path{stroke:#a6e4d6;stroke-width:3.2;stroke-dasharray:3 4;filter:drop-shadow(0 0 5px #83dfc188)}
+.game-shell .combat-route rect{stroke-width:1.5;filter:drop-shadow(0 0 6px #0009)}
+.game-shell .combat-route text{font-size:12px;font-weight:800}
+@keyframes combat-arrow-flow{to{stroke-dashoffset:-30}}
+@media(prefers-reduced-motion:reduce){.game-shell .route-ally>path,.game-shell .route-enemy>path{animation:none}}
+@media(max-width:650px){.game-shell .hero-avatar{right:7%;bottom:4%;width:70px;height:70px;font-size:36px}.game-shell .avatar-choice{min-height:58px}.game-shell .avatar-choice small{font-size:8px}.game-shell .player-panel{grid-template-rows:94px 18px 220px 18px 88px!important}.game-shell .player-panel .creature-row{height:220px!important}.game-shell .player-panel .creature-group{height:218px!important}.game-shell .player-panel .creature-group>.creature-token{width:103px!important;flex-basis:103px!important}}
