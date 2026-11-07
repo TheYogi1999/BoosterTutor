@@ -508,6 +508,8 @@ $('#enemy-board').addEventListener('click', (event) => {
 });
 
 $('#creature-row').addEventListener('click', (event) => {
+  const withdrawButton = event.target.closest('[data-unit-withdraw]');
+  if (withdrawButton) return withdrawAttack(withdrawButton.dataset.unitWithdraw);
   const attackButton = event.target.closest('[data-unit-attack]');
   if (attackButton) return attackWithCreature(attackButton.dataset.unitAttack);
   const button = event.target.closest('[data-creature-id]');
@@ -625,6 +627,12 @@ function drawToHand(maxHand) {
   }
 }
 
+function drawOneCard() {
+  const battle = state.battle;
+  if (!battle || battle.phase === 'complete') return;
+  drawToHand(battle.hand.length + 1);
+}
+
 function freeMulligan() {
   const battle = state.battle;
   if (!battle || !battle.mulliganAvailable || battle.turn !== 1 || battle.phase !== 'main') return;
@@ -643,7 +651,7 @@ function syncMana(battle = state.battle) {
   if (!battle) return;
   battle.floatingMana ||= 0;
   battle.mana = battle.lands.filter(land => !land.tapped).length + battle.floatingMana;
-  battle.maxMana = battle.lands.length + battle.floatingMana;
+  if (!Number.isFinite(battle.maxMana)) battle.maxMana = battle.lands.length + battle.floatingMana;
 }
 
 function payMana(amount, battle = state.battle) {
@@ -791,6 +799,7 @@ function hideCardPreview() {
 function renderBattle() {
   const battle = state.battle;
   if (!battle) return;
+  syncMana(battle);
   hideCardPreview();
   if (battle.phase === 'main') for (const creature of battle.creatures) { if (creature.attackTargetId && !battle.enemyCreatures.some(enemy => enemy.id === creature.attackTargetId)) { creature.attackTargetId = null; creature.willAttack = false; } }
   const enemy = battle.enemy;
@@ -815,7 +824,7 @@ function renderBattle() {
   $('#end-turn-button').innerHTML = battle.priorityCallback ? 'CONTINUE <span>→</span>' : battle.phase === 'blocks' ? 'CONFIRM BLOCKS <span>✓</span>' : resolving ? 'RESOLVING COMBAT …' : 'END TURN <span>→</span>';
   $('#combat-action-hint').textContent = battle.pendingAttachment ? 'Choose an allied creature. Cancelling is free.' : battle.phase === 'blocks'
     ? 'Choose an attacker, then add blockers. You can drag blockers onto attackers.'
-    : 'Play one mana card each turn. Queue attacks or choose Attack now; combat resolves in the attack phase.';
+    : 'Play one mana card each turn. Use Withdraw to cancel an attack before it resolves.';
   if (battle.priorityCallback) $('#combat-action-hint').textContent = 'Response window: cast an instant, then Continue.';
   else if (resolving) $('#combat-action-hint').textContent = phaseInfo(battle.phase).description;
   $('#combat-action-hint').classList.toggle('blocking', battle.phase === 'blocks');
@@ -888,9 +897,11 @@ function renderCreatures() {
     const legal = blocking && !creature.tapped && (!selected || canBlockCreature(creature, selected));
     const canAttack = eligibleAttacker(creature, battle);
     const target = attackTarget(battle, creature);
-    const status = hasCreatureKeyword(creature, 'defender') ? 'Defender · cannot attack' : battle.pendingAttachment ? 'Choose as attachment target' : creature.tapped ? 'Tapped' : blocking ? attacker ? `Blocking ${attacker.card.name}` : legal ? 'Click to add as blocker' : 'Cannot block this attacker' : sick ? 'Summoning sickness · may block' : creature.attackedThisTurn ? hasCreatureKeyword(creature, 'vigilance') ? 'Attacked · vigilance · may block' : 'Already attacked' : creature.willAttack ? `Queued → ${target?.card.name || 'choose target'}` : /attacks each combat if able/i.test(creature.card.oracle_text||'') ? 'Must attack if able' : 'Ready · click to queue attack';
+    const mustAttack = /attacks each combat if able/i.test(creature.card.oracle_text || '');
+    const canWithdraw = !mustAttack && creature.willAttack && (battle.phase === 'main' || (battle.phase === 'attack' && battle.activeAttackIds?.includes(creature.id)));
+    const status = hasCreatureKeyword(creature, 'defender') ? 'Defender · cannot attack' : battle.pendingAttachment ? 'Choose as attachment target' : creature.tapped ? 'Tapped' : blocking ? attacker ? `Blocking ${attacker.card.name}` : legal ? 'Click to add as blocker' : 'Cannot block this attacker' : sick ? 'Summoning sickness · may block' : creature.attackedThisTurn ? hasCreatureKeyword(creature, 'vigilance') ? 'Attacked · vigilance · may block' : 'Already attacked' : creature.willAttack ? `${battle.phase === 'attack' ? 'Attacking' : 'Queued'} → ${target?.card.name || 'choose target'}` : mustAttack ? 'Must attack if able' : 'Ready · click to queue attack';
     const attachments = battle.permanents.filter(permanent => permanent.attachedTo === creature.id);
-    return `<div class="creature-group${sick ? ' is-summoning-sick' : ''}${creature.tapped ? ' is-tapped' : ''}" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="Cards attached to ${escapeHtml(creature.card.name)}">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${assignment ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${creature.willAttack ? ' attack-queued' : ''}${battle.pendingAttachment ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(assignment) : Boolean(creature.willAttack)}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${(blocking && !creature.tapped) || (battle.phase === 'main' && canAttack)}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ` · ${creature.damage} damage` : ''}</span><span class="keyword-strip" title="${escapeHtml(creatureKeywordLabels(creature))}">${escapeHtml(creatureKeywordLabels(creature))}</span>${bonusMarkup(creature)}<small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} attached cards">↔ ${attachments.length}</span>` : ''}<div class="unit-controls${/\{T\}: Add/i.test(creature.card.oracle_text||'')?' has-mana-ability':''}"><select data-unit-target="${creature.id}" aria-label="Attack target for ${escapeHtml(creature.card.name)}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''}>${battle.enemyCreatures.map(enemy => `<option value="${enemy.id}" ${target?.id === enemy.id ? 'selected' : ''}>${escapeHtml(enemy.card.name)}</option>`).join('')}</select><button data-unit-attack="${creature.id}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''} aria-label="Attack now with ${escapeHtml(creature.card.name)}">Attack now</button>${/\{T\}: Add/i.test(creature.card.oracle_text||'')?`<button data-unit-mana="${creature.id}" ${canTapForMana(creature,battle)?'':'disabled'} aria-label="Tap ${escapeHtml(creature.card.name)} for one generic mana">+1 mana</button>`:''}</div></div>`;
+    return `<div class="creature-group${sick ? ' is-summoning-sick' : ''}${creature.tapped ? ' is-tapped' : ''}" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="Cards attached to ${escapeHtml(creature.card.name)}">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${assignment ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${creature.willAttack ? ' attack-queued' : ''}${battle.pendingAttachment ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(assignment) : Boolean(creature.willAttack)}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${(blocking && !creature.tapped) || (battle.phase === 'main' && canAttack)}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ` · ${creature.damage} damage` : ''}</span><span class="keyword-strip" title="${escapeHtml(creatureKeywordLabels(creature))}">${escapeHtml(creatureKeywordLabels(creature))}</span>${bonusMarkup(creature)}<small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} attached cards">↔ ${attachments.length}</span>` : ''}<div class="unit-controls${/\{T\}: Add/i.test(creature.card.oracle_text||'')?' has-mana-ability':''}"><select data-unit-target="${creature.id}" aria-label="Attack target for ${escapeHtml(creature.card.name)}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''}>${battle.enemyCreatures.map(enemy => `<option value="${enemy.id}" ${target?.id === enemy.id ? 'selected' : ''}>${escapeHtml(enemy.card.name)}</option>`).join('')}</select>${canWithdraw ? `<button data-unit-withdraw="${escapeHtml(creature.id)}" aria-label="Withdraw ${escapeHtml(creature.card.name)} from this attack">Withdraw</button>` : `<button data-unit-attack="${creature.id}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''} aria-label="Attack now with ${escapeHtml(creature.card.name)}">Attack now</button>`}${/\{T\}: Add/i.test(creature.card.oracle_text||'')?`<button data-unit-mana="${creature.id}" ${canTapForMana(creature,battle)?'':'disabled'} aria-label="Tap ${escapeHtml(creature.card.name)} for one generic mana">+1 mana</button>`:''}</div></div>`;
   }).join('') : '<div class="empty-board">Play a creature from your hand.<br>You have three creature slots.</div>';
 }
 
@@ -1282,6 +1293,7 @@ function playCard(index, targetSide = 'enemy') {
     battle.mulliganAvailable = false;
     battle.hand.splice(index, 1);
     battle.lands.push({ id: `mana-${state.nextPermanentId++}`, card, tapped: false });
+    battle.maxMana += 1;
     battle.landAvailable = false;
     syncMana(battle);
     addLog(`${card.name} enters untapped and adds one generic mana.`);
@@ -1474,7 +1486,7 @@ function eligibleAttacker(creature, battle) {
 }
 function resolvePlayerAttacks(onlyIds = null) {
   const battle = state.battle;
-  const attackers = battle.creatures.filter(creature => eligibleAttacker(creature, battle) && (onlyIds ? onlyIds.includes(creature.id) : creature.willAttack === true));
+  const attackers = battle.creatures.filter(creature => eligibleAttacker(creature, battle) && creature.willAttack === true && (!onlyIds || onlyIds.includes(creature.id)));
   for (const creature of attackers) {
     if (!creatureAlive(creature)) continue;
     const target = attackTarget(battle, creature);
@@ -1486,18 +1498,44 @@ function resolvePlayerAttacks(onlyIds = null) {
     resolveCombatDamage([creature], new Map([[creature.id, [target]]]), 'player');
   }
 }
+function withdrawAttack(creatureId) {
+  const battle = state.battle;
+  const creature = battle?.creatures.find(item => item.id === creatureId);
+  if (!battle || !creature || /attacks each combat if able/i.test(creature.card.oracle_text || '')) return;
+  if (battle.phase === 'main' && creature.willAttack) {
+    creature.willAttack = false;
+    addLog(`${creature.card.name} is withdrawn from the attack.`);
+    renderBattle();
+    return;
+  }
+  if (battle.phase !== 'attack' || !battle.activeAttackIds?.includes(creatureId)) return;
+  creature.willAttack = false;
+  battle.activeAttackIds = battle.activeAttackIds.filter(id => id !== creatureId);
+  addLog(`${creature.card.name} is withdrawn before damage.`);
+  if (battle.attackPhaseKind === 'direct' && !battle.activeAttackIds.length) {
+    battle.priorityCallback = null;
+    battle.phaseTicket = (battle.phaseTicket || 0) + 1;
+    battle.attackPhaseKind = null;
+    battle.activeAttackIds = null;
+    battle.phase = 'main';
+  }
+  renderBattle();
+}
 function attackWithCreature(creatureId) {
   const battle = state.battle;
   const creature = battle?.creatures.find(item => item.id === creatureId);
   if (!battle || battle.phase !== 'main' || !creature || !eligibleAttacker(creature, battle)) return;
   battle.pendingAttachment = null;
   battle.mulliganAvailable = false;
+  creature.willAttack = true;
   battle.phase = 'attack';
+  battle.attackPhaseKind = 'direct';
   battle.activeAttackIds = [creatureId];
   renderBattle();
   afterCombatBeat(battle, 'attack', () => {
     resolvePlayerAttacks([creatureId]);
     battle.activeAttackIds = null;
+    battle.attackPhaseKind = null;
     if (!battle.enemyCreatures.length) return winBattle();
     battle.phase = 'main';
     renderBattle();
@@ -1590,6 +1628,7 @@ function resolveEnemyCombat() {
   battle.turn += 1;
   battle.lands.forEach(land => { land.tapped = false; });
   battle.floatingMana = state.relic === 'crystal' ? 1 : 0;
+  battle.maxMana = battle.lands.length + battle.floatingMana;
   battle.landAvailable = true;
   syncMana(battle);
   battle.phase = 'main';
@@ -1601,7 +1640,7 @@ function resolveEnemyCombat() {
     creature.attackedThisTurn = false;
   });
   for (const permanent of battle.permanents) if (permanent.card.name === 'Fountain of Renewal') state.playerHealth += 1;
-  drawToHand(HAND_SIZE);
+  drawOneCard();
   if (battle.phase === 'complete') return;
   renderBattle();
   playSfx('turn');
@@ -1628,9 +1667,13 @@ function finishTurn() {
   battle.pendingAttachment = null;
   for (const creature of battle.creatures) { if (/attacks each combat if able/i.test(creature.card.oracle_text || '') && eligibleAttacker(creature, battle)) creature.willAttack = true; }
   battle.phase = 'attack';
+  battle.attackPhaseKind = 'turn';
+  battle.activeAttackIds = battle.creatures.filter(creature => creature.willAttack && eligibleAttacker(creature, battle)).map(creature => creature.id);
   renderBattle();
   afterCombatBeat(battle, 'attack', () => {
     resolvePlayerAttacks();
+    battle.activeAttackIds = null;
+    battle.attackPhaseKind = null;
     if (!battle.enemyCreatures.length) return winBattle();
     battle.phase = 'enemy';
     resolveEnemyIntents();
@@ -1841,7 +1884,9 @@ function inspectBattlefieldCard(card, element) {
   $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>Pay ${permanentActivationCost(permanent.card)} · sacrifice · ${permanent.card.name==='Fountain of Renewal'?'draw 1':'scry 2'}</button>`:''}</div>`;
 }
 function fitGameCanvas() {
-  document.documentElement.style.setProperty('--game-scale', Math.min(window.innerWidth / 1600, window.innerHeight / 900));
+  const responsive = window.matchMedia('(max-width: 1200px), (pointer: coarse) and (max-width: 1400px)').matches;
+  document.documentElement.style.setProperty('--game-scale', responsive ? 1 : Math.min(window.innerWidth / 1600, window.innerHeight / 900));
+  document.documentElement.classList.toggle('responsive-game', responsive);
 }
 window.addEventListener('resize', fitGameCanvas);
 fitGameCanvas();
@@ -1849,7 +1894,7 @@ fitGameCanvas();
 $('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Fullscreen is unavailable in this browser.')); });
 
 const COMBAT_PHASES = [
-  { id: 'main', label: 'Main phase', description: 'Queue attackers, choose individual targets, or use Attack now. Instants can respond in every phase.' },
+  { id: 'main', label: 'Main phase', description: 'Queue attackers, choose targets, or use Attack now. Withdraw any attack before it resolves.' },
   { id: 'attack', label: 'Your attack', description: 'Your creatures fight their targets. Monsters retaliate.' },
   { id: 'enemy', label: 'Enemy action', description: 'Monsters guard, strengthen, or prepare their attacks.' },
   { id: 'blocks', label: 'Block', description: 'Assign one or more blockers. Selection order is damage order.' },
@@ -2038,7 +2083,7 @@ $('#shop-continue').addEventListener('click',showJourney);
 $('#return-shop').addEventListener('click',showShop);
 
 function canTapForMana(creature,battle=state.battle){return Boolean(battle && creature && /\{T\}: Add/i.test(creature.card.oracle_text||'') && !creature.tapped && !isSummoningSick(creature,battle.turn) && ['main','attack','enemy','blocks','damage'].includes(battle.phase));}
-function tapForMana(id){const battle=state.battle;const creature=battle?.creatures.find(item=>item.id===id);if(!canTapForMana(creature,battle))return false;creature.tapped=true;for(const [id] of battle.blockAssignments){const keep=blockerIds(battle,id).filter(item=>item!==creature.id);if(keep.length)battle.blockAssignments.set(id,keep);else battle.blockAssignments.delete(id);}battle.floatingMana=(battle.floatingMana||0)+1;syncMana(battle);battle.mulliganAvailable=false;renderBattle();playSfx('select');return true;}
+function tapForMana(id){const battle=state.battle;const creature=battle?.creatures.find(item=>item.id===id);if(!canTapForMana(creature,battle))return false;creature.tapped=true;for(const [id] of battle.blockAssignments){const keep=blockerIds(battle,id).filter(item=>item!==creature.id);if(keep.length)battle.blockAssignments.set(id,keep);else battle.blockAssignments.delete(id);}battle.floatingMana=(battle.floatingMana||0)+1;battle.maxMana+=1;syncMana(battle);battle.mulliganAvailable=false;renderBattle();playSfx('select');return true;}
 function permanentActivationCost(card){return card.name==='Fountain of Renewal'?3:card.name==='Omen of the Sea'?3:null;}
 function canActivatePermanent(permanent,battle=state.battle){const cost=permanentActivationCost(permanent.card);return Boolean(battle && cost!==null && battle.mana>=cost && ['main','attack','enemy','blocks','damage'].includes(battle.phase));}
 function activatePermanent(id){
