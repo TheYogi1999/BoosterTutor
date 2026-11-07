@@ -10,13 +10,14 @@ Play: https://theyogi1999.github.io/BoosterTutor/
 python3 -m http.server 8000
 ```
 
-No build step or runtime dependencies. The English desktop interface uses a 1600×900 canvas. Phones and tablets use a touch-friendly, scrollable layout with larger controls and swipeable card rows instead of shrinking the whole game. Fullscreen is available.
+No build step or runtime dependencies. The English desktop interface uses a 1600×900 canvas. Combat always fits the viewport: portrait phones and tablets use opposing ranks, while landscape uses the wide tabletop. Enemies, all three creature slots, mana, permanents, the fanned hand and turn controls stay visible without scrolling. Start, draft, camp and shop screens keep their mobile page layouts. Fullscreen is available.
 
 ## Draft, deck and card zones
 
 - The curated list in `card-pool.txt` contains 389 Magic card names. At the start of a run, the game resolves the list through Scryfall and loads card text, mana values, keywords and original images. The verified bundled cards remain available as the offline fallback.
 - Open six packs individually, with seven cards each. Pick one card per pack and receive two copies of each pick. Four basic mana cards complete the 16-card starter deck; there are no extra starter creatures.
 - Each opened pack has one free reroll. It replaces seven cards and clears only that pack's selection. Reward packs also contain seven cards.
+- Every booster card shows its type, mana value, printed power/toughness, keywords and a short in-game ability summary below its image. Noncreatures show a dash for power/toughness; full effect details remain available in the card preview.
 - The global Deck button and the camp's **Review your deck** button show grouped copies, mana statistics and a card search. Deck inspection works between encounters and turns.
 - The Library is a physical face-down stack to the right of the hand. Click it to inspect remaining cards grouped and sorted; upcoming draw order is not exposed.
 - Used spells, dead creatures and their auras enter the graveyard. The graveyard does not recycle into the library: if you try to draw while it is empty, the run ends. Exile lasts for the encounter; your run deck is restored for the next encounter.
@@ -65,7 +66,7 @@ No build step or runtime dependencies. The English desktop interface uses a 1600
 
 ## Progression and limits
 
-Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session. Touch layouts reflow the arena and booster row for phones and tablets; on touch, queued or winding-up attacks can be withdrawn before they resolve.
+Four encounters lead to the Shard Dragon. Each run draws four distinct stages from ten country regions; the battlefield receives a subtle color tint for its location. Choose one of four planeswalker avatars on the start screen; your selection is saved in the browser. After rewards and the card shop, rest for 10 life or study to add a Divination. Run progress lasts for the current page session. The battlefield adapts when rotating a phone or resizing the browser, and the hand fan adjusts to the available width. On touch, queued or winding-up attacks can be withdrawn before they resolve. Portrait card details use an on-demand preview, with permanent activation controls, instead of a separate inspector column.
 
 This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents use the stated roguelike interpretations. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system. This is a free, non-commercial fan demo for entertainment; it is not affiliated with or endorsed by Wizards of the Coast.
 
@@ -86,9 +87,10 @@ Browser checks require Playwright, Chromium and a running static server. `CHROMI
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/browser.test.cjs
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/advanced-browser.test.cjs
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/market-browser.test.cjs
+BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/mobile-browser.test.cjs
 ```
 
-The suites cover pointer drags, cancellation, large hands, uncapped healing, packs/rerolls, audio, layout bounds, English UI, card-zone inspection, individual attacks, retaliation, vigilance, priority windows, multi-blocks, exile and modifier expiry. Temporary screenshots go into ignored `work/`.
+The suites cover pointer drags, cancellation, large hands, uncapped healing, packs/rerolls, audio, layout bounds, English UI, card-zone inspection, individual attacks, retaliation, vigilance, priority windows, multi-blocks, exile and modifier expiry. The mobile suite runs without the external card API and checks booster facts, ten viewport sizes, all combat phases, a 15-card hand, rotation and touch blocking. Temporary screenshots go into ignored `work/`.
 
 ## Assets and publication
 

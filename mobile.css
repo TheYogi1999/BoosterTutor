@@ -1,0 +1,124 @@
+/* Booster facts stay visible without a tooltip, on both starter and reward packs. */
+.game-shell .draft-card-name{padding:8px 4px 4px;min-height:0;margin:0;line-height:1.25!important}
+.game-shell .booster-cards{align-items:start!important}
+.game-shell .booster-pack header{padding-bottom:12px}
+.draft-card-summary{display:flex;flex-direction:column;gap:5px;padding:0 4px 10px;color:#c8d6d9;font:12px/1.4 var(--sans);text-align:left;overflow-wrap:anywhere}
+.draft-card-summary b{color:#e5d2aa;font-weight:600}
+.draft-card-summary .draft-card-type{color:#ede5d5;font-size:inherit;min-height:0;margin:0;line-height:inherit}
+.draft-card-keywords{color:#b8d9dd}
+.game-shell .booster-pack{height:auto;min-height:450px}
+.game-shell .draft-grid{height:auto;min-height:460px;max-height:520px;overflow-y:auto;padding:12px 0}
+html:not(.responsive-game) .game-shell .draft-option .card-image-wrap{height:210px!important;aspect-ratio:auto}
+
+/* The combat canvas always fits the screen. Portrait uses opposing ranks so
+   the whole board remains visible without horizontal or vertical scrolling. */
+html.combat-game,html.combat-game body{width:100%;height:100%;overflow:hidden!important;overscroll-behavior:none}
+html.combat-game:not(.portrait-combat) .game-shell .player-panel .creature-group>.creature-token{width:114px!important;flex-basis:114px!important}
+html.portrait-combat .game-shell{width:760px;height:var(--combat-height);display:grid;grid-template-rows:64px minmax(0,1fr);padding:0 10px}
+html.portrait-combat .game-shell .topbar{width:100%;height:64px;gap:8px;padding:0;flex-wrap:nowrap}
+html.portrait-combat .game-shell .brand{font-size:19px;letter-spacing:0;gap:7px}
+html.portrait-combat .game-shell .brand-cards{width:36px;height:36px}
+html.portrait-combat .game-shell .topbar-right{gap:8px}
+html.portrait-combat .game-shell .topbar .quiet-button{height:48px;min-height:0;padding:6px 10px!important;font-size:20px!important}
+html.portrait-combat .game-shell .pixel-label,html.portrait-combat .game-shell .icon-button span{display:none!important}
+html.portrait-combat .game-shell .coin-purse{font-size:20px;line-height:40px;padding:0 6px}
+html.portrait-combat .game-shell .icon-button{font-size:26px;width:44px;height:48px;padding:0}
+html.portrait-combat .game-shell #fullscreen-button{font-size:0!important;width:44px;padding:0!important}
+html.portrait-combat .game-shell #fullscreen-button:before{content:'⛶';font-size:30px}
+html.portrait-combat .game-shell main{width:100%;height:100%;min-height:0;padding:0;margin:0}
+html.portrait-combat .game-shell .combat-screen.active{height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:82px minmax(0,1fr) 280px;gap:8px;padding:0 0 8px}
+html.portrait-combat .game-shell .combat-topline{grid-column:1;grid-row:1;height:82px;min-height:0;display:grid;grid-template-columns:1fr auto;grid-template-rows:30px 44px;gap:4px;padding:0 4px}
+html.portrait-combat .game-shell .run-progress{max-width:none;font-size:16px;gap:8px;flex-wrap:nowrap}
+html.portrait-combat .game-shell .run-progress b{font-size:22px}
+html.portrait-combat .game-shell .turn-badge{font-size:18px;margin-left:4px;padding-left:8px}
+html.portrait-combat .game-shell .progress-pips{gap:6px}
+html.portrait-combat .game-shell #quit-button{grid-column:2;grid-row:1;padding:0 5px!important;height:30px;min-height:0;font-size:16px!important}
+html.portrait-combat .game-shell .phase-strip{grid-column:1/-1;grid-row:2;justify-content:space-between;width:100%;gap:4px}
+html.portrait-combat .game-shell .phase-strip li{font-size:18px;padding:7px 6px;white-space:nowrap;flex:1;text-align:center}
+html.portrait-combat .game-shell .phase-strip li>span{display:none}
+html.portrait-combat .game-shell .arrow-legend,html.portrait-combat .game-shell #location-name{display:none!important}
+html.portrait-combat .game-shell .arena-table{grid-column:1;grid-row:2;width:100%;height:100%;display:grid;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,.8fr) minmax(0,1fr)!important;gap:8px!important;padding:8px!important;margin:0;overflow:hidden!important}
+html.portrait-combat .game-shell .arena-side{grid-column:1;height:100%!important;min-height:0;padding:6px 10px!important;overflow:hidden!important}
+html.portrait-combat .game-shell .versus-mark{display:none!important}
+html.portrait-combat .game-shell .enemy-panel{grid-row:1;grid-template-rows:40px minmax(0,1fr) auto!important;gap:4px!important}
+html.portrait-combat .game-shell .enemy-side-header{height:40px!important;padding:0!important;min-height:0}
+html.portrait-combat .game-shell .enemy-identity{display:block}
+html.portrait-combat .game-shell .enemy-identity h2{font-size:24px!important;line-height:36px!important}
+html.portrait-combat .game-shell .enemy-rank,html.portrait-combat .game-shell .enemy-identity .health-label,html.portrait-combat .game-shell .enemy-panel>.arena-zone-header{display:none!important}
+html.portrait-combat .game-shell #enemy-board{height:100%!important;min-height:0!important}
+html.portrait-combat .game-shell .monster-rank{display:flex;height:100%!important;gap:12px!important;padding:0;align-items:stretch!important;justify-content:space-evenly!important;overflow:visible}
+html.portrait-combat .game-shell .monster{height:100%;width:auto;flex:1;max-width:300px;min-width:0;padding:0 5px!important;grid-template-rows:36px minmax(20px,1fr) 28px 32px 6px 24px 20px!important;gap:0}
+html.portrait-combat .game-shell .monster-figure{width:100%!important;height:100%!important;min-height:0;max-height:200px}
+html.portrait-combat .game-shell .monster-figure img{height:100%;width:100%;object-fit:contain}
+html.portrait-combat .game-shell .monster-intent{font-size:18px;line-height:24px;padding:3px 5px}
+html.portrait-combat .game-shell .monster-intent b{font-size:20px}
+html.portrait-combat .game-shell .monster>strong{font-size:21px;line-height:28px}
+html.portrait-combat .game-shell .monster-life{font-size:26px;line-height:32px}
+html.portrait-combat .game-shell .monster-bounty{font-size:18px}
+html.portrait-combat .game-shell .monster-keywords{font-size:18px;line-height:24px}
+html.portrait-combat .game-shell .monster>small{font-size:16px;line-height:20px;max-width:100%;max-height:20px}
+html.portrait-combat .game-shell .player-panel{grid-row:2!important;grid-template-rows:60px 24px minmax(0,1fr) 24px 64px!important;gap:4px!important}
+html.portrait-combat .game-shell .player-side-header{height:60px!important;grid-template-columns:170px minmax(0,1fr) 150px!important;grid-template-rows:60px!important;gap:8px!important}
+html.portrait-combat .game-shell .player-avatar{height:48px!important;width:48px!important;top:6px;font-size:28px}
+html.portrait-combat .game-shell .player-side-header .side-identity{padding-left:58px;grid-column:1;gap:4px!important}
+html.portrait-combat .game-shell #player-health-label{font-size:32px!important;line-height:40px}
+html.portrait-combat .game-shell .health-label>span{font-size:17px}
+html.portrait-combat .game-shell .player-side-header .mana-display{grid-column:3;grid-row:1;width:150px!important;min-width:150px!important;height:54px!important;align-self:center}
+html.portrait-combat .game-shell .mana-display b{font-size:28px!important}
+html.portrait-combat .game-shell .mana-display small{font-size:17px!important;line-height:18px}
+html.portrait-combat .game-shell .mana-land-row{grid-column:2;grid-row:1;height:54px;gap:0;padding:0;align-self:center}
+html.portrait-combat .game-shell .mana-land{width:36px;flex:1 1 0;max-width:36px;min-width:0;height:50px}
+html.portrait-combat .game-shell .mana-land-meta{display:none}
+html.portrait-combat .game-shell .player-panel .arena-zone-header{height:24px!important;line-height:24px!important}
+html.portrait-combat .game-shell .arena-zone-header>span,html.portrait-combat .game-shell .arena-zone-header>small{font-size:17px}
+html.portrait-combat .game-shell .player-panel .creature-row{display:flex;height:100%!important;min-height:0!important;padding:0!important;gap:10px!important;align-items:flex-start!important;flex-wrap:nowrap;overflow:visible!important}
+html.portrait-combat .game-shell .player-panel .creature-group{height:100%!important;flex:1 1 0!important;width:0;max-width:220px;min-width:0}
+html.portrait-combat .game-shell .player-panel .creature-group>.creature-token{width:min(148px,100%)!important;flex:none!important;height:auto;max-height:calc(100% - 56px);gap:3px!important}
+html.portrait-combat .game-shell .player-panel .creature-group .player-card-frame{width:100%!important;height:auto!important;max-height:calc(100% - 120px);aspect-ratio:488/680!important;flex-shrink:1}
+html.portrait-combat .game-shell .field-caption{min-height:68px;gap:0}
+html.portrait-combat .game-shell .field-caption>b{font-size:18px;line-height:22px!important}
+html.portrait-combat .game-shell .field-caption>span:not(.stat-modifiers){font-size:22px;line-height:26px!important}
+html.portrait-combat .game-shell .field-caption>small{font-size:16px;line-height:20px!important;max-height:20px}
+html.portrait-combat .game-shell .field-caption .keyword-strip:not(.stat-modifiers){font-size:15px!important;line-height:20px!important;max-height:20px}
+html.portrait-combat .game-shell .unit-attachments{left:138px;top:8px;width:62px;height:140px}
+html.portrait-combat .game-shell .attachment-link{left:140px}
+html.portrait-combat .game-shell .unit-attachments .attached-permanent{width:54px!important;flex-basis:54px!important}
+html.portrait-combat .game-shell .unit-controls{width:100%;height:48px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:3px;margin-top:3px}
+html.portrait-combat .game-shell .unit-controls select,html.portrait-combat .game-shell .unit-controls button{height:48px;min-height:0;font-size:17px;line-height:22px;padding:3px}
+html.portrait-combat .game-shell .unit-controls.has-mana-ability{grid-template-columns:minmax(0,1fr) 72px 54px}
+html.portrait-combat .game-shell .unit-controls.has-mana-ability button{font-size:14px}
+html.portrait-combat .game-shell .stat-modifiers>span{font-size:14px;line-height:18px}
+html.portrait-combat .game-shell .stat-modifiers{max-height:20px;min-height:20px}
+html.portrait-combat .game-shell .stat-modifiers:empty{min-height:0;max-height:0}
+html.portrait-combat .game-shell .player-panel .permanent-row{height:64px!important;gap:8px!important;padding:0!important;flex-wrap:nowrap}
+html.portrait-combat .game-shell .player-panel .permanent-row .permanent-card{width:40px!important;flex:0 1 40px!important;min-width:0;gap:0!important}
+html.portrait-combat .game-shell .player-panel .permanent-row .field-caption{display:none}
+html.portrait-combat .game-shell .empty-permanents,html.portrait-combat .game-shell .empty-board{font-size:20px;line-height:28px;margin:10px 0}
+html.portrait-combat .game-shell .blocking-panel{height:auto!important;padding:5px!important;margin:0!important}
+html.portrait-combat .game-shell .blocking-panel[hidden]{display:none!important}
+html.portrait-combat .game-shell .blocking-heading{display:flex;align-items:center;gap:8px}
+html.portrait-combat .game-shell .blocking-heading .eyebrow,html.portrait-combat .game-shell .blocking-heading h2,html.portrait-combat .game-shell .blocking-panel>p,html.portrait-combat .game-shell .blocking-pairs{display:none}
+html.portrait-combat .game-shell #blocking-summary{font-size:18px;line-height:23px;max-width:410px;margin:0}
+html.portrait-combat .game-shell .block-tools{display:flex;gap:6px;margin:0}
+html.portrait-combat .game-shell .block-tools .quiet-button{height:48px;min-height:0;padding:4px 8px!important;font-size:17px!important}
+html.portrait-combat .game-shell .card-inspector,html.portrait-combat .game-shell .table-graveyard,html.portrait-combat .game-shell .battle-log-panel,html.portrait-combat .game-shell .combat-source-note,html.portrait-combat .game-shell .site-footer{display:none!important}
+html.portrait-combat .game-shell .hand-panel{position:relative!important;grid-column:1;grid-row:3;height:280px!important;display:grid;grid-template-columns:minmax(0,1fr) 90px;grid-template-rows:46px 154px 56px;gap:4px;padding:8px!important;margin:0!important;overflow:visible!important}
+html.portrait-combat .game-shell .phase-status{position:static;grid-column:1/-1;grid-row:1;font-size:19px;line-height:23px;white-space:normal;margin:0;overflow:hidden}
+html.portrait-combat .game-shell .hand-heading{display:none}
+html.portrait-combat .game-shell .hand-heading>div{display:block}
+html.portrait-combat .game-shell .hand-heading span,html.portrait-combat .game-shell #hand-count{font-size:15px;line-height:21px;display:block}
+html.portrait-combat .game-shell .hand-help{display:none!important}
+html.portrait-combat .game-shell .hand-row{grid-column:1;grid-row:2;height:154px!important;min-height:0!important;padding:3px 0!important;align-items:flex-start!important;overflow:visible!important}
+html.portrait-combat .game-shell .hand-card{--card-width:100px;width:100px!important;flex-basis:100px!important;margin-left:calc(var(--hand-step,75px) - 100px)!important;transform:none!important}
+html.portrait-combat .game-shell .hand-card:first-child{margin-left:0!important}
+html.portrait-combat .game-shell .hand-card:hover,html.portrait-combat .game-shell .hand-card:focus-visible{transform:translateY(-8px) scale(1.04)!important}
+html.portrait-combat .game-shell .library-pile{grid-column:2;grid-row:2;gap:0;padding:0 0 0 4px}
+html.portrait-combat .game-shell .library-stack{width:65px;margin:3px 0}
+html.portrait-combat .game-shell .library-label{font-size:15px;letter-spacing:0}
+html.portrait-combat .game-shell .library-caption{font-size:15px;line-height:23px}
+html.portrait-combat .game-shell .library-caption b{font-size:19px}
+html.portrait-combat .game-shell .turn-footer{grid-column:1/-1;grid-row:3;height:56px;grid-template-columns:minmax(0,1fr) 160px 210px;gap:6px}
+html.portrait-combat .game-shell .discard-info{grid-column:auto;grid-row:auto;gap:4px}
+html.portrait-combat .game-shell .turn-footer button{height:52px!important;max-height:none!important;min-height:0!important;font-size:18px!important;line-height:22px!important;padding:4px 6px!important;white-space:normal}
+html.portrait-combat .game-shell .mulligan-button,html.portrait-combat .game-shell .end-turn-button{width:100%;max-width:none;gap:3px}
+html.portrait-combat .game-shell .end-turn-button span{font-size:20px}
