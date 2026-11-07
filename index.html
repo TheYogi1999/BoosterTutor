@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="expedition.css" />
     <link rel="stylesheet" href="combat.css" />
     <link rel="stylesheet" href="polish.css" />
+    <link rel="stylesheet" href="adventure.css" />
     <script src="cards.js" defer></script>
     <script src="sounds.js" defer></script>
     <script src="game.js" defer></script>
@@ -24,8 +25,8 @@
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
-      <div class="topbar-right"><button class="quiet-button" id="fullscreen-button">⛶ 16:9 Vollbild</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.11 · <span id="global-phase">START</span></span>
+      <div class="topbar-right"><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
+        <span class="pixel-label"><i class="status-dot"></i> v0.12 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -35,29 +36,29 @@
         <div class="title-stage">
           <div class="pixel-sun" aria-hidden="true"></div>
           <div class="title-copy">
-            <div class="eyebrow"><span>✦</span> EINE REISE DURCH DEN AETHER <span>✦</span></div>
-            <h1 id="game-title">DEIN DECK.<br /><span>DEIN ABENTEUER.</span></h1>
+            <div class="eyebrow"><span>✦</span> A JOURNEY THROUGH THE AETHER <span>✦</span></div>
+            <h1 id="game-title">YOUR DECK.<br /><span>YOUR ADVENTURE.</span></h1>
             <p class="subtitle">The Aether Expedition</p>
-            <p class="intro">Öffne echte Magic-Booster, finde deinen Spielstil und stelle dich den Kreaturen des Aethers. Jede Karte verändert deinen Weg.</p>
-            <button class="primary-button" id="start-button"><span>▶</span> EXPEDITION STARTEN</button>
-            <div class="start-note"><span class="keycap">ENTER</span> oder klicken zum Starten</div>
+            <p class="intro">Open real Magic boosters, forge your strategy, and face the creatures of the Aether. Every card shapes your journey.</p>
+            <button class="primary-button" id="start-button"><span>▶</span> BEGIN EXPEDITION</button>
+            <div class="start-note"><span class="keycap">ENTER</span> or click to begin</div>
           </div>
-          <div class="hero-card-stack" aria-hidden="true"><img src="assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg" alt="" draggable="false"><img src="assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg" alt="" draggable="false"><img src="assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg" alt="" draggable="false"><span>ECHTE KARTEN. DEINE ENTSCHEIDUNGEN.</span></div>
+          <div class="hero-card-stack" aria-hidden="true"><img src="assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg" alt="" draggable="false"><img src="assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg" alt="" draggable="false"><img src="assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg" alt="" draggable="false"><span>REAL CARDS. YOUR DECISIONS.</span></div>
           <div class="title-ground" aria-hidden="true"></div>
         </div>
         <div class="feature-row">
-          <div class="feature"><span>01</span><b>Öffnen & wählen</b><small>Drei Booster. Je sieben Karten. Ein Pack nach dem anderen.</small></div>
-          <div class="feature"><span>02</span><b>Dein Deck meistern</b><small>Ein Manavorrat für alle Farben. Sieben Karten auf deiner Hand.</small></div>
-          <div class="feature"><span>03</span><b>Den Aether bezwingen</b><small>Lies die Absichten der Monster. Finde Relikte. Besiege den Drachen.</small></div>
+          <div class="feature"><span>01</span><b>Open & choose</b><small>Three boosters. Seven cards each. One pack at a time.</small></div>
+          <div class="feature"><span>02</span><b>Master your deck</b><small>One mana pool for every colour. Start with seven cards.</small></div>
+          <div class="feature"><span>03</span><b>Conquer the Aether</b><small>Read monster intentions. Discover relics. Defeat the dragon.</small></div>
         </div>
-        <div class="api-status" id="start-api-status">KARTENPOOL: <span>32 ECHTE MAGIC-KARTEN · LOKAL</span></div>
+        <div class="api-status" id="start-api-status">CARD POOL: <span>32 REAL MAGIC CARDS · OFFLINE READY</span></div>
       </section>
 
       <section class="screen loading-screen" id="loading-screen" aria-live="polite">
         <div class="loading-frame">
           <div class="loading-gem">✦</div>
           <h2>Shuffling boosters…</h2>
-          <p id="loading-message">Connecting to the card database.</p>
+          <p id="loading-message">Preparing the bundled card pool.</p>
           <div class="loading-bar"><i></i></div>
         </div>
       </section>
@@ -75,37 +76,37 @@
         <div class="draft-grid" id="draft-grid"></div>
         <div class="draft-footer">
           <p class="selection-status" id="selection-status">Choose one card from each booster.</p>
-          <button class="quiet-button" id="pack-reroll" disabled>↻ Pack neu würfeln · 1×</button>
+          <button class="quiet-button" id="pack-reroll" disabled>↻ Reroll pack · 1×</button>
           <button class="primary-button" id="draft-confirm" disabled>BUILD DECK <span>→</span></button>
         </div>
-        <div class="source-note">32 verifizierte Magic-Karten · Originalbilder lokal verfügbar · 7 Karten pro Pack</div>
+        <div class="source-note">32 verified Magic cards · Original images bundled · 7 cards per pack</div>
       </section>
 
       <section class="screen combat-screen" id="combat-screen" aria-labelledby="enemy-name">
         <div class="combat-topline">
-          <div class="run-progress"><span>RUN</span><b id="node-counter">01</b><div class="progress-pips" id="progress-pips"></div><span class="turn-badge" id="turn-display">Zug 1</span></div>
-          <ol class="phase-strip" id="phase-strip" aria-label="Kampfphasen"></ol><span id="location-name" hidden>THE FORGOTTEN GLADE</span>
-          <button class="quiet-button" id="quit-button">RUN BEENDEN</button>
+          <div class="run-progress"><span>RUN</span><b id="node-counter">01</b><div class="progress-pips" id="progress-pips"></div><span class="turn-badge" id="turn-display">Turn 1</span></div>
+          <ol class="phase-strip" id="phase-strip" aria-label="Combat phases"></ol><div class="arrow-legend"><span>Your attack</span><span>Enemy</span><span>Block</span></div><span id="location-name" hidden>THE FORGOTTEN GLADE</span>
+          <button class="quiet-button" id="quit-button">ABANDON RUN</button>
         </div>
 
         <div class="battlefield arena-table">
-          <svg class="combat-arrows" id="combat-arrows" aria-label="Geplante Angriffe und Blocks" role="img"></svg>
-          <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Dein Spielfeld links. Kreaturen, Auren und Ausrüstung hierher ziehen.">
+          <svg class="combat-arrows" id="combat-arrows" aria-label="Planned attacks and blocks" role="img"></svg>
+          <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Your battlefield on the left. Drop creatures, auras and equipment here.">
             <div class="side-header player-side-header">
               <div class="player-avatar" aria-hidden="true"><div class="avatar-cape"></div><div class="avatar-head"></div><div class="avatar-eye"></div><div class="avatar-staff">✦</div></div>
               <div class="side-identity" id="player-target">
-                <span class="player-rank">PLANESWALKER</span><h2>Dein Spielfeld</h2>
-                <div class="health-label"><span>LEBEN</span><b id="player-health-label">30</b></div>
-                <div class="shield-label" id="shield-label">0 Schild</div>
+                <span class="player-rank">PLANESWALKER</span>
+                <div class="health-label"><span>LIFE</span><b id="player-health-label">30</b></div>
+                <div class="shield-label" id="shield-label">0 shield</div>
               </div>
               <div class="mana-display"><span class="mana-symbol">◆</span><div><small>MANA</small><b id="mana-label">0 / 0</b></div></div>
             </div>
-            <div class="arena-zone-header creatures-zone-header"><span>DEINE KREATUREN · LINKS</span><small id="creature-count">0 / 3</small></div>
+            <div class="arena-zone-header creatures-zone-header"><span>YOUR CREATURES</span><small id="creature-count">0 / 3</small></div>
             <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Creature zone. Drop creatures here. Click a creature to hold it back for blocking."><div class="empty-board">Drop creatures here or play one from your hand.</div></div>
-            <div class="drop-hint">Kreatur anklicken: angreifen oder zum Blocken zurückhalten</div>
-            <div class="arena-zone-header"><span>FREIE VERZAUBERUNGEN & AUSRÜSTUNG</span><small id="permanent-count">0</small></div>
+            <div class="drop-hint">Click a creature to queue an attack or keep it back.</div>
+            <div class="arena-zone-header"><span>UNATTACHED PERMANENTS</span><small id="permanent-count">0</small></div>
             <div class="permanent-row" id="permanent-row"></div>
-            <button class="quiet-button" id="attachment-cancel" hidden>Zielauswahl abbrechen</button>
+            <button class="quiet-button" id="attachment-cancel" hidden>Cancel targeting</button>
           </section>
 
           <div class="versus-mark" aria-hidden="true"><span>VS</span><i></i></div>
@@ -114,42 +115,43 @@
             <div class="side-header enemy-side-header">
               <div class="side-identity enemy-identity">
                 <span class="enemy-rank" id="enemy-rank">SKIRMISH</span><h2 id="enemy-name">Mosswood Ambush</h2>
-                <div class="health-label"><span>GEGNER</span><b id="enemy-count-label">2 ENEMIES REMAIN</b></div>
+                <div class="health-label"><span>ENEMIES</span><b id="enemy-count-label">2 ENEMIES REMAIN</b></div>
               </div>
               <div class="enemy-art" id="enemy-art" aria-hidden="true"><img id="enemy-art-image" alt="" /><span class="enemy-sprite">♟</span><div class="enemy-shadow"></div></div>
             </div>
-            <div class="arena-zone-header"><span>GEGNER & ABSICHTEN</span><small id="enemy-board-label">CREATURES</small></div>
+            <div class="arena-zone-header"><span>MONSTERS & INTENTIONS</span><small id="enemy-board-label">CREATURES</small></div>
             <div class="enemy-board" id="enemy-board" aria-label="Enemy creatures and attacks"><div class="enemy-intent" id="enemy-intent"><span class="intent-icon">⚔</span><span>Enemies prepare to attack</span><b>0</b></div></div>
-        <section class="blocking-panel" id="blocking-panel" aria-label="Blocker zuweisen" hidden>
-          <div class="blocking-heading"><div><span class="eyebrow">VERTEIDIGUNG</span><h2>Wer hält den Angriff auf?</h2><p id="blocking-summary" aria-live="polite"></p></div><div class="block-tools"><button class="quiet-button" id="auto-block">Automatisch zuweisen</button><button class="quiet-button" id="clear-blocks">Alle lösen</button></div></div>
-          <p>1. Angreifer wählen &nbsp; 2. Eigene Kreatur wählen &nbsp; 3. Blocken bestätigen</p><div class="blocking-pairs" id="blocking-pairs"></div>
+        <section class="blocking-panel" id="blocking-panel" aria-label="Assign blockers" hidden>
+          <div class="blocking-heading"><div><span class="eyebrow">DEFENCE</span><h2>Who holds the line?</h2><p id="blocking-summary" aria-live="polite"></p></div><div class="block-tools"><button class="quiet-button" id="auto-block">Auto assign</button><button class="quiet-button" id="clear-blocks">Clear blocks</button></div></div>
+          <p>1. Choose an attacker &nbsp; 2. Add blockers &nbsp; 3. Confirm blocks</p><div class="blocking-pairs" id="blocking-pairs"></div>
         </section>
           </section>
 
         </div>
 
-        <aside class="card-inspector" aria-label="Große Kartenansicht"><div class="inspector-heading">KARTENANSICHT</div><div id="inspector-content"><div class="inspector-empty">◈<p>Fahre über eine eigene Karte auf dem Spielfeld, um sie hier groß zu sehen.</p></div></div></aside>
-        <section class="table-graveyard" aria-label="Dein Friedhof"><div><span class="eyebrow">FRIEDHOF</span><h3>Gefallene Karten <b id="graveyard-zone-count">0</b></h3><p>Zauber und zerstörte Karten landen hier.<br>Ist die Bibliothek leer, werden sie neu gemischt.</p><button class="quiet-button" id="graveyard-open">Friedhof ansehen</button></div><div id="graveyard-pile" class="graveyard-pile"></div></section>
+        <aside class="card-inspector" aria-label="Large card inspector"><div class="inspector-heading">CARD INSPECTOR</div><div id="inspector-content"><div class="inspector-empty">◈<p>Hover a battlefield card for a larger view and live stats.</p></div></div></aside>
+        <section class="table-graveyard" aria-label="Your graveyard"><div><span class="eyebrow">GRAVEYARD</span><h3>Fallen cards <b id="graveyard-zone-count">0</b></h3><p>Used spells and destroyed cards live here.<br>They recycle when your library is empty.</p><button class="quiet-button" id="graveyard-open">View graveyard</button></div><div id="graveyard-pile" class="graveyard-pile"></div></section>
         <div class="battle-log-panel">
           <div class="log-header"><span>BATTLE LOG</span><span id="turn-label">TURN 1</span></div>
           <div class="battle-log" id="battle-log" aria-live="polite"></div>
         </div>
 
-        <div class="hand-panel"><p id="phase-status" class="phase-status" aria-live="polite"></p><div class="arrow-legend"><span>Eigener Angriff</span><span>Gegnerangriff</span><span>Geblockt</span></div>
-          <div class="hand-heading"><div><span>DEINE HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
+        <div class="hand-panel"><p id="phase-status" class="phase-status" aria-live="polite"></p>
+          <div class="hand-heading"><div><span>YOUR HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
           <div class="hand-row" id="hand-row"></div>
+          <button class="library-pile" id="library-button" aria-label="Inspect library contents without revealing draw order"><span class="library-label">LIBRARY</span><span class="library-stack"><img src="assets/card-back.svg" alt="Face-down library" draggable="false"></span><span class="library-caption"><b id="library-count">0</b> cards</span></button>
           <div class="turn-footer">
-            <div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Friedhof <b id="graveyard-count">0</b></button><span class="library-count">Library</span> <b id="library-count">0</b></div>
+            <div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div>
             <button class="mulligan-button" id="mulligan-button" type="button">FREE MULLIGAN <span>↻</span></button>
             <button class="end-turn-button" id="end-turn-button">END TURN <span>→</span></button>
           </div>
         </div>
-        <div class="source-note combat-source-note">Fan-Prototyp · Vereinfachte Spielregeln · Kartendaten von Scryfall</div>
+        <div class="source-note combat-source-note">Fan prototype · Adapted rules · Card data from Scryfall</div>
       </section>
 
       <section class="screen journey-screen" id="journey-screen" aria-labelledby="journey-title">
         <div class="eyebrow">THE AETHER EXPEDITION</div><h2 id="journey-title"></h2><p id="journey-description"></p>
-        <div class="journey-path" id="journey-path"></div><div class="journey-life" id="journey-life"></div><div class="journey-options" id="journey-options"></div>
+        <div class="journey-path" id="journey-path"></div><div class="journey-life" id="journey-life"></div><button class="quiet-button" id="journey-deck-button">▣ Review your deck</button><div class="journey-options" id="journey-options"></div>
       </section>
       <section class="screen end-screen" id="end-screen" aria-labelledby="end-title">
         <div class="end-emblem" id="end-emblem">✦</div>
@@ -163,8 +165,8 @@
     </main>
 
     <footer class="site-footer">
-      <span>Booster Tutor · Unofficial fan prototype</span>
-      <span>Unofficial · <a href="https://scryfall.com" target="_blank" rel="noreferrer">Card data: Scryfall</a> · <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noreferrer">Wizards Fan Content Policy</a></span>
+      <span>Booster Tutor · Fan prototype</span>
+      <span><a href="https://scryfall.com" target="_blank" rel="noreferrer">Card data: Scryfall</a> · <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noreferrer">Wizards Fan Content Policy</a></span>
     </footer>
     </div>
 
@@ -172,10 +174,14 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="card-preview" id="card-preview" role="tooltip" hidden></div>
     <dialog class="graveyard-dialog" id="graveyard-dialog" aria-labelledby="graveyard-title">
-      <div class="graveyard-heading"><div><span class="eyebrow">CARD ZONE</span><h2 id="graveyard-title">Dein Friedhof</h2></div><button class="graveyard-close" id="graveyard-close" type="button" aria-label="Close graveyard">×</button></div>
-      <p class="graveyard-note">Ausgespielte Zauber, zerstörte Kreaturen und ihre Auren. Ausrüstung bleibt auf dem Spielfeld.</p>
+      <div class="graveyard-heading"><div><span class="eyebrow">CARD ZONE</span><h2 id="graveyard-title">Your graveyard</h2></div><button class="graveyard-close" id="graveyard-close" type="button" aria-label="Close graveyard">×</button></div>
+      <p class="graveyard-note">Cast spells, destroyed creatures and their auras. Equipment stays on the battlefield.</p>
       <div class="graveyard-grid" id="graveyard-grid"></div>
-      <p class="graveyard-empty" id="graveyard-empty">Dein Friedhof ist leer.</p>
+      <p class="graveyard-empty" id="graveyard-empty">Your graveyard is empty.</p>
+    </dialog>
+    <dialog class="collection-dialog" id="collection-dialog" aria-labelledby="collection-title">
+      <header><div><span class="eyebrow" id="collection-kind">RUN DECK</span><h2 id="collection-title">Your deck</h2></div><button id="collection-close" class="graveyard-close" aria-label="Close card collection">×</button></header>
+      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
     </dialog>
     <dialog class="confirm-dialog" id="quit-dialog">
       <h2>Abandon this run?</h2>

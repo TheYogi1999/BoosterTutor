@@ -252,20 +252,20 @@ const BUNDLED_CARDS = [
     "verified": true
   },
   {
-    "id": "bbc99a51-1501-4525-a3cc-f48249b64bed",
-    "name": "Opt",
-    "mana_cost": "{U}",
+    "id": "2b34e76b-86b3-464e-93e7-c3f2074028fb",
+    "name": "Battlegrowth",
+    "mana_cost": "{G}",
     "cmc": 1.0,
     "type_line": "Instant",
-    "oracle_text": "Scry 1. (Look at the top card of your library. You may put that card on the bottom.)\nDraw a card.",
+    "oracle_text": "Put a +1/+1 counter on target creature.",
     "power": "",
     "toughness": "",
     "color_identity": [
-      "U"
+      "G"
     ],
-    "image": "assets/cards/bbc99a51-1501-4525-a3cc-f48249b64bed.jpg",
-    "art": "https://cards.scryfall.io/art_crop/front/b/b/bbc99a51-1501-4525-a3cc-f48249b64bed.jpg?1783907102",
-    "uri": "https://scryfall.com/card/tdc/158/opt?utm_source=api",
+    "image": "assets/cards/2b34e76b-86b3-464e-93e7-c3f2074028fb.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/b/2b34e76b-86b3-464e-93e7-c3f2074028fb.jpg?1783944536",
+    "uri": "https://scryfall.com/card/mrd/113/battlegrowth?utm_source=api",
     "verified": true
   },
   {
@@ -337,20 +337,21 @@ const BUNDLED_CARDS = [
     "verified": true
   },
   {
-    "id": "c57ee875-5ce7-4c47-841c-9639d622fe00",
-    "name": "Negate",
-    "mana_cost": "{1}{U}",
-    "cmc": 2.0,
+    "id": "6d0dea1b-43dc-4e76-aabd-f12e121a78af",
+    "name": "Unmake",
+    "mana_cost": "{W/B}{W/B}{W/B}",
+    "cmc": 3.0,
     "type_line": "Instant",
-    "oracle_text": "Counter target noncreature spell.",
+    "oracle_text": "Exile target creature.",
     "power": "",
     "toughness": "",
     "color_identity": [
-      "U"
+      "B",
+      "W"
     ],
-    "image": "assets/cards/c57ee875-5ce7-4c47-841c-9639d622fe00.jpg",
-    "art": "https://cards.scryfall.io/art_crop/front/c/5/c57ee875-5ce7-4c47-841c-9639d622fe00.jpg?1793111882",
-    "uri": "https://scryfall.com/card/trc/439/negate?utm_source=api",
+    "image": "assets/cards/6d0dea1b-43dc-4e76-aabd-f12e121a78af.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/d/6d0dea1b-43dc-4e76-aabd-f12e121a78af.jpg?1783940077",
+    "uri": "https://scryfall.com/card/ddk/27/unmake?utm_source=api",
     "verified": true
   },
   {

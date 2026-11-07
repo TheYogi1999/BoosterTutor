@@ -18,7 +18,7 @@ const FIXTURES = [
 function game() {
   const elements = new Map();
   const queuedTimers = [];
-  function element(key) { if (!elements.has(key)) elements.set(key, {textContent:'',innerHTML:'',style:{setProperty(){}},dataset:{},classList:{toggle(){},add(){},remove(){},contains(){return false}},addEventListener(){},querySelectorAll(){return []},setAttribute(){},removeAttribute(){},append(){},closest(){return null},isConnected:true,offsetWidth:380,offsetHeight:180,getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}}); return elements.get(key); }
+  function element(key) { if (!elements.has(key)) elements.set(key, {textContent:'',innerHTML:'',style:{setProperty(){}},dataset:{},classList:{toggle(){},add(){},remove(){},contains(){return false}},addEventListener(){},querySelectorAll(){return []},setAttribute(){},removeAttribute(){},append(){},closest(){return null},isConnected:true,value:'',showModal(){this.open=true},close(){this.open=false},offsetWidth:380,offsetHeight:180,getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}}); return elements.get(key); }
   const context = vm.createContext({document:{documentElement:{style:{setProperty(){}}},body:{append(){}},querySelector:element,querySelectorAll:()=>[],addEventListener(){}},requestAnimationFrame(){},window:{scrollTo(){},addEventListener(){},innerWidth:1200,innerHeight:900},queuedTimers,setTimeout:callback=>{queuedTimers.push(callback);return queuedTimers.length},clearTimeout(){},console,AbortSignal});
   vm.runInContext(fs.readFileSync('cards.js','utf8'),context);
   vm.runInContext(fs.readFileSync('sounds.js','utf8'),context);
@@ -120,19 +120,19 @@ test('global enchantment modifiers apply once and include creatures cast later',
 test('first strike blocker kills a normal attacker before it can deal damage',()=>{
  const run=game();prepare(run);
  run("state.battle.creatures=[{id:'p',owner:'player',card:{name:'Blocker'},power:3,toughness:2,firstStrike:true}];state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Attacker'},power:5,health:3,maxHealth:3}];resolveCombatDamage(state.battle.enemyCreatures,new Map([['e',state.battle.creatures[0]]]),'enemy');");
- assert.equal(run('state.battle.creatures.length'),1);assert.equal(run('state.battle.enemyCreatures.length'),0);assert.equal(run('state.battle.creatures[0].damage'),0);
+ assert.equal(run('state.battle.creatures.length'),1);assert.equal(run('state.battle.enemyCreatures.length'),0);assert.equal(run('state.battle.creatures[0].damage||0'),0);
 });
 test('block assignment rejects illegal flying blocks and toggles legal assignments',()=>{
  const run=game();prepare(run);
  run("state.battle.phase='blocks';state.battle.turn=3;state.battle.creatures=[{id:'p',owner:'player',card:{name:'Guard'},power:2,toughness:3,tapped:false}];state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Flyer'},power:2,health:3,maxHealth:3,flying:true,summonedTurn:1}];assignBlocker('e','p');");
  assert.equal(run('state.battle.blockAssignments.size'),0);
- run("state.battle.creatures[0].reach=true;assignBlocker('e','p')");assert.equal(run("state.battle.blockAssignments.get('e')"),'p');
+ run("state.battle.creatures[0].reach=true;assignBlocker('e','p')");assert.equal(run("blockerIds(state.battle,'e').join(',')"),'p');
  run("assignBlocker('e','p')");assert.equal(run('state.battle.blockAssignments.size'),0);
 });
 test('rules bubble describes the implemented fallback, not unsupported original text',()=>{
  const run=game();prepare(run);
  run("globalThis.mystery={name:'Mystery',type_line:'Sorcery',cmc:2,oracle_text:'Take an extra turn.'};showCardPreview(mystery,{dataset:{previewOwner:'hand',handIndex:0},isConnected:true,setAttribute(){},removeAttribute(){},closest(){return null},getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}});");
- assert.equal(run("$('#card-preview').innerHTML.includes('6 Schaden')"),true);assert.equal(run("$('#card-preview').innerHTML.includes('Take an extra turn')"),false);
+ assert.equal(run("$('#card-preview').innerHTML.includes('6 damage')"),true);assert.equal(run("$('#card-preview').innerHTML.includes('Take an extra turn')"),false);
  assert.equal(run("parseFloat($('#card-preview').style.top)<500"),true);
 });
 test('hand and battlefield markup contain complete faces without UI overlays',()=>{
@@ -216,12 +216,88 @@ test('healing, lifelink and rest-style gains can exceed starting life',()=>{
  const run=game();prepare(run);run("state.playerHealth=35;applyOracle({name:'Heal',type_line:'Instant',cmc:1,oracle_text:'You gain 5 life.'});gainLifelinkLife({lifelink:true},'player',4,state.battle)");
  assert.equal(run('state.playerHealth'),44);
 });
-test('arrows are restricted to their matching combat phase',()=>{
+test('planned arrows stay visible in every combat phase',()=>{
  const run=game();prepare(run);run("state.battle.turn=3;state.battle.creatures=[{id:'p',owner:'player',card:FIXTURES[4],power:2,toughness:3,summonedTurn:1,willAttack:true,tapped:false}]");
  for(const phase of ['main','attack','enemy','blocks','damage']){
   run(`state.battle.phase='${phase}'`);
-  if(phase==='main')assert.equal(run('combatRoutes(state.battle).length'),0);
-  else if(phase==='attack')assert.equal(run("combatRoutes(state.battle).every(route=>route.kind==='ally')"),true);
-  else assert.equal(run("combatRoutes(state.battle).every(route=>route.kind!=='ally')"),true);
+  assert.equal(run("combatRoutes(state.battle).some(route=>route.kind==='ally')"),true);
+  assert.equal(run("combatRoutes(state.battle).some(route=>route.kind==='enemy')"),true);
  }
+});
+function fighter(run, stats) {
+ run(`state.battle.creatures=[{id:'p',owner:'player',card:FIXTURES[4],power:3,toughness:3,summonedTurn:0,willAttack:true,tapped:false,...${JSON.stringify(stats||{})}}];`);
+}
+test('monsters retaliate and normal combat damage is simultaneous',()=>{
+ const run=game();prepare(run);fighter(run);
+ run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Enemy'},health:3,maxHealth:3,power:3}];resolvePlayerAttacks()");
+ assert.equal(run('state.battle.creatures.length'),0);assert.equal(run('state.battle.enemyCreatures.length'),0);assert.equal(run('state.battle.graveyard.length'),1);
+});
+test('first strike prevents retaliation when it kills the monster first',()=>{
+ const run=game();prepare(run);fighter(run,{firstStrike:true});
+ run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Enemy'},health:3,power:6}];resolvePlayerAttacks()");
+ assert.equal(run('state.battle.creatures.length'),1);assert.equal(run('state.battle.creatures[0].damage||0'),0);
+});
+test('vigilance attacks once, remains untapped, and can then block',()=>{
+ const run=game();prepare(run);fighter(run,{vigilance:true,toughness:8});
+ run("state.battle.enemyCreatures[0].power=1;resolvePlayerAttacks();");
+ assert.equal(run('state.battle.creatures[0].tapped'),false);assert.equal(run('state.battle.creatures[0].attackedThisTurn'),true);assert.equal(run('eligibleAttacker(state.battle.creatures[0],state.battle)'),false);
+ run("state.battle.phase='blocks';assignBlocker(state.battle.enemyCreatures[0].id,'p')");assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).length'),1);
+});
+test('individual creatures use different attack targets',()=>{
+ const run=game();prepare(run);
+ run("state.battle.creatures=[{id:'a',owner:'player',card:FIXTURES[4],power:2,toughness:9,summonedTurn:0,willAttack:true,attackTargetId:state.battle.enemyCreatures[0].id},{id:'b',owner:'player',card:FIXTURES[4],power:4,toughness:9,summonedTurn:0,willAttack:true,attackTargetId:state.battle.enemyCreatures[1].id}];resolvePlayerAttacks()");
+ assert.equal(run('state.battle.enemyCreatures[0].health'),11);assert.equal(run('state.battle.enemyCreatures[1].health'),6);assert.equal(run('state.battle.creatures[0].damage'),3);assert.equal(run('state.battle.creatures[1].damage'),2);
+});
+test('two blockers split incoming damage once and combine their return damage',()=>{
+ const run=game();prepare(run);
+ run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Raider'},power:4,health:10}];state.battle.creatures=[{id:'a',owner:'player',card:FIXTURES[4],power:3,toughness:3},{id:'b',owner:'player',card:FIXTURES[4],power:2,toughness:2}];globalThis.result=resolveCombatDamage(state.battle.enemyCreatures,new Map([['e',state.battle.creatures.slice()]]),'enemy')");
+ assert.equal(run('result.damageToPlayer'),0);assert.equal(run('state.battle.creatures.length'),1);assert.equal(run('state.battle.creatures[0].id'),'b');assert.equal(run('state.battle.creatures[0].damage'),1);assert.equal(run('state.battle.enemyCreatures[0].health'),5);
+});
+test('multi-block assignment is additive, toggles one blocker, and keeps each blocker unique',()=>{
+ const run=game();prepare(run);run("state.battle.turn=3;state.battle.phase='blocks';state.battle.creatures=['a','b','c'].map(id=>({id,owner:'player',card:FIXTURES[4],power:2,toughness:3}));assignBlocker(state.battle.enemyCreatures[0].id,'a');assignBlocker(state.battle.enemyCreatures[0].id,'b');assignBlocker(state.battle.enemyCreatures[0].id,'c');");
+ assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).length'),3);
+ run("assignBlocker(state.battle.enemyCreatures[0].id,'b')");assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).join(",")'),'a,c');
+ run("assignBlocker(state.battle.enemyCreatures[1].id,'a')");assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).join(",")'),'c');assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[1].id).join(",")'),'a');
+});
+test('exiling a creature detaches equipment, destroys its aura, and never recycles the exiled card',()=>{
+ const run=game();prepare(run);
+ run("state.battle.hand=[FIXTURES[4],FIXTURES[2],FIXTURES[1]];playCard(0,'player');playCard(0);selectAttachmentTarget(state.battle.creatures[0].id);playCard(0);state.battle.permanents[1].attachedTo=state.battle.creatures[0].id;state.battle.resolvingSpellTarget={side:'player',id:state.battle.creatures[0].id};removeSpellTarget('exile');state.battle.deck=[];reshuffleGraveyard();");
+ assert.equal(run('state.battle.exile.length'),1);assert.equal(run('state.battle.creatures.length'),0);assert.equal(run('state.battle.permanents.length'),1);assert.equal(run('state.battle.permanents[0].attachedTo'),null);assert.equal(run('state.battle.deck.some(card=>card.id===FIXTURES[4].id)'),false);
+});
+test('Unmake is a genuine bundled instant with an exile effect',()=>{
+ const run=game();assert.equal(run("cardEffects(BUNDLED_CARDS.find(card=>card.name==='Unmake'))[0].kind"),'exile');
+});
+test('instants are castable and pause priority in every combat phase; sorceries cannot',()=>{
+ const run=game();prepare(run);
+ for(const phase of ['main','attack','enemy','blocks','damage']){
+  run(`state.battle.phase='${phase}'`);
+  assert.equal(run('canCastNow(FIXTURES[3])'),true);assert.equal(run('canCastNow(FIXTURES[5])'),phase==='main');
+ }
+ run("state.battle.phase='attack';state.battle.hand=[FIXTURES[3]];queuedTimers.length=0;afterCombatBeat(state.battle,'attack',()=>{state.battle.phase='enemy'});");
+ assert.equal(run('typeof state.battle.priorityCallback'),'function');assert.equal(run('queuedTimers.length'),0);
+ run("playCard(0,'enemy');handleCombatAction()");assert.equal(run('state.battle.phase'),'enemy');
+});
+test('persistent and end-of-turn bonuses have separate values and expiry',()=>{
+ const run=game();prepare(run);run("state.battle.hand=[FIXTURES[4],FIXTURES[1],FIXTURES[9]];playCard(0,'player');playCard(0);state.battle.pendingAttachment={permanentId:state.battle.permanents[0].id};selectAttachmentTarget(state.battle.creatures[0].id);playCard(0);");
+ assert.equal(run('creatureBonuses(state.battle.creatures[0]).permanent.power'),2);assert.equal(run('creatureBonuses(state.battle.creatures[0]).temporary.power'),2);
+ run('expireTurnEffects(state.battle)');assert.equal(run('creatureBonuses(state.battle.creatures[0]).temporary.power'),0);assert.equal(run('state.battle.creatures[0].power'),4);
+});
+test('deck and library inspection groups copies without changing draw order',()=>{
+ const run=game();prepare(run);run("state.deck=[FIXTURES[4],FIXTURES[4],FIXTURES[3]];state.battle.deck=state.deck.slice();globalThis.order=JSON.stringify(state.battle.deck);openCollection('deck')");
+ assert.equal(run('state.collectionCards.length'),2);assert.equal(run('state.collectionCards.find(card=>card.id===FIXTURES[4].id).count'),2);
+ run("openCollection('library')");assert.equal(run('JSON.stringify(state.battle.deck)'),run('order'));
+});
+test('exiling a blocker removes its assignment before incoming damage',()=>{
+ const run=game();prepare(run);fighter(run,{toughness:5});
+ run("state.battle.phase='blocks';assignBlocker(state.battle.enemyCreatures[0].id,'p');state.battle.resolvingSpellTarget={side:'player',id:'p'};removeSpellTarget('exile')");
+ assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).length'),0);
+});
+test('a declared attack does not silently retarget after its target leaves',()=>{
+ const run=game();prepare(run);fighter(run,{attackTargetId:'gone'});run('resolvePlayerAttacks()');
+ assert.equal(run('state.battle.enemyCreatures[0].health'),13);assert.equal(run('state.battle.creatures[0].attackedThisTurn||false'),false);
+});
+test('Battlegrowth creates a persistent +1/+1 modifier distinct from a temporary buff',()=>{
+ const run=game();prepare(run);fighter(run,{power:2,toughness:3});
+ run("applyOracle(BUNDLED_CARDS.find(card=>card.name==='Battlegrowth'))");
+ assert.equal(run('state.battle.creatures[0].power'),3);assert.equal(run('state.battle.creatures[0].toughness'),4);assert.equal(run('creatureBonuses(state.battle.creatures[0]).permanent.power'),1);assert.equal(run('creatureBonuses(state.battle.creatures[0]).temporary.power'),0);
 });

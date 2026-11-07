@@ -70,7 +70,7 @@ require('node:fs').mkdirSync('work',{recursive:true});
  assert.equal(await page.evaluate(()=>state.battle.phase),'damage');
  await page.waitForFunction(()=>state.battle.turn===2);
  assert.equal(await page.evaluate(()=>state.battle.turn),2);assert.equal(await page.evaluate(()=>state.playerHealth),30);assert.equal(await page.locator('.hand-card').count(),7);
- assert.equal(await page.locator('.combat-route').count(),0,'no attack routes during the card phase');
+ assert.ok(await page.locator('.combat-route').count()>0,'planned routes remain visible during the card phase');
  const lionIndex=await page.evaluate(()=>state.battle.hand.findIndex(card=>card.name==='Savannah Lions'));
  assert.ok(lionIndex>=0);
  await page.locator(`[data-hand-index="${lionIndex}"]`).dragTo(page.locator('#creature-row'));

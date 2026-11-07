@@ -29,6 +29,7 @@ function showScreen(id) {
   state.screen = id;
   hideCardPreview();
   updatePhaseDisplay();
+  $('#deck-button').disabled = !state.deck.length;
   for (const screen of screens) $('#' + screen).classList.toggle('active', screen === id);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -54,7 +55,8 @@ function creatureKeywords(card) {
     firstStrike: hasKeywordLine(text, 'first strike'),
     deathtouch: hasKeywordLine(text, 'deathtouch'),
     reach: hasKeywordLine(text, 'reach'),
-    haste: hasKeywordLine(text, 'haste')
+    haste: hasKeywordLine(text, 'haste'),
+    vigilance: hasKeywordLine(text, 'vigilance')
   };
 }
 
@@ -77,7 +79,7 @@ function creatureKeywordLabels(creature) {
     ['double strike', 'Double strike'],
     ['first strike', 'First strike'],
     ['deathtouch', 'Deathtouch'],
-    ['reach', 'Reach']
+    ['reach', 'Reach'], ['vigilance', 'Vigilance'], ['haste', 'Haste']
   ];
   return labels.filter(([keyword]) => hasCreatureKeyword(creature, keyword)).map(([, label]) => label).join(' · ');
 }
@@ -120,7 +122,7 @@ function startNewRun() {
   loadCardPool().then(({ cards }) => {
     state.pool = cards;
     const status = $('#start-api-status span');
-    status.textContent = '32 ECHTE MAGIC-KARTEN · LOKAL';
+    status.textContent = '32 REAL MAGIC CARDS · OFFLINE READY';
     status.style.color = '#b7d9c2';
     state.packs = makeStarterPacks();
     state.draftKind = 'starter';
@@ -147,11 +149,11 @@ function parseStats(card) {
 }
 
 const FOE_TYPES = {
-  sprout: { name: 'Mooswächter', health: 13, power: 3, pattern: ['attack', 'guard', 'attack'] },
-  wisp: { name: 'Aethergeist', health: 10, power: 2, pattern: ['buff', 'attack', 'attack'] },
-  raider: { name: 'Runenräuber', health: 22, power: 4, pattern: ['attack', 'buff', 'attack', 'guard'] },
-  wolf: { name: 'Dornenwolf', health: 20, power: 4, pattern: ['attack', 'attack', 'guard'] },
-  dragon: { name: 'Splitterdrache', health: 60, power: 7, pattern: ['guard', 'attack', 'buff', 'attack'] }
+  sprout: { name: 'Moss Sentinel', health: 13, power: 3, pattern: ['attack', 'guard', 'attack'] },
+  wisp: { name: 'Aether Wisp', health: 10, power: 2, pattern: ['buff', 'attack', 'attack'] },
+  raider: { name: 'Rune Raider', health: 22, power: 4, pattern: ['attack', 'buff', 'attack', 'guard'] },
+  wolf: { name: 'Thornwolf', health: 20, power: 4, pattern: ['attack', 'attack', 'guard'] },
+  dragon: { name: 'Shard Dragon', health: 60, power: 7, pattern: ['guard', 'attack', 'buff', 'attack'] }
 };
 function createEnemyTeam(encounter) {
   const teams = [['sprout', 'wisp'], ['raider', 'sprout'], ['wolf', 'raider', 'wisp'], ['dragon', 'wisp']];
@@ -163,7 +165,7 @@ function createEnemyTeam(encounter) {
 function enemyIntent(enemy, turn = state.battle?.turn || 1) {
   const kind = enemy.pattern ? enemy.pattern[(turn - 1) % enemy.pattern.length] : 'attack';
   return { kind, damage: kind === 'attack' ? Math.max(0, enemy.power) : 0, shield: kind === 'guard' ? 5 : 0,
-    label: kind === 'attack' ? `Angriff · ${enemy.power} Schaden` : kind === 'guard' ? 'Verteidigung · 5 Schild' : 'Stärken · +1 Angriff', icon: kind === 'attack' ? '⚔' : kind === 'guard' ? '⛨' : '✦' };
+    label: kind === 'attack' ? `Attack · ${enemy.power} damage` : kind === 'guard' ? 'Guard · 5 shield' : 'Strengthen · +1 power', icon: kind === 'attack' ? '⚔' : kind === 'guard' ? '⛨' : '✦' };
 }
 function resolveEnemyIntents() {
   const battle = state.battle;
@@ -171,8 +173,8 @@ function resolveEnemyIntents() {
   battle.intentsResolvedTurn = battle.turn;
   for (const enemy of battle.enemyCreatures) {
     const intent = enemyIntent(enemy);
-    if (intent.kind === 'guard') { enemy.shield = intent.shield; addLog(`${enemy.card.name} erhält ${intent.shield} Schild.`); }
-    if (intent.kind === 'buff') { enemy.power += 1; addLog(`${enemy.card.name} verstärkt seinen Angriff um 1.`); }
+    if (intent.kind === 'guard') { enemy.shield = intent.shield; addLog(`${enemy.card.name} gains ${intent.shield} shield.`); }
+    if (intent.kind === 'buff') { enemy.power += 1; addLog(`${enemy.card.name} gains 1 power.`); }
   }
 }
 
@@ -192,13 +194,16 @@ function cardEffects(card, creature = isCreature(card)) {
   if (damage) effects.push({ kind: 'damage', amount: Number(damage[1]) });
   if (life) effects.push({ kind: 'heal', amount: Number(life[1]) });
   if (draw) effects.push({ kind: 'draw', amount: ({ a: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 })[draw[1].toLowerCase()] || Number(draw[1]) || 1 });
+  const counter = text.match(/put (a|one|two|three|four|\d+) \+1\/\+1 counters? on target creature/i);
+  if (counter) { const amount = ({a:1,one:1,two:2,three:3,four:4})[counter[1].toLowerCase()] || Number(counter[1]) || 1; effects.push({ kind: 'buff', power: amount, toughness: amount, temporary: false }); }
   if (buff) effects.push({ kind: 'buff', power: Number(buff[1]), toughness: Number(buff[2]), temporary: /until end of turn/i.test(text) });
   if (grant) {
-    const keywords = grant[1].match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste)\b/gi) || [];
+    const keywords = grant[1].match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste|vigilance)\b/gi) || [];
     if (keywords.length) effects.push({ kind: 'keywords', keywords: keywords.map(value => value.toLowerCase()) });
   }
   if (/counter target/i.test(text)) effects.push({ kind: 'shield', amount: 5 });
-  if (/destroy target creature|exile target creature/i.test(text)) effects.push({ kind: 'damage', amount: /exile target creature/i.test(text) ? 9 : 7 });
+  if (/destroy target creature/i.test(text)) effects.push({ kind: 'destroy' });
+  if (/exile target creature/i.test(text)) effects.push({ kind: 'exile' });
   if (/prevent the next|prevent all damage/i.test(text)) effects.push({ kind: 'shield', amount: 6 });
   if (/create .*token/i.test(text)) effects.push({ kind: 'token' });
   if (!effects.length && !creature) effects.push({ kind: 'damage', amount: Math.max(3, Math.ceil((card.cmc || 0) * 2 + 2)) });
@@ -208,7 +213,7 @@ function permanentEffect(card) {
   const text = card.oracle_text || '';
   const buff = text.match(/gets?\s+([+-]\d+)\/([+-]\d+)/i);
   const attachment = isAttachment(card);
-  const keywords = attachment ? (text.match(/(?:has|have|gains?)\s+([^.;\n]+)/i)?.[1] || '').match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste)\b/gi) || [] : [];
+  const keywords = attachment ? (text.match(/(?:has|have|gains?)\s+([^.;\n]+)/i)?.[1] || '').match(/\b(?:flying|lifelink|double strike|first strike|deathtouch|reach|haste|vigilance)\b/gi) || [] : [];
   return {
     power: buff ? Number(buff[1]) : attachment ? 1 : 0,
     toughness: buff ? Number(buff[2]) : attachment ? 1 : 0,
@@ -220,34 +225,38 @@ function signed(value) { return `${value >= 0 ? '+' : ''}${value}`; }
 function effectDescriptions(card) {
   if (isPermanent(card)) {
     const effect = permanentEffect(card);
-    const lines = ['Bleibt bis zum Ende dieses Kampfes auf dem Spielfeld.'];
+    const lines = ['Stays on the battlefield for this encounter.'];
     if (isAttachment(card)) {
-      lines.push(`${isAura(card) ? 'Aura: Wähle beim Ausspielen' : 'Ausrüstung: Klicke sie an und wähle kostenlos'} eine eigene Kreatur.`);
-      lines.push(`Die verbundene Kreatur erhält ${signed(effect.power)}/${signed(effect.toughness)}${effect.keywords.length ? ' und ' + effect.keywords.join(', ') : ''}.`);
-      lines.push(isAura(card) ? 'Stirbt die Kreatur, geht die Aura in den Friedhof.' : 'Stirbt die Kreatur, bleibt die Ausrüstung liegen und kann neu angelegt werden.');
-    } else if (effect.shield) lines.push(`Sofort und zu Beginn jedes eigenen Zuges: ${effect.shield} Schild. Schild verfällt nach dem gegnerischen Angriff.`);
-    else lines.push(`Alle eigenen Kreaturen erhalten ${signed(effect.power)}/${signed(effect.toughness)}, solange diese Karte liegt.`);
+      lines.push(isAura(card) ? 'Aura: choose an allied creature when casting.' : 'Equipment: click or drag it onto an allied creature; re-equipping is free.');
+      lines.push(`Its host gets ${signed(effect.power)}/${signed(effect.toughness)}${effect.keywords.length ? ' and ' + effect.keywords.join(', ') : ''}.`);
+      lines.push(isAura(card) ? 'When its host leaves the battlefield, the aura goes to your graveyard.' : 'When its host leaves, the equipment stays unattached.');
+    } else if (effect.shield) lines.push(`Gain ${effect.shield} shield on entry and at each turn start. Shield expires after enemy damage.`);
+    else lines.push(`All allied creatures get ${signed(effect.power)}/${signed(effect.toughness)} while this card remains.`);
     return lines;
   }
   const lines = [];
   if (isCreature(card)) {
     const stats = parseStats(card);
     const keywords = creatureKeywordLabels(creatureKeywords(card));
-    lines.push(`Kreatur: ${stats.power} Angriff / ${stats.toughness} Widerstandskraft.${keywords ? ' Fähigkeiten: ' + keywords + '.' : ''}`);
-    lines.push(/Artifact/.test(card.type_line) || creatureKeywords(card).haste ? 'Kann sofort angreifen.' : 'Kann ab dem nächsten Zug angreifen. Darf sofort blocken.');
+    lines.push(`Creature: ${stats.power} power / ${stats.toughness} toughness.${keywords ? ' Keywords: ' + keywords + '.' : ''}`);
+    lines.push(creatureKeywords(card).haste ? 'Haste: may attack immediately.' : 'Summoning sickness: may block now, but attacks from your next turn.');
+    lines.push('Attacking a monster also deals its power back to this creature. First strike and double strike use separate steps.');
   }
   for (const effect of cardEffects(card)) {
-    if (effect.kind === 'damage') lines.push(`${effect.amount} Schaden am gewählten Gegner, sonst am ersten Gegner. Schild fängt Schaden ab; Überschuss verfällt.`);
-    if (effect.kind === 'heal') lines.push(`Heilt dich um ${effect.amount} Leben. Keine Lebensobergrenze.`);
-    if (effect.kind === 'draw') lines.push(`Zieht ${effect.amount} zusätzliche Karte(n). Keine Handkartenobergrenze.`);
-    if (effect.kind === 'shield') lines.push(`Gibt ${effect.amount} Schild bis nach dem nächsten gegnerischen Angriff.`);
-    if (effect.kind === 'buff') lines.push(`Stärkste eigene Kreatur: ${signed(effect.power)}/${signed(effect.toughness)}${effect.temporary ? ' bis Zugende' : ' für diesen Kampf'}. Ohne Kreatur: 3 Schild.`);
-    if (effect.kind === 'keywords') lines.push(`Stärkste eigene Kreatur erhält ${effect.keywords.join(', ')} bis Zugende. Ohne Kreatur kein Effekt.`);
-    if (effect.kind === 'token') lines.push('Erzeugt einen 2/2-Spielstein, wenn einer der 3 Kreaturenplätze frei ist.');
+    if (effect.kind === 'damage') lines.push(`Deal ${effect.amount} damage to the selected enemy, otherwise the first enemy. Shield absorbs damage; excess is lost.`);
+    if (effect.kind === 'destroy') lines.push('Destroy the selected creature. It goes to its graveyard.');
+    if (effect.kind === 'exile') lines.push('Exile the selected creature for this encounter. It cannot be recycled. Drop onto an ally to exile that ally instead.');
+    if (effect.kind === 'heal') lines.push(`Gain ${effect.amount} life. There is no life cap.`);
+    if (effect.kind === 'draw') lines.push(`Draw ${effect.amount} additional card(s). There is no hand-size cap.`);
+    if (effect.kind === 'shield') lines.push(`Gain ${effect.amount} shield until enemy damage finishes.`);
+    if (effect.kind === 'buff') lines.push(`Your selected ally, otherwise your strongest creature, gets ${signed(effect.power)}/${signed(effect.toughness)}${effect.temporary ? ' until end of turn (amber)' : ' for this encounter (green)'}. With no creature, gain 3 shield.`);
+    if (effect.kind === 'keywords') lines.push(`Your selected ally, otherwise your strongest creature, gains ${effect.keywords.join(', ')} until end of turn.`);
+    if (effect.kind === 'token') lines.push('Create a 2/2 token if one of your three creature slots is free.');
   }
-  if (!isCreature(card)) lines.push('Geht nach dem Ausspielen in den Friedhof.');
+  if (!isCreature(card)) lines.push(`${isInstant(card) ? 'Instant: playable in every combat phase. ' : ''}Goes to your graveyard after casting.`);
   return lines;
 }
+
 function effectSummary(card) { return effectDescriptions(card).join(' '); }
 function cardFace(card) {
   return card.image ? `<img src="${escapeHtml(card.image)}" alt="${escapeHtml(card.name)}" draggable="false" loading="lazy" />`
@@ -255,7 +264,7 @@ function cardFace(card) {
 }
 
 function makeCardMarkup(card, packIndex, cardIndex, selected) {
-  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} generisches Mana${selected ? ', ausgewählt' : ''}"><span class="card-image-wrap">${cardFace(card)}</span><span class="draft-card-name">${escapeHtml(card.name)}</span></button>`;
+  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} generic mana${selected ? ', selected' : ''}"><span class="card-image-wrap">${cardFace(card)}</span><span class="draft-card-name">${escapeHtml(card.name)}</span></button>`;
 }
 
 function selectedDraftCards() {
@@ -273,19 +282,19 @@ function renderDraft() {
   const packIndex = state.activePack || 0;
   const chosen = state.selection.has(packIndex);
   const last = !starter || packIndex === 2;
-  $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} VON 3` : 'BELOHNUNG';
-  $('#draft-title').textContent = state.boosterSealed ? 'Dein nächster Booster' : 'Welche Karte reist mit dir?';
-  $('#draft-instruction').textContent = state.boosterSealed ? 'Öffne das Pack und entdecke sieben Karten.' : 'Wähle eine von sieben Karten. Du erhältst vier Exemplare. Fahre über eine Karte, um ihre Spielwirkung zu lesen.';
+  $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF 3` : 'REWARD';
+  $('#draft-title').textContent = state.boosterSealed ? 'Your next booster' : 'Which card joins your journey?';
+  $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : 'Choose one of seven cards. Receive four copies. Hover a card to read its actual game effect.';
   $('#pack-number').textContent = `${packIndex + 1} / ${starter ? 3 : 1}`;
   $('#deck-count').textContent = String(state.deck.length + state.selection.size * 4);
   $('#draft-grid').innerHTML = state.boosterSealed
-    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} öffnen"><span class="pack-foil"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 KARTEN</span></button><p>Klicken zum Öffnen</p></div>`
-    : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 KARTE GEWÄHLT' : 'WÄHLE 1 VON 7'}</small></header><div class="booster-cards">${state.packs[packIndex].map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex)).join('')}</div></section>`;
-  $('#selection-status').textContent = state.boosterSealed ? 'Ein Pack nach dem anderen.' : chosen ? 'Deine Karte ist ausgewählt.' : 'Kosten und tatsächliche Effekte stehen in der Infoblase.';
+    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-foil"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 CARDS</span></button><p>Click to open</p></div>`
+    : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${state.packs[packIndex].map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex)).join('')}</div></section>`;
+  $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'The tooltip shows costs and actual in-game effects.';
   $('#pack-reroll').disabled = state.boosterSealed || Boolean(state.rerolledPacks?.has(packIndex));
-  $('#pack-reroll').textContent = state.rerolledPacks?.has(packIndex) ? '↻ Reroll verbraucht' : '↻ Pack neu würfeln · 1×';
+  $('#pack-reroll').textContent = state.rerolledPacks?.has(packIndex) ? '↻ Reroll used' : '↻ Reroll pack · 1×';
   $('#draft-confirm').disabled = state.boosterSealed || !chosen;
-  $('#draft-confirm').textContent = last ? starter ? 'DECK BAUEN →' : 'KARTE MITNEHMEN →' : 'NÄCHSTES PACK →';
+  $('#draft-confirm').textContent = last ? starter ? 'BUILD DECK →' : 'TAKE CARD →' : 'NEXT PACK →';
   updatePhaseDisplay();
 }
 
@@ -326,6 +335,8 @@ $('#enemy-board').addEventListener('click', (event) => {
 });
 
 $('#creature-row').addEventListener('click', (event) => {
+  const attackButton = event.target.closest('[data-unit-attack]');
+  if (attackButton) return attackWithCreature(attackButton.dataset.unitAttack);
   const button = event.target.closest('[data-creature-id]');
   const battle = state.battle;
   if (!button || !battle || Date.now() < (state.suppressClickUntil || 0)) return;
@@ -337,8 +348,9 @@ $('#creature-row').addEventListener('click', (event) => {
     if (!battle.selectedEnemyAttackerId) return showToast('Choose an attacker on the right first.');
     return assignBlocker(battle.selectedEnemyAttackerId, creature.id);
   }
-  if (battle.phase !== 'main' || !creatureCanAttack(creature, battle.turn)) return;
-  creature.willAttack = creature.willAttack === false;
+  if (battle.phase !== 'main' || !eligibleAttacker(creature, battle)) return;
+  creature.willAttack = !creature.willAttack;
+  if (creature.willAttack && !creature.attackTargetId) creature.attackTargetId = battle.selectedEnemyTargetId || battle.enemyCreatures[0]?.id;
   addLog(creature.willAttack ? `${creature.card.name} will attack.` : `${creature.card.name} will stay back to block.`);
   renderBattle();
   playSfx('select');
@@ -383,6 +395,9 @@ function beginBattle(node) {
     deck: shuffle(state.deck),
     graveyard: [],
     enemyGraveyard: [],
+    exile: [],
+    enemyExile: [],
+    selectedPlayerAttackerId: null,
     hand: [],
     creatures: [],
     permanents: [],
@@ -447,14 +462,13 @@ function defaultTarget(card) {
 
 function creatureCanAttack(creature, turn) {
   if (creature.owner === 'enemy' && creature.pattern) return enemyIntent(creature, turn).kind === 'attack';
-  const cardHasSickness = isCreature(creature.card) && !/\bArtifact\b/i.test(creature.card.type_line || '');
+  const cardHasSickness = isCreature(creature.card);
   const sick = creature.summoningSick ?? cardHasSickness;
   return !sick || turn > creature.summonedTurn || hasCreatureKeyword(creature, 'haste');
 }
 
 function assignedBlockerName(battle, attackerId) {
-  const blockerId = battle.blockAssignments.get(attackerId);
-  return battle.creatures.find((creature) => creature.id === blockerId)?.card.name || '';
+  return blockerIds(battle, attackerId).map(id => battle.creatures.find(creature => creature.id === id)?.card.name).filter(Boolean).join(' + ');
 }
 
 function renderEnemyBoard() {
@@ -463,7 +477,7 @@ function renderEnemyBoard() {
     const intent = enemyIntent(enemy);
     const selected = battle.phase === 'blocks' ? battle.selectedEnemyAttackerId === enemy.id : battle.selectedEnemyTargetId === enemy.id;
     const blocker = assignedBlockerName(battle, enemy.id);
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${blocker ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} Leben, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} Leben">♥ <b>${enemy.health}</b>${enemy.shield ? `<span>⛨ ${enemy.shield}</span>` : ''}</span><small>${blocker ? 'Blockiert von ' + escapeHtml(blocker) : selected ? 'Aktuelles Ziel' : ''}</small></button>`;
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${blocker ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure"><img src="assets/foes/${enemy.kind || 'sprout'}.svg" alt="" draggable="false"></span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} life">♥ <b>${enemy.health}</b>${enemy.shield ? `<span>⛨ ${enemy.shield}</span>` : ''}</span><small>${blocker ? 'Blocked by ' + escapeHtml(blocker) : selected ? 'Selected target' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -471,13 +485,14 @@ function renderGraveyard() {
   const graveyard = state.battle?.graveyard || [];
   $('#graveyard-count').textContent = String(graveyard.length);
   $('#graveyard-empty').hidden = graveyard.length > 0;
-  const markup = (card, index) => `<button type="button" class="graveyard-card" data-preview-owner="graveyard" data-preview-index="${index}" aria-label="${escapeHtml(card.name)} im Friedhof">${cardFace(card)}</button>`;
+  const markup = (card, index) => `<button type="button" class="graveyard-card" data-preview-owner="graveyard" data-preview-index="${index}" aria-label="${escapeHtml(card.name)} in your graveyard">${cardFace(card)}</button>`;
   $('#graveyard-grid').innerHTML = graveyard.map(markup).reverse().join('');
-  $('#graveyard-pile').innerHTML = graveyard.length ? markup(graveyard[graveyard.length - 1], graveyard.length - 1) : '<span class="empty-graveyard">✧<small>Noch keine Karten</small></span>';
+  $('#graveyard-pile').innerHTML = graveyard.length ? markup(graveyard[graveyard.length - 1], graveyard.length - 1) : '<span class="empty-graveyard">✧<small>No cards yet</small></span>';
   $('#graveyard-zone-count').textContent = String(graveyard.length);
 }
 function previewCardFor(element) {
   const owner = element.dataset.previewOwner;
+  if (owner === 'collection') return state.collectionCards?.[Number(element.dataset.collectionIndex)] || null;
   if (owner === 'draft') return state.packs[Number(element.dataset.packIndex)]?.[Number(element.dataset.cardIndex)] || null;
   const battle = state.battle;
   if (!battle) return null;
@@ -522,14 +537,14 @@ function showCardPreview(card, element) {
   const attached = permanent?.attachedTo ? battle.creatures.find(item => item.id === permanent.attachedTo)?.card.name : null;
   const cost = Math.ceil(card.cmc || 0);
   const lines = element.dataset.previewOwner === 'enemy'
-    ? [`Gegner: ${creature.power} Angriff · ${creature.health} Leben.`, `Angriff ${creatureCanAttack(creature, battle.turn) ? 'in diesem Zug' : 'ab dem nächsten Zug'}.`, creatureKeywordLabels(creature) || 'Keine besonderen Kampffähigkeiten.']
+    ? [`Enemy: ${creature.power} attack · ${creature.health} life.`, `Attack ${creatureCanAttack(creature, battle.turn) ? 'this turn' : 'from next turn'}.`, creatureKeywordLabels(creature) || 'No special combat keywords.']
     : effectDescriptions(card);
-  if (creature?.owner === 'player') lines.unshift(`Aktuell: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Schaden · ${creature.tapped ? 'hat angegriffen, kann nicht blocken' : 'kann blocken'}.`);
-  if (permanent) lines.push(attached ? `Verbunden mit: ${attached}.` : isAttachment(card) ? 'Noch nicht angelegt.' : 'Aktiv auf dem Spielfeld.');
-  if (element.dataset.previewOwner === 'hand') lines.push(battle.phase !== 'main' ? 'In der Blockphase nicht spielbar.' : battle.mana < cost ? `Noch ${cost - battle.mana} Mana nötig.` : isCreature(card) && battle.creatures.length >= 3 ? 'Alle 3 Kreaturenplätze sind belegt.' : isAura(card) && !battle.creatures.length ? 'Benötigt eine eigene Kreatur.' : 'Klicken oder ziehen zum Ausspielen.');
-  const keywordInfo = { flying:'Fliegend: nur durch Fliegend oder Reichweite blockbar.', reach:'Reichweite: kann fliegende Kreaturen blocken.', lifelink:'Lebensverknüpfung: Kampfschaden heilt den Besitzer.', deathtouch:'Todesberührung: jeder Kampfschaden ist für Kreaturen tödlich.', 'first strike':'Erstschlag: Schaden vor dem normalen Kampfschritt.', 'double strike':'Doppelschlag: Schaden in beiden Kampfschritten.', haste:'Eile: kann sofort angreifen.' };
+  if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
+  if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
+  if (element.dataset.previewOwner === 'hand') lines.push(!canCastNow(card, battle) ? 'Only instants can be cast outside the main phase.' : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
+  const keywordInfo = { flying:'Flying: only flying or reach can block it.', reach:'Reach: can block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: may attack immediately.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
-  preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · nur generische Kosten</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
+  preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
   preview.hidden = false;
   positionCardPreview();
   requestAnimationFrame(positionCardPreview);
@@ -545,14 +560,15 @@ function renderBattle() {
   const battle = state.battle;
   if (!battle) return;
   hideCardPreview();
+  if (battle.phase === 'main') for (const creature of battle.creatures) { if (creature.attackTargetId && !battle.enemyCreatures.some(enemy => enemy.id === creature.attackTargetId)) { creature.attackTargetId = null; creature.willAttack = false; } }
   const enemy = battle.enemy;
-  $('#shield-label').textContent = `${battle.playerBlock} Schild`;
+  $('#shield-label').textContent = `${battle.playerBlock} shield`;
   $('#node-counter').textContent = String(state.node).padStart(2, '0');
   $('#location-name').textContent = enemy.location;
   $('#enemy-rank').textContent = enemy.rank;
   $('#enemy-name').textContent = enemy.name;
   const enemyCount = battle.enemyCreatures.length;
-  $('#enemy-count-label').textContent = `${enemyCount} VERBLEIBEND`;
+  $('#enemy-count-label').textContent = `${enemyCount} REMAINING`;
   $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)}`;
   const availableMana = battle.mana;
   $('#mana-label').textContent = `${availableMana} / ${battle.maxMana}`;
@@ -560,18 +576,21 @@ function renderBattle() {
   $('#enemy-art-image').hidden = !battle.enemyArt;
   $('#enemy-art .enemy-sprite').hidden = Boolean(battle.enemyArt);
   const resolving = ['attack', 'enemy', 'damage'].includes(battle.phase);
-  $('#end-turn-button').disabled = resolving;
-  $('#end-turn-button').innerHTML = battle.phase === 'blocks' ? 'BLOCKEN BESTÄTIGEN <span>✓</span>' : resolving ? 'KAMPF WIRD AUFGELÖST …' : 'ANGRIFF STARTEN <span>→</span>';
-  $('#combat-action-hint').textContent = battle.pendingAttachment ? 'Wähle eine eigene Kreatur als Ziel · Abbrechen ist kostenlos.' : battle.phase === 'blocks'
-    ? 'Wähle einen Angreifer, dann deinen Blocker. Du kannst Blocker auch auf Angreifer ziehen.'
-    : 'Kreatur anklicken: angreifen oder zurückhalten · Hand wird auf 7 aufgefüllt.';
-  if (resolving) $('#combat-action-hint').textContent = phaseInfo(battle.phase).description;
+  $('#end-turn-button').disabled = resolving && !battle.priorityCallback;
+  $('#end-turn-button').innerHTML = battle.priorityCallback ? 'CONTINUE <span>→</span>' : battle.phase === 'blocks' ? 'CONFIRM BLOCKS <span>✓</span>' : resolving ? 'RESOLVING COMBAT …' : 'END TURN <span>→</span>';
+  $('#combat-action-hint').textContent = battle.pendingAttachment ? 'Choose an allied creature. Cancelling is free.' : battle.phase === 'blocks'
+    ? 'Choose an attacker, then add blockers. You can drag blockers onto attackers.'
+    : 'Click a creature to queue it, choose its target, or use Attack now.';
+  if (battle.priorityCallback) $('#combat-action-hint').textContent = 'Response window: cast an instant, then Continue.';
+  else if (resolving) $('#combat-action-hint').textContent = phaseInfo(battle.phase).description;
   $('#combat-action-hint').classList.toggle('blocking', battle.phase === 'blocks');
-  $('#turn-label').textContent = `ZUG ${battle.turn}`;
-  $('#turn-display').textContent = `Zug ${battle.turn}`;
+  $('#turn-label').textContent = `TURN ${battle.turn}`;
+  $('#turn-display').textContent = `Turn ${battle.turn}`;
   $('#progress-pips').innerHTML = ENCOUNTERS.map((_, index) => `<i class="${index < state.node ? 'done ' : ''}${index === 3 ? 'boss' : ''}" aria-label="Fight ${index + 1}"></i>`).join('');
   $('#graveyard-count').textContent = String(battle.graveyard.length);
   $('#library-count').textContent = String(battle.deck.length);
+  $('#library-button').classList.toggle('is-empty', !battle.deck.length);
+  $('#library-button').setAttribute('aria-label', `Library, ${battle.deck.length} cards. Inspect sorted contents without revealing draw order.`);
   $('#hand-count').textContent = `${battle.hand.length} CARDS`;
   $('#mulligan-button').disabled = !battle.mulliganAvailable || battle.phase !== 'main';
   $('#mulligan-button').innerHTML = battle.mulliganAvailable ? 'FREE MULLIGAN <span>↻</span>' : 'MULLIGAN USED';
@@ -583,10 +602,14 @@ function renderBattle() {
   renderGraveyard();
   renderPermanents();
   renderBlocking();
+  $('#exile-count').textContent = String((battle.exile?.length || 0) + (battle.enemyExile?.length || 0));
+  $('#deck-button').disabled = resolving && !battle.priorityCallback;
+  $('#library-button').disabled = resolving && !battle.priorityCallback;
+  $('#exile-button').disabled = resolving && !battle.priorityCallback;
   if (state.inspectedId) {
     const inspected = battle.creatures.find(item => item.id === state.inspectedId) || battle.permanents.find(item => item.id === state.inspectedId);
     if (inspected) inspectBattlefieldCard(inspected.card, { dataset: { previewId: inspected.id } });
-    else { state.inspectedId = null; $('#inspector-content').innerHTML = '<div class="inspector-empty">◈<p>Fahre über eine Karte auf deinem Spielfeld.</p></div>'; }
+    else { state.inspectedId = null; $('#inspector-content').innerHTML = '<div class="inspector-empty">◈<p>Hover a battlefield card to inspect it.</p></div>'; }
   }
   renderDropZones();
   updatePhaseDisplay();
@@ -596,71 +619,81 @@ function renderBattle() {
 function renderHand() {
   const battle = state.battle;
   const center = (battle.hand.length - 1) / 2;
-  const spacing = Math.min(87, 980 / Math.max(1, battle.hand.length - 1));
+  const spacing = Math.min(87, 820 / Math.max(1, battle.hand.length - 1));
   $('#hand-row').style.setProperty('--hand-step', `${spacing}px`);
   $('#hand-row').innerHTML = battle.hand.map((card, index) => {
     const position = index - center;
     const canPay = Boolean(paymentPlan(card));
     const selected = battle.pendingAttachment?.handIndex === index;
-    return `<button type="button" class="hand-card${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${battle.phase === 'main'}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
+    return `<button type="button" class="hand-card${!canCastNow(card, battle) ? ' timing-unavailable' : ''}${isInstant(card) && battle.phase !== 'main' ? ' instant-response' : ''}${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${canCastNow(card, battle)}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
   }).join('');
   $('#hand-row').querySelectorAll('.hand-card').forEach(button => {
     button.addEventListener('click', () => { if (Date.now() < (state.suppressClickUntil || 0)) return; hideCardPreview(); playCard(Number(button.dataset.handIndex), defaultTarget(battle.hand[Number(button.dataset.handIndex)])); });
 
   });
 }
+function creatureBonuses(creature, battle = state.battle) {
+  const base = parseStats(creature.card);
+  const temporary = (battle.turnEffects || []).filter(effect => effect.creatureId === creature.id).reduce((sum, effect) => ({ power: sum.power + (effect.power || 0), toughness: sum.toughness + (effect.toughness || 0) }), { power: 0, toughness: 0 });
+  return { permanent: { power: creature.power - base.power - temporary.power, toughness: creature.toughness - base.toughness - temporary.toughness }, temporary };
+}
+function bonusMarkup(creature) {
+  const bonus = creatureBonuses(creature);
+  return `<span class="stat-modifiers">${['permanent', 'temporary'].map(kind => bonus[kind].power || bonus[kind].toughness ? `<span class="stat-${kind}" title="${kind === 'permanent' ? 'Persistent: counters, auras and equipment' : 'Until end of turn'}">${signed(bonus[kind].power)}/${signed(bonus[kind].toughness)} ${kind === 'permanent' ? 'perm' : 'EOT'}</span>` : '').join('')}</span>`;
+}
 function renderCreatures() {
   const battle = state.battle;
   $('#creature-row').innerHTML = battle.creatures.length ? battle.creatures.map(creature => {
-    const waiting = !creatureCanAttack(creature, battle.turn);
-    const entry = [...battle.blockAssignments.entries()].find(([, id]) => id === creature.id);
-    const attacker = battle.enemyCreatures.find(item => item.id === entry?.[0]);
-    const selectedAttacker = battle.enemyCreatures.find(item => item.id === battle.selectedEnemyAttackerId);
+    const sick = !creatureCanAttack(creature, battle.turn);
+    const assignment = [...battle.blockAssignments.keys()].find(id => blockerIds(battle, id).includes(creature.id));
+    const attacker = battle.enemyCreatures.find(item => item.id === assignment);
+    const selected = battle.enemyCreatures.find(item => item.id === battle.selectedEnemyAttackerId);
     const blocking = battle.phase === 'blocks';
-    const legal = blocking && !creature.tapped && (!selectedAttacker || canBlockCreature(creature, selectedAttacker));
-    const willAttack = !waiting && creature.willAttack !== false;
-    const targeting = Boolean(battle.pendingAttachment);
-    const status = targeting ? '✦ Als Ziel auswählen' : blocking ? attacker ? `↔ Blockt ${attacker.card.name}` : creature.tapped ? 'Hat angegriffen' : legal ? 'Zum Blocken auswählen' : 'Kann diesen Angriff nicht blocken' : waiting ? 'Wartet · kann blocken' : willAttack ? '⚔ Greift an' : '⛨ Blockbereit';
+    const legal = blocking && !creature.tapped && (!selected || canBlockCreature(creature, selected));
+    const canAttack = eligibleAttacker(creature, battle);
+    const target = attackTarget(battle, creature);
+    const status = battle.pendingAttachment ? 'Choose as attachment target' : creature.tapped ? 'Tapped' : blocking ? attacker ? `Blocking ${attacker.card.name}` : legal ? 'Click to add as blocker' : 'Cannot block this attacker' : sick ? 'Summoning sickness · may block' : creature.attackedThisTurn ? hasCreatureKeyword(creature, 'vigilance') ? 'Attacked · vigilance · may block' : 'Already attacked' : creature.willAttack ? `Queued → ${target?.card.name || 'choose target'}` : 'Ready · click to queue attack';
     const attachments = battle.permanents.filter(permanent => permanent.attachedTo === creature.id);
-    return `<div class="creature-group" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="An ${escapeHtml(creature.card.name)} angelegte Karten">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${entry ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${!blocking && !waiting && !willAttack ? ' held-back' : ''}${targeting ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(entry) : !waiting && !willAttack}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${blocking && !creature.tapped}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ' · ' + creature.damage + ' Schaden' : ''}</span><small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} Karten angelegt">↔ ${attachments.length}</span>` : ''}</div>`;
-  }).join('') : '<div class="empty-board">Spiele eine Kreatur aus deiner Hand.<br>Bis zu drei Kreaturen können hier liegen.</div>';
+    return `<div class="creature-group${sick ? ' is-summoning-sick' : ''}${creature.tapped ? ' is-tapped' : ''}" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="Cards attached to ${escapeHtml(creature.card.name)}">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${assignment ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${creature.willAttack ? ' attack-queued' : ''}${battle.pendingAttachment ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(assignment) : Boolean(creature.willAttack)}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${(blocking && !creature.tapped) || (battle.phase === 'main' && canAttack)}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ` · ${creature.damage} damage` : ''}</span>${bonusMarkup(creature)}<small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} attached cards">↔ ${attachments.length}</span>` : ''}<div class="unit-controls"><select data-unit-target="${creature.id}" aria-label="Attack target for ${escapeHtml(creature.card.name)}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''}>${battle.enemyCreatures.map(enemy => `<option value="${enemy.id}" ${target?.id === enemy.id ? 'selected' : ''}>${escapeHtml(enemy.card.name)}</option>`).join('')}</select><button data-unit-attack="${creature.id}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''} aria-label="Attack now with ${escapeHtml(creature.card.name)}">Attack now</button></div></div>`;
+  }).join('') : '<div class="empty-board">Play a creature from your hand.<br>You have three creature slots.</div>';
 }
+
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-label="${escapeHtml(permanent.card.name)}${target ? ', angelegt an ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : isAttachment(permanent.card) ? 'Klicken zum Anlegen' : 'Aktive Verzauberung / Artefakt'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : isAttachment(permanent.card) ? 'Click to equip' : 'Active enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
   const loose = battle.permanents.filter(permanent => !permanent.attachedTo);
   const attached = battle.permanents.length - loose.length;
-  $('#permanent-count').textContent = `${attached} angelegt · ${loose.length} frei`;
-  $('#permanent-row').innerHTML = loose.length ? loose.map(permanent => permanentMarkup(permanent)).join('') : `<p class="empty-permanents">${attached ? 'Angelegte Karten liegen direkt an ihren Kreaturen.' : 'Freie Verzauberungen und Ausrüstung liegen hier.'}</p>`;
+  $('#permanent-count').textContent = `${attached} attached · ${loose.length} free`;
+  $('#permanent-row').innerHTML = loose.length ? loose.map(permanent => permanentMarkup(permanent)).join('') : `<p class="empty-permanents">${attached ? 'Attached cards sit beside their hosts.' : 'Unattached permanents live here.'}</p>`;
   $('#attachment-cancel').hidden = !battle.pendingAttachment;
 }
 
 function renderBlocking() {
   const battle = state.battle;
-  const blocking = battle.phase === 'blocks';
-  $('#blocking-panel').hidden = !blocking;
-  $('#combat-screen').classList.toggle('is-blocking', blocking);
-  if (!blocking) return;
+  $('#blocking-panel').hidden = battle.phase !== 'blocks';
+  $('#combat-screen').classList.toggle('is-blocking', battle.phase === 'blocks');
+  if (battle.phase !== 'blocks') return;
   const attackers = battle.enemyCreatures.filter(creature => creatureCanAttack(creature, battle.turn));
-  const unblocked = attackers.filter(creature => !battle.blockAssignments.has(creature.id));
+  const unblocked = attackers.filter(creature => !blockerIds(battle, creature.id).length);
   const damage = unblocked.reduce((sum, creature) => sum + Math.max(0, creature.power) * (hasCreatureKeyword(creature, 'double strike') ? 2 : 1), 0);
-  $('#blocking-summary').textContent = `${battle.blockAssignments.size} von ${attackers.length} Angriffen geblockt · ${Math.max(0, damage - battle.playerBlock)} direkter Schaden nach ${battle.playerBlock} Schild`;
+  $('#blocking-summary').textContent = `${attackers.length - unblocked.length}/${attackers.length} attacks blocked · ${Math.max(0, damage - battle.playerBlock)} direct damage after shield. Multiple blockers are allowed; click order sets damage order.`;
   $('#blocking-pairs').innerHTML = attackers.map(attacker => {
-    const blocker = battle.creatures.find(creature => creature.id === battle.blockAssignments.get(attacker.id));
-    return `<button type="button" data-block-attacker="${escapeHtml(attacker.id)}" class="block-pair${blocker ? ' paired' : ''}${battle.selectedEnemyAttackerId === attacker.id ? ' selected' : ''}" aria-pressed="${battle.selectedEnemyAttackerId === attacker.id}"><b>${escapeHtml(attacker.card.name)}</b><span>${blocker ? '⛨ ' + escapeHtml(blocker.card.name) : '→ Blocker wählen'}</span></button>`;
+    const names = blockerIds(battle, attacker.id).map(id => battle.creatures.find(creature => creature.id === id)?.card.name).filter(Boolean);
+    return `<button type="button" data-block-attacker="${attacker.id}" class="block-pair${names.length ? ' paired' : ''}${battle.selectedEnemyAttackerId === attacker.id ? ' selected' : ''}" aria-pressed="${battle.selectedEnemyAttackerId === attacker.id}"><b>${escapeHtml(attacker.card.name)}</b><span>${names.length ? names.map((name, index) => `${index + 1}. ${escapeHtml(name)}`).join('<br>') : 'Choose blockers →'}</span></button>`;
   }).join('');
 }
+
 $('#player-drop-zone').addEventListener('click', event => {
   const button = event.target.closest('[data-permanent-id]');
   const battle = state.battle;
   if (!button || battle?.phase !== 'main' || Date.now() < (state.suppressClickUntil || 0)) return;
   const permanent = battle.permanents.find(item => item.id === button.dataset.permanentId);
   if (!permanent || !/Equipment/.test(permanent.card.type_line)) return;
-  if (!battle.creatures.length) return showToast('Spiele zuerst eine Kreatur aus.');
+  if (!battle.creatures.length) return showToast('Play a creature first.');
   battle.pendingAttachment = { permanentId: permanent.id };
   renderBattle();
 });
@@ -675,7 +708,7 @@ $('#auto-block').addEventListener('click', () => {
   const battle = state.battle;
   if (battle?.phase !== 'blocks') return;
   const assignments = chooseEnemyBlocks(battle.enemyCreatures.filter(creature => creatureCanAttack(creature, battle.turn)), battle.creatures.filter(creature => !creature.tapped));
-  battle.blockAssignments = new Map([...assignments].map(([attackerId, blocker]) => [attackerId, blocker.id]));
+  battle.blockAssignments = new Map([...assignments].map(([attackerId, blocker]) => [attackerId, [blocker.id]]));
   battle.selectedEnemyAttackerId = null;
   renderBattle();
 });
@@ -691,8 +724,9 @@ function dragPayloadFor(element) {
   const hand = element.closest('[data-hand-index]');
   const creature = element.closest('[data-creature-id]');
   const permanent = element.closest('[data-permanent-id]');
-  if (hand && state.battle?.phase === 'main') return { kind: 'hand', index: Number(hand.dataset.handIndex), cardId: state.battle.hand[Number(hand.dataset.handIndex)]?.id };
-  if (creature && state.battle?.phase === 'blocks') return { kind: 'blocker', id: creature.dataset.creatureId };
+  if (hand && canCastNow(state.battle.hand[Number(hand.dataset.handIndex)])) return { kind: 'hand', index: Number(hand.dataset.handIndex), cardId: state.battle.hand[Number(hand.dataset.handIndex)]?.id };
+  if (creature && state.battle?.phase === 'main' && eligibleAttacker(state.battle.creatures.find(item => item.id === creature.dataset.creatureId), state.battle)) return { kind: 'attacker', id: creature.dataset.creatureId };
+  if (creature && state.battle?.phase === 'blocks' && state.battle.creatures.some(item => item.id === creature.dataset.creatureId && !item.tapped)) return { kind: 'blocker', id: creature.dataset.creatureId };
   if (permanent && state.battle?.phase === 'main') {
     const item = state.battle.permanents.find(item => item.id === permanent.dataset.permanentId);
     if (item && /Equipment/.test(item.card.type_line)) return { kind: 'equipment', id: item.id };
@@ -707,6 +741,11 @@ function handleCardDrop(payload, target) {
   const ally = target.closest('[data-creature-id]') || (host ? { dataset: { creatureId: host.dataset.hostId } } : null);
   const onPlayer = Boolean(target.closest('#player-drop-zone'));
   const onEnemy = Boolean(target.closest('#enemy-drop-zone'));
+  if (payload.kind === 'attacker') {
+    const creature = battle.creatures.find(item => item.id === payload.id);
+    if (!enemy || battle.phase !== 'main' || !creature || !eligibleAttacker(creature, battle)) return false;
+    creature.attackTargetId = enemy.dataset.enemyAttacker; attackWithCreature(creature.id); return true;
+  }
   if (payload.kind === 'blocker') {
     if (!enemy || battle.phase !== 'blocks') return false;
     assignBlocker(enemy.dataset.enemyAttacker, payload.id);
@@ -718,13 +757,14 @@ function handleCardDrop(payload, target) {
     selectAttachmentTarget(ally.dataset.creatureId);
     return true;
   }
-  if (payload.kind !== 'hand' || battle.phase !== 'main') return false;
+  if (payload.kind !== 'hand') return false;
   const card = battle.hand[payload.index];
-  if (!card || (payload.cardId && card.id !== payload.cardId)) return false;
+  if (!card || !canCastNow(card, battle) || (payload.cardId && card.id !== payload.cardId)) return false;
   if ((isCreature(card) || isPermanent(card)) && !onPlayer) return false;
   if (!onPlayer && !onEnemy) return false;
   if (enemy) battle.selectedEnemyTargetId = enemy.dataset.enemyAttacker;
   const allyId = ally?.dataset.creatureId;
+  battle.pendingSpellTarget = allyId ? { side: 'player', id: allyId } : enemy ? { side: 'enemy', id: enemy.dataset.enemyAttacker } : null;
   const beforeCount = battle.permanents.length;
   playCard(payload.index, onPlayer ? 'player' : 'enemy');
   if (isAura(card) && allyId && battle.pendingAttachment) selectAttachmentTarget(allyId);
@@ -742,10 +782,15 @@ function dropFeedback(payload, target) {
   const own = target.closest('#player-drop-zone');
   const enemy = target.closest('[data-enemy-attacker]');
   const ally = target.closest('[data-creature-id], [data-host-id]');
-  if (payload.kind === 'blocker') return battle.phase === 'blocks' && Boolean(enemy);
+  if (payload.kind === 'attacker') return battle.phase === 'main' && Boolean(enemy) && eligibleAttacker(battle.creatures.find(item => item.id === payload.id), battle);
+  if (payload.kind === 'blocker') {
+    const unit = battle.creatures.find(item => item.id === payload.id && !item.tapped);
+    const attacker = battle.enemyCreatures.find(item => item.id === enemy?.dataset.enemyAttacker);
+    return battle.phase === 'blocks' && Boolean(unit && attacker && creatureCanAttack(attacker, battle.turn) && canBlockCreature(unit, attacker));
+  }
   if (payload.kind === 'equipment') return battle.phase === 'main' && Boolean(own && ally);
   const card = battle.hand[payload.index];
-  if (battle.phase !== 'main' || !card || !paymentPlan(card)) return false;
+  if (!card || !canCastNow(card, battle) || !paymentPlan(card)) return false;
   if (isCreature(card)) return Boolean(own) && battle.creatures.length < 3;
   if (isAura(card)) return Boolean(own && ally);
   if (isPermanent(card)) return Boolean(own);
@@ -873,16 +918,18 @@ function applyOracle(card, creature = false) {
   const battle = state.battle;
   for (const effect of cardEffects(card, creature)) {
     if (effect.kind === 'damage') damageFirstEnemy(effect.amount);
+    if (effect.kind === 'exile' || effect.kind === 'destroy') removeSpellTarget(effect.kind);
     if (effect.kind === 'heal') { state.playerHealth += effect.amount; playSfx('heal'); }
     if (effect.kind === 'draw') for (let i = 0; i < effect.amount; i++) drawOneExtra();
     if (effect.kind === 'shield') battle.playerBlock += effect.amount;
     if (effect.kind === 'buff' || effect.kind === 'keywords') {
-      const target = battle.creatures.slice().sort((a, b) => b.power - a.power)[0];
+      const target = (battle.resolvingSpellTarget?.side === 'player' ? battle.creatures.find(creature => creature.id === battle.resolvingSpellTarget.id) : null) || battle.creatures.slice().sort((a, b) => b.power - a.power)[0];
       if (!target) { if (effect.kind === 'buff') battle.playerBlock += 3; continue; }
       if (effect.kind === 'buff') {
         target.power += effect.power;
         target.toughness += effect.toughness;
         if (effect.temporary) battle.turnEffects.push({ creatureId: target.id, power: effect.power, toughness: effect.toughness });
+        else { target.counterPower = (target.counterPower || 0) + effect.power; target.counterToughness = (target.counterToughness || 0) + effect.toughness; }
       } else {
         target.temporaryKeywords ||= [];
         for (const keyword of effect.keywords) {
@@ -892,7 +939,7 @@ function applyOracle(card, creature = false) {
       }
     }
     if (effect.kind === 'token' && battle.creatures.length < 3) {
-      battle.creatures.push({ id: `player-${state.nextPermanentId++}`, owner: 'player', card: { id: 'token', name: 'Aether-Spielstein', cmc: 0, type_line: 'Creature — Token', power: '2', toughness: '2', oracle_text: '', image: '' }, power: 2, toughness: 2, summonedTurn: battle.turn, summoningSick: true, isToken: true, willAttack: false, tapped: false });
+      battle.creatures.push({ id: `player-${state.nextPermanentId++}`, owner: 'player', card: { id: 'token', name: 'Aether Token', cmc: 0, type_line: 'Creature — Token', power: '2', toughness: '2', oracle_text: '', image: '' }, power: 2, toughness: 2, summonedTurn: battle.turn, summoningSick: true, isToken: true, willAttack: false, tapped: false });
     }
   }
   refreshPermanentEffects();
@@ -921,6 +968,10 @@ function refreshPermanentEffects() {
 }
 function cleanupAttachments(deadIds) {
   const battle = state.battle;
+  for (const [attackerId] of battle.blockAssignments || []) {
+    const kept = blockerIds(battle, attackerId).filter(id => !deadIds.has(id));
+    if (kept.length) battle.blockAssignments.set(attackerId, kept); else battle.blockAssignments.delete(attackerId);
+  }
   battle.permanents = (battle.permanents || []).filter(permanent => {
     if (!deadIds.has(permanent.attachedTo)) return true;
     if (isAura(permanent.card)) { battle.graveyard.push(permanent.card); return false; }
@@ -937,7 +988,7 @@ function selectAttachmentTarget(creatureId) {
   if (pending.handIndex !== undefined) {
     const card = battle.hand[pending.handIndex];
     if (!card || !isAura(card)) { battle.pendingAttachment = null; renderBattle(); return; }
-    if (!paymentPlan(card)) return showToast('Nicht genug generisches Mana.');
+    if (!paymentPlan(card)) return showToast('Not enough generic mana.');
     battle.mana -= Math.ceil(card.cmc || 0);
     battle.hand.splice(pending.handIndex, 1);
     battle.permanents.push({ id: `permanent-${state.nextPermanentId++}`, card, attachedTo: creatureId });
@@ -958,27 +1009,29 @@ function playCard(index, targetSide = 'enemy') {
   const battle = state.battle;
   const card = battle?.hand[index];
   if (!card) return;
-  if (battle.phase !== 'main') return showToast('In der Blockphase kannst du keine Karten ausspielen.');
+  if (!canCastNow(card, battle)) return showToast('Only instants can be cast outside your main phase.');
   if (isAura(card)) {
-    if (!battle.creatures.length) return showToast('Für diese Aura brauchst du eine eigene Kreatur.');
-    if (!paymentPlan(card)) return showToast('Nicht genug generisches Mana.');
+    if (!battle.creatures.length) return showToast('This aura requires an allied creature.');
+    if (!paymentPlan(card)) return showToast('Not enough generic mana.');
     battle.pendingAttachment = { handIndex: index };
     renderBattle();
     return;
   }
   battle.pendingAttachment = null;
-  if (isLand(card)) return showToast('Länder werden in diesem Spiel nicht benötigt.');
+  battle.resolvingSpellTarget = battle.pendingSpellTarget || null;
+  battle.pendingSpellTarget = null;
+  if (isLand(card)) return showToast('This game does not require lands.');
   if (isCreature(card) && battle.creatures.length >= 3) return showToast('Your creature board is full.');
   if (targetSide === 'enemy' && isCreature(card)) return showToast('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
-  if (!payment) return showToast('Not enough generic mana. End your turn to refill it.');
+  if (!payment) return showToast('Not enough generic mana for this card.');
   battle.mulliganAvailable = false;
   battle.mana -= Math.ceil(card.cmc || 0);
   battle.hand.splice(index, 1);
   if (isCreature(card)) {
     const stats = parseStats(card);
     const keywords = creatureKeywords(card);
-    const summoningSick = !/\bArtifact\b/i.test(card.type_line || '');
+    const summoningSick = true;
     battle.creatures.push({
       id: `player-${state.nextPermanentId++}`,
       owner: 'player',
@@ -988,7 +1041,9 @@ function playCard(index, targetSide = 'enemy') {
       summonedTurn: battle.turn,
       summoningSick,
       ...keywords,
-      willAttack: keywords.haste || !summoningSick,
+      willAttack: false,
+      attackedThisTurn: false,
+      attackTargetId: null,
       tapped: false
     });
     addLog(`${card.name} enters as a ${stats.power}/${stats.toughness} creature${summoningSick && !keywords.haste ? ' with summoning sickness' : ''}.`);
@@ -998,7 +1053,7 @@ function playCard(index, targetSide = 'enemy') {
     battle.permanents.push({ id: `permanent-${state.nextPermanentId++}`, card, attachedTo: null });
     battle.playerBlock += permanentEffect(card).shield;
     refreshPermanentEffects();
-    addLog(`${card.name} bleibt auf dem Spielfeld.`);
+    addLog(`${card.name} stays on the battlefield.`);
   } else {
     battle.graveyard.push(card);
     applyOracle(card, false);
@@ -1024,14 +1079,14 @@ function chooseEnemyBlocks(attackers, blockers) {
   return assignments;
 }
 
-function removeDeadCreatures(creatures, owner = 'player', clearDamage = true) {
+function removeDeadCreatures(creatures, owner = 'player', clearDamage = false) {
   const battle = state.battle;
   const survivors = [];
   const deadIds = new Set();
   for (const creature of creatures) {
     const dead = owner === 'enemy'
       ? creature.health <= 0
-      : (creature.damage || 0) >= creature.toughness || creature.deathtouchDamage;
+      : creature.toughness <= 0 || (creature.damage || 0) >= creature.toughness || creature.deathtouchDamage;
     if (dead) {
       deadIds.add(creature.id);
       addLog(`${creature.card.name} is destroyed and goes to the ${owner === 'player' ? 'graveyard' : 'enemy graveyard'}.`);
@@ -1066,97 +1121,141 @@ function gainLifelinkLife(creature, controller, amount, battle) {
   else creature.health = (creature.health || 0) + amount;
 }
 
-function dealCreatureDamage(source, target, controller, battle) {
-  const amount = Math.max(0, source.power || 0);
-  if (!amount) return;
+function dealCreatureDamage(source, target, controller, battle, amount = Math.max(0, source.power || 0)) {
+  if (amount <= 0) return;
+  let dealt = amount;
   if (target.owner === 'enemy') {
-    const blocked = Math.min(target.shield || 0, amount);
-    target.shield = (target.shield || 0) - blocked;
-    target.health = Math.max(0, target.health - (amount - blocked));
-    if (hasCreatureKeyword(source, 'deathtouch')) target.health = 0;
+    const absorbed = Math.min(target.shield || 0, amount);
+    target.shield = (target.shield || 0) - absorbed;
+    dealt = Math.max(0, amount - absorbed);
+    target.health = Math.max(0, target.health - dealt);
+    if (dealt > 0 && hasCreatureKeyword(source, 'deathtouch')) target.health = 0;
   } else {
     target.damage = (target.damage || 0) + amount;
     if (hasCreatureKeyword(source, 'deathtouch')) target.deathtouchDamage = true;
   }
-  gainLifelinkLife(source, controller, amount, battle);
+  gainLifelinkLife(source, controller, dealt, battle);
+  if (dealt) playSfx('hit');
 }
-
+function blockerIds(battle, attackerId) {
+  const value = battle.blockAssignments.get(attackerId);
+  return Array.isArray(value) ? value : value ? [value] : [];
+}
 function resolveCombatDamage(attackers, assignments, attackingSide) {
   const battle = state.battle;
   let damageToPlayer = 0;
   let damageToOpponent = 0;
   const enemyLifelinkEvents = [];
-  const damageStep = (firstStep) => {
+  for (const firstStep of [true, false]) {
+    const exchanges = [];
     for (const attacker of attackers) {
       if (!creatureAlive(attacker)) continue;
-      const blocker = assignments.get(attacker.id);
-      if (!blocker) {
+      const original = assignments.get(attacker.id);
+      const group = Array.isArray(original) ? original : original ? [original] : [];
+      const blockers = group.filter(blocker => creatureAlive(blocker) && (attackingSide === 'player' || canBlockCreature(blocker, attacker)));
+      if (!group.length) {
         if (!dealsInCombatStep(attacker, firstStep)) continue;
-        if (attackingSide === 'player') {
-          damageToOpponent += damageFirstEnemy(attacker.power);
-          gainLifelinkLife(attacker, 'player', attacker.power, battle);
-        } else {
-          damageToPlayer += attacker.power;
-          if (hasCreatureKeyword(attacker, 'lifelink')) enemyLifelinkEvents.push({ creature: attacker, damage: attacker.power });
-        }
+        if (attackingSide === 'enemy') {
+          const amount = Math.max(0, attacker.power);
+          damageToPlayer += amount;
+          if (hasCreatureKeyword(attacker, 'lifelink')) enemyLifelinkEvents.push({ creature: attacker, damage: amount });
+        } else damageToOpponent += damageFirstEnemy(Math.max(0, attacker.power));
         continue;
       }
-      if (!creatureAlive(blocker) || !canBlockCreature(blocker, attacker)) continue;
-      const attackerAliveAtStep = creatureAlive(attacker);
-      const blockerAliveAtStep = creatureAlive(blocker);
-      if (attackerAliveAtStep && dealsInCombatStep(attacker, firstStep)) dealCreatureDamage(attacker, blocker, attackingSide, battle);
-      if (blockerAliveAtStep && dealsInCombatStep(blocker, firstStep)) dealCreatureDamage(blocker, attacker, attackingSide === 'player' ? 'enemy' : 'player', battle);
+      if (dealsInCombatStep(attacker, firstStep)) {
+        let remaining = Math.max(0, attacker.power);
+        blockers.forEach((blocker, index) => {
+          const lethal = hasCreatureKeyword(attacker, 'deathtouch') ? 1 : blocker.owner === 'enemy' ? Math.max(0, blocker.health + (blocker.shield || 0)) : Math.max(0, blocker.toughness - (blocker.damage || 0));
+          const amount = index === blockers.length - 1 ? remaining : Math.min(remaining, lethal);
+          if (amount > 0) exchanges.push({ source: attacker, target: blocker, controller: attackingSide, amount });
+          remaining -= amount;
+        });
+      }
+      for (const blocker of blockers) {
+        if (dealsInCombatStep(blocker, firstStep)) exchanges.push({ source: blocker, target: attacker, controller: attackingSide === 'player' ? 'enemy' : 'player', amount: Math.max(0, blocker.power) });
+      }
     }
-  };
-
-  damageStep(true);
-  battle.creatures = removeDeadCreatures(battle.creatures, 'player', false);
-  battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
-  damageStep(false);
-  battle.creatures = removeDeadCreatures(battle.creatures, 'player', true);
-  battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
+    // Eligibility is captured before applying the step: normal damage is simultaneous.
+    for (const exchange of exchanges) dealCreatureDamage(exchange.source, exchange.target, exchange.controller, battle, exchange.amount);
+    battle.creatures = removeDeadCreatures(battle.creatures, 'player', false);
+    battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
+  }
   return { damageToPlayer, damageToOpponent, enemyLifelinkEvents };
 }
-
-function resolvePlayerAttacks() {
+function attackTarget(battle, creature) {
+  if (creature.attackTargetId) return battle.enemyCreatures.find(enemy => enemy.id === creature.attackTargetId) || null;
+  return battle.enemyCreatures.find(enemy => enemy.id === battle.selectedEnemyTargetId) || battle.enemyCreatures[0];
+}
+function eligibleAttacker(creature, battle) {
+  return Boolean(creature) && creatureCanAttack(creature, battle.turn) && !creature.tapped && !creature.attackedThisTurn;
+}
+function resolvePlayerAttacks(onlyIds = null) {
   const battle = state.battle;
-  const attackers = battle.creatures.filter(creature => creatureCanAttack(creature, battle.turn) && creature.willAttack !== false && !creature.tapped);
+  const attackers = battle.creatures.filter(creature => eligibleAttacker(creature, battle) && (onlyIds ? onlyIds.includes(creature.id) : creature.willAttack === true));
   for (const creature of attackers) {
-    creature.tapped = true;
-    const hits = hasCreatureKeyword(creature, 'double strike') ? 2 : 1;
-    for (let hit = 0; hit < hits; hit++) {
-      const target = battle.enemyCreatures.find(enemy => enemy.id === battle.selectedEnemyTargetId) || battle.enemyCreatures[0];
-      const dealt = damageFirstEnemy(Math.max(0, creature.power));
-      if (dealt > 0 && target && hasCreatureKeyword(creature, 'deathtouch') && battle.enemyCreatures.includes(target)) {
-        target.health = 0;
-        battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
-      }
-      gainLifelinkLife(creature, 'player', dealt, battle);
-    }
-    addLog(`${creature.card.name} greift das gewählte Monster an.`);
+    if (!creatureAlive(creature)) continue;
+    const target = attackTarget(battle, creature);
+    if (!target) { creature.willAttack = false; continue; }
+    creature.attackedThisTurn = true;
+    creature.willAttack = false;
+    creature.tapped = !hasCreatureKeyword(creature, 'vigilance');
+    addLog(`${creature.card.name} attacks ${target.card.name}; the monster retaliates.`);
+    resolveCombatDamage([creature], new Map([[creature.id, [target]]]), 'player');
   }
 }
-
+function attackWithCreature(creatureId) {
+  const battle = state.battle;
+  const creature = battle?.creatures.find(item => item.id === creatureId);
+  if (!battle || battle.phase !== 'main' || !creature || !eligibleAttacker(creature, battle)) return;
+  battle.pendingAttachment = null;
+  battle.mulliganAvailable = false;
+  battle.phase = 'attack';
+  battle.activeAttackIds = [creatureId];
+  renderBattle();
+  afterCombatBeat(battle, 'attack', () => {
+    resolvePlayerAttacks([creatureId]);
+    battle.activeAttackIds = null;
+    if (!battle.enemyCreatures.length) return winBattle();
+    battle.phase = 'main';
+    renderBattle();
+  });
+}
 function assignBlocker(attackerId, blockerId) {
   const battle = state.battle;
   if (!battle || battle.phase !== 'blocks') return;
-  const attacker = battle.enemyCreatures.find((creature) => creature.id === attackerId && creatureCanAttack(creature, battle.turn));
-  const blocker = battle.creatures.find((creature) => creature.id === blockerId && !creature.tapped);
+  const attacker = battle.enemyCreatures.find(creature => creature.id === attackerId && creatureCanAttack(creature, battle.turn));
+  const blocker = battle.creatures.find(creature => creature.id === blockerId && !creature.tapped);
   if (!attacker || !blocker) return;
-  if (!canBlockCreature(blocker, attacker)) return showToast('Flying attackers can only be blocked by flying creatures or creatures with reach.');
-  if (battle.blockAssignments.get(attackerId) === blockerId) {
-    battle.blockAssignments.delete(attackerId);
-    addLog(`${blocker.card.name} is no longer blocking.`);
-  } else {
-    for (const [assignedAttacker, assignedBlocker] of battle.blockAssignments) {
-      if (assignedBlocker === blockerId) battle.blockAssignments.delete(assignedAttacker);
-    }
-    battle.blockAssignments.set(attackerId, blockerId);
-    addLog(`${blocker.card.name} blocks ${attacker.card.name}.`);
+  if (!canBlockCreature(blocker, attacker)) return showToast('Flying attackers require flying or reach to block.');
+  const already = blockerIds(battle, attackerId).includes(blockerId);
+  for (const [id] of battle.blockAssignments) {
+    const ids = blockerIds(battle, id).filter(item => item !== blockerId);
+    if (ids.length) battle.blockAssignments.set(id, ids); else battle.blockAssignments.delete(id);
   }
-  battle.selectedEnemyAttackerId = null;
+  if (!already) battle.blockAssignments.set(attackerId, [...blockerIds(battle, attackerId), blockerId]);
+  battle.selectedEnemyAttackerId = attackerId;
   renderBattle();
   playSfx('block');
+}
+function isInstant(card) { return /\bInstant\b/i.test(card?.type_line || ''); }
+function canCastNow(card, battle = state.battle) {
+  return Boolean(battle && (battle.phase === 'main' || (isInstant(card) && ['attack', 'enemy', 'blocks', 'damage'].includes(battle.phase))));
+}
+function hasInstantResponse(battle) { return battle.hand.some(card => isInstant(card) && battle.mana >= Math.ceil(card.cmc || 0)); }
+function removeSpellTarget(kind) {
+  const battle = state.battle;
+  const own = battle.resolvingSpellTarget?.side === 'player';
+  const unit = own ? battle.creatures.find(item => item.id === battle.resolvingSpellTarget.id) : battle.enemyCreatures.find(item => item.id === (battle.resolvingSpellTarget?.id || battle.selectedEnemyTargetId)) || battle.enemyCreatures[0];
+  if (!unit) return;
+  if (own) {
+    battle.creatures = battle.creatures.filter(item => item !== unit);
+    if (!unit.isToken) (kind === 'exile' ? (battle.exile ||= []) : battle.graveyard).push(unit.card);
+    cleanupAttachments(new Set([unit.id]));
+  } else {
+    battle.enemyCreatures = battle.enemyCreatures.filter(item => item !== unit);
+    (kind === 'exile' ? (battle.enemyExile ||= []) : battle.enemyGraveyard).push({ ...unit.card, enemyKind: unit.kind });
+  }
+  addLog(`${unit.card.name} ${kind === 'exile' ? 'is exiled for this encounter' : 'is destroyed'}.`);
 }
 
 function expireTurnEffects(battle) {
@@ -1180,13 +1279,9 @@ function resolveEnemyCombat() {
   if (!battle) return;
   const attackers = battle.enemyCreatures.filter((creature) => creatureCanAttack(creature, battle.turn));
   const assignments = new Map();
-  for (const [attackerId, blockerId] of battle.blockAssignments) {
-    const blocker = battle.creatures.find((creature) => creature.id === blockerId && !creature.tapped);
-    if (blocker && attackers.some((attacker) => attacker.id === attackerId)) assignments.set(attackerId, blocker);
-  }
-  for (const [attackerId, blocker] of assignments) {
-    const attacker = attackers.find((creature) => creature.id === attackerId);
-    if (attacker) addLog(`${blocker.card.name} blocks ${attacker.card.name}.`);
+  for (const attacker of attackers) {
+    const blockers = blockerIds(battle, attacker.id).map(id => battle.creatures.find(creature => creature.id === id && !creature.tapped)).filter(blocker => blocker && canBlockCreature(blocker, attacker));
+    if (blockers.length) assignments.set(attacker.id, blockers);
   }
   const { damageToPlayer, enemyLifelinkEvents } = resolveCombatDamage(attackers, assignments, 'enemy');
   const prevented = Math.min(battle.playerBlock, damageToPlayer);
@@ -1207,6 +1302,7 @@ function resolveEnemyCombat() {
   if (state.playerHealth <= 0) return endRun(false);
   if (!battle.enemyCreatures.length) return winBattle();
 
+  battle.creatures.forEach(creature => { creature.damage = 0; creature.deathtouchDamage = false; });
   expireTurnEffects(battle);
   battle.creatures = removeDeadCreatures(battle.creatures, 'player');
   battle.playerBlock = (battle.permanents || []).reduce((sum, permanent) => sum + permanentEffect(permanent.card).shield, 0);
@@ -1218,7 +1314,8 @@ function resolveEnemyCombat() {
   battle.selectedEnemyAttackerId = null;
   battle.creatures.forEach((creature) => {
     creature.tapped = false;
-    if (creatureCanAttack(creature, battle.turn)) creature.willAttack = true;
+    creature.willAttack = false;
+    creature.attackedThisTurn = false;
   });
   drawToHand(HAND_SIZE);
   renderBattle();
@@ -1226,11 +1323,19 @@ function resolveEnemyCombat() {
 }
 
 function afterCombatBeat(battle, phase, callback) {
+  battle.priorityCallback = null;
+  const ticket = battle.phaseTicket = (battle.phaseTicket || 0) + 1;
+  if (hasInstantResponse(battle)) {
+    battle.priorityCallback = callback;
+    renderBattle();
+    return;
+  }
   setTimeout(() => {
-    if (state.battle !== battle || battle.phase !== phase) return;
+    if (state.battle !== battle || battle.phase !== phase || battle.phaseTicket !== ticket) return;
     callback();
   }, 650);
 }
+
 function finishTurn() {
   const battle = state.battle;
   if (!battle || battle.phase !== 'main') return;
@@ -1265,11 +1370,13 @@ function beginEnemyDamage() {
   afterCombatBeat(battle, 'damage', resolveEnemyCombat);
 }
 function handleCombatAction() {
+  if (state.battle?.priorityCallback) { const callback = state.battle.priorityCallback; state.battle.priorityCallback = null; callback(); return; }
   if (state.battle?.phase === 'blocks') beginEnemyDamage();
   else if (state.battle?.phase === 'main') finishTurn();
 }
 
 function winBattle() {
+  state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
   addLog(`${state.battle.enemy.name} has been defeated.`);
   if (node >= ENCOUNTERS.length) return endRun(true);
@@ -1287,6 +1394,7 @@ function winBattle() {
 }
 
 function endRun(won) {
+  if (state.battle) { state.battle.phase = 'complete'; state.battle.priorityCallback = null; }
   const end = $('#end-screen');
   end.dataset.result = won ? 'win' : 'loss';
   $('#end-emblem').textContent = won ? '✦' : '×';
@@ -1314,7 +1422,7 @@ function playBoosterOpeningSound() {
   audio.pause();
   audio.currentTime = 0;
   audio.volume = 0.72;
-  audio.play().catch(() => showToast('Zum Aktivieren des Sounds einmal auf SOUND klicken.'));
+  audio.play().catch(() => showToast('Click SOUND once to enable audio.'));
 }
 
 function animateBoosterOpening() {
@@ -1385,8 +1493,8 @@ function showJourney() {
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
   $('#journey-options').innerHTML = first
     ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>+1 generic mana every turn.</p></button><button data-relic="ward"><span>⛨</span><h3>Ancient Ward</h3><p>Begin each battle with 4 shield.</p></button>'
-    : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>10 Leben wiederherstellen. Ohne Obergrenze.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Divination hinzufügen: bis zu 2 Karten ziehen.</p></button>';
-  $('#journey-life').textContent = `${state.playerHealth} LEBEN · ${state.deck.length} CARDS`;
+    : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life. No life cap.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add Divination: draw two cards.</p></button>';
+  $('#journey-life').textContent = `${state.playerHealth} LIFE · ${state.deck.length} CARDS`;
   showScreen('journey-screen');
 }
 $('#journey-options').addEventListener('click', event => {
@@ -1415,7 +1523,7 @@ function rerollCurrentPack() {
   const excluded = new Set(state.packs.flat().map(card => card.id));
   let candidates = state.pool.filter(card => !excluded.has(card.id));
   if (candidates.length < PACK_SIZE) candidates = state.pool.filter(card => !state.packs[index].some(old => old.id === card.id));
-  if (candidates.length < PACK_SIZE) return showToast('Nicht genug andere Karten für einen Reroll.');
+  if (candidates.length < PACK_SIZE) return showToast('Not enough different cards to reroll.');
   state.packs[index] = shuffle(candidates).slice(0, PACK_SIZE);
   state.selection.delete(index);
   state.rerolledPacks.add(index);
@@ -1431,7 +1539,7 @@ function inspectBattlefieldCard(card, element) {
   const creature = battle?.creatures.find(item => item.id === element.dataset.previewId);
   const permanent = battle?.permanents.find(item => item.id === element.dataset.previewId);
   const attached = battle?.creatures.find(item => item.id === permanent?.attachedTo);
-  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generisches Mana${creature ? ` · Aktuell ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Verbunden mit ${escapeHtml(attached.card.name)}.</p>` : ''}</div>`;
+  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}</div>`;
 }
 function fitGameCanvas() {
   document.documentElement.style.setProperty('--game-scale', Math.min(window.innerWidth / 1600, window.innerHeight / 900));
@@ -1439,43 +1547,50 @@ function fitGameCanvas() {
 window.addEventListener('resize', fitGameCanvas);
 fitGameCanvas();
 
-$('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Vollbild ist in diesem Browser nicht verfügbar.')); });
+$('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Fullscreen is unavailable in this browser.')); });
 
 const COMBAT_PHASES = [
-  { id: 'main', label: 'Karten spielen', description: 'Karten ausspielen · Kreatur anklicken: angreifen oder zurückhalten.' },
-  { id: 'attack', label: 'Dein Angriff', description: 'Deine angreifenden Kreaturen treffen ihre angezeigten Ziele.' },
-  { id: 'enemy', label: 'Gegneraktion', description: 'Die Gegner verstärken oder schützen sich und bereiten ihre Angriffe vor.' },
-  { id: 'blocks', label: 'Blocken', description: 'Weise den Angreifern eigene Blocker zu oder lasse Angriffe durch.' },
-  { id: 'damage', label: 'Schaden', description: 'Die gegnerischen Angriffe und Blocks werden aufgelöst.' }
+  { id: 'main', label: 'Main phase', description: 'Queue attackers, choose individual targets, or use Attack now. Instants can respond in every phase.' },
+  { id: 'attack', label: 'Your attack', description: 'Your creatures fight their targets. Monsters retaliate.' },
+  { id: 'enemy', label: 'Enemy action', description: 'Monsters guard, strengthen, or prepare their attacks.' },
+  { id: 'blocks', label: 'Block', description: 'Assign one or more blockers. Selection order is damage order.' },
+  { id: 'damage', label: 'Damage', description: 'Enemy attacks and blocks resolve damage simultaneously.' }
 ];
 function phaseInfo(id) { return COMBAT_PHASES.find(phase => phase.id === id) || COMBAT_PHASES[0]; }
 function updatePhaseDisplay() {
   const screen = state.screen || 'start-screen';
-  const labels = { 'start-screen': 'START', 'loading-screen': 'DECK VORBEREITEN', 'draft-screen': state.boosterSealed ? 'BOOSTER ÖFFNEN' : 'KARTE WÄHLEN', 'journey-screen': state.node === 1 ? 'RELIKT WÄHLEN' : 'RAST', 'end-screen': 'RUN BEENDET' };
+  const labels = { 'start-screen': 'START', 'loading-screen': 'PREPARING DECK', 'draft-screen': state.boosterSealed ? 'OPEN BOOSTER' : 'PICK A CARD', 'journey-screen': state.node === 1 ? 'CHOOSE RELIC' : 'CAMP', 'end-screen': 'RUN COMPLETE' };
   const phase = phaseInfo(state.battle?.phase);
   $('.arrow-legend').dataset.phase = phase.id;
   $('#global-phase').textContent = screen === 'combat-screen' ? phase.label.toUpperCase() : labels[screen] || 'EXPEDITION';
   if (!state.battle) return;
   $('#phase-strip').innerHTML = COMBAT_PHASES.map((item, index) => `<li class="${phase.id === item.id ? 'current' : ''}" ${phase.id === item.id ? 'aria-current="step"' : ''} data-phase="${item.id}"><span>${index + 1}</span>${item.label}</li>`).join('');
-  $('#phase-status').textContent = phase.description;
+  $('#phase-status').textContent = state.battle?.priorityCallback ? 'You have priority: cast an instant, then Continue.' : phase.description;
 }
 function combatRoutes(battle) {
   const routes = [];
-  const target = battle.enemyCreatures.find(enemy => enemy.id === battle.selectedEnemyTargetId) || battle.enemyCreatures[0];
-  if (target && battle.phase === 'attack') {
-    for (const creature of battle.creatures) {
-      if (creatureCanAttack(creature, battle.turn) && creature.willAttack !== false && !creature.tapped) routes.push({ kind: 'ally', from: creature.id, to: target.id, damage: Math.max(0, creature.power) * (hasCreatureKeyword(creature, 'double strike') ? 2 : 1) });
-    }
+  for (const creature of battle.creatures) {
+    const active = battle.phase === 'attack' && battle.activeAttackIds?.includes(creature.id);
+    if (!eligibleAttacker(creature, battle) || (!creature.willAttack && !active)) continue;
+    const target = attackTarget(battle, creature);
+    if (target) routes.push({ kind: 'ally', from: creature.id, to: target.id, damage: Math.max(0, creature.power) * (hasCreatureKeyword(creature, 'double strike') ? 2 : 1) });
   }
-  if (!['enemy', 'blocks', 'damage'].includes(battle.phase)) return routes;
   for (const enemy of battle.enemyCreatures) {
     if (!creatureCanAttack(enemy, battle.turn)) continue;
-    const blockerId = ['blocks', 'damage'].includes(battle.phase) ? battle.blockAssignments.get(enemy.id) : null;
-    const blocker = battle.creatures.find(creature => creature.id === blockerId && !creature.tapped);
-    routes.push({ kind: blocker ? 'block' : 'enemy', from: enemy.id, to: blocker?.id || 'player', damage: Math.max(0, enemy.power) * (hasCreatureKeyword(enemy, 'double strike') ? 2 : 1) });
+    const ids = blockerIds(battle, enemy.id);
+    const blockers = ids.map(id => battle.creatures.find(creature => creature.id === id && !creature.tapped)).filter(Boolean);
+    if (!blockers.length) routes.push({ kind: 'enemy', from: enemy.id, to: 'player', damage: Math.max(0, enemy.power) * (hasCreatureKeyword(enemy, 'double strike') ? 2 : 1) });
+    else {
+      let remaining = Math.max(0, enemy.power);
+      blockers.forEach((blocker, index) => {
+        const amount = index === blockers.length - 1 ? remaining : Math.min(remaining, Math.max(0, blocker.toughness - (blocker.damage || 0)));
+        routes.push({ kind: 'block', from: enemy.id, to: blocker.id, damage: amount }); remaining -= amount;
+      });
+    }
   }
   return routes;
 }
+
 function drawCombatArrows() {
   const arena = $('.arena-table');
   const svg = $('#combat-arrows');
@@ -1490,22 +1605,22 @@ function drawCombatArrows() {
   const center = (element, edge) => {
     if (!element) return null;
     const box = element.getBoundingClientRect();
-    return { x: ((edge === 'right' ? box.right : box.left + box.width / 2) - rect.left) * sx, y: ((edge === 'top' ? box.top - 4 : box.top + box.height / 2) - rect.top) * sy };
+    return { x: ((edge === 'right' ? box.right : box.left + box.width / 2) - rect.left) * sx, y: ((edge === 'top' ? box.top - 4 : edge === 'bottom' ? box.bottom + 7 : box.top + box.height / 2) - rect.top) * sy };
   };
   const paths = combatRoutes(battle).map((route, index) => {
     const fromElement = route.kind === 'ally' ? document.querySelector(`[data-creature-id="${route.from}"] .player-card-frame`) : document.querySelector(`[data-enemy-attacker="${route.from}"] .monster-figure`);
     const toElement = route.to === 'player' ? $('#player-health-label') : route.kind === 'ally' ? document.querySelector(`[data-enemy-attacker="${route.to}"] .monster-figure`) : document.querySelector(`[data-creature-id="${route.to}"] .player-card-frame`);
     const from = center(fromElement, 'top');
-    const to = center(toElement, route.to === 'player' ? 'right' : 'top');
+    const to = center(toElement, route.to === 'player' ? 'bottom' : 'top');
     if (!from || !to) return '';
     const lift = 30 + index % 3 * 12;
     const c1 = { x: from.x + (route.kind === 'ally' ? 50 : -70), y: Math.max(32, from.y - lift) };
-    const c2 = { x: to.x + (route.kind === 'ally' ? -70 : 80), y: Math.max(32, to.y - lift) };
+    const c2 = route.to === 'player' ? { x: to.x + 60, y: to.y + 18 } : { x: to.x + (route.kind === 'ally' ? -70 : 80), y: Math.max(32, to.y - lift) };
     const label = { x: (from.x + 3 * c1.x + 3 * c2.x + to.x) / 8, y: (from.y + 3 * c1.y + 3 * c2.y + to.y) / 8 };
     const units = [...battle.creatures, ...battle.enemyCreatures];
     const fromName = units.find(unit => unit.id === route.from)?.card.name || '';
-    const toName = route.to === 'player' ? 'Deine Lebenspunkte' : units.find(unit => unit.id === route.to)?.card.name || '';
-    const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'geblockter Angriff' : 'Angriff'}`;
+    const toName = route.to === 'player' ? 'Your life' : units.find(unit => unit.id === route.to)?.card.name || '';
+    const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'blocked attack' : 'attack'}`;
     return `<g class="combat-route route-${route.kind}" data-arrow-kind="${route.kind}" data-from-id="${escapeHtml(route.from)}" data-to-id="${escapeHtml(route.to)}"><title>${escapeHtml(title)}</title><path d="M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}" marker-end="url(#arrow-${route.kind})"/><g transform="translate(${label.x},${label.y})"><rect x="-14" y="-10" width="28" height="20" rx="10"/><text text-anchor="middle" dominant-baseline="central">${route.damage}</text></g></g>`;
   }).join('');
   svg.innerHTML = `<defs>${['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrowhead-${kind}" d="M 1 1 L 9 5 L 1 9 Z"/></marker>`).join('')}</defs>${paths}`;
@@ -1517,3 +1632,44 @@ document.addEventListener('click', event => {
   const source = dragClickGuard; dragClickGuard = null;
   if (event.detail && (event.target === source || source.contains(event.target))) { event.preventDefault(); event.stopImmediatePropagation(); }
 }, true);
+
+$('#creature-row').addEventListener('change', event => {
+  const input = event.target.closest('[data-unit-target]');
+  const battle = state.battle;
+  if (!input || battle?.phase !== 'main') return;
+  const creature = battle.creatures.find(item => item.id === input.dataset.unitTarget);
+  if (!creature || !eligibleAttacker(creature, battle)) return;
+  creature.attackTargetId = input.value; creature.willAttack = true; renderBattle();
+});
+
+function openCollection(kind = 'deck') {
+  const battle = state.battle;
+  if (state.screen === 'combat-screen' && ['attack', 'enemy', 'damage'].includes(battle?.phase) && !battle.priorityCallback) return;
+  state.collectionKind = kind;
+  $('#collection-search').value = '';
+  $('#collection-title').textContent = kind === 'library' ? 'Your library' : kind === 'exile' ? 'Exile' : 'Your run deck';
+  $('#collection-kind').textContent = kind.toUpperCase();
+  $('#collection-note').textContent = kind === 'library' ? 'Remaining cards, grouped and sorted. Draw order stays hidden.' : kind === 'exile' ? 'Exiled cards and monsters cannot return through graveyard recycling. Exile lasts for this encounter.' : 'Every card in your run deck, including cards currently in other zones. Inspect this between encounters or turns.';
+  renderCollection(); hideCardPreview(); $('#collection-dialog').showModal();
+}
+function renderCollection() {
+  const kind = state.collectionKind;
+  const cards = kind === 'library' ? state.battle?.deck || [] : kind === 'exile' ? [...(state.battle?.exile || []), ...(state.battle?.enemyExile || [])] : state.deck;
+  const groups = new Map();
+  for (const card of cards) {
+    const key = card.id || card.name;
+    if (groups.has(key)) groups.get(key).count += 1; else groups.set(key, { ...card, count: 1 });
+  }
+  const query = $('#collection-search').value.trim().toLowerCase();
+  state.collectionCards = [...groups.values()].filter(card => `${card.name} ${card.type_line}`.toLowerCase().includes(query)).sort((a, b) => (a.cmc || 0) - (b.cmc || 0) || a.name.localeCompare(b.name));
+  const average = cards.length ? cards.reduce((sum, card) => sum + (card.cmc || 0), 0) / cards.length : 0;
+  $('#collection-stats').textContent = `${cards.length} cards · ${groups.size} unique · average mana ${average.toFixed(1)}`;
+  $('#collection-grid').innerHTML = state.collectionCards.length ? state.collectionCards.map((card, index) => card.enemyKind ? `<div class="collection-monster"><img src="assets/foes/${card.enemyKind}.svg" alt="${escapeHtml(card.name)}"><b>${escapeHtml(card.name)}</b><span>Exiled monster</span></div>` : `<button class="collection-card" data-preview-owner="collection" data-collection-index="${index}" aria-label="${card.count} copies of ${escapeHtml(card.name)}">${cardFace(card)}<span><b>${escapeHtml(card.name)}</b><strong>×${card.count}</strong></span></button>`).join('') : '<p class="collection-empty">No cards in this zone.</p>';
+}
+$('#deck-button').addEventListener('click', () => openCollection('deck'));
+$('#journey-deck-button').addEventListener('click', () => openCollection('deck'));
+$('#library-button').addEventListener('click', () => openCollection('library'));
+$('#exile-button').addEventListener('click', () => openCollection('exile'));
+$('#collection-search').addEventListener('input', renderCollection);
+$('#collection-close').addEventListener('click', () => { hideCardPreview(); $('#collection-dialog').close(); });
+$('#collection-dialog').addEventListener('click', event => { if (event.target === $('#collection-dialog')) { hideCardPreview(); $('#collection-dialog').close(); } });

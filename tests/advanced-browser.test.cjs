@@ -1,0 +1,36 @@
+const {chromium}=require('playwright');const assert=require('node:assert/strict');require('node:fs').mkdirSync('work',{recursive:true});
+(async()=>{const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});try{
+ const page=await browser.newPage({viewport:{width:1600,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
+ await page.evaluate(()=>{state.soundOn=false;state.pool=BUNDLED_CARDS;state.deck=['Serra Angel','Serra Angel','Giant Spider','Giant Spider','Grizzly Bears','Grizzly Bears','Giant Growth','Giant Growth','Unmake','Unmake','Divination','Divination'].map(name=>BUNDLED_CARDS.find(card=>card.name===name));state.node=2;showJourney()});
+ await page.locator('#journey-deck-button').click();assert.equal(await page.locator('.collection-card').count(),6);assert.ok((await page.locator('#collection-stats').innerText()).startsWith('12 cards'));
+ await page.locator('#collection-search').fill('Serra');assert.equal(await page.locator('.collection-card').count(),1);await page.locator('#collection-close').click();
+ await page.evaluate(()=>{beginBattle(1);state.battle.turn=2;state.battle.mana=6;state.battle.maxMana=6;state.battle.hand=['Giant Growth','Unmake','Grizzly Bears','Divination'].map(name=>BUNDLED_CARDS.find(card=>card.name===name));state.battle.creatures=['Serra Angel','Giant Spider','Grizzly Bears'].map((name,index)=>{const card=BUNDLED_CARDS.find(item=>item.name===name);return{id:'ui-'+index,owner:'player',card,...parseStats(card),...creatureKeywords(card),summoningSick:true,summonedTurn:index===2?2:1,tapped:false,willAttack:false,attackedThisTurn:false}});state.battle.enemyCreatures.forEach(enemy=>{enemy.power=1;enemy.health=40;enemy.maxHealth=40});state.battle.permanents=[{id:'eq-ui',card:BUNDLED_CARDS.find(card=>card.name==='Short Sword'),attachedTo:'ui-0'}];refreshPermanentEffects();renderBattle()});
+ await page.waitForTimeout(350);assert.equal(await page.locator('.creature-group.is-summoning-sick').count(),1);
+ assert.equal(await page.locator('[data-unit-attack="ui-2"]').isDisabled(),true);
+ await page.locator('#library-button').click();assert.ok((await page.locator('#collection-note').innerText()).includes('Draw order stays hidden'));await page.locator('#collection-close').click();
+ const enemyIds=await page.evaluate(()=>state.battle.enemyCreatures.map(enemy=>enemy.id));
+ await page.locator('[data-unit-target="ui-0"]').selectOption(enemyIds[1]);await page.locator('[data-unit-attack="ui-0"]').click();
+ await page.waitForTimeout(800);assert.equal(await page.evaluate(()=>state.battle.phase),'attack');assert.equal(await page.locator('#end-turn-button').isEnabled(),true);assert.ok((await page.locator('#phase-status').innerText()).includes('priority'));
+ await page.locator('[data-hand-index="0"]').click();assert.equal(await page.evaluate(()=>state.battle.creatures[0].power),8);
+ assert.ok((await page.locator('.creature-group').first().locator('.stat-permanent').innerText()).includes('+1/+1'));assert.ok((await page.locator('.creature-group').first().locator('.stat-temporary').innerText()).includes('+3/+3'));
+ await page.locator('#end-turn-button').click();await page.waitForFunction(()=>state.battle.phase==='main');
+ assert.equal(await page.evaluate(()=>state.battle.enemyCreatures[1].health),32);assert.equal(await page.evaluate(()=>state.battle.enemyCreatures[0].health),40);assert.equal(await page.evaluate(()=>state.battle.creatures[0].damage),1);assert.equal(await page.evaluate(()=>state.battle.creatures[0].tapped),false);assert.equal(await page.locator('[data-unit-attack="ui-0"]').isDisabled(),true);
+ await page.locator('[data-unit-target="ui-1"]').selectOption(enemyIds[0]);await page.locator('[data-unit-attack="ui-1"]').click();assert.equal(await page.evaluate(()=>state.battle.phase),'attack');await page.locator('#end-turn-button').click();await page.waitForFunction(()=>state.battle.phase==='main');
+ assert.equal(await page.evaluate(()=>state.battle.enemyCreatures[0].health),38);assert.equal(await page.evaluate(()=>state.battle.creatures[1].tapped),true);assert.equal(await page.locator('.creature-group.is-tapped').count(),1);assert.ok((await page.locator('[data-creature-id="ui-1"] .player-card-frame').evaluate(el=>getComputedStyle(el).transform))!=='none');
+ await page.screenshot({path:'work/individual-vigilance-bonuses12.png'});
+ await page.locator('#end-turn-button').click();await page.locator('#end-turn-button').click();await page.waitForFunction(()=>state.battle.phase==='enemy');await page.locator('#end-turn-button').click();await page.waitForFunction(()=>state.battle.phase==='blocks');
+ await page.locator(`[data-enemy-attacker="${enemyIds[1]}"]`).click();await page.locator('[data-creature-id="ui-0"]').click();await page.locator('[data-creature-id="ui-2"]').click();
+ assert.equal(await page.evaluate(id=>blockerIds(state.battle,id).length,enemyIds[1]),2);await page.waitForFunction(()=>document.querySelectorAll('[data-arrow-kind="block"]').length===2);
+ await page.screenshot({path:'work/multiblock-response12.png'});
+ // Unmake is an instant: exile the guarding monster during the block phase.
+ await page.locator('[data-hand-index="0"]').dragTo(page.locator(`[data-enemy-attacker="${enemyIds[0]}"]`));assert.equal(await page.evaluate(()=>state.battle.enemyExile.length),1);assert.equal(await page.locator('#exile-count').innerText(),'1');
+ await page.locator('#end-turn-button').click();await page.waitForFunction(()=>state.battle.turn===3);
+ assert.equal(await page.locator('.stat-temporary').count(),0);assert.equal(await page.evaluate(()=>state.battle.creatures[0].power),5);assert.equal(await page.locator('.creature-group.is-summoning-sick').count(),0);
+ await page.locator('#exile-button').click();assert.equal(await page.locator('.collection-monster').count(),1);assert.ok((await page.locator('#collection-note').innerText()).includes('cannot return'));await page.locator('#collection-close').click();
+ assert.equal(await page.locator('html').getAttribute('lang'),'en');assert.ok(!await page.evaluate(()=>/Dein|Karte|Schaden|Schild|Friedhof|Angriff|Wähle|Zug |Aktuell|generisch|Verbunden/u.test(document.body.textContent)));
+ assert.ok(await page.locator('.topbar').evaluate(el=>el.getBoundingClientRect().height<=42));assert.ok(await page.locator('.site-footer').evaluate(el=>el.getBoundingClientRect().height<=22));
+ const boxes=await page.locator('#player-target,.mana-display,#mulligan-button,#end-turn-button,#hand-row,#library-button').evaluateAll(elements=>elements.map(el=>{const r=el.getBoundingClientRect();return{x:r.x,y:r.y,right:r.right,bottom:r.bottom}}));assert.ok(boxes[0].right<boxes[1].x);assert.ok(boxes[2].right<boxes[3].x);assert.ok(boxes[4].right<=boxes[5].x);
+ await page.screenshot({path:'work/final-arena12.png'});
+ assert.deepEqual(errors,[]);console.log('Advanced browser checks passed: English UI, deck/library/exile inspection, per-unit targets and attacks, retaliation, vigilance, sickness/tap visuals, instant priority windows, multi-block, coloured bonus expiry, compact chrome and HUD/library boundaries.');
+}finally{await browser.close()}})().catch(error=>{console.error(error);process.exit(1)});
