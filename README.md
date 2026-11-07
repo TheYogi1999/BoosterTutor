@@ -91,6 +91,6 @@ The suites cover pointer drags, cancellation, large hands, uncapped healing, pac
 
 ## Assets and publication
 
-Card metadata and original images were retrieved from [Scryfall](https://scryfall.com). Card images/text belong to their respective rights holders. Environmental SVGs, monster illustrations, the Library back and audio are original assets for this prototype. The project is not endorsed by Wizards of the Coast and does not claim permission under the [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy).
+Card metadata and original images were retrieved from [Scryfall](https://scryfall.com). The Library uses the original Magic card back supplied by Scryfall. Card images/text belong to their respective rights holders. Environmental SVGs, monster illustrations, and audio are original assets for this prototype. The project is not endorsed by Wizards of the Coast and does not claim permission under the [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy).
 
 `.github/workflows/pages.yml` publishes changes pushed to `main` automatically, and can also be run manually.
