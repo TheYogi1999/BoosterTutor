@@ -86,6 +86,7 @@ function showScreen(id) {
   updatePhaseDisplay();
   $('#deck-button').disabled = !state.deck.length;
   for (const screen of screens) $('#' + screen).classList.toggle('active', screen === id);
+  fitGameCanvas();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -436,8 +437,16 @@ function cardFace(card) {
     : `<span class="printed-card"><strong>${escapeHtml(card.name)}</strong><small>${Math.ceil(card.cmc || 0)} Mana · ${escapeHtml(card.type_line)}</small><span class="printed-sigil">✦</span><span>${escapeHtml(effectSummary(card))}</span>${isCreature(card) ? `<b>${parseStats(card).power}/${parseStats(card).toughness}</b>` : ''}</span>`;
 }
 
+function draftAbilitySummary(card) {
+  const lines = effectDescriptions(card).filter(line => !/^(Creature:|Summoning sickness:|Haste:|Defender:|Monsters retaliate|Stays on the battlefield|Aura:|Equipment:|When its host|If its host|Goes to your graveyard)/.test(line));
+  const summary = lines.join(' ');
+  return summary.length > 110 ? `${summary.slice(0, 107).trimEnd()}…` : summary;
+}
 function makeCardMarkup(card, packIndex, cardIndex, selected) {
-  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} generic mana${selected ? ', selected' : ''}"><span class="card-image-wrap">${cardFace(card)}</span><span class="draft-card-name">${escapeHtml(card.name)}</span></button>`;
+  const keywords = printedKeywords(card).join(', ') || 'None';
+  const stats = isCreature(card) ? `${card.power ?? '—'}/${card.toughness ?? '—'}` : '—';
+  const ability = draftAbilitySummary(card);
+  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}"><span class="card-image-wrap">${cardFace(card)}</span><span class="draft-card-name">${escapeHtml(card.name)}</span><span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">P/T ${escapeHtml(stats)}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span></button>`;
 }
 
 function selectedDraftCards() {
@@ -457,7 +466,7 @@ function renderDraft() {
   const last = !starter || packIndex === STARTER_BOOSTER_COUNT - 1;
   $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF ${STARTER_BOOSTER_COUNT}` : 'REWARD';
   $('#draft-title').textContent = state.boosterSealed ? 'Your next booster' : 'Which card joins your journey?';
-  $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : `Choose one of seven cards. Receive ${COPIES_PER_DRAFT_PICK} copies. Hover a card to read its actual game effect.`;
+  $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : `Choose one of seven cards. Receive ${COPIES_PER_DRAFT_PICK} copies. Type, power/toughness and keywords are listed below each card.`;
   $('#pack-number').textContent = `${packIndex + 1} / ${starter ? STARTER_BOOSTER_COUNT : 1}`;
   $('#deck-count').textContent = String(state.deck.length + state.selection.size * COPIES_PER_DRAFT_PICK);
   $('#draft-grid').innerHTML = state.boosterSealed
@@ -764,7 +773,7 @@ function positionCardPreview() {
 function showCardPreview(card, element) {
   if (!card || !element) return hideCardPreview();
   if (element.dataset.previewOwner === 'draft' && $('#draft-screen').classList.contains('opening') && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return hideCardPreview();
-  if (['player', 'permanent'].includes(element.dataset.previewOwner)) { inspectBattlefieldCard(card, element); hideCardPreview(); return; }
+  if (['player', 'permanent'].includes(element.dataset.previewOwner) && !document.documentElement.classList.contains('portrait-combat')) { inspectBattlefieldCard(card, element); hideCardPreview(); return; }
   const preview = $('#card-preview');
   preview.dataset.mode = element.dataset.previewOwner;
   (element.closest('dialog') || document.body).append(preview);
@@ -785,6 +794,7 @@ function showCardPreview(card, element) {
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: only flying or reach can block it.', reach:'Reach: can block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
+  if (permanent && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>Pay ${permanentActivationCost(card)} · sacrifice · ${card.name === 'Fountain of Renewal' ? 'draw 1' : 'scry 2'}</button>`;
   preview.hidden = false;
   positionCardPreview();
   requestAnimationFrame(positionCardPreview);
@@ -864,18 +874,24 @@ function renderBattle() {
 function renderHand() {
   const battle = state.battle;
   const center = (battle.hand.length - 1) / 2;
-  const spacing = Math.min(87, 820 / Math.max(1, battle.hand.length - 1));
-  $('#hand-row').style.setProperty('--hand-step', `${spacing}px`);
   $('#hand-row').innerHTML = battle.hand.map((card, index) => {
     const position = index - center;
     const canPay = Boolean(paymentPlan(card));
     const selected = battle.pendingAttachment?.handIndex === index;
     return `<button type="button" class="hand-card${!canCastNow(card, battle) ? ' timing-unavailable' : ''}${(isInstant(card) || hasFlash(card)) && battle.phase !== 'main' ? ' instant-response' : ''}${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${canCastNow(card, battle)}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
   }).join('');
+  fitHand();
   $('#hand-row').querySelectorAll('.hand-card').forEach(button => {
     button.addEventListener('click', () => { if (Date.now() < (state.suppressClickUntil || 0)) return; hideCardPreview(); playCard(Number(button.dataset.handIndex), defaultTarget(battle.hand[Number(button.dataset.handIndex)])); });
 
   });
+}
+function fitHand() {
+  const row = $('#hand-row');
+  const cards = row.querySelectorAll('.hand-card');
+  const cardWidth = cards[0]?.offsetWidth || 96;
+  const available = Math.max(0, (row.clientWidth || 940) - cardWidth - 64);
+  row.style.setProperty('--hand-step', `${Math.min(87, available / Math.max(1, cards.length - 1))}px`);
 }
 function creatureBonuses(creature, battle = state.battle) {
   const base = parseStats(creature.card);
@@ -1097,6 +1113,7 @@ document.addEventListener('drop', event => {
 });
 document.addEventListener('dragend', () => { if (!pointerDrag) finishDrag(); });
 document.addEventListener('pointerdown', event => {
+  if (!event.target.closest('[data-preview-owner], #card-preview')) hideCardPreview();
   if (event.button !== 0 || pointerDrag) return;
   dragClickGuard = null;
   const payload = dragPayloadFor(event.target);
@@ -1775,6 +1792,7 @@ document.addEventListener('pointerover', (event) => {
   if (element && !element.contains(event.relatedTarget)) showCardPreview(previewCardFor(element), element);
 });
 document.addEventListener('pointerout', (event) => {
+  if (event.pointerType === 'touch') return;
   const element = event.target.closest('[data-preview-owner]');
   if (element && !element.contains(event.relatedTarget) && !event.relatedTarget?.closest('#card-preview')) hideCardPreview();
 });
@@ -1783,7 +1801,7 @@ document.addEventListener('focusin', (event) => {
   if (element) showCardPreview(previewCardFor(element), element);
 });
 document.addEventListener('focusout', (event) => {
-  if (!event.relatedTarget?.closest('[data-preview-owner]')) hideCardPreview();
+  if (!event.relatedTarget?.closest('[data-preview-owner], #card-preview')) hideCardPreview();
 });
 $('#start-button').addEventListener('click', startNewRun);
 $('#restart-button').addEventListener('click', startNewRun);
@@ -1854,7 +1872,7 @@ document.addEventListener('pointermove', positionCardPreview);
 
 $('#graveyard-open').addEventListener('click', () => { hideCardPreview(); $('#graveyard-dialog').showModal(); });
 
-$('#card-preview').addEventListener('pointerleave', event => { if (!previewAnchor?.contains(event.relatedTarget)) hideCardPreview(); });
+$('#card-preview').addEventListener('pointerleave', event => { if (event.pointerType !== 'touch' && !previewAnchor?.contains(event.relatedTarget)) hideCardPreview(); });
 
 $('#graveyard-pile').addEventListener('click', () => { hideCardPreview(); $('#graveyard-dialog').showModal(); });
 
@@ -1884,11 +1902,22 @@ function inspectBattlefieldCard(card, element) {
   $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>Pay ${permanentActivationCost(permanent.card)} · sacrifice · ${permanent.card.name==='Fountain of Renewal'?'draw 1':'scry 2'}</button>`:''}</div>`;
 }
 function fitGameCanvas() {
-  const responsive = window.matchMedia('(max-width: 1200px), (pointer: coarse) and (max-width: 1400px)').matches;
-  document.documentElement.style.setProperty('--game-scale', responsive ? 1 : Math.min(window.innerWidth / 1600, window.innerHeight / 900));
-  document.documentElement.classList.toggle('responsive-game', responsive);
+  const root = document.documentElement;
+  const combat = state.screen === 'combat-screen';
+  const smallScreen = window.matchMedia('(max-width: 1200px), (pointer: coarse) and (max-width: 1400px)').matches;
+  const portrait = combat && smallScreen && window.innerHeight > window.innerWidth;
+  const height = window.visualViewport?.scale === 1 ? window.visualViewport.height : window.innerHeight;
+  const canvasWidth = portrait ? 760 : 1600;
+  const scale = Math.min(window.innerWidth / canvasWidth, height / (portrait ? 1100 : 900));
+  root.style.setProperty('--game-scale', smallScreen && !combat ? 1 : scale);
+  root.style.setProperty('--combat-height', `${Math.max(1100, height / scale)}px`);
+  root.classList.toggle('responsive-game', smallScreen && !combat);
+  root.classList.toggle('combat-game', combat);
+  root.classList.toggle('portrait-combat', portrait);
+  if (combat) requestAnimationFrame(() => { fitHand(); drawCombatArrows(); });
 }
 window.addEventListener('resize', fitGameCanvas);
+window.visualViewport?.addEventListener('resize', fitGameCanvas);
 fitGameCanvas();
 
 $('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Fullscreen is unavailable in this browser.')); });
@@ -2110,6 +2139,7 @@ $('#scry-confirm').addEventListener('click',finishScry);
 $('#scry-dialog').addEventListener('cancel',event=>{event.preventDefault();finishScry();});
 $('#creature-row').addEventListener('click',event=>{const button=event.target.closest('[data-unit-mana]');if(button)tapForMana(button.dataset.unitMana);});
 $('#inspector-content').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button)activatePermanent(button.dataset.activatePermanent);});
+$('#card-preview').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button){hideCardPreview();activatePermanent(button.dataset.activatePermanent);}});
 
 function printedKeywords(card){return (card.keywords || [...COMBAT_KEYWORDS.filter(keyword=>hasKeywordLine(card.oracle_text||'',keyword)),...(hasFlash(card)?['flash']:[])]).map(keyword=>keyword.toLowerCase());}
 function cardAudit(card){const unknown=printedKeywords(card).filter(keyword=>!SUPPORTED_KEYWORDS.includes(keyword));return{dataVerified:Boolean(card.verified),unknown,adapted:card.name==='Cancel'};}
