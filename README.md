@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.14** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.15** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -19,7 +19,7 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 - Each opened pack has one free reroll. It replaces seven cards and clears only that pack's selection. Reward packs also contain seven cards.
 - The global Deck button and the camp's **Review your deck** button show grouped copies, mana statistics and a card search. Deck inspection works between encounters and turns.
 - The Library is a physical face-down stack to the right of the hand. Click it to inspect remaining cards grouped and sorted; upcoming draw order is not exposed.
-- Used spells, dead creatures and their auras enter the graveyard. When the library is empty, the graveyard is shuffled back in. Exiled cards never join that recycle. Exile lasts for the encounter; your run deck is restored for the next encounter.
+- Used spells, dead creatures and their auras enter the graveyard. The graveyard does not recycle into the library: if you try to draw while it is empty, the run ends. Exile lasts for the encounter; your run deck is restored for the next encounter.
 - Unmake exiles a selected monster; dragging it directly onto an allied creature exiles that ally. Its auras go to the graveyard and its equipment remains unattached. The Exile viewer displays both cards and banished monsters.
 
 ## Coins, shop and verified catalog
@@ -27,17 +27,17 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 - Every defeated or exiled monster pays its displayed bounty once. Coins persist through the run and reset with a new run.
 - After a reward pack, visit a shop with exactly three distinct cards. Each offer sells one extra copy for your run deck; sold offers stay sold when returning from camp. Prices are 6 + 3 × mana value. You can leave without buying.
 - The start screen opens the curated card catalog, with name/text search, type, mana, printed keyword and colour filters. Cards link to their Scryfall source. The catalog and boosters use the same dynamically loaded pool.
-- Printed keywords in this pool have explicit support: flying, reach, lifelink, deathtouch, first/double strike, haste, vigilance, trample, menace, defender, flash, enchant, equip and scry. Monsters can have combat keywords, shown under their intentions.
+- Printed keywords in this pool have explicit support: flying, reach, lifelink, deathtouch, first/double strike, haste, vigilance, trample, menace, defender, hexproof, flash, enchant, equip and scry. Monsters can have combat keywords, shown under their intentions. Hexproof monsters cannot be targeted by player spells, but can still be attacked or blocked in combat.
 - Scry opens an ordered top-card chooser: keep cards on top, move them to the bottom, or swap their order. Omen scries before its draw and can be sacrificed for 3 mana to scry again. Fountain of Renewal gains life each upkeep and can be sacrificed for 3 mana to draw. Angelic Chorus gains life equal to an entering creature’s toughness; Llanowar Elves taps for generic mana after sickness ends. Rancor returns to hand when its host leaves. Juggernaut must attack when able and cannot be blocked by Walls.
-- Data verification means source metadata and original images match Scryfall. Combat remains an adapted monster-duel ruleset; Cancel is explicitly marked as an adapted counterspell that grants shield, without a full stack.
+- Data verification means source metadata and original images match Scryfall. Combat remains an adapted monster-duel ruleset; Cancel interrupts a monster's attack for the turn instead of using a full spell stack.
 
 ## Mana, hand and life
 
 - Only generic mana is required: pay the card's total mana value. Printed images retain their original symbols.
 - The starter deck contains four basic mana cards. Two begin untapped on the battlefield and two stay in the draw pile. Draw mana cards, then play one during your main phase; it enters untapped, taps to pay generic costs, and untaps at the start of your next turn. There is no automatic mana refill or colour requirement.
-- Start each run at 20 life. Life carries between encounters. Aether Crystal adds one floating mana at the start of each later turn; Ancient Ward grants 4 shield at the start of each battle.
+- Start each run at 20 life. Life carries between encounters. Aether Crystal adds one floating mana at the start of each later turn; Wayfinder’s Lens gives one extra opening card in each battle.
 - Draw seven opening cards and refill to at least seven each turn. Extra draws may grow the hand beyond seven without discarding excess. The fan adapts to its actual size. A free opening mulligan is available before your first action.
-- Healing, resting and lifelink can raise life above 20. Life displays use numbers, not bars. Each enemy has its own life total and bar.
+- Healing, resting and lifelink can raise life above 20. Life displays use numbers, not bars. Each enemy has its own life total and bar, plus damage output; enemies have no toughness stat. The game has no shield or damage-absorption mechanic.
 
 ## Individual attacks and retaliation
 
@@ -45,7 +45,7 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 - Monsters deal their power back when legally able to block the attacking creature. Flying/reach and menace apply to retaliation. Normal damage in each duel is simultaneous. First strike may kill before retaliation; double strike uses two damage steps. Damage marked on allied creatures persists until turn cleanup.
 - A creature attacks at most once per turn. Attacking normally taps it. **Vigilance** leaves it untapped, so it can still block, but does not grant another attack.
 - Every creature, including artifact creatures and monsters, has summoning sickness unless it has haste. New creatures appear grey and may block immediately. Haste lets a creature join the current turn's combat phase. Tapped creature faces rotate sideways; vigilance attackers stay upright.
-- Planned attack arrows remain visible throughout combat. Each allied arrow uses that creature's own target. Enemy routes point at your life or the assigned blockers. Animated, glowing SVG routes do not intercept clicks or drops.
+- Planned attack arrows remain visible throughout combat. Each allied arrow uses that creature's own target. Enemy routes point at your life or the assigned blockers. Animated, glowing SVG routes with endpoint markers do not intercept clicks or drops.
 
 ## Blocking and instant responses
 
@@ -57,7 +57,7 @@ No build step or runtime dependencies. The English interface uses a fixed 1600×
 
 ## Permanents, modifiers and controls
 
-- Noncreature artifacts/enchantments stay for the encounter. Recognized static bonuses affect allied creatures; other unattached permanents grant 1 shield on entry and at each turn start, as stated in the inspector.
+- Noncreature artifacts/enchantments stay for the encounter. Recognized static bonuses affect allied creatures; unknown permanent effects are described as not implemented.
 - Auras choose an allied host when cast. Equipment pays its printed Equip cost in generic mana each time it is attached or moved, during your main phase. Casting and equipping are separate costs; dragging equipment directly from your hand onto a creature pays both. Attached cards sit physically beside their host in an overlapping rail; equipment can be dragged to another host. The free permanent zone holds unattached equipment and global enchantments.
 - **Green** stat chips show persistent modifiers, including counters, equipment and auras. **Amber EOT** chips show temporary bonuses. Total power/toughness reflects both; temporary bonuses expire at cleanup.
 - Hand tooltips show actual implemented effects and casting availability above the hovered card. Battlefield cards retain the large side inspector. Mouse/touch/pen dragging holds the card at the grabbed point; legal zones highlight and Escape cancels without spending mana.
