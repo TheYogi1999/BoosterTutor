@@ -20,11 +20,13 @@
     <link rel="stylesheet" href="widescreen.css?v=0.25" />
     <link rel="stylesheet" href="discoveries.css?v=0.25" />
     <link rel="stylesheet" href="effects.css?v=0.25.2" />
+    <link rel="stylesheet" href="controller.css?v=0.26" />
     <script src="cards.js?v=0.25" defer></script>
     <script src="sounds.js?v=0.25" defer></script>
     <script src="game.js?v=0.25" defer></script>
     <script src="rules.js?v=0.25" defer></script>
     <script src="effects.js?v=0.25" defer></script>
+    <script src="controller.js?v=0.26" defer></script>
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
@@ -34,8 +36,8 @@
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
-      <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.25 · <span id="global-phase">START</span></span>
+      <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="controller-help-button" aria-label="Controller controls and help">Controls</button><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
+        <span class="pixel-label"><i class="status-dot"></i> v0.26 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -177,7 +179,7 @@
     </main>
 
     <footer class="site-footer">
-      <span>Booster Tutor · Fan prototype</span>
+      <span id="controller-hints" aria-live="polite">Booster Tutor · Fan prototype</span>
       <span><a href="https://scryfall.com" target="_blank" rel="noreferrer">Card data: Scryfall</a> · <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noreferrer">Wizards Fan Content Policy</a></span>
     </footer>
     </div>
@@ -197,6 +199,7 @@
     </dialog>
     <dialog class="scry-dialog" id="scry-dialog" aria-labelledby="scry-title"><span class="eyebrow">SCRY</span><h2 id="scry-title">Shape your next draw</h2><p>Click a card to send it to the bottom. Swap the cards to change their order.</p><div id="scry-grid"></div><div class="scry-actions"><button class="quiet-button" id="scry-swap">Swap order</button><button class="primary-button" id="scry-confirm">Confirm scry →</button></div></dialog>
     <dialog class="rule-dialog" id="rule-dialog" aria-labelledby="rule-title"><span class="eyebrow">CARD CHOICES</span><h2 id="rule-title"></h2><p id="rule-instruction"></p><div id="rule-options"></div><p id="rule-progress"></p><div class="rule-actions"><button id="rule-cancel" class="quiet-button">Cancel · pay nothing</button><button id="rule-confirm" class="primary-button" disabled>Confirm →</button></div></dialog>
+    <dialog class="controller-dialog" id="controller-dialog" aria-labelledby="controller-title"><header><div><span class="eyebrow">GAMEPAD SUPPORT</span><h2 id="controller-title">Play with your controller</h2></div><button id="controller-close" class="graveyard-close" aria-label="Close controller help">×</button></header><p>Connect an Xbox, PlayStation or other controller with standard browser mapping. Press any button, release it, then navigate.</p><div class="controller-bindings"><div><kbd>✚ / Left stick</kbd><span>Move the gold selection</span></div><div><kbd>A / ✕</kbd><span>Select, play a card, or edit a filter / attack target</span></div><div><kbd>B / ○</kbd><span>Back, close a window, cancel unpaid card choices</span></div><div><kbd>X / □</kbd><span>Inspect the highlighted card or opponent</span></div><div><kbd>Y / △</kbd><span>Continue combat, confirm a booster pick, or leave the shop</span></div><div><kbd>LB / RB · L1 / R1</kbd><span>Switch between hand, battlefield, opponents and actions</span></div><div><kbd>View / Share</kbd><span>Open your run deck</span></div><div><kbd>Menu / Options</kbd><span>Open this help</span></div><div><kbd>Right stick</kbd><span>Scroll card lists and longer windows</span></div></div><p class="controller-tip">To block: select an attacker on the right, then select your blockers. To equip: select equipment, then its allied host. In a filter or target selector, directions change the option; A or B finishes editing. A held confirm button never repeats.</p><p class="controller-browser-note">Your browser may ask for an initial mouse click to enable sound or fullscreen.</p></dialog>
     <dialog class="confirm-dialog" id="quit-dialog">
       <h2>Abandon this run?</h2>
       <p>Your current progress will be lost.</p>

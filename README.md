@@ -1,5 +1,26 @@
 # Booster Tutor — The Aether Expedition
 
+## Controller support (v0.26)
+
+Xbox, PlayStation and other controllers with standard Gamepad API mapping can operate the menus, boosters, shops, card choices and combat. Connect the controller and press a button; release held inputs before confirming. Open **Controls** or Menu / Options for the in-game guide.
+
+- D-pad / left stick: move the gold focus.
+- A / Cross: select or activate. On a filter or attack-target selector, toggle edit mode; directions change the option immediately.
+- B / Circle: finish selector editing, close a dialog, or cancel unpaid card choices.
+- X / Square: inspect the highlighted card or opponent.
+- Y / Triangle: continue the current combat phase, confirm a chosen draft card, or leave the shop. This shortcut never submits a modal cost choice.
+- LB/RB or L1/R1: switch between hand, battlefield, opponents, action buttons and other UI zones.
+- View / Share: open the run deck. Menu / Options: controller help. Right stick: scroll card lists.
+
+Blocking and equipping use the existing click controls: choose an attacker then your blockers; choose equipment then its host. Focus survives UI re-renders. Confirm buttons use press edges, while directions repeat after a short delay; stick deadzones ignore minor drift. Disconnecting, losing window focus, or reconnecting with a held button cannot submit a game action. Mouse or keyboard input immediately takes over. The game uses standard browser mapping; browser sound/fullscreen restrictions may require an initial mouse click.
+
+Controller regression checks use simulated Gamepad API snapshots in Chromium, including held buttons, modal costs, target editing, combat, disconnection and reconnect. Hardware models have not been individually tested.
+
+```sh
+node tests/controller-browser.test.cjs
+```
+
+
 ## Version 0.25: reviewed cards and presentation
 
 The source catalog now includes 60 bundled real cards. Only rules-reviewed cards can enter new boosters, shops and decks (57 in the offline pool). The larger Scryfall list is audited on load: supported fixed-stat keyword creatures remain eligible; unimplemented triggers, costs and keywords are excluded. The catalog’s **Ban list** filter shows the exact reason. Cancel and Reverberate require a spell stack, and Duress requires an opponent hand; they are banned instead of being replaced by unrelated effects.
@@ -20,7 +41,7 @@ node tests/rules-effects-browser.test.cjs
 The earlier UI test scripts describe older releases; use the reviewed-rules suite for the new target and cost dialogs.
 
 
-**Version 0.25** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.26** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
