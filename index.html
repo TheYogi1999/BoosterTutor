@@ -1,24 +1,24 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0b1015" />
-    <meta name="description" content="Booster Tutor ist ein inoffizieller Mana-Roguelike-Prototyp mit dynamisch geladenen Magic-Karten." />
-    <title>Booster Tutor — Ein Mana-Roguelike</title>
+    <meta name="description" content="Booster Tutor is an unofficial mana roguelike demo with a booster draft and dynamically loaded Magic cards." />
+    <title>Booster Tutor — A Mana Roguelike</title>
     <link rel="stylesheet" href="style.css" />
     <script src="game.js" defer></script>
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
     <header class="topbar">
-      <a class="brand" href="#start" aria-label="Booster Tutor Startseite">
+      <a class="brand" href="#start" aria-label="Booster Tutor home">
         <span class="brand-mark">B</span>
         <span>BOOSTER TUTOR <small>Mana Roguelike</small></span>
       </a>
       <div class="topbar-right">
-        <span class="pixel-label"><i class="status-dot"></i> DEMO BUILD 0.5</span>
-        <button class="icon-button" id="sound-toggle" aria-label="Ton ausschalten" title="Ton ausschalten">♪ <span>TON AN</span></button>
+        <span class="pixel-label"><i class="status-dot"></i> DEMO BUILD 0.6</span>
+        <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
 
@@ -27,12 +27,12 @@
         <div class="title-stage">
           <div class="pixel-sun" aria-hidden="true"></div>
           <div class="title-copy">
-            <div class="eyebrow"><span>✦</span> EIN KARTENABENTEUER <span>✦</span></div>
+            <div class="eyebrow"><span>✦</span> A CARD ADVENTURE <span>✦</span></div>
             <h1 id="game-title">BOOSTER<br /><span>TUTOR</span></h1>
-            <p class="subtitle">Ein Mana-Roguelike</p>
-            <p class="intro">Öffne Booster. Baue dein Deck. Überlebe den Run.</p>
-            <button class="primary-button" id="start-button"><span>▶</span> RUN STARTEN</button>
-            <div class="start-note"><span class="keycap">ENTER</span> oder klicken zum Starten</div>
+            <p class="subtitle">A Mana Roguelike</p>
+            <p class="intro">Open boosters. Build your deck. Survive the run.</p>
+            <button class="primary-button" id="start-button"><span>▶</span> START RUN</button>
+            <div class="start-note"><span class="keycap">ENTER</span> or click to begin</div>
           </div>
           <div class="title-monster" aria-hidden="true">
             <div class="monster-horns"></div>
@@ -42,18 +42,18 @@
           <div class="title-ground" aria-hidden="true"></div>
         </div>
         <div class="feature-row">
-          <div class="feature"><span>01</span><b>Draften</b><small>Wähle aus drei Boostern mit je fünf Karten.</small></div>
-          <div class="feature"><span>02</span><b>Kämpfen</b><small>Nutze Mana, Kreaturen und Zauber.</small></div>
-          <div class="feature"><span>03</span><b>Aufsteigen</b><small>Besiege Bosse und baue dein Deck aus.</small></div>
+          <div class="feature"><span>01</span><b>Draft</b><small>Choose from three boosters with five cards each.</small></div>
+          <div class="feature"><span>02</span><b>Battle</b><small>Use mana, creatures, and spells.</small></div>
+          <div class="feature"><span>03</span><b>Advance</b><small>Defeat bosses and grow your deck.</small></div>
         </div>
-        <div class="api-status" id="start-api-status">KARTENQUELLE: <span>NOCH NICHT VERBUNDEN</span></div>
+        <div class="api-status" id="start-api-status">CARD SOURCE: <span>NOT CONNECTED</span></div>
       </section>
 
       <section class="screen loading-screen" id="loading-screen" aria-live="polite">
         <div class="loading-frame">
           <div class="loading-gem">✦</div>
-          <h2>Booster werden gemischt…</h2>
-          <p id="loading-message">Verbinde mit der Kartendatenbank.</p>
+          <h2>Shuffling boosters…</h2>
+          <p id="loading-message">Connecting to the card database.</p>
           <div class="loading-bar"><i></i></div>
         </div>
       </section>
@@ -62,100 +62,106 @@
         <div class="screen-heading">
           <div>
             <div class="eyebrow">DRAFT PHASE <span id="draft-step">01 / 01</span></div>
-            <h2 id="draft-title">Booster geöffnet</h2>
-            <p id="draft-instruction">Wähle Karten für dein Deck.</p>
+            <h2 id="draft-title">Booster opened</h2>
+            <p id="draft-instruction">Choose cards for your deck.</p>
           </div>
-          <div class="deck-counter"><span>DEIN DECK</span><b id="deck-count">0</b><small>KARTEN</small></div>
+          <div class="deck-counter"><span>YOUR DECK</span><b id="deck-count">0</b><small>CARDS</small></div>
         </div>
-        <div class="pack-ribbon"><span>✦</span> BOOSTER-PACK <span id="pack-number">01</span> <span>✦</span></div>
+        <div class="pack-ribbon"><span>✦</span> BOOSTER PACK <span id="pack-number">01</span> <span>✦</span></div>
         <div class="draft-grid" id="draft-grid"></div>
         <div class="draft-footer">
-          <p class="selection-status" id="selection-status">Wähle 2 Karten.</p>
-          <button class="primary-button" id="draft-confirm" disabled>INS DECK <span>→</span></button>
+          <p class="selection-status" id="selection-status">Choose one card from each booster.</p>
+          <button class="primary-button" id="draft-confirm" disabled>BUILD DECK <span>→</span></button>
         </div>
-        <div class="source-note">Kartendaten und Kartenbilder werden beim Spielen von Scryfall geladen.</div>
+        <div class="source-note">Card data and card images are loaded from Scryfall while you play.</div>
       </section>
 
       <section class="screen combat-screen" id="combat-screen" aria-labelledby="enemy-name">
         <div class="combat-topline">
           <div class="run-progress"><span>RUN</span><b id="node-counter">01</b><div class="progress-pips" id="progress-pips"></div></div>
-          <div class="combat-location"><small>ORT</small><b id="location-name">DIE VERGESSENE LICHTUNG</b></div>
-          <button class="quiet-button" id="quit-button">RUN AUFGEBEN</button>
+          <div class="combat-location"><small>LOCATION</small><b id="location-name">THE FORGOTTEN GLADE</b></div>
+          <button class="quiet-button" id="quit-button">ABANDON RUN</button>
         </div>
 
         <div class="battlefield arena-table">
-          <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Dein Spielfeld. Hier Kreaturen und Länder ablegen.">
+          <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Your battlefield. Drop creatures and lands here.">
             <div class="side-header player-side-header">
               <div class="player-avatar" aria-hidden="true"><div class="avatar-cape"></div><div class="avatar-head"></div><div class="avatar-eye"></div><div class="avatar-staff">✦</div></div>
               <div class="side-identity">
-                <span class="player-rank">PLANESWALKER</span><h2>Du</h2>
-                <div class="health-label"><span>LEBEN</span><b id="player-health-label">30 / 30</b></div>
+                <span class="player-rank">PLANESWALKER</span><h2>You</h2>
+                <div class="health-label"><span>LIFE</span><b id="player-health-label">30 / 30</b></div>
                 <div class="health-bar player-health-bar"><i id="player-health-fill"></i></div>
               </div>
-              <div class="mana-display"><span class="mana-symbol">◆</span><div><small>MANA</small><b id="mana-label">0 / 0</b><small id="land-status">Land pro Zug verfügbar</small></div></div>
+              <div class="mana-display"><span class="mana-symbol">◆</span><div><small>MANA</small><b id="mana-label">0 / 0</b><small id="land-status">Land drop available</small></div></div>
             </div>
-            <div class="arena-zone-header"><span>DEINE LÄNDER</span><small id="land-count">0</small></div>
-            <div class="land-row drop-zone" id="land-row" data-zone="lands" aria-label="Länderzone. Landkarten hier ablegen."></div>
-            <div class="arena-zone-header creatures-zone-header"><span>DEINE KREATUREN</span><small id="creature-count">0 / 3</small></div>
-            <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Kreaturenfeld. Kreaturen hier ablegen. Klicke eine Kreatur an, um sie zum Blocken zurückzuhalten."><div class="empty-board">Kreaturen hier ablegen oder eine Karte ausspielen.</div></div>
-            <div class="drop-hint">Kreaturen und Länder hier ablegen</div>
+            <div class="arena-zone-header"><span>YOUR LANDS</span><small id="land-count">0</small></div>
+            <div class="land-row drop-zone" id="land-row" data-zone="lands" aria-label="Land zone. Drop land cards here."></div>
+            <div class="arena-zone-header creatures-zone-header"><span>YOUR CREATURES</span><small id="creature-count">0 / 3</small></div>
+            <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Creature zone. Drop creatures here. Click a creature to hold it back for blocking."><div class="empty-board">Drop creatures here or play one from your hand.</div></div>
+            <div class="drop-hint">Drag creatures and lands here to play them</div>
           </section>
 
           <div class="versus-mark" aria-hidden="true"><span>VS</span><i></i></div>
 
-          <section class="enemy-panel arena-side drop-zone" id="enemy-drop-zone" data-side="enemy" aria-label="Gegnerisches Spielfeld. Zauber hier ablegen.">
+          <section class="enemy-panel arena-side drop-zone" id="enemy-drop-zone" data-side="enemy" aria-label="Enemy battlefield. Drop spells here to target the enemy.">
             <div class="side-header enemy-side-header">
               <div class="side-identity enemy-identity">
-                <span class="enemy-rank" id="enemy-rank">GEGENSPIELER</span><h2 id="enemy-name">Moosgoblin</h2>
-                <div class="health-label"><span>LEBEN</span><b id="enemy-health-label">22 / 22</b></div>
-                <div class="health-bar enemy-health-bar"><i id="enemy-health-fill"></i></div>
+                <span class="enemy-rank" id="enemy-rank">SKIRMISH</span><h2 id="enemy-name">Mosswood Ambush</h2>
+                <div class="health-label"><span>ENEMIES LEFT</span><b id="enemy-count-label">2 ENEMIES REMAIN</b></div>
               </div>
               <div class="enemy-art" id="enemy-art" aria-hidden="true"><img id="enemy-art-image" alt="" /><span class="enemy-sprite">♟</span><div class="enemy-shadow"></div></div>
             </div>
-            <div class="arena-zone-header"><span>GEGNERISCHES SPIELFELD</span><small>GEGENSPIELER</small></div>
-            <div class="enemy-board" id="enemy-board" aria-label="Gegnerische Kreaturen und Angriffe"><div class="enemy-intent" id="enemy-intent"><span class="intent-icon">⚔</span><span>Angriff geplant</span><b>4</b></div></div>
-            <div class="drop-hint">Gegnerische Angreifer wählen, um Blocker zuzuweisen</div>
+            <div class="arena-zone-header"><span>ENEMY BATTLEFIELD</span><small id="enemy-board-label">CREATURES</small></div>
+            <div class="enemy-board" id="enemy-board" aria-label="Enemy creatures and attacks"><div class="enemy-intent" id="enemy-intent"><span class="intent-icon">⚔</span><span>Enemies prepare to attack</span><b>0</b></div></div>
+            <div class="drop-hint">Choose enemy attackers to assign your blockers</div>
           </section>
         </div>
 
         <div class="battle-log-panel">
-          <div class="log-header"><span>RUNENCHRONIK</span><span id="turn-label">ZUG 1</span></div>
+          <div class="log-header"><span>BATTLE LOG</span><span id="turn-label">TURN 1</span></div>
           <div class="battle-log" id="battle-log" aria-live="polite"></div>
         </div>
 
         <div class="hand-panel">
-          <div class="hand-heading"><div><span>DEINE HAND</span><small id="hand-count">0 KARTEN</small></div><div class="hand-help" id="combat-action-hint">Karten aus deinem Deck · ziehe auf ein Feld oder klicke zum Spielen</div></div>
+          <div class="hand-heading"><div><span>YOUR HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
           <div class="hand-row" id="hand-row"></div>
           <div class="turn-footer">
-            <div class="discard-info"><span>⬇</span> Friedhof <b id="discard-count">0</b><span class="library-count">Bibliothek</span> <b id="library-count">0</b></div>
-            <button class="mulligan-button" id="mulligan-button" type="button">KOSTENLOSER MULLIGAN <span>↻</span></button>
-            <button class="end-turn-button" id="end-turn-button">ZUG BEENDEN <span>→</span></button>
+            <div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><span class="library-count">Library</span> <b id="library-count">0</b></div>
+            <button class="mulligan-button" id="mulligan-button" type="button">FREE MULLIGAN <span>↻</span></button>
+            <button class="end-turn-button" id="end-turn-button">END TURN <span>→</span></button>
           </div>
         </div>
-        <div class="source-note combat-source-note">Fan-Prototyp · Effekte werden vereinfacht interpretiert · Kartendaten von Scryfall</div>
+        <div class="source-note combat-source-note">Fan prototype · Card effects are simplified · Card data from Scryfall</div>
       </section>
 
       <section class="screen end-screen" id="end-screen" aria-labelledby="end-title">
         <div class="end-emblem" id="end-emblem">✦</div>
-        <div class="eyebrow" id="end-eyebrow">RUN BEENDET</div>
-        <h2 id="end-title">Der Pfad endet hier.</h2>
+        <div class="eyebrow" id="end-eyebrow">RUN OVER</div>
+        <h2 id="end-title">The path ends here.</h2>
         <p id="end-message"></p>
         <div class="run-summary" id="run-summary"></div>
-        <button class="primary-button" id="restart-button">NEUEN RUN STARTEN <span>↻</span></button>
-        <a class="text-link" href="#start" id="back-link">ZUR TITELSEITE</a>
+        <button class="primary-button" id="restart-button">START A NEW RUN <span>↻</span></button>
+        <a class="text-link" href="#start" id="back-link">BACK TO TITLE</a>
       </section>
     </main>
 
     <footer class="site-footer">
-      <span>Booster Tutor · Inoffizieller Fan-Prototyp</span>
-      <span>Inoffiziell · <a href="https://scryfall.com" target="_blank" rel="noreferrer">Kartendatenquelle: Scryfall</a> · <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noreferrer">Wizards Fan-Content-Richtlinie</a></span>
+      <span>Booster Tutor · Unofficial fan prototype</span>
+      <span>Unofficial · <a href="https://scryfall.com" target="_blank" rel="noreferrer">Card data: Scryfall</a> · <a href="https://company.wizards.com/en/legal/fancontentpolicy" target="_blank" rel="noreferrer">Wizards Fan Content Policy</a></span>
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="card-preview" id="card-preview" role="tooltip" hidden></div>
+    <dialog class="graveyard-dialog" id="graveyard-dialog" aria-labelledby="graveyard-title">
+      <div class="graveyard-heading"><div><span class="eyebrow">CARD ZONE</span><h2 id="graveyard-title">Your Graveyard</h2></div><button class="graveyard-close" id="graveyard-close" type="button" aria-label="Close graveyard">×</button></div>
+      <p class="graveyard-note">Spells you cast and creatures that die end up here.</p>
+      <div class="graveyard-grid" id="graveyard-grid"></div>
+      <p class="graveyard-empty" id="graveyard-empty">Your graveyard is empty.</p>
+    </dialog>
     <dialog class="confirm-dialog" id="quit-dialog">
-      <h2>Run aufgeben?</h2>
-      <p>Dein aktueller Fortschritt geht verloren.</p>
-      <div><button class="quiet-button" id="quit-cancel">WEITERSPIELEN</button><button class="danger-button" id="quit-confirm">AUFGEBEN</button></div>
+      <h2>Abandon this run?</h2>
+      <p>Your current progress will be lost.</p>
+      <div><button class="quiet-button" id="quit-cancel">KEEP PLAYING</button><button class="danger-button" id="quit-confirm">ABANDON</button></div>
     </dialog>
   </body>
 </html>
