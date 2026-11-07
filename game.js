@@ -88,6 +88,7 @@ function walkerPortrait(kind) {
 }
 
 function showScreen(id) {
+  if (id !== 'draft-screen') cancelBoosterTravel();
   state.screen = id;
   hideCardPreview();
   updatePhaseDisplay();
@@ -467,6 +468,7 @@ function selectedDraftCards() {
 }
 
 function renderDraft() {
+  if (state.boosterSealed) cancelBoosterTravel();
   const starter = state.draftKind === 'starter';
   const packIndex = state.activePack || 0;
   const chosen = state.selection.has(packIndex);
@@ -489,14 +491,11 @@ function renderDraft() {
 
 $('#draft-grid').addEventListener('click', (event) => {
   if (event.target.closest('[data-open-pack]')) {
-    if (!state.boosterSealed) return;
-    state.boosterSealed = false;
-    renderDraft();
-    animateBoosterOpening();
+    openCurrentBooster();
     return;
   }
   const button = event.target.closest('.draft-option');
-  if (!button) return;
+  if (!button || boosterTravel) return;
   const packIndex = Number(button.dataset.packIndex);
   const cardIndex = Number(button.dataset.cardIndex);
   if (!Number.isInteger(packIndex) || !Number.isInteger(cardIndex) || !state.packs[packIndex]?.[cardIndex]) return;
@@ -550,6 +549,7 @@ $('#creature-row').addEventListener('click', (event) => {
 
 
 function confirmDraft() {
+  if (boosterTravel) return;
   const starter = state.draftKind === 'starter';
   if (starter && (state.activePack || 0) < STARTER_BOOSTER_COUNT - 1) {
     if (!state.selection.has(state.activePack || 0)) return;
@@ -1756,19 +1756,146 @@ function showToast(message) {
   state.toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000);
 }
 
+function primeBoosterOpeningSound() {
+  if (!state.soundOn) return;
+  // Start the media element silently in the tap gesture. Safari can then keep
+  // playing it when the visible tear happens after the travel animation.
+  const audio = $('#booster-audio');
+  const context = soundEngine.context ||= new (window.AudioContext || window.webkitAudioContext)();
+  context.resume().catch(() => {});
+  if (!soundEngine.packGain) {
+    soundEngine.packSource = context.createMediaElementSource(audio);
+    soundEngine.packGain = context.createGain();
+    soundEngine.packSource.connect(soundEngine.packGain);
+    soundEngine.packGain.connect(context.destination);
+  }
+  soundEngine.packGain.gain.value = 0;
+  audio.currentTime = 0;
+  audio.volume = 0.72;
+  audio.play().catch(() => {});
+}
+
 function playBoosterOpeningSound() {
   if (!state.soundOn) return;
   const audio = $('#booster-audio');
-  audio.pause();
+  if (soundEngine.packGain) soundEngine.packGain.gain.value = 1;
   audio.currentTime = 0;
   audio.volume = 0.72;
   audio.play().catch(() => showToast('Click SOUND once to enable audio.'));
+}
+
+let boosterTravel = null;
+function cancelBoosterTravel() {
+  if (!boosterTravel) return;
+  const travel = boosterTravel;
+  boosterTravel = null;
+  travel.animation?.cancel();
+  if (soundEngine.packGain) {
+    $('#booster-audio').pause();
+    $('#booster-audio').currentTime = 0;
+  }
+  travel.pack.remove();
+  $('#draft-screen').classList.remove('pack-travelling');
+  $('#draft-grid').removeAttribute('aria-busy');
+}
+
+async function openCurrentBooster() {
+  if (!state.boosterSealed || boosterTravel) return;
+  const pack = $('#draft-grid .sealed-pack');
+  if (!pack) return;
+  const source = pack.getBoundingClientRect();
+  const packWidth = pack.offsetWidth;
+  const packHeight = pack.offsetHeight;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const style = getComputedStyle(pack);
+  const transform = style.transform;
+  const pulse = parseFloat(style.scale) || 1;
+  state.boosterSealed = false;
+  if (reduced || !pack.animate) {
+    renderDraft();
+    animateBoosterOpening();
+    return;
+  }
+  const matrix = new DOMMatrixReadOnly(transform === 'none' ? undefined : transform);
+  const angle = Math.atan2(matrix.b, matrix.a) * 180 / Math.PI;
+  try { primeBoosterOpeningSound(); } catch { /* Audio is optional. */ }
+  const travel = { pack, cards: state.packs[state.activePack || 0], index: state.activePack || 0, revealed: false };
+  boosterTravel = travel;
+  const screen = $('#draft-screen');
+  screen.classList.add('pack-travelling');
+  renderDraft();
+  const grid = $('#draft-grid');
+  const rect = grid.getBoundingClientRect();
+  const target = $('#draft-grid .card-image-wrap').getBoundingClientRect();
+  const scale = grid.clientWidth / rect.width;
+  const from = { x: (source.left + source.width / 2 - rect.left) * scale, y: (source.top + source.height / 2 - rect.top) * scale };
+  const to = { x: (target.left + target.width / 2 - rect.left) * scale, y: (target.top + target.height / 2 - rect.top) * scale };
+  const endScale = Math.min(target.width * scale / packWidth, target.height * scale / packHeight);
+  const pose = (point, tilt, size) => `translate(${point.x - packWidth / 2}px,${point.y - packHeight / 2}px) rotate(${tilt}deg) scale(${size})`;
+  const landed = pose(to, 0, endScale);
+  pack.classList.add('pack-opening-flight');
+  pack.disabled = true;
+  pack.setAttribute('aria-hidden', 'true');
+  pack.removeAttribute('data-open-pack');
+  pack.style.transform = landed;
+  grid.append(pack);
+  grid.setAttribute('aria-busy', 'true');
+  $('#pack-reroll').disabled = true;
+  $('#draft-confirm').disabled = true;
+  $('#selection-status').textContent = 'Moving your booster into place…';
+  const current = () => boosterTravel === travel && state.screen === 'draft-screen' && state.packs[travel.index] === travel.cards;
+  const reveal = () => {
+    if (!current() || travel.revealed) return;
+    travel.revealed = true;
+    screen.classList.remove('pack-travelling');
+    animateBoosterOpening();
+  };
+  try {
+    travel.animation = pack.animate([
+      { transform: pose(from, angle, pulse) },
+      { transform: landed }
+    ], { duration: 460, easing: 'cubic-bezier(.22,.75,.24,1)', fill: 'forwards' });
+    await travel.animation.finished;
+    if (!current()) return;
+    travel.animation.cancel();
+    // Sound, sparks and card reveals start only after the pack has arrived.
+    reveal();
+    pack.classList.add('is-unsealing');
+    travel.animation = pack.animate([
+      { opacity: 1, transform: landed, filter: 'brightness(1)' },
+      { opacity: 0, transform: pose(to, 0, endScale * 1.12), filter: 'brightness(1.8)' }
+    ], { duration: 260, easing: 'ease-out', fill: 'forwards' });
+    await travel.animation.finished;
+  } catch {
+    reveal(); // A cancelled/unsupported effect must never block card selection.
+  } finally {
+    if (boosterTravel === travel) {
+      boosterTravel = null;
+      travel.animation?.cancel();
+      pack.remove();
+      screen.classList.remove('pack-travelling');
+      grid.removeAttribute('aria-busy');
+      if (state.screen === 'draft-screen') {
+        $('#pack-reroll').disabled = Boolean(state.rerolledPacks?.has(travel.index));
+        $('#selection-status').textContent = 'Choose one of seven cards.';
+      }
+    }
+  }
 }
 
 function animateBoosterOpening() {
   const screen = $('#draft-screen');
   clearTimeout(state.openingTimer);
   screen.classList.remove('opening');
+  const grid = $('#draft-grid');
+  const card = $('#draft-grid .card-image-wrap');
+  if (card) {
+    const rect = grid.getBoundingClientRect();
+    const target = card.getBoundingClientRect();
+    const scale = grid.clientWidth / rect.width;
+    grid.style.setProperty('--pack-open-x', `${(target.left + target.width / 2 - rect.left) * scale}px`);
+    grid.style.setProperty('--pack-open-y', `${(target.top + target.height / 2 - rect.top) * scale}px`);
+  }
   void screen.offsetWidth;
   screen.classList.add('opening');
   state.openingTimer = setTimeout(() => screen.classList.remove('opening'), 1800);
@@ -1870,6 +1997,7 @@ $('#card-preview').addEventListener('pointerleave', event => { if (event.pointer
 $('#graveyard-pile').addEventListener('click', () => { hideCardPreview(); $('#graveyard-dialog').showModal(); });
 
 function rerollCurrentPack() {
+  if (boosterTravel) return;
   const index = state.activePack || 0;
   state.rerolledPacks ||= new Set();
   if (state.boosterSealed || state.rerolledPacks.has(index)) return;

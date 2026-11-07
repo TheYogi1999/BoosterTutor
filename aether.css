@@ -35,6 +35,13 @@ html.portrait-combat .game-shell #enemy-board,html.portrait-combat .game-shell .
 .game-shell .sealed-pack:hover{box-shadow:0 25px 65px #0009,0 0 65px #ff8a3d55}
 .game-shell .sealed-pack{animation:booster-breathe 3.4s ease-in-out infinite}
 @keyframes booster-breathe{0%,100%{translate:0 0;scale:1}50%{translate:0 -12px;scale:1.015}}
+.game-shell .draft-screen.pack-travelling .booster-pack{visibility:hidden;pointer-events:none}
+.game-shell .pack-opening-flight{position:absolute!important;left:0;top:0;margin:0!important;z-index:110;animation:none!important;translate:none!important;scale:1!important;transition:none!important;transform-origin:center;pointer-events:none;cursor:default}
+.game-shell .pack-opening-flight.is-unsealing:after{content:'';position:absolute;left:-10%;right:-10%;top:19%;height:3px;background:#ffe9bd;box-shadow:0 0 12px 5px #ff9f3cbb;transform:rotate(-7deg);animation:pack-tear .26s ease-out both}
+.game-shell .reveal-sparks i{left:var(--pack-open-x,50%);top:var(--pack-open-y,45%)}
+@keyframes pack-tear{from{opacity:0;scale:.1 1}40%{opacity:1;scale:1 1}to{opacity:0;scale:1.15 2}}
+.game-shell .draft-screen.opening .draft-grid:after{inset:auto;left:var(--pack-open-x,50%);top:var(--pack-open-y,45%);width:260px;height:300px;background:radial-gradient(ellipse,#ffd69da6,#ff922d44 35%,transparent 68%);animation:pack-slot-glow .75s ease-out both!important}
+@keyframes pack-slot-glow{from{opacity:1;transform:translate(-50%,-50%) scale(.55)}to{opacity:0;transform:translate(-50%,-50%) scale(1.4)}}
 .game-shell .pack-foil{background:linear-gradient(110deg,transparent 15%,#ffd18a88 45%,transparent 65%)}
 .game-shell .pack-emblem{color:#ffb25d;text-shadow:0 0 26px #ff9c3788}
 .game-shell .pack-particles{color:#ffb15e}
