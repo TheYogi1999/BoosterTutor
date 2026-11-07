@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0b1015" />
-    <meta name="description" content="Booster Tutor is an unofficial mana roguelike demo with a booster draft and dynamically loaded Magic cards." />
+    <meta name="description" content="Booster Tutor is a free, unofficial browser roguelike with a six-pack Magic draft, mana cards, and country-themed encounters." />
     <title>Booster Tutor — The Aether Expedition</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="arena.css" />
@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="polish.css" />
     <link rel="stylesheet" href="adventure.css" />
     <link rel="stylesheet" href="market.css" />
+    <link rel="stylesheet" href="country.css" />
     <script src="cards.js" defer></script>
     <script src="sounds.js" defer></script>
     <script src="game.js" defer></script>
@@ -27,7 +28,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.13 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.14 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -41,26 +42,27 @@
             <h1 id="game-title">YOUR DECK.<br /><span>YOUR ADVENTURE.</span></h1>
             <p class="subtitle">The Aether Expedition</p>
             <p class="intro">Open real Magic boosters, forge your strategy, and face the creatures of the Aether. Every card shapes your journey.</p>
+            <div class="avatar-picker" role="group" aria-label="Choose your planeswalker avatar"><span>CHOOSE YOUR AVATAR</span><div id="avatar-choices"></div></div>
             <button class="primary-button" id="start-button"><span>▶</span> BEGIN EXPEDITION</button>
-            <button class="quiet-button catalog-launch" id="card-catalog-button">Browse 48 verified cards →</button>
+            <button class="quiet-button catalog-launch" id="card-catalog-button">Browse the Magic card pool →</button>
             <div class="start-note"><span class="keycap">ENTER</span> or click to begin</div>
           </div>
-          <div class="hero-card-stack" aria-hidden="true"><img src="assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg" alt="" draggable="false"><img src="assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg" alt="" draggable="false"><img src="assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg" alt="" draggable="false"><span>REAL CARDS. YOUR DECISIONS.</span></div>
+          <div class="hero-card-stack" aria-hidden="true"><img src="assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg" alt="" draggable="false"><img src="assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg" alt="" draggable="false"><img src="assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg" alt="" draggable="false"><span>REAL CARDS. YOUR DECISIONS.</span><i class="hero-avatar" id="hero-avatar"><span data-avatar-symbol>✦</span></i></div>
           <div class="title-ground" aria-hidden="true"></div>
         </div>
         <div class="feature-row">
-          <div class="feature"><span>01</span><b>Open & choose</b><small>Three boosters. Seven cards each. One pack at a time.</small></div>
-          <div class="feature"><span>02</span><b>Master your deck</b><small>One mana pool for every colour. Start with seven cards.</small></div>
+          <div class="feature"><span>01</span><b>Open & choose</b><small>Six boosters. Pick one card from each and get two copies.</small></div>
+          <div class="feature"><span>02</span><b>Master your deck</b><small>Draw and play mana cards. Start at 20 life with two lands in play.</small></div>
           <div class="feature"><span>03</span><b>Conquer the Aether</b><small>Read monster intentions. Discover relics. Defeat the dragon.</small></div>
         </div>
-        <div class="api-status" id="start-api-status">CARD POOL: <span>48 REAL MAGIC CARDS · OFFLINE READY</span></div>
+        <div class="api-status" id="start-api-status">CARD POOL: <span>EXPANDED MAGIC CARD LIST · SCRYFALL</span></div>
       </section>
 
       <section class="screen loading-screen" id="loading-screen" aria-live="polite">
         <div class="loading-frame">
           <div class="loading-gem">✦</div>
           <h2>Shuffling boosters…</h2>
-          <p id="loading-message">Preparing the bundled card pool.</p>
+          <p id="loading-message">Preparing the curated card pool.</p>
           <div class="loading-bar"><i></i></div>
         </div>
       </section>
@@ -81,7 +83,7 @@
           <button class="quiet-button" id="pack-reroll" disabled>↻ Reroll pack · 1×</button>
           <button class="primary-button" id="draft-confirm" disabled>BUILD DECK <span>→</span></button>
         </div>
-        <div class="source-note">48 verified Magic cards · Original images bundled · 7 cards per pack</div>
+        <div class="source-note">Cards and images load from Scryfall · 7 cards per booster</div>
       </section>
 
       <section class="screen combat-screen" id="combat-screen" aria-labelledby="enemy-name">
@@ -95,13 +97,14 @@
           <svg class="combat-arrows" id="combat-arrows" aria-label="Planned attacks and blocks" role="img"></svg>
           <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Your battlefield on the left. Drop creatures, auras and equipment here.">
             <div class="side-header player-side-header">
-              <div class="player-avatar" aria-hidden="true"><div class="avatar-cape"></div><div class="avatar-head"></div><div class="avatar-eye"></div><div class="avatar-staff">✦</div></div>
+              <div class="player-avatar" id="player-avatar" data-avatar="mage" aria-hidden="true"><span data-avatar-symbol>✦</span></div>
               <div class="side-identity" id="player-target">
                 <span class="player-rank">PLANESWALKER</span>
-                <div class="health-label"><span>LIFE</span><b id="player-health-label">30</b></div>
+                <div class="health-label"><span>LIFE</span><b id="player-health-label">20</b></div>
                 <div class="shield-label" id="shield-label">0 shield</div>
               </div>
               <div class="mana-display"><span class="mana-symbol">◆</span><div><small>MANA</small><b id="mana-label">0 / 0</b></div></div>
+              <div class="mana-land-row" id="mana-land-row" aria-label="Mana cards in play"></div>
             </div>
             <div class="arena-zone-header creatures-zone-header"><span>YOUR CREATURES</span><small id="creature-count">0 / 3</small></div>
             <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Creature zone. Drop creatures here. Click a creature to hold it back for blocking."><div class="empty-board">Drop creatures here or play one from your hand.</div></div>
