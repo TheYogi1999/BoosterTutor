@@ -5,3 +5,5 @@
 - `expedition-start.mp3`: Kenney **Music Jingles**, `jingles_PIZZA09`, shortened, filtered, faded and mastered to -25 LUFS. https://kenney.nl/assets/music-jingles — CC0. Original archive mirror: https://opengameart.org/content/85-short-music-jingles
 
 The retained `sfx-suite.mp3` contains the project's original quieter combat/health cues. No audio was extracted from MTG Arena or a video.
+
+- `rising-moon.mp3`: **Fantasy: Rising Moon** by RandomMind (MP3 metadata: RandomMynd), 2018. https://opengameart.org/content/fantasy-rising-moon — **CC0**. Original full composition, converted to 96 kbps stereo, normalized to -22 LUFS; the final eight seconds crossfade into the opening eight seconds for a circular ambient loop. A separate music volume control defaults to 35%, with gentle fade-in, master mute and hidden-tab pause. Not audio from MTG Arena.

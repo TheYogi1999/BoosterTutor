@@ -1,0 +1,17 @@
+/* Original foil treatment: moving light, prismatic ink and a gently floating fan. */
+#start-screen .hero-card{position:absolute;width:198px;aspect-ratio:488/680;left:30px;top:82px;--angle:-14deg;--delay:-2s;transform:rotate(var(--angle));perspective:900px;isolation:isolate}
+#start-screen .hero-card:nth-child(2){left:220px;top:20px;--angle:1deg;--delay:-5s;z-index:2}
+#start-screen .hero-card:nth-child(3){left:403px;top:92px;--angle:15deg;--delay:-8s}
+#start-screen .hero-card-face{position:absolute;inset:0;border-radius:11px;overflow:hidden;transform:rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg));transition:transform .35s ease-out;box-shadow:0 25px 40px #000a,0 0 0 1px #edcf9466,0 0 30px #d6a55822;animation:title-card-float 7s ease-in-out var(--delay) infinite}
+#start-screen .hero-card-stack .hero-card img{position:static;display:block;width:100%;height:100%;transform:none;box-shadow:none;border-radius:inherit}
+#start-screen .hero-card-face:before,#start-screen .hero-card-face:after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+#start-screen .hero-card-face:before{z-index:1;background:repeating-linear-gradient(125deg,#7df0ff00 0%,#73dbfa66 12%,#ba8bff66 22%,#ffbd7b77 32%,#fff3b866 40%,#7df0ff00 50%);background-size:350% 350%;mix-blend-mode:color-dodge;opacity:.38;animation:title-foil 11s ease-in-out var(--delay) infinite}
+#start-screen .hero-card-face:after{z-index:2;background:radial-gradient(ellipse at var(--light-x,45%) var(--light-y,35%),#fff4cc66,transparent 55%),linear-gradient(115deg,transparent 35%,#fff7d577 49%,transparent 63%);background-size:100% 100%,350% 100%;background-repeat:no-repeat;mix-blend-mode:screen;opacity:.55;animation:title-glint 9s ease-in-out var(--delay) infinite;box-shadow:inset 0 0 0 1px #ffe8bf66}
+#start-screen:not(.active) .hero-card-face,#start-screen:not(.active) .hero-card-face:before,#start-screen:not(.active) .hero-card-face:after,.ambience-paused .hero-card-face,.ambience-paused .hero-card-face:before,.ambience-paused .hero-card-face:after{animation-play-state:paused}
+@keyframes title-card-float{0%,100%{translate:0 0}50%{translate:0 -10px}}
+@keyframes title-foil{0%,100%{background-position:0% 20%}50%{background-position:100% 80%}}
+@keyframes title-glint{0%,25%{background-position:0 0,100% 0}75%,100%{background-position:0 0,0% 0}}
+.music-dialog{padding:38px 44px;border:1px solid #c8a66e;border-radius:12px;color:#efe8d9;background:radial-gradient(ellipse at 90% 0,#61503b44,transparent 65%),#14222e}
+html.fixed-game .music-dialog{width:680px!important;height:410px!important}
+.music-dialog header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.music-dialog h2{font:650 28px/1.3 var(--sans);margin:8px 0 16px}.music-dialog p{font:14px/1.6 var(--sans);color:#bdcbd0}.music-volume{display:flex;align-items:center;gap:16px;margin:24px 0}.music-volume input{flex:1;accent-color:#e2b978;min-width:0}.music-volume button{width:42px;height:40px;font-size:22px}.music-volume output{width:42px;font:600 15px var(--sans);color:#f4d5a3}.music-dialog .music-credit{font-size:12px;margin-top:22px}.music-credit a{color:#e2c38f}.music-dialog #music-status{min-height:23px;margin-bottom:0}
+@media(prefers-reduced-motion:reduce){#start-screen .hero-card-face,#start-screen .hero-card-face:before,#start-screen .hero-card-face:after{animation:none!important;transform:none!important;transition:none!important}}
