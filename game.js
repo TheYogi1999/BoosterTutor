@@ -36,9 +36,9 @@ const FALLBACK_LANDS = [
 ].map(([name, color]) => ({ id: `offline-${name.toLowerCase()}`, name, mana_cost: '', cmc: 0, type_line: `Basic Land — ${name}`, oracle_text: '{T}: Add one mana.', power: '', toughness: '', color_identity: [color], keywords: [], image: '', art: '', uri: `https://scryfall.com/search?q=!${name}`, verified: true }));
 const ENCOUNTERS = [
   { name: 'Mosswood Ambush', rank: 'SKIRMISH', location: 'THE FORGOTTEN GLADE', foeCount: 2 },
-  { name: 'Rune Hunter Patrol', rank: 'ELITE', location: 'THE BROKEN PASS', foeCount: 3 },
+  { name: 'Rune Hunter Patrol', rank: 'ELITE', location: 'THE BROKEN PASS', foeCount: 2 },
   { name: 'Thornwild Pack', rank: 'ELITE', location: 'THE ROOT VAULT', foeCount: 3 },
-  { name: 'The Shard Dragon', rank: 'BOSS', location: 'THE CROWN CHAMBER', foeCount: 4 }
+  { name: 'The Shard Dragon', rank: 'BOSS', location: 'THE CROWN CHAMBER', foeCount: 2 }
 ];
 
 const state = {
@@ -327,10 +327,16 @@ const FOE_TYPES = {
   dragon: { name: 'Shard Dragon', health: 60, power: 7, pattern: ['guard', 'attack', 'buff', 'attack'], keywords: ['flying','trample'], bounty: 40 }
 };
 function createEnemyTeam(encounter) {
-  const teams = [['sprout', 'wisp'], ['raider', 'sprout'], ['wolf', 'raider', 'wisp'], ['dragon', 'wisp']];
-  return teams[state.node - 1].map(kind => {
+  const node = ENCOUNTERS.indexOf(encounter) + 1 || state.node;
+  const support = Math.random() < 0.5 ? 'sprout' : 'wisp';
+  // Vary support and positioning without changing encounter sizes or allowing
+  // elite foes/dragons in the opening fight. The final boss stays recognizable.
+  const teams = [['sprout', support], ['raider', support], ['wolf', 'raider', support], ['dragon', support]];
+  const kinds = node === ENCOUNTERS.length ? teams[node - 1] : shuffle(teams[node - 1]);
+  return kinds.map(kind => {
     const template = FOE_TYPES[kind];
-    const card = { name: template.name, type_line: 'Monster', oracle_text: template.keywords.join(', ') };
+    const keywords = template.keywords.filter(keyword => node !== 1 || keyword !== 'hexproof');
+    const card = { name: template.name, type_line: 'Monster', oracle_text: keywords.join(', ') };
     return { id: `enemy-${state.nextPermanentId++}`, kind, card, ...creatureKeywords(card), bounty: template.bounty, owner: 'enemy', health: template.health, maxHealth: template.health, power: template.power, pattern: template.pattern, summonedTurn: 1, summoningSick: true };
   });
 }

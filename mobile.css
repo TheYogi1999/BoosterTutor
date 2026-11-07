@@ -8,7 +8,7 @@
 .draft-card-keywords{color:#b8d9dd}
 .game-shell .booster-pack{height:auto;min-height:450px}
 .game-shell .draft-grid{height:auto;min-height:460px;max-height:520px;overflow-y:auto;padding:12px 0}
-html:not(.responsive-game) .game-shell .draft-option .card-image-wrap{height:210px!important;aspect-ratio:auto}
+html:not(.responsive-game) .game-shell .draft-option .card-image-wrap{width:calc(210px * 488 / 680)!important;height:210px!important;aspect-ratio:488/680;margin-inline:auto}
 
 /* The combat canvas always fits the screen. Portrait uses opposing ranks so
    the whole board remains visible without horizontal or vertical scrolling. */

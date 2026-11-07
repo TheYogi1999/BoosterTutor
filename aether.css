@@ -50,8 +50,10 @@ html.portrait-combat .game-shell #enemy-board,html.portrait-combat .game-shell .
 .game-shell .pack-ribbon span{color:#ffae58}
 .game-shell .booster-pack{border-color:#d5833c77;background:linear-gradient(120deg,#3d281fbb,#192027 50%,#4c2c1c66)}
 .game-shell .booster-pack header{color:#ffc389}
-.game-shell .draft-option.selected{border-color:#ffb267!important;box-shadow:0 0 0 3px #ff9b3d33!important}
-.game-shell .draft-option.selected .card-image-wrap{box-shadow:0 0 0 2px #ffad6166,0 0 22px #ff7d2333}
+.game-shell .draft-option.selected{border-color:transparent!important;box-shadow:none!important}
+.game-shell .draft-option.selected .card-image-wrap{outline:2px solid #ffb267;outline-offset:2px;box-shadow:0 0 0 2px #ffad6166,0 0 22px #ff7d2333}
+.game-shell .draft-option:focus-visible{outline:none}
+.game-shell .draft-option:focus-visible .card-image-wrap{outline:2px solid #ffd49a;outline-offset:2px}
 .game-shell .draft-screen.opening .booster-pack{animation:ember-pack-reveal .65s ease-out both!important}
 .game-shell .draft-screen.opening .card-image-wrap:after{background:linear-gradient(110deg,transparent 12%,#ff9d38a6 42%,#ffe4b2dd 50%,transparent 78%)}
 .game-shell .reveal-sparks i{background:#ffb95f;box-shadow:0 0 12px 4px #ff7a3488}

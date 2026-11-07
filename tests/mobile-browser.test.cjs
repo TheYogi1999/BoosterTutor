@@ -88,7 +88,8 @@ async function assertVisibleBoard(page) {
     }
     await page.setViewportSize({width:390,height:844});
     await page.evaluate(()=>{state.battle.phase='blocks';renderBattle()});
-    await page.locator('.monster').first().tap();
+    const blockTarget=await page.evaluate(()=>state.battle.enemyCreatures.find(enemy=>canBlockCreature(state.battle.creatures[0],enemy)).id);
+    await page.locator(`[data-enemy-attacker="${blockTarget}"]`).tap();
     await page.locator('.creature-token').first().tap();
     assert.equal(await page.evaluate(()=>[...state.battle.blockAssignments.values()].flat().length),1,'touch assigns a blocker');
     await page.locator('#clear-blocks').tap();
