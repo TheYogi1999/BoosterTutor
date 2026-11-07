@@ -2,7 +2,7 @@
 
 **Booster Tutor** is a browser-based, unofficial mana roguelike demo with booster drafting, creature combat, and a boss run.
 
-**Demo version: 0.6**
+**Demo version: 0.7**
 
 ## Play
 
@@ -16,20 +16,29 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`. On startup, the game loads real card data and images from the Scryfall API. The selection is cached in the browser for 12 hours; a small set of demo cards is available offline.
 
-## Game systems
+## Game systems (0.7)
 
-- Start with three boosters of five cards each. Choose one card from every booster; each pick adds four copies to your deck.
-- Your starter deck also contains ten basic lands. Play up to one land per turn. Every land adds one shared mana, and any land can pay any card's total mana value. Colored symbols remain visible on cards but do not restrict payment.
-- Draw five cards at the start of a fight and automatically refill to five cards after each turn. If your library runs out, your graveyard is shuffled back in.
-- Before your first action in each fight, you can take one free mulligan and draw five new cards.
-- Play creatures by dragging them onto your battlefield or clicking them in your hand. Creatures attack at the end of your turn unless you click one to hold it back. Held-back creatures can block enemy attackers. Click an enemy attacker, then click one of your creatures to block it; you can also drag your blocker onto an attacker.
-- Each encounter starts with a team of creature-card enemies. They do not draw or cast cards. Every enemy has its own life bar and can be defeated by combat or spell damage. Enemies with summoning sickness wait until the next turn before attacking; haste can attack immediately. Artifact creatures are exempt from summoning sickness in this prototype.
-- Creatures that die go to your graveyard. Spells go there after you cast them. Open the Graveyard button to inspect the pile.
-- Flying can only be blocked by flying or reach. First strike and double strike use separate damage steps; deathtouch destroys creatures, and lifelink restores life. Recognized “until end of turn” effects expire after combat.
-- The booster opening has a card reveal animation and synthesized sound. You can turn sound off in the top bar.
-- Your life resets to 30 before every fight.
-- Some card text is interpreted through patterns for damage, healing, card draw, creature buffs, counterspells, and tokens. Unrecognized spell effects use a simple mana-based damage effect. This is a roguelike interpretation, not a complete Magic rules simulation.
-- After each encounter, choose a card as a reward. The fourth fight is the boss.
+- Draft one card from each of three five-card boosters. Each pick adds four copies; four starting creatures make a 16-card deck. No lands are required.
+- **Only generic mana:** the displayed cost is the card's total mana value. Colours never restrict casting. Printed original card images still contain their original Magic symbols.
+- Start a fight with 3 mana. Refill every turn; capacity grows by 1 every two turns, up to 6. Aether Crystal adds 1 starting mana (the cap remains 6).
+- Choose a permanent run relic: Aether Crystal for mana, or Ancient Ward for 4 shield at the start of each fight.
+- Four encounters on a visible adventure path lead to the Shard Dragon. Life carries between fights. After each reward, rest for 10 life or study to add a utility spell.
+- Draw five cards, refill your hand at the start of each turn, and recycle the graveyard when the library runs out. One free opening mulligan is available before your first action.
+- Click or drag to cast. Up to three allied creatures may be in play. Click a creature to hold it back, then choose an enemy attacker and your blocker during the blocking phase.
+- Flying, reach, first strike, double strike, deathtouch, haste, and lifelink have simplified combat implementations. Artifact creatures retain the prototype's immediate-attack rule.
+- Card effects use the prototype's text interpretation and explicit demo effects. Unrecognized spells deal generic damage. This is **not a full Magic rules engine**; complex card text is not faithfully simulated.
+- Progress lasts for the current page session. No saved runs or account are implemented.
+
+## Validation
+
+Requires Node.js 20+ for tests, no runtime dependencies:
+
+```sh
+node --check game.js
+node --test tests/game.test.cjs
+```
+
+Tests cover generic mana across colours, spell spending, mana growth, persistent life, relic mana, combat keywords, and the land-free starter draft. Browser and visual QA must be performed separately.
 
 ## Card data, images, and fan project notice
 

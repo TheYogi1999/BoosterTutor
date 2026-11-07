@@ -1,7 +1,7 @@
 const CARD_QUERY = 'game:paper lang:en (t:creature or t:instant or t:sorcery or t:artifact or t:enchantment) cmc<=5';
 const LAND_QUERY = 'game:paper lang:en t:basic t:land';
 const API_BASE = 'https://api.scryfall.com/cards/search?q=';
-const CACHE_KEY = 'booster-tutor-card-pool-arena-v3';
+const CACHE_KEY = 'booster-tutor-card-pool-arena-v4';
 const CACHE_TTL = 12 * 60 * 60 * 1000;
 const COLORS = ['W', 'U', 'B', 'R', 'G'];
 const COLOR_NAMES = { W: 'Plains', U: 'Island', B: 'Swamp', R: 'Mountain', G: 'Forest' };
@@ -57,7 +57,7 @@ const state = {
 };
 
 const $ = (selector) => document.querySelector(selector);
-const screens = ['start-screen', 'loading-screen', 'draft-screen', 'combat-screen', 'end-screen'];
+const screens = ['start-screen', 'loading-screen', 'draft-screen', 'combat-screen', 'journey-screen', 'end-screen'];
 
 function showScreen(id) {
   for (const screen of screens) $('#' + screen).classList.toggle('active', screen === id);
@@ -138,7 +138,7 @@ function normalizeCard(card) {
 }
 
 function validSpell(card) {
-  return card && card.name && !isLand(card) && card.cmc <= 5 && card.cmc >= 0 && !/\{C\}/i.test(card.mana_cost || '');
+  return card && card.name && !isLand(card) && card.cmc <= 5 && card.cmc >= 0 ;
 }
 
 function validBasicLand(card) {
@@ -147,7 +147,7 @@ function validBasicLand(card) {
 
 function apiSearch(query) {
   const url = API_BASE + encodeURIComponent(query) + '&order=random&unique=cards';
-  return fetch(url, { headers: { Accept: 'application/json' } }).then((response) => {
+  return fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(8000) }).then((response) => {
     if (!response.ok) throw new Error('Card service returned ' + response.status);
     return response.json();
   });
@@ -201,6 +201,8 @@ function chooseRandomCards(source, count) {
 
 function makeStarterPacks() {
   const cards = shuffle(state.pool);
+  const creatures = shuffle(state.pool.filter(isCreature));
+  if (creatures.length) { const i = cards.findIndex(c => c.id === creatures[0].id); cards.splice(i, 1); cards.unshift(creatures[0]); }
   while (cards.length < 15) cards.push(...shuffle(FALLBACK_CARDS));
   return [cards.slice(0, 5), cards.slice(5, 10), cards.slice(10, 15)];
 }
@@ -213,6 +215,7 @@ function startNewRun() {
     } catch { /* Sound is optional. */ }
   }
   state.deck = [];
+  state.relic = null;
   state.playerHealth = 30;
   state.node = 1;
   state.battle = null;
@@ -235,21 +238,14 @@ function startNewRun() {
 }
 
 function manaCostHtml(card) {
-  if (isLand(card)) return '<span class="mana-chip land-chip">LAND</span>';
-  const symbols = (card.mana_cost || '').match(/\{([^}]+)\}/g) || [];
-  if (!symbols.length) return `<span class="mana-chip">${Math.ceil(card.cmc || 0)}</span>`;
-  return symbols.map((symbol) => {
-    const value = symbol.slice(1, -1).replace('/', ' / ');
-    const color = COLORS.find((item) => value.includes(item)) || 'generic';
-    return `<span class="mana-chip mana-${color.toLowerCase()}">${escapeHtml(value)}</span>`;
-  }).join('');
+  return `<span class="mana-chip mana-generic" title="Generic mana">${Math.ceil(card.cmc || 0)}</span>`;
 }
 
 function parseStats(card) {
   const power = Number.parseInt(card.power, 10);
   const toughness = Number.parseInt(card.toughness, 10);
   return {
-    power: Number.isFinite(power) ? Math.max(1, power) : Math.max(1, Math.ceil(card.cmc / 2)),
+    power: Number.isFinite(power) ? Math.max(0, power) : Math.max(1, Math.ceil(card.cmc / 2)),
     toughness: Number.isFinite(toughness) ? Math.max(1, toughness) : Math.max(2, card.cmc)
   };
 }
@@ -263,8 +259,8 @@ function createEnemyCreature(card) {
     power: stats.power + bonus,
     toughness: stats.toughness + bonus,
     owner: 'enemy',
-    health: Math.max(6, (stats.toughness + bonus) * 2 + state.node),
-    maxHealth: Math.max(6, (stats.toughness + bonus) * 2 + state.node),
+    health: Math.max(3, stats.toughness + bonus + state.node),
+    maxHealth: Math.max(3, stats.toughness + bonus + state.node),
     summoningSick: !/\bArtifact\b/i.test(card.type_line || ''),
     summonedTurn: 1,
     tapped: false,
@@ -273,7 +269,7 @@ function createEnemyCreature(card) {
 }
 
 function createEnemyTeam(encounter) {
-  const source = state.pool.filter(isCreature);
+  const source = state.pool.filter(card => isCreature(card) && card.cmc <= Math.min(5, state.node + 1));
   const cards = shuffle(source.length ? source : FALLBACK_CARDS.filter(isCreature));
   while (cards.length < encounter.foeCount) cards.push(...shuffle(source.length ? source : FALLBACK_CARDS.filter(isCreature)));
   return cards.slice(0, encounter.foeCount).map(createEnemyCreature);
@@ -281,6 +277,8 @@ function createEnemyTeam(encounter) {
 
 function effectSummary(card) {
   const text = card.oracle_text || '';
+  if (card.id === 'demo-spark') return 'Draw 1 card · gain 3 shield';
+  if (card.id === 'demo-mending') return 'Restore 5 life';
   if (isLand(card)) return 'Land · adds 1 shared mana';
   if (isCreature(card)) {
     const stats = parseStats(card);
@@ -307,7 +305,7 @@ function makeCardMarkup(card, packIndex, cardIndex, selected) {
     ? `<img src="${escapeHtml(card.image)}" alt="${escapeHtml(card.name)} card image" loading="lazy" />`
     : '<div class="card-fallback-art" aria-hidden="true">✦</div>';
   const stat = isCreature(card) ? ` · ${escapeHtml(card.power || '?')}/${escapeHtml(card.toughness || '?')}` : '';
-  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" style="--card-index:${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${escapeHtml(card.type_line)}, ${escapeHtml(card.mana_cost || 'Land')}${selected ? ', selected' : ''}">
+  return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" style="--card-index:${cardIndex}" aria-pressed="${selected}" aria-label="${escapeHtml(card.name)}, ${escapeHtml(card.type_line)}, ${escapeHtml(String(Math.ceil(card.cmc || 0)) + ' generic mana')}${selected ? ', selected' : ''}">
     <div class="card-image-wrap">${image}<span class="card-cost card-mana-cost">${manaCostHtml(card)}</span></div>
     <span class="draft-card-name">${escapeHtml(card.name)}${stat}</span>
     <p class="draft-card-type">${escapeHtml(card.type_line)}</p>
@@ -344,7 +342,7 @@ function renderDraft() {
     return `<section class="booster-pack" style="--pack-index:${packIndex}"><header><span>BOOSTER ${String(packIndex + 1).padStart(2, '0')}</span><small>${selectedIndex === undefined ? 'CHOOSE 1 CARD' : '1 / 1 CHOSEN'}</small></header><div class="booster-cards">${pack.map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, selectedIndex === cardIndex)).join('')}</div></section>`;
   }).join('');
   $('#selection-status').textContent = starter
-    ? `Chosen: ${state.selection.size} / 3 boosters · Your starter deck will have 12 draft cards + 10 lands.`
+    ? `Chosen: ${state.selection.size} / 3 boosters · Your starter deck will have 12 draft cards + 4 starting creatures.`
     : `Chosen: ${state.selection.size} / 1 card · +4 copies`;
   $('#draft-confirm').disabled = !picks;
   $('#draft-confirm').innerHTML = starter ? 'BUILD DECK <span>→</span>' : 'ADD CARD <span>→</span>';
@@ -433,10 +431,9 @@ function confirmDraft() {
     return;
   }
   for (const card of selected) for (let i = 0; i < 4; i += 1) state.deck.push(card);
-  if (starter) state.deck.push(...generateStarterLands(10));
+  if (starter) state.deck.push(...FALLBACK_CARDS.filter(isCreature).slice(0, 2).flatMap(card => [card, card]));
   state.selection.clear();
-  if (starter) beginBattle(1);
-  else beginBattle(state.node);
+  showJourney();
 }
 
 function cardColor(card) {
@@ -457,14 +454,15 @@ function generateStarterLands(total) {
 
 function beginBattle(node) {
   state.node = node;
-  state.playerHealth = 30;
   const enemy = ENCOUNTERS[node - 1];
   const enemyCreatures = createEnemyTeam(enemy);
   state.battle = {
     enemy,
     enemyArt: enemyCreatures[0]?.card.art || '',
     enemyCreatures,
-    playerBlock: 0,
+    playerBlock: state.relic === 'ward' ? 4 : 0,
+    mana: state.relic === 'crystal' ? 4 : 3,
+    maxMana: state.relic === 'crystal' ? 4 : 3,
     mulliganAvailable: true,
     landAvailable: true,
     turn: 1,
@@ -481,7 +479,7 @@ function beginBattle(node) {
     log: []
   };
   drawToHand(5);
-  addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures. Play a land from your hand to make mana.`);
+  addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures. Your generic mana refills each turn. Defeat every enemy to advance.`);
   renderBattle();
   showScreen('combat-screen');
   playSound(330, 0.1);
@@ -524,10 +522,7 @@ function freeMulligan() {
 }
 
 function paymentPlan(card) {
-  const battle = state.battle;
-  const cost = Math.ceil(card.cmc || 0);
-  const available = battle.lands.filter((land) => !land.tapped);
-  return available.length >= cost ? available.slice(0, cost) : null;
+  return state.battle && state.battle.mana >= Math.ceil(card.cmc || 0) ? [] : null;
 }
 
 function defaultTarget(card) {
@@ -604,7 +599,7 @@ function showCardPreview(card) {
   const image = card.image
     ? `<img class="card-preview-image" src="${escapeHtml(card.image)}" alt="${escapeHtml(card.name)}" />`
     : '<div class="card-preview-fallback">✦</div>';
-  preview.innerHTML = `${image}<div class="card-preview-copy"><b>${escapeHtml(card.name)}</b><small>${escapeHtml(card.type_line || '')} · ${escapeHtml(card.mana_cost || 'No mana cost')}</small><p>${escapeHtml(card.oracle_text || effectSummary(card))}</p></div>`;
+  preview.innerHTML = `${image}<div class="card-preview-copy"><b>${escapeHtml(card.name)}</b><small>${escapeHtml(card.type_line || '')} · ${escapeHtml(String(Math.ceil(card.cmc || 0)) + ' generic mana')}</small><p>${escapeHtml(card.oracle_text || effectSummary(card))}</p></div>`;
   preview.hidden = false;
 }
 
@@ -625,9 +620,9 @@ function renderBattle() {
   $('#enemy-count-label').textContent = `${enemyCount} ${enemyCount === 1 ? 'ENEMY REMAINS' : 'ENEMIES REMAIN'}`;
   $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)} / 30`;
   $('#player-health-fill').style.width = `${Math.max(0, state.playerHealth / 30 * 100)}%`;
-  const availableMana = battle.lands.filter((land) => !land.tapped).length;
-  $('#mana-label').textContent = `${availableMana} / ${battle.lands.length}`;
-  $('#land-status').textContent = battle.landAvailable ? 'Land drop available' : 'Land already played';
+  const availableMana = battle.mana;
+  $('#mana-label').textContent = `${availableMana} / ${battle.maxMana}`;
+  $('#land-status').textContent = 'Generic · refills every turn';
   $('#land-count').textContent = `${battle.lands.length}`;
   $('#land-row').innerHTML = battle.lands.length ? battle.lands.map((land) => {
     const image = land.card.image ? `<img src="${escapeHtml(land.card.image)}" alt="${escapeHtml(land.card.name)}" loading="lazy" />` : `<span class="land-color land-${land.color.toLowerCase()}">◆</span>`;
@@ -671,7 +666,7 @@ function renderHand() {
     const blocked = !canPay || boardFull;
     const fanPosition = index - fanCenter;
     const fanStyle = `--fan-angle:${fanPosition * 2.3}deg;--fan-lift:${Math.abs(fanPosition) * 4}px;--fan-index:${index}`;
-    return `<button class="hand-card${isLand(card) ? ' land-in-hand' : ''}${battle.phase === 'blocks' ? ' paused' : ''}" style="${fanStyle}" data-hand-index="${index}" data-preview-owner="hand" draggable="${battle.phase === 'main'}" ${battle.phase === 'blocks' ? 'disabled' : ''} title="${escapeHtml(card.name)} · ${escapeHtml(card.mana_cost || 'Land')}${blocked ? ' · not currently playable' : ''}" aria-label="${escapeHtml(card.name)}, ${escapeHtml(card.mana_cost || 'Land')}, drag and drop to play">
+    return `<button class="hand-card${isLand(card) ? ' land-in-hand' : ''}${battle.phase === 'blocks' ? ' paused' : ''}" style="${fanStyle}" data-hand-index="${index}" data-preview-owner="hand" draggable="${battle.phase === 'main'}" ${battle.phase === 'blocks' ? 'disabled' : ''} title="${escapeHtml(card.name)} · ${escapeHtml(String(Math.ceil(card.cmc || 0)) + ' generic mana')}${blocked ? ' · not currently playable' : ''}" aria-label="${escapeHtml(card.name)}, ${escapeHtml(String(Math.ceil(card.cmc || 0)) + ' generic mana')}, drag and drop to play">
       ${image}<span class="hand-card-cost">${manaCostHtml(card)}</span><span class="hand-card-name">${escapeHtml(card.name)}</span>${blocked ? '<span class="card-unavailable">–</span>' : ''}
     </button>`;
   }).join('');
@@ -759,6 +754,8 @@ function applyOracle(card, creature = false) {
   const battle = state.battle;
   const text = card.oracle_text || '';
   let recognized = false;
+  if (card.id === 'demo-spark') { drawOneExtra(); battle.playerBlock += 3; return; }
+  if (card.id === 'demo-mending') { state.playerHealth = Math.min(30, state.playerHealth + 5); return; }
   const damage = text.match(/deals?\s+(\d+)\s+damage/i);
   if (damage) {
     const amount = Number(damage[1]);
@@ -861,9 +858,9 @@ function playCard(index, targetSide = 'enemy') {
   if (isCreature(card) && battle.creatures.length >= 3) return showToast('Your creature board is full.');
   if (targetSide === 'enemy' && isCreature(card)) return showToast('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
-  if (!payment) return showToast('You do not have enough untapped lands to pay this mana cost.');
+  if (!payment) return showToast('Not enough generic mana. End your turn to refill it.');
   battle.mulliganAvailable = false;
-  payment.forEach((land) => { land.tapped = true; });
+  battle.mana -= Math.ceil(card.cmc || 0);
   battle.hand.splice(index, 1);
   if (isCreature(card)) {
     const stats = parseStats(card);
@@ -1080,11 +1077,15 @@ function resolveEnemyCombat() {
   } else if (!prevented && attackers.length) {
     addLog('All enemy attacks were blocked.');
   }
-  if (!battle.enemyCreatures.length) return winBattle();
   if (state.playerHealth <= 0) return endRun(false);
+  if (!battle.enemyCreatures.length) return winBattle();
 
+  expireTurnEffects(battle);
+  battle.creatures = removeDeadCreatures(battle.creatures, 'player');
   battle.playerBlock = 0;
   battle.turn += 1;
+  battle.maxMana = Math.min(6, 3 + Math.floor((battle.turn - 1) / 2) + (state.relic === 'crystal' ? 1 : 0));
+  battle.mana = battle.maxMana;
   battle.phase = 'main';
   battle.blockAssignments.clear();
   battle.selectedEnemyAttackerId = null;
@@ -1105,7 +1106,6 @@ function finishTurn() {
   battle.mulliganAvailable = false;
   resolvePlayerAttacks();
   if (!battle.enemyCreatures.length) return winBattle();
-  expireTurnEffects(battle);
   const enemyAttackers = battle.enemyCreatures.filter((creature) => creatureCanAttack(creature, battle.turn));
   if (enemyAttackers.length && battle.creatures.some((creature) => !creature.tapped)) {
     battle.phase = 'blocks';
@@ -1135,7 +1135,7 @@ function winBattle() {
   renderDraft();
   showScreen('draft-screen');
   animateBoosterOpening();
-  showToast(`${state.battle.enemy.name} defeated. You start the next fight with 30 life.`);
+  showToast(`${state.battle.enemy.name} defeated. Choose a reward, then rest before the next encounter.`);
   playSound(760, 0.16);
 }
 
@@ -1167,7 +1167,7 @@ function playSound(frequency, duration) {
     state.audio ||= new (window.AudioContext || window.webkitAudioContext)();
     const oscillator = state.audio.createOscillator();
     const gain = state.audio.createGain();
-    oscillator.type = 'square';
+    oscillator.type = 'triangle';
     oscillator.frequency.value = frequency;
     gain.gain.setValueAtTime(0.025, state.audio.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, state.audio.currentTime + duration);
@@ -1259,4 +1259,24 @@ $('#back-link').addEventListener('click', (event) => {
 });
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' && $('#start-screen').classList.contains('active')) startNewRun();
+});
+
+function showJourney() {
+  const first = state.node === 1;
+  $('#journey-title').textContent = first ? 'Choose your relic' : 'A moment by the fire';
+  $('#journey-description').textContent = first ? 'One relic. A different way to play. Your choice lasts for this run.' : 'Life carries between encounters. Prepare before you continue.';
+  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
+  $('#journey-options').innerHTML = first
+    ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>+1 generic mana every turn.</p></button><button data-relic="ward"><span>⛨</span><h3>Ancient Ward</h3><p>Begin each battle with 4 shield.</p></button>'
+    : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life, up to 30.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add a Star Shard: draw a card and gain 3 shield.</p></button>';
+  $('#journey-life').textContent = `${state.playerHealth} / 30 LIFE · ${state.deck.length} CARDS`;
+  showScreen('journey-screen');
+}
+$('#journey-options').addEventListener('click', event => {
+  const choice = event.target.closest('button');
+  if (!choice) return;
+  if (choice.dataset.relic) state.relic = choice.dataset.relic;
+  if (choice.dataset.camp === 'rest') state.playerHealth = Math.min(30, state.playerHealth + 10);
+  if (choice.dataset.camp === 'study') state.deck.push(FALLBACK_CARDS[2]);
+  beginBattle(state.node);
 });
