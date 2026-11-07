@@ -1,64 +1,62 @@
-# Booster Tutor
+# Booster Tutor — The Aether Expedition
 
-**Booster Tutor** is a browser-based, unofficial mana roguelike demo with booster drafting, creature combat, and a boss run.
-
-**Demo version: 0.8**
+**Version 0.9** · An unofficial browser roguelike using real Magic cards and a simplified, explicitly described ruleset.
 
 ## Play
 
-This is a static website with no build step. GitHub Pages can serve the files; the workflow in `.github/workflows/pages.yml` is ready to run manually.
+Open https://theyogi1999.github.io/BoosterTutor/ or serve this static checkout:
 
-For a local preview, start a static web server in the project folder:
-
-```bash
+```sh
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. On startup, the game loads real card data and images from the Scryfall API. The selection is cached in the browser for 12 hours; a small set of demo cards is available offline.
+There is no build step and no runtime dependency. The interface uses a fixed **1600 × 900** canvas scaled to fit the window, preserving the 16:9 layout. A fullscreen button is provided. Your cards stay on the left, monsters on the right, the hand at the bottom, and a large battlefield-card inspector at the far right. Very small windows scale the whole interface down; this version prioritizes desktop 16:9 play.
 
-## Game systems (0.8)
+## Real cards and packs
 
-- Draft one card from each of three seven-card boosters. Each pick adds four copies; four starting creatures make a 16-card deck. No lands are required.
-- **Only generic mana:** the displayed cost is the card's total mana value. Colours never restrict casting. Printed original card images still contain their original Magic symbols.
-- Start a fight with 3 mana. Refill every turn; capacity grows by 1 every two turns, up to 6. Aether Crystal adds 1 starting mana (the cap remains 6).
-- Choose a permanent run relic: Aether Crystal for mana, or Ancient Ward for 4 shield at the start of each fight.
-- Four encounters on a visible adventure path lead to the Shard Dragon. Life carries between fights. After each reward, rest for 10 life or study to add a utility spell.
-- Draw seven cards, refill your hand at the start of each turn, and recycle the graveyard when the library runs out. One free opening mulligan is available before your first action.
-- Click or drag to cast. Up to three allied creatures may be in play. Click a creature to hold it back, then choose an enemy attacker and your blocker during the blocking phase.
-- Flying, reach, first strike, double strike, deathtouch, haste, and lifelink have simplified combat implementations. Artifact creatures retain the prototype's immediate-attack rule.
-- Card effects use the prototype's text interpretation and explicit demo effects. Unrecognized spells deal generic damage. This is **not a full Magic rules engine**; complex card text is not faithfully simulated.
-- Progress lasts for the current page session. No saved runs or account are implemented.
+- The 32-card pool in `cards.js` contains genuine, normal-layout Magic cards verified against Scryfall. Original full-card JPEGs ship in `assets/cards/`. There are no invented starter or fallback cards. Network access to Scryfall is no longer needed to play.
+- Start with three packs of **seven cards**, opened individually with foil, light, particles and synthesized sound. Sound can be muted and reduced-motion settings disable animations.
+- Choose one card from each pack; each choice adds four copies. Two Grizzly Bears and two Savannah Lions complete the 16-card starter deck.
+- Each opened pack has one free **reroll**. It replaces all seven cards, removes that pack's selection, and preserves picks from other packs. Reward packs also contain seven cards and receive one reroll.
+- Printed original Magic symbols remain on the images. **Payment uses only generic mana** equal to total mana value.
 
-## Table and card interactions (0.8)
+## Combat and progression
 
-- Packs open **one at a time**. Click a sealed foil pack for a light burst, particles, a staggered seven-card reveal and synthesized opening sound. Choose one card, then continue to the next pack. Sound can be muted; reduced-motion preferences disable the animations.
-- The hand fans seven full card faces into an arc. Hover or keyboard focus lifts a card and opens a readable text bubble above it (or below when space is limited). Added cost/status overlays are removed. The bubble can be scrolled when needed.
-- Bubbles describe the implemented roguelike effect, generic cost, current creature values, keyword meanings, attachment target and casting availability. Spell descriptions and execution share one effect plan. Original printed card images remain unchanged.
-- All creatures, enchantments, equipment and auras show complete card faces with status outside the card. The site uses a new card-fan wordmark and larger interface typography.
-- Noncreature artifacts and enchantments stay on the battlefield for the current encounter. Recognized static stat bonuses affect your creatures; other unattached permanents give 1 shield on entry and at each turn start (the demo Aether Aegis gives 2). The rules bubble states this interpretation.
-- Auras require an allied creature target before mana is spent. Equipment enters unattached; click it and an allied creature to attach or move it for free. Recognized stat/keyword bonuses apply while attached; otherwise attachments grant +1/+1. Auras die with their host; equipment remains and can be reassigned.
-- A visible graveyard pile opens into a full-card gallery. Used spells, dead creatures and their auras go there. The existing graveyard recycle rule remains.
-- The blocking panel shows attacker/blocker pairs and predicted unblocked damage after shield, plus auto-assignment and reset controls. Dragging and click-to-assign are supported. First-strike blockers now act in the first damage step against normal attackers.
+- Start with 3 mana and refill it every turn. Capacity grows by one every two turns, up to 6. Aether Crystal adds one initial mana; Ancient Ward supplies four starting shield instead.
+- Draw **seven hand cards**, refill to seven each turn, and recycle the graveyard when the library runs out. One free opening mulligan is available before the first action.
+- A fanned hand lifts on hover/focus. A text bubble directly above the hand card explains what it actually does in this game, its generic cost and casting availability. Battlefield cards use the separate large inspector, including their current values.
+- Drag or click to play. Creatures and permanents go to the left battlefield. Drag a spell onto a monster to select its target. Drop an aura/equipment directly on an allied creature to attach it. Equipment already on the battlefield can also be dragged onto a different creature. Mouse drag and touch/pen drag use separate event lifecycles.
+- Noncreature enchantments and artifacts remain for the encounter. Recognized stat bonuses affect allied creatures; other unattached permanents give 1 shield immediately and at each turn start. Attachments use recognized stat/keyword bonuses, otherwise +1/+1. Equipment can be moved for free. Auras die with their host; equipment remains.
+- Monsters have independent illustrations, health, shield and visible **attack / guard / strengthen intentions**. They are not Magic-card enemies. Guard grants 5 shield; strengthen adds 1 attack. Their deterministic action cycles are shown before ending the turn.
+- Allied creatures attack the selected monster. Monsters do not automatically block those attacks or retaliate. During enemy attacks, creatures held back can be assigned as blockers by dragging or clicking. Flying, reach, first strike, double strike, deathtouch, haste and lifelink have simplified implementations. Artifact creatures retain the prototype's immediate-attack rule.
+- The blocking panel shows pairs, direct incoming damage after shield, auto-assignment and reset. Used spells, dead creatures and their auras enter the visible graveyard/gallery.
+- Four encounters lead to the Shard Dragon. Life carries between fights. After a reward, rest for 10 life or study to add a real Divination card.
+- This is **not the complete Magic rules engine**. Effect descriptions and execution share one effect plan. Unsupported spells become generic damage; permanent effects use the interpretation stated in their inspector. Run progress is held for the current page session.
 
 ## Validation
 
-Requires Node.js 20+ for tests, no runtime dependencies:
+Logic tests require Node.js 20+:
 
 ```sh
 node --check game.js
+node --check cards.js
 node --test tests/game.test.cjs
 ```
 
-Tests cover generic mana across colours, spell spending, mana growth, persistent life, relic mana, combat keywords, and the land-free starter draft. Browser and visual QA must be performed separately.
+The browser regression requires Playwright and Chromium, plus a running static server. Set `CHROMIUM_PATH` if Chromium is elsewhere:
 
-## Card data, images, and fan project notice
+```sh
+BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/browser.test.cjs
+```
 
-Card data and images are loaded from Scryfall at runtime; they are not stored in this repository. Scryfall is an independent card database, not the official Wizards of the Coast website. Card images and text belong to their respective rights holders. This project is not endorsed or sponsored by Wizards of the Coast.
+It checks seven-card packs, rerolls, image loading, the anchored hand bubble, the large inspector, native mouse drags for creatures/auras/equipment/spells/blockers, turn refill, console errors, and 1280×720 / 1920×1080 viewport boundaries. Temporary screenshots go into `work/`.
 
-The Wizards [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy) has limits on the use of Wizards IP in games, including free games. Review the policy before distributing the demo publicly; this project does not claim permission from Wizards.
+## Assets and fan project notice
+
+Card metadata and original card images were retrieved from Scryfall, an independent card database. Images and text belong to their respective rights holders. The environmental SVG and monster illustrations are original artwork for this prototype. The project is not endorsed or sponsored by Wizards of the Coast.
+
+The Wizards [Fan Content Policy](https://company.wizards.com/en/legal/fancontentpolicy) has limits on the use of Wizards IP in games, including free games. This prototype does not claim permission from Wizards.
 
 ## GitHub Pages
 
-1. In the repository settings under **Pages**, select **GitHub Actions** as the build source if it is not already selected.
-2. Push changes to `main` or manually run the workflow under **Actions → Deploy GitHub Pages → Run workflow**.
-3. The published URL is shown in the workflow run under **Deploy**.
+`.github/workflows/pages.yml` publishes changes pushed to `main` automatically and can also be run manually. The published URL appears in the deployment workflow. Keep generated screenshots, analysis scripts and local browser data out of published source.
