@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.20** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+**Version 0.21** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -63,7 +63,7 @@ No build step or runtime dependencies. Every scene uses the same 1600×900 (16:9
 - **Green** stat chips show persistent modifiers, including counters, equipment and auras. **Amber EOT** chips show temporary bonuses. Total power/toughness reflects both; temporary bonuses expire at cleanup.
 - Hand tooltips show actual implemented effects and casting availability above the hovered card. Battlefield cards retain the large side inspector. Mouse/touch/pen dragging holds the card at the grabbed point; legal zones highlight and Escape cancels without spending mana.
 - Selection uses a dedicated 85 ms bright UI tick (`assets/audio/select.wav`), replacing the percussion-like sprite slice. Other original stereo sound cues use the shared decoded sprite, category levels, compression, a voice cap and short fades. A mastered booster Foley plays with seven staggered reveal glints. Muting stops all sounds; reduced-motion settings disable reveal glints.
-- Four selectable player portraits and five opponent portraits use original painted fantasy spellcaster busts, cropped to head and upper torso. The shared WebP portrait sheet is about 407 KB. Booster foil, sparks and reveal light use a warm orange palette.
+- Four selectable player portraits and five opponent portraits use original painted fantasy spellcaster busts, cropped to head and upper torso. The shared WebP portrait sheet is about 407 KB. Booster foil, sparks and reveal light use a warm orange palette. Sealed boosters gently float up and down with a slight breathing pulse; reduced-motion settings keep them still.
 - Attack arrows have rounded, glowing tips and a steady light trail. Each animated dash loop advances by one exact dash period. Existing SVG routes retain their nodes and animation timelines through redraws; adding or removing another route does not shift their curve. Reduced-motion settings keep static routes.
 
 ## Progression and limits
