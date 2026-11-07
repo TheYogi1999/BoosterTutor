@@ -2,7 +2,7 @@
 
 **Booster Tutor** ist ein browserbasiertes, inoffizielles Mana-Roguelike-Demo mit Booster-Draft, Kartenkampf und Boss-Run.
 
-**Demo-Version: 0.4**
+**Demo-Version: 0.5**
 
 ## Spielen
 
@@ -24,6 +24,7 @@ Anschließend `http://localhost:8000` im Browser öffnen. Beim Start lädt das S
 - Zu Beginn jedes Kampfes kannst du vor der ersten Aktion einmal kostenlos mulliganen und wieder fünf Karten ziehen.
 - Kreaturen kommen per Drag-and-drop auf dein Feld und greifen standardmäßig beim Zugende an. Klicke eine Kreatur an, um sie zum Blocken zurückzuhalten. In der Blockphase wählst du erst den Angreifer rechts und dann den Blocker links; alternativ kannst du den Blocker auf den Angreifer ziehen.
 - Der Gegner spielt echte Kreaturen aus dem Kartenpool, die angreifen und deine Angriffe blocken. Das Kampfmodell ist vereinfacht.
+- Flugfähigkeit braucht zum Blocken Flugfähigkeit oder Reichweite. Erstschlag und Doppelschlag erhalten getrennte Schadensschritte; Todesberührung zerstört Kreaturen, und Lebensverknüpfung heilt den Besitzer. Erkannte Boni „bis zum Ende des Zuges“ laufen nach dem Kampf aus.
 - Die Boosteröffnung zeigt eine kurze Kartenenthüllung mit Synthesizer-Sound; der Ton lässt sich oben ausschalten.
 - Deine Lebenspunkte starten vor jedem Kampf wieder bei 30.
 - Du kannst Karten aus der Hand ziehen und auf dein Feld oder das Feld des Gegners legen. Klicken spielt sie ebenfalls aus.
