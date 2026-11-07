@@ -369,3 +369,127 @@ h1 span { display: inline-block; color: #dfc38a; font-style: italic; }
   .site-footer { flex-direction: column; font-size: 8px; line-height: 1.5; }
   .run-summary { gap: 14px; font-size: 9px; }
 }
+
+/* Booster Tutor 0.4: card-sized hand, attack choices and block phase. */
+.draft-screen.opening .booster-pack {
+  animation: booster-pack-reveal .62s cubic-bezier(.18,.8,.25,1) both;
+  animation-delay: calc(var(--pack-index, 0) * 110ms);
+}
+.draft-screen.opening .draft-option {
+  animation: booster-card-reveal .48s cubic-bezier(.2,.82,.25,1) both;
+  animation-delay: calc(100ms + var(--pack-index, 0) * 110ms + var(--card-index, 0) * 38ms);
+}
+.draft-screen.opening .pack-ribbon { animation: ribbon-glow .8s ease-out both; }
+@keyframes booster-pack-reveal {
+  0% { opacity: 0; transform: translateY(-15px) scale(.975); filter: brightness(1.6); }
+  65% { opacity: 1; filter: brightness(1.25); }
+  100% { transform: translateY(0) scale(1); filter: brightness(1); }
+}
+@keyframes booster-card-reveal {
+  0% { opacity: 0; transform: perspective(650px) rotateY(72deg) translateY(8px) scale(.86); }
+  70% { opacity: 1; transform: perspective(650px) rotateY(-5deg) translateY(-2px) scale(1.025); }
+  100% { opacity: 1; transform: perspective(650px) rotateY(0) translateY(0) scale(1); }
+}
+@keyframes ribbon-glow {
+  0% { color: #fff5ce; text-shadow: 0 0 0 transparent; }
+  35% { color: #fff4c2; text-shadow: 0 0 22px #f6d783; }
+  100% { color: #dec98d; text-shadow: 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .draft-screen.opening .booster-pack,
+  .draft-screen.opening .draft-option,
+  .draft-screen.opening .pack-ribbon { animation-duration: .01ms; animation-delay: 0ms; }
+}
+
+.hand-panel { position: sticky; bottom: 0; z-index: 6; border-color: #d4c18a55; background: linear-gradient(180deg, #202b30f5, #11191ef7); backdrop-filter: blur(12px); }
+.hand-row { min-height: 262px; align-items: end; justify-content: center; gap: 0; overflow-x: auto; overflow-y: hidden; padding: 34px 20px 16px; }
+.hand-card {
+  z-index: calc(1 + var(--fan-index, 0));
+  flex: 0 0 152px;
+  width: 152px;
+  height: 213px;
+  margin-left: -29px;
+  transform: translateY(var(--fan-lift, 0px)) rotate(var(--fan-angle, 0deg));
+  transform-origin: center bottom;
+}
+.hand-card:first-child { margin-left: 0; }
+.hand-card:hover, .hand-card:focus-visible { z-index: 20; transform: translateY(-19px) rotate(0) scale(1.09); }
+.hand-card.paused { cursor: default; opacity: .78; }
+.hand-card:disabled { color: inherit; }
+.hand-heading { margin-bottom: 0; }
+.hand-help { max-width: min(620px, 62%); text-align: right; }
+.mulligan-button { min-height: 40px; padding: 0 13px; border: 1px solid #c6ad70; border-radius: 6px; color: #f0dba4; background: linear-gradient(145deg, #30382f, #1c2827); cursor: pointer; font-size: 8px; font-weight: 800; letter-spacing: .7px; white-space: nowrap; }
+.mulligan-button span { margin-left: 5px; font-size: 13px; }
+.mulligan-button:hover:not(:disabled) { border-color: #ffe6a9; color: #fff5d7; box-shadow: 0 0 14px #d5b96b44; transform: translateY(-2px); }
+.mulligan-button:disabled { border-color: #ffffff1c; color: #89948e; background: #1a2223; cursor: default; opacity: .72; }
+.creature-token { color: inherit; font: inherit; text-align: left; cursor: default; transition: border-color .15s, box-shadow .15s, transform .15s, opacity .15s; }
+.creature-token.can-block { cursor: pointer; }
+.creature-token.can-block:hover, .creature-token.blocker-target { border-color: #f1d58c; box-shadow: 0 0 0 2px #f1d58c44, 0 7px 16px #0008; transform: translateY(-4px); }
+.creature-token.assigned-blocker { border-color: #9fd7bd; box-shadow: 0 0 0 2px #8ac9a255, 0 6px 14px #0007; }
+.creature-token.held-back { border-color: #88c8b2; box-shadow: inset 0 0 0 1px #88c8b277; }
+.creature-token.tapped { opacity: .62; transform: rotate(5deg) translateY(4px); }
+.enemy-board { display: flex; flex: 1; flex-direction: column; align-items: stretch; justify-content: space-between; gap: 9px; min-height: 176px; padding: 7px 4px; }
+.enemy-creatures-row { display: flex; min-height: 112px; align-items: flex-end; justify-content: center; gap: 7px; padding: 3px; overflow-x: auto; }
+.enemy-creature {
+  position: relative;
+  display: grid;
+  flex: 0 0 92px;
+  grid-template-rows: 54px auto auto;
+  gap: 3px;
+  min-height: 104px;
+  padding: 4px;
+  overflow: hidden;
+  border: 1px solid #cb9283aa;
+  border-radius: 7px;
+  color: #f4e9dc;
+  background: linear-gradient(155deg, #483438, #20282b);
+  box-shadow: 0 4px 10px #0007;
+  font: inherit;
+  text-align: left;
+}
+.enemy-creature:not(:disabled) { cursor: pointer; }
+.enemy-creature:not(:disabled):hover, .enemy-creature.selected { border-color: #f2d58d; box-shadow: 0 0 0 2px #f2d58d4d, 0 8px 18px #0008; transform: translateY(-4px); }
+.enemy-creature:disabled { opacity: .72; }
+.enemy-creature-art { display: block; width: 100%; height: 54px; border-radius: 4px; object-fit: cover; }
+.enemy-creature-art.fallback { display: grid; place-items: center; color: #f2d58d; background: #4d4240; font-size: 25px; }
+.enemy-creature > b { display: block; overflow: hidden; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.enemy-creature-stats { position: absolute; top: 5px; right: 5px; padding: 2px 4px; border-radius: 4px; color: #211c18; background: #e7c780; font-size: 7px; font-weight: 800; }
+.enemy-creature > small { display: block; overflow: hidden; color: #dfb3a3; font-size: 6px; text-overflow: ellipsis; white-space: nowrap; }
+.empty-enemy-board { align-self: center; max-width: 190px; padding: 10px; color: #bd9d91; font-size: 9px; text-align: center; }
+.enemy-attack-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 7px; }
+.enemy-intent { min-height: 36px; font: inherit; }
+button.enemy-intent { cursor: pointer; }
+button.enemy-intent.selected { border-color: #f2d58d; box-shadow: 0 0 0 2px #f2d58d44; }
+.enemy-intent small { color: #e0bfa4; font-size: 7px; }
+.block-total { color: #eddbb6; font-size: 8px; }
+.enemy-board.block-drop-ready { border-radius: 8px; outline: 2px dashed #f0d58c; outline-offset: -4px; background: #735c3c44; }
+#combat-action-hint { transition: color .15s; }
+#combat-action-hint.blocking { color: #f0d58c; }
+
+@media (max-width: 900px) {
+  .hand-card { flex-basis: 136px; width: 136px; height: 190px; margin-left: -27px; }
+  .hand-row { min-height: 238px; }
+}
+@media (max-width: 620px) {
+  .hand-panel { bottom: 0; margin-right: -2px; margin-left: -2px; padding: 9px 6px 8px; }
+  .hand-heading { align-items: start; }
+  .hand-help { display: block; max-width: 52%; font-size: 8px; line-height: 1.3; }
+  .hand-row { min-height: 202px; justify-content: flex-start; padding: 25px 17px 12px; }
+  .turn-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .discard-info { grid-column: 1 / -1; }
+  .mulligan-button { min-height: 36px; padding: 0 8px; font-size: 7px; }
+  .mulligan-button span { font-size: 11px; }
+  .hand-card { flex-basis: 116px; width: 116px; height: 162px; margin-left: -23px; }
+  .hand-card:first-child { margin-left: 0; }
+  .hand-card:hover, .hand-card:focus-visible { transform: translateY(-13px) rotate(0) scale(1.06); }
+  .enemy-board { min-height: 160px; gap: 5px; padding: 4px 1px; }
+  .enemy-creatures-row { min-height: 102px; gap: 3px; justify-content: flex-start; }
+  .enemy-creature { flex-basis: 66px; grid-template-rows: 42px auto auto; min-height: 88px; padding: 3px; }
+  .enemy-creature-art { height: 42px; }
+  .enemy-creature > b { font-size: 6px; }
+  .enemy-creature > small { font-size: 5px; }
+  .enemy-intent { min-height: 30px; gap: 3px; padding: 5px 6px; font-size: 6px; }
+  .enemy-intent small { font-size: 5px; }
+  .block-total { font-size: 6px; }
+  .creature-token.can-block:hover, .creature-token.blocker-target { transform: translateY(-2px); }
+}
