@@ -27,7 +27,9 @@ const $ = (selector) => document.querySelector(selector);
 const screens = ['start-screen', 'loading-screen', 'draft-screen', 'combat-screen', 'journey-screen', 'end-screen'];
 
 function showScreen(id) {
+  state.screen = id;
   hideCardPreview();
+  updatePhaseDisplay();
   for (const screen of screens) $('#' + screen).classList.toggle('active', screen === id);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -290,6 +292,7 @@ function renderDraft() {
   $('#pack-reroll').textContent = state.rerolledPacks?.has(packIndex) ? '↻ Reroll verbraucht' : '↻ Pack neu würfeln · 1×';
   $('#draft-confirm').disabled = state.boosterSealed || !chosen;
   $('#draft-confirm').textContent = last ? starter ? 'DECK BAUEN →' : 'KARTE MITNEHMEN →' : 'NÄCHSTES PACK →';
+  updatePhaseDisplay();
 }
 
 $('#draft-grid').addEventListener('click', (event) => {
@@ -562,13 +565,16 @@ function renderBattle() {
   $('#enemy-art-image').src = battle.enemyArt || '';
   $('#enemy-art-image').hidden = !battle.enemyArt;
   $('#enemy-art .enemy-sprite').hidden = Boolean(battle.enemyArt);
-  $('#end-turn-button').innerHTML = battle.phase === 'blocks' ? 'BLOCKEN BESTÄTIGEN <span>✓</span>' : 'ZUG BEENDEN <span>→</span>';
+  const resolving = ['attack', 'enemy', 'damage'].includes(battle.phase);
+  $('#end-turn-button').disabled = resolving;
+  $('#end-turn-button').innerHTML = battle.phase === 'blocks' ? 'BLOCKEN BESTÄTIGEN <span>✓</span>' : resolving ? 'KAMPF WIRD AUFGELÖST …' : 'ANGRIFF STARTEN <span>→</span>';
   $('#combat-action-hint').textContent = battle.pendingAttachment ? 'Wähle eine eigene Kreatur als Ziel · Abbrechen ist kostenlos.' : battle.phase === 'blocks'
     ? 'Wähle einen Angreifer, dann deinen Blocker. Du kannst Blocker auch auf Angreifer ziehen.'
     : 'Kreatur anklicken: angreifen oder zurückhalten · Hand wird auf 7 aufgefüllt.';
+  if (resolving) $('#combat-action-hint').textContent = phaseInfo(battle.phase).description;
   $('#combat-action-hint').classList.toggle('blocking', battle.phase === 'blocks');
   $('#turn-label').textContent = `ZUG ${battle.turn}`;
-  $('#turn-display').textContent = `Zug ${battle.turn} · ${battle.phase === 'blocks' ? 'Blockphase' : 'Hauptphase'}`;
+  $('#turn-display').textContent = `Zug ${battle.turn}`;
   $('#progress-pips').innerHTML = ENCOUNTERS.map((_, index) => `<i class="${index < state.node ? 'done ' : ''}${index === 3 ? 'boss' : ''}" aria-label="Fight ${index + 1}"></i>`).join('');
   $('#graveyard-count').textContent = String(battle.graveyard.length);
   $('#library-count').textContent = String(battle.deck.length);
@@ -589,6 +595,8 @@ function renderBattle() {
     else { state.inspectedId = null; $('#inspector-content').innerHTML = '<div class="inspector-empty">◈<p>Fahre über eine Karte auf deinem Spielfeld.</p></div>'; }
   }
   renderDropZones();
+  updatePhaseDisplay();
+  requestAnimationFrame(drawCombatArrows);
 }
 
 function renderHand() {
@@ -617,18 +625,24 @@ function renderCreatures() {
     const willAttack = !waiting && creature.willAttack !== false;
     const targeting = Boolean(battle.pendingAttachment);
     const status = targeting ? '✦ Als Ziel auswählen' : blocking ? attacker ? `↔ Blockt ${attacker.card.name}` : creature.tapped ? 'Hat angegriffen' : legal ? 'Zum Blocken auswählen' : 'Kann diesen Angriff nicht blocken' : waiting ? 'Wartet · kann blocken' : willAttack ? '⚔ Greift an · klicken zum Zurückhalten' : '⛨ Bleibt zum Blocken zurück';
-    return `<button type="button" class="creature-token${legal ? ' can-block' : ''}${entry ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${!blocking && !waiting && !willAttack ? ' held-back' : ''}${targeting ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(entry) : !waiting && !willAttack}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${blocking && !creature.tapped}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ' · ' + creature.damage + ' Schaden' : ''}</span><small>${escapeHtml(status)}</small></span></button>`;
+    const attachments = battle.permanents.filter(permanent => permanent.attachedTo === creature.id);
+    return `<div class="creature-group" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="An ${escapeHtml(creature.card.name)} angelegte Karten">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${entry ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${!blocking && !waiting && !willAttack ? ' held-back' : ''}${targeting ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(entry) : !waiting && !willAttack}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${blocking && !creature.tapped}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b><span>${creature.power}/${creature.toughness}${creature.damage ? ' · ' + creature.damage + ' Schaden' : ''}</span><small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} Karten angelegt">↔ ${attachments.length}</span>` : ''}</div>`;
   }).join('') : '<div class="empty-board">Spiele eine Kreatur aus deiner Hand.<br>Bis zu drei Kreaturen können hier liegen.</div>';
+}
+function permanentMarkup(permanent, attached = false) {
+  const battle = state.battle;
+  const target = battle.creatures.find(item => item.id === permanent.attachedTo);
+  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-label="${escapeHtml(permanent.card.name)}${target ? ', angelegt an ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : isAttachment(permanent.card) ? 'Klicken zum Anlegen' : 'Aktive Verzauberung / Artefakt'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
-  $('#permanent-count').textContent = String(battle.permanents.length);
-  $('#permanent-row').innerHTML = battle.permanents.length ? battle.permanents.map(permanent => {
-    const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-    return `<button type="button" class="permanent-card${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-label="${escapeHtml(permanent.card.name)}${target ? ', angelegt an ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : isAttachment(permanent.card) ? 'Klicken zum Anlegen' : 'Aktive Verzauberung / Artefakt'}</small></span></button>`;
-  }).join('') : '<p class="empty-permanents">Verzauberungen, Auren und Ausrüstungen bleiben hier sichtbar.</p>';
+  const loose = battle.permanents.filter(permanent => !permanent.attachedTo);
+  const attached = battle.permanents.length - loose.length;
+  $('#permanent-count').textContent = `${attached} angelegt · ${loose.length} frei`;
+  $('#permanent-row').innerHTML = loose.length ? loose.map(permanent => permanentMarkup(permanent)).join('') : `<p class="empty-permanents">${attached ? 'Angelegte Karten liegen direkt an ihren Kreaturen.' : 'Freie Verzauberungen und Ausrüstung liegen hier.'}</p>`;
   $('#attachment-cancel').hidden = !battle.pendingAttachment;
 }
+
 function renderBlocking() {
   const battle = state.battle;
   const blocking = battle.phase === 'blocks';
@@ -644,7 +658,7 @@ function renderBlocking() {
     return `<button type="button" data-block-attacker="${escapeHtml(attacker.id)}" class="block-pair${blocker ? ' paired' : ''}${battle.selectedEnemyAttackerId === attacker.id ? ' selected' : ''}" aria-pressed="${battle.selectedEnemyAttackerId === attacker.id}"><b>${escapeHtml(attacker.card.name)}</b><span>${blocker ? '⛨ ' + escapeHtml(blocker.card.name) : '→ Blocker wählen'}</span></button>`;
   }).join('');
 }
-$('#permanent-row').addEventListener('click', event => {
+$('#player-drop-zone').addEventListener('click', event => {
   const button = event.target.closest('[data-permanent-id]');
   const battle = state.battle;
   if (!button || battle?.phase !== 'main' || Date.now() < (state.suppressClickUntil || 0)) return;
@@ -693,7 +707,8 @@ function handleCardDrop(payload, target) {
   const battle = state.battle;
   if (!battle || !payload || !target) return false;
   const enemy = target.closest('[data-enemy-attacker]');
-  const ally = target.closest('[data-creature-id]');
+  const host = target.closest('[data-host-id]');
+  const ally = target.closest('[data-creature-id]') || (host ? { dataset: { creatureId: host.dataset.hostId } } : null);
   const onPlayer = Boolean(target.closest('#player-drop-zone'));
   const onEnemy = Boolean(target.closest('#enemy-drop-zone'));
   if (payload.kind === 'blocker') {
@@ -1164,31 +1179,48 @@ function resolveEnemyCombat() {
   playSound(230, 0.08);
 }
 
+function afterCombatBeat(battle, phase, callback) {
+  setTimeout(() => {
+    if (state.battle !== battle || battle.phase !== phase) return;
+    callback();
+  }, 650);
+}
 function finishTurn() {
   const battle = state.battle;
   if (!battle || battle.phase !== 'main') return;
   battle.mulliganAvailable = false;
   battle.pendingAttachment = null;
-  hideCardPreview();
-  resolvePlayerAttacks();
-  if (!battle.enemyCreatures.length) return winBattle();
-  resolveEnemyIntents();
-  const enemyAttackers = battle.enemyCreatures.filter((creature) => creatureCanAttack(creature, battle.turn));
-  if (enemyAttackers.length && battle.creatures.some((creature) => !creature.tapped)) {
-    battle.phase = 'blocks';
-    battle.blockAssignments.clear();
-    battle.selectedEnemyAttackerId = null;
-    addLog('The enemies attack. Assign blockers or confirm without blocking.');
+  battle.phase = 'attack';
+  renderBattle();
+  afterCombatBeat(battle, 'attack', () => {
+    resolvePlayerAttacks();
+    if (!battle.enemyCreatures.length) return winBattle();
+    battle.phase = 'enemy';
+    resolveEnemyIntents();
     renderBattle();
-    playSound(340, 0.1);
-    return;
-  }
-  resolveEnemyCombat();
+    afterCombatBeat(battle, 'enemy', () => {
+      const attackers = battle.enemyCreatures.filter(creature => creatureCanAttack(creature, battle.turn));
+      if (attackers.length && battle.creatures.some(creature => !creature.tapped)) {
+        battle.phase = 'blocks';
+        battle.blockAssignments.clear();
+        battle.selectedEnemyAttackerId = null;
+        renderBattle();
+        return;
+      }
+      beginEnemyDamage();
+    });
+  });
 }
-
+function beginEnemyDamage() {
+  const battle = state.battle;
+  if (!battle || !['blocks', 'enemy'].includes(battle.phase)) return;
+  battle.phase = 'damage';
+  renderBattle();
+  afterCombatBeat(battle, 'damage', resolveEnemyCombat);
+}
 function handleCombatAction() {
-  if (state.battle?.phase === 'blocks') resolveEnemyCombat();
-  else finishTurn();
+  if (state.battle?.phase === 'blocks') beginEnemyDamage();
+  else if (state.battle?.phase === 'main') finishTurn();
 }
 
 function winBattle() {
@@ -1249,43 +1281,11 @@ function playSound(frequency, duration) {
 
 function playBoosterOpeningSound() {
   if (!state.soundOn) return;
-  try {
-    state.audio ||= new (window.AudioContext || window.webkitAudioContext)();
-    state.audio.resume().catch(() => {});
-    const context = state.audio;
-    const start = context.currentTime + 0.025;
-    const noiseBuffer = context.createBuffer(1, Math.floor(context.sampleRate * 0.45), context.sampleRate);
-    const samples = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < samples.length; i++) samples[i] = Math.random() * 2 - 1;
-    const noise = context.createBufferSource();
-    noise.buffer = noiseBuffer;
-    const filter = context.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(350, start);
-    filter.frequency.exponentialRampToValueAtTime(5000, start + 0.15);
-    filter.frequency.exponentialRampToValueAtTime(250, start + 0.45);
-    const noiseGain = context.createGain();
-    noiseGain.gain.setValueAtTime(0.0001, start);
-    noiseGain.gain.exponentialRampToValueAtTime(0.055, start + 0.1);
-    noiseGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.45);
-    noise.connect(filter); filter.connect(noiseGain); noiseGain.connect(context.destination);
-    noise.start(start); noise.stop(start + 0.45);
-    [392, 523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      const noteStart = start + index * 0.095;
-      oscillator.type = index === 4 ? 'sine' : 'triangle';
-      oscillator.frequency.setValueAtTime(frequency * 0.72, noteStart);
-      oscillator.frequency.exponentialRampToValueAtTime(frequency, noteStart + 0.12);
-      gain.gain.setValueAtTime(0.0001, noteStart);
-      gain.gain.exponentialRampToValueAtTime(index === 4 ? 0.045 : 0.026, noteStart + 0.035);
-      gain.gain.exponentialRampToValueAtTime(0.0001, noteStart + 0.34);
-      oscillator.connect(gain);
-      gain.connect(context.destination);
-      oscillator.start(noteStart);
-      oscillator.stop(noteStart + 0.36);
-    });
-  } catch { /* Sound is optional. */ }
+  const audio = $('#booster-audio');
+  audio.pause();
+  audio.currentTime = 0;
+  audio.volume = 0.72;
+  audio.play().catch(() => showToast('Zum Aktivieren des Sounds einmal auf SOUND klicken.'));
 }
 
 function animateBoosterOpening() {
@@ -1294,7 +1294,7 @@ function animateBoosterOpening() {
   screen.classList.remove('opening');
   void screen.offsetWidth;
   screen.classList.add('opening');
-  state.openingTimer = setTimeout(() => screen.classList.remove('opening'), 1350);
+  state.openingTimer = setTimeout(() => screen.classList.remove('opening'), 1800);
   playBoosterOpeningSound();
 }
 
@@ -1324,6 +1324,7 @@ $('#end-turn-button').addEventListener('click', handleCombatAction);
 $('#mulligan-button').addEventListener('click', freeMulligan);
 $('#sound-toggle').addEventListener('click', () => {
   state.soundOn = !state.soundOn;
+  if (!state.soundOn) { $('#booster-audio').pause(); $('#booster-audio').currentTime = 0; }
   $('#sound-toggle span').textContent = state.soundOn ? 'SOUND ON' : 'SOUND OFF';
   $('#sound-toggle').setAttribute('aria-label', state.soundOn ? 'Turn sound off' : 'Turn sound on');
   $('#sound-toggle').title = state.soundOn ? 'Turn sound off' : 'Turn sound on';
@@ -1410,3 +1411,72 @@ window.addEventListener('resize', fitGameCanvas);
 fitGameCanvas();
 
 $('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Vollbild ist in diesem Browser nicht verfügbar.')); });
+
+const COMBAT_PHASES = [
+  { id: 'main', label: 'Karten spielen', description: 'Spiele Karten aus und wähle, welche Kreaturen angreifen.' },
+  { id: 'attack', label: 'Dein Angriff', description: 'Deine angreifenden Kreaturen treffen ihre angezeigten Ziele.' },
+  { id: 'enemy', label: 'Gegneraktion', description: 'Die Gegner verstärken oder schützen sich und bereiten ihre Angriffe vor.' },
+  { id: 'blocks', label: 'Blocken', description: 'Weise den Angreifern eigene Blocker zu oder lasse Angriffe durch.' },
+  { id: 'damage', label: 'Schaden', description: 'Die gegnerischen Angriffe und Blocks werden aufgelöst.' }
+];
+function phaseInfo(id) { return COMBAT_PHASES.find(phase => phase.id === id) || COMBAT_PHASES[0]; }
+function updatePhaseDisplay() {
+  const screen = state.screen || 'start-screen';
+  const labels = { 'start-screen': 'START', 'loading-screen': 'DECK VORBEREITEN', 'draft-screen': state.boosterSealed ? 'BOOSTER ÖFFNEN' : 'KARTE WÄHLEN', 'journey-screen': state.node === 1 ? 'RELIKT WÄHLEN' : 'RAST', 'end-screen': 'RUN BEENDET' };
+  const phase = phaseInfo(state.battle?.phase);
+  $('#global-phase').textContent = screen === 'combat-screen' ? phase.label.toUpperCase() : labels[screen] || 'EXPEDITION';
+  if (!state.battle) return;
+  $('#phase-strip').innerHTML = COMBAT_PHASES.map((item, index) => `<li class="${phase.id === item.id ? 'current' : ''}" ${phase.id === item.id ? 'aria-current="step"' : ''} data-phase="${item.id}"><span>${index + 1}</span>${item.label}</li>`).join('');
+  $('#phase-status').textContent = phase.description;
+}
+function combatRoutes(battle) {
+  const routes = [];
+  const target = battle.enemyCreatures.find(enemy => enemy.id === battle.selectedEnemyTargetId) || battle.enemyCreatures[0];
+  if (target && ['main', 'attack'].includes(battle.phase)) {
+    for (const creature of battle.creatures) {
+      if (creatureCanAttack(creature, battle.turn) && creature.willAttack !== false && !creature.tapped) routes.push({ kind: 'ally', from: creature.id, to: target.id, damage: Math.max(0, creature.power) * (hasCreatureKeyword(creature, 'double strike') ? 2 : 1) });
+    }
+  }
+  for (const enemy of battle.enemyCreatures) {
+    if (!creatureCanAttack(enemy, battle.turn)) continue;
+    const blockerId = ['blocks', 'damage'].includes(battle.phase) ? battle.blockAssignments.get(enemy.id) : null;
+    const blocker = battle.creatures.find(creature => creature.id === blockerId && !creature.tapped);
+    routes.push({ kind: blocker ? 'block' : 'enemy', from: enemy.id, to: blocker?.id || 'player', damage: Math.max(0, enemy.power) * (hasCreatureKeyword(enemy, 'double strike') ? 2 : 1) });
+  }
+  return routes;
+}
+function drawCombatArrows() {
+  const arena = $('.arena-table');
+  const svg = $('#combat-arrows');
+  const battle = state.battle;
+  if (!battle || !$('#combat-screen').classList.contains('active')) { svg.innerHTML = ''; return; }
+  const rect = arena.getBoundingClientRect();
+  const width = arena.clientWidth;
+  const height = arena.clientHeight;
+  const sx = width / rect.width;
+  const sy = height / rect.height;
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  const center = (element, edge) => {
+    if (!element) return null;
+    const box = element.getBoundingClientRect();
+    return { x: ((edge === 'right' ? box.right : box.left + box.width / 2) - rect.left) * sx, y: ((edge === 'top' ? box.top - 4 : box.top + box.height / 2) - rect.top) * sy };
+  };
+  const paths = combatRoutes(battle).map((route, index) => {
+    const fromElement = route.kind === 'ally' ? document.querySelector(`[data-creature-id="${route.from}"] .player-card-frame`) : document.querySelector(`[data-enemy-attacker="${route.from}"] .monster-figure`);
+    const toElement = route.to === 'player' ? $('#player-health-label') : route.kind === 'ally' ? document.querySelector(`[data-enemy-attacker="${route.to}"] .monster-figure`) : document.querySelector(`[data-creature-id="${route.to}"] .player-card-frame`);
+    const from = center(fromElement, 'top');
+    const to = center(toElement, route.to === 'player' ? 'right' : 'top');
+    if (!from || !to) return '';
+    const lift = 30 + index % 3 * 12;
+    const c1 = { x: from.x + (route.kind === 'ally' ? 50 : -70), y: Math.max(32, from.y - lift) };
+    const c2 = { x: to.x + (route.kind === 'ally' ? -70 : 80), y: Math.max(32, to.y - lift) };
+    const label = { x: (from.x + 3 * c1.x + 3 * c2.x + to.x) / 8, y: (from.y + 3 * c1.y + 3 * c2.y + to.y) / 8 };
+    const units = [...battle.creatures, ...battle.enemyCreatures];
+    const fromName = units.find(unit => unit.id === route.from)?.card.name || '';
+    const toName = route.to === 'player' ? 'Deine Lebenspunkte' : units.find(unit => unit.id === route.to)?.card.name || '';
+    const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'geblockter Angriff' : 'Angriff'}`;
+    return `<g class="combat-route route-${route.kind}" data-arrow-kind="${route.kind}" data-from-id="${escapeHtml(route.from)}" data-to-id="${escapeHtml(route.to)}"><title>${escapeHtml(title)}</title><path d="M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}" marker-end="url(#arrow-${route.kind})"/><g transform="translate(${label.x},${label.y})"><rect x="-14" y="-10" width="28" height="20" rx="10"/><text text-anchor="middle" dominant-baseline="central">${route.damage}</text></g></g>`;
+  }).join('');
+  svg.innerHTML = `<defs>${['ally', 'enemy', 'block'].map(kind => `<marker id="arrow-${kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrowhead-${kind}" d="M 1 1 L 9 5 L 1 9 Z"/></marker>`).join('')}</defs>${paths}`;
+}
+window.addEventListener('resize', () => requestAnimationFrame(drawCombatArrows));

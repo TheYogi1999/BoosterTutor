@@ -17,8 +17,9 @@ const FIXTURES = [
 ];
 function game() {
   const elements = new Map();
+  const queuedTimers = [];
   function element(key) { if (!elements.has(key)) elements.set(key, {textContent:'',innerHTML:'',style:{},dataset:{},classList:{toggle(){},add(){},remove(){},contains(){return false}},addEventListener(){},querySelectorAll(){return []},setAttribute(){},removeAttribute(){},append(){},closest(){return null},isConnected:true,offsetWidth:380,offsetHeight:180,getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}}); return elements.get(key); }
-  const context = vm.createContext({document:{documentElement:{style:{setProperty(){}}},body:{append(){}},querySelector:element,querySelectorAll:()=>[],addEventListener(){}},requestAnimationFrame(){},window:{scrollTo(){},addEventListener(){},innerWidth:1200,innerHeight:900},setTimeout:()=>0,clearTimeout(){},console,AbortSignal});
+  const context = vm.createContext({document:{documentElement:{style:{setProperty(){}}},body:{append(){}},querySelector:element,querySelectorAll:()=>[],addEventListener(){}},requestAnimationFrame(){},window:{scrollTo(){},addEventListener(){},innerWidth:1200,innerHeight:900},queuedTimers,setTimeout:callback=>{queuedTimers.push(callback);return queuedTimers.length},clearTimeout(){},console,AbortSignal});
   vm.runInContext(fs.readFileSync('cards.js','utf8'),context);
   vm.runInContext(fs.readFileSync('game.js','utf8'),context);
   vm.runInContext(`globalThis.FIXTURES = ${JSON.stringify(FIXTURES)}`,context);
@@ -182,4 +183,26 @@ test('deathtouch on an allied attacker defeats a monster after damaging its heal
  const run=game();prepare(run);
  run("state.battle.turn=3;state.battle.creatures=[{id:'p',owner:'player',card:{name:'Deathtouch fixture'},power:1,toughness:2,deathtouch:true,willAttack:true,summonedTurn:1,summoningSick:false}];resolvePlayerAttacks();");
  assert.equal(run('state.battle.enemyCreatures.length'),1);
+});
+test('combat phases prevent duplicate actions and advance through attack, enemy, block and damage',()=>{
+ const run=game();prepare(run);
+ run("state.battle.creatures=[{id:'guard',owner:'player',card:FIXTURES[4],power:2,toughness:5,summonedTurn:1,summoningSick:true,tapped:false}];queuedTimers.length=0;handleCombatAction();handleCombatAction();");
+ assert.equal(run('state.battle.phase'),'attack');assert.equal(run('queuedTimers.length'),1);
+ run('queuedTimers.shift()()');assert.equal(run('state.battle.phase'),'enemy');
+ run('queuedTimers.shift()()');assert.equal(run('state.battle.phase'),'blocks');
+ run('handleCombatAction();handleCombatAction()');assert.equal(run('state.battle.phase'),'damage');assert.equal(run('queuedTimers.length'),1);
+ run('queuedTimers.shift()()');assert.equal(run('state.battle.phase'),'main');assert.equal(run('state.battle.turn'),2);
+});
+test('resolution callbacks cannot alter another run after abandonment',()=>{
+ const run=game();prepare(run);run('queuedTimers.length=0;finishTurn();globalThis.old=state.battle;state.battle=null;queuedTimers.shift()()');
+ assert.equal(run('old.phase'),'attack');assert.equal(run('state.battle'),null);
+});
+test('planned arrows reflect the selected enemy, held-back allies and legal blockers',()=>{
+ const run=game();prepare(run);
+ run("state.battle.turn=2;state.battle.creatures=[{id:'p',owner:'player',card:FIXTURES[4],power:2,toughness:3,summonedTurn:1,summoningSick:true,willAttack:true,tapped:false}];state.battle.selectedEnemyTargetId=state.battle.enemyCreatures[1].id;");
+ assert.equal(run("combatRoutes(state.battle).find(route=>route.kind==='ally').to"),run('state.battle.enemyCreatures[1].id'));
+ run('state.battle.creatures[0].willAttack=false');assert.equal(run("combatRoutes(state.battle).filter(route=>route.kind==='ally').length"),0);
+ run("state.battle.turn=1;state.battle.phase='blocks';state.battle.blockAssignments.set(state.battle.enemyCreatures[0].id,'p')");
+ assert.equal(run("combatRoutes(state.battle).find(route=>route.kind==='block').to"),'p');
+ assert.equal(run("combatRoutes(state.battle).some(route=>route.from===state.battle.enemyCreatures[1].id)"),false);
 });

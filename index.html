@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="arena.css" />
     <link rel="stylesheet" href="table.css" />
     <link rel="stylesheet" href="expedition.css" />
+    <link rel="stylesheet" href="combat.css" />
     <script src="cards.js" defer></script>
     <script src="game.js" defer></script>
   </head>
@@ -22,7 +23,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><button class="quiet-button" id="fullscreen-button">⛶ 16:9 Vollbild</button>
-        <span class="pixel-label"><i class="status-dot"></i> ROGUELIKE · v0.9</span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.10 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -81,15 +82,16 @@
       <section class="screen combat-screen" id="combat-screen" aria-labelledby="enemy-name">
         <div class="combat-topline">
           <div class="run-progress"><span>RUN</span><b id="node-counter">01</b><div class="progress-pips" id="progress-pips"></div><span class="turn-badge" id="turn-display">Zug 1</span></div>
-          <div class="combat-location"><small>LOCATION</small><b id="location-name">THE FORGOTTEN GLADE</b></div>
+          <ol class="phase-strip" id="phase-strip" aria-label="Kampfphasen"></ol><span id="location-name" hidden>THE FORGOTTEN GLADE</span>
           <button class="quiet-button" id="quit-button">RUN BEENDEN</button>
         </div>
 
         <div class="battlefield arena-table">
+          <svg class="combat-arrows" id="combat-arrows" aria-label="Geplante Angriffe und Blocks" role="img"></svg>
           <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Dein Spielfeld links. Kreaturen, Auren und Ausrüstung hierher ziehen.">
             <div class="side-header player-side-header">
               <div class="player-avatar" aria-hidden="true"><div class="avatar-cape"></div><div class="avatar-head"></div><div class="avatar-eye"></div><div class="avatar-staff">✦</div></div>
-              <div class="side-identity">
+              <div class="side-identity" id="player-target">
                 <span class="player-rank">PLANESWALKER</span><h2>Dein Spielfeld</h2>
                 <div class="health-label"><span>LEBEN</span><b id="player-health-label">30 / 30</b></div>
                 <div class="shield-label" id="shield-label">0 Schild</div><div class="health-bar player-health-bar"><i id="player-health-fill"></i></div>
@@ -99,7 +101,7 @@
             <div class="arena-zone-header creatures-zone-header"><span>DEINE KREATUREN · LINKS</span><small id="creature-count">0 / 3</small></div>
             <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Creature zone. Drop creatures here. Click a creature to hold it back for blocking."><div class="empty-board">Drop creatures here or play one from your hand.</div></div>
             <div class="drop-hint">Kreatur anklicken: angreifen oder zum Blocken zurückhalten</div>
-            <div class="arena-zone-header"><span>VERZAUBERUNGEN & AUSRÜSTUNG</span><small id="permanent-count">0</small></div>
+            <div class="arena-zone-header"><span>FREIE VERZAUBERUNGEN & AUSRÜSTUNG</span><small id="permanent-count">0</small></div>
             <div class="permanent-row" id="permanent-row"></div>
             <button class="quiet-button" id="attachment-cancel" hidden>Zielauswahl abbrechen</button>
           </section>
@@ -131,7 +133,7 @@
           <div class="battle-log" id="battle-log" aria-live="polite"></div>
         </div>
 
-        <div class="hand-panel">
+        <div class="hand-panel"><p id="phase-status" class="phase-status" aria-live="polite"></p><div class="arrow-legend"><span>Eigener Angriff</span><span>Gegnerangriff</span><span>Geblockt</span></div>
           <div class="hand-heading"><div><span>DEINE HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
           <div class="hand-row" id="hand-row"></div>
           <div class="turn-footer">
@@ -164,6 +166,7 @@
     </footer>
     </div>
 
+    <audio id="booster-audio" src="assets/audio/booster-open.mp3" preload="auto"></audio>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="card-preview" id="card-preview" role="tooltip" hidden></div>
     <dialog class="graveyard-dialog" id="graveyard-dialog" aria-labelledby="graveyard-title">

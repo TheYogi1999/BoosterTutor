@@ -1,6 +1,6 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.9** · An unofficial browser roguelike using real Magic cards and a simplified, explicitly described ruleset.
+**Version 0.10** · An unofficial browser roguelike using real Magic cards and a simplified, explicitly described ruleset.
 
 ## Play
 
@@ -15,7 +15,7 @@ There is no build step and no runtime dependency. The interface uses a fixed **1
 ## Real cards and packs
 
 - The 32-card pool in `cards.js` contains genuine, normal-layout Magic cards verified against Scryfall. Original full-card JPEGs ship in `assets/cards/`. There are no invented starter or fallback cards. Network access to Scryfall is no longer needed to play.
-- Start with three packs of **seven cards**, opened individually with foil, light, particles and synthesized sound. Sound can be muted and reduced-motion settings disable animations.
+- Start with three packs of **seven cards**, opened individually with foil, light, particles and a bundled stereo Foley opening effect (foil tear, release thump, seven card slides). Sound can be muted and reduced-motion settings disable animations.
 - Choose one card from each pack; each choice adds four copies. Two Grizzly Bears and two Savannah Lions complete the 16-card starter deck.
 - Each opened pack has one free **reroll**. It replaces all seven cards, removes that pack's selection, and preserves picks from other packs. Reward packs also contain seven cards and receive one reroll.
 - Printed original Magic symbols remain on the images. **Payment uses only generic mana** equal to total mana value.
@@ -33,6 +33,13 @@ There is no build step and no runtime dependency. The interface uses a fixed **1
 - Four encounters lead to the Shard Dragon. Life carries between fights. After a reward, rest for 10 life or study to add a real Divination card.
 - This is **not the complete Magic rules engine**. Effect descriptions and execution share one effect plan. Unsupported spells become generic damage; permanent effects use the interpretation stated in their inspector. Run progress is held for the current page session.
 
+## Combat presentation (0.10)
+
+- The top bar shows the current adventure phase, and a five-step combat strip tracks **Cards → Your attack → Enemy action → Blocks → Damage**. Resolution beats remain visible for 650 ms each. Cards and repeated end-turn actions are locked while resolving; abandoned-run timers cannot mutate a new run.
+- Attached auras/equipment sit in a small overlapping rail directly at their host creature. Hover/focus retains the large side inspector; equipment can be dragged from that rail to a different creature. Rails scroll when many attachments accumulate. Unattached equipment and global enchantments remain in the free permanent zone.
+- Gold arrows show allied attackers and their selected target. Red dashed arrows show enemies attacking your life total; assigned blocks turn the arrow turquoise and point to the blocking creature. Damage badges and route names describe each plan. Guarding or strengthening enemies do not get attack arrows. The SVG overlay does not capture clicks or drops and rescales with the 16:9 canvas.
+- `assets/audio/booster-open.mp3` is an original 2.15-second stereo Foley asset. Playback starts on opening/rerolling a pack, tracks the card reveals, and stops immediately when sound is muted. It replaces the old musical opening chirp. No third-party audio samples are used.
+
 ## Validation
 
 Logic tests require Node.js 20+:
@@ -49,7 +56,7 @@ The browser regression requires Playwright and Chromium, plus a running static s
 BOOSTERTUTOR_URL=http://127.0.0.1:8000 node tests/browser.test.cjs
 ```
 
-It checks seven-card packs, rerolls, image loading, the anchored hand bubble, the large inspector, native mouse drags for creatures/auras/equipment/spells/blockers, turn refill, console errors, and 1280×720 / 1920×1080 viewport boundaries. Temporary screenshots go into `work/`.
+It checks seven-card packs, rerolls, image loading, the anchored hand bubble, the large inspector, native mouse drags for creatures/auras/equipment/spells/blockers, moving physically attached equipment, phase transitions, route arrows, audio playback/muting, turn refill, console errors, and 1280×720 / 1920×1080 viewport boundaries. Temporary screenshots go into `work/`.
 
 ## Assets and fan project notice
 
