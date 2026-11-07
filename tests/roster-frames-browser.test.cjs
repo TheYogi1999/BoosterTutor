@@ -54,7 +54,7 @@ const fs=require('node:fs');
         const wisp=state.battle.enemyCreatures.find(e=>e.kind==='wisp');
         state.battle.floatingMana=5;state.battle.hand=[BUNDLED_CARDS.find(c=>c.name==='Lightning Bolt')];
         state.battle.selectedEnemyTargetId=wisp.id;renderBattle();
-        const ids=state.battle.enemyCreatures.map(e=>e.id);playCard(0,'enemy');renderBattle();
+        const ids=state.battle.enemyCreatures.map(e=>e.id);playCard(0,'enemy');if(state.battle.choice){if(node===1){selectRuleChoice('enemy:'+wisp.id);confirmRuleChoice();}else cancelRuleChoice();}renderBattle();
         return{health:wisp.health,remaining:state.battle.hand.length,ids,after:state.battle.enemyCreatures.map(e=>e.id),keywords:document.querySelector(`[data-enemy-attacker="${wisp.id}"] .monster-keywords`).textContent};
       },node);
       assert.deepEqual(result.after,result.ids,'rendering never rerolls a live encounter');

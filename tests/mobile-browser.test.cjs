@@ -42,10 +42,10 @@ async function assertVisibleBoard(page) {
     });
     await page.locator('.sealed-pack').tap();
     assert.equal(await page.locator('.draft-card-summary').count(),7);
-    assert.match(await page.locator('.draft-option').nth(0).innerText(),/Creature — Bear[\s\S]*P\/T 2\/2[\s\S]*Keywords: None/);
+    assert.match(await page.locator('.draft-option').nth(0).innerText(),/Creature — Bear[\s\S]*2 mana[\s\S]*Keywords: None/);
     assert.match(await page.locator('.draft-option').nth(1).innerText(),/deathtouch, flying, lifelink/);
-    assert.match(await page.locator('.draft-option').nth(2).innerText(),/Instant[\s\S]*P\/T —[\s\S]*Deal 3 damage/);
-    assert.match(await page.locator('.draft-option').nth(6).innerText(),/<Test & card>[\s\S]*P\/T \*\/1\+\*/);
+    assert.match(await page.locator('.draft-option').nth(2).innerText(),/Instant[\s\S]*1 mana[\s\S]*Deal 3 damage/);
+    assert.match(await page.locator('.draft-option').nth(6).innerText(),/<Test & card>[\s\S]*\*[\s\S]*1\+\*/);
     await page.locator('.draft-option').first().tap();
     assert.equal(await page.locator('.draft-option').first().getAttribute('aria-pressed'),'true');
     await page.locator('#pack-reroll').tap();

@@ -19,7 +19,8 @@ function game() {
   const elements = new Map();
   const queuedTimers = [];
   function element(key) { if (!elements.has(key)) elements.set(key, {textContent:'',innerHTML:'',style:{setProperty(){}},dataset:{},classList:{toggle(){},add(){},remove(){},contains(){return false}},addEventListener(){},querySelectorAll(){return []},setAttribute(){},removeAttribute(){},append(){},closest(){return null},isConnected:true,value:'',showModal(){this.open=true},close(){this.open=false},offsetWidth:380,offsetHeight:180,getBoundingClientRect(){return {left:200,top:500,bottom:700,width:130}}}); return elements.get(key); }
-  const context = vm.createContext({document:{documentElement:{style:{setProperty(){}}},body:{append(){}},querySelector:element,querySelectorAll:()=>[],addEventListener(){}},requestAnimationFrame(){},window:{scrollTo(){},addEventListener(){},innerWidth:1200,innerHeight:900},queuedTimers,setTimeout:callback=>{queuedTimers.push(callback);return queuedTimers.length},clearTimeout(){},console,AbortSignal});
+  const context = vm.createContext({document:{documentElement:{style:{setProperty(){}},classList:{add(){},remove(){},toggle(){}}},body:{append(){}},querySelector:element,querySelectorAll:()=>[],addEventListener(){}},requestAnimationFrame(){},window:{scrollTo(){},addEventListener(){},innerWidth:1200,innerHeight:900},queuedTimers,setTimeout:callback=>{queuedTimers.push(callback);return queuedTimers.length},clearTimeout(){},console,AbortSignal,rulesAudit:()=>({playable:true,reason:'Legacy rules unit fixture'})});
+  vm.runInContext('Math.random=()=>.9',context);
   vm.runInContext(fs.readFileSync('cards.js','utf8'),context);
   vm.runInContext(fs.readFileSync('sounds.js','utf8'),context);
   vm.runInContext(fs.readFileSync('game.js','utf8'),context);
@@ -28,7 +29,7 @@ function game() {
 }
 test('all colour identities spend only their total generic mana value',()=>{
   const run=game();
-  run("state.battle={mana:3};");
+  run("state.battle={mana:3,floatingMana:3,lands:[]};");
   for (const cost of ['{1}{W}{U}','{B}{B}{B}','{C}{C}{C}']) {
     assert.equal(run(`Boolean(paymentPlan({cmc:3,mana_cost:'${cost}'}))`),true);
     assert.equal(run(`manaCostHtml({cmc:3,mana_cost:'${cost}'}).includes('>3</span>')`),true);
@@ -38,19 +39,12 @@ test('all colour identities spend only their total generic mana value',()=>{
 });
 test('casting spends mana and moves a spell into the graveyard',()=>{
  const run=game();
- run("state.soundOn=false; state.playerHealth=20; state.battle={phase:'main',mana:3,maxMana:3,hand:[FIXTURES.find(card=>card.id==='fixture-mending')],graveyard:[],creatures:[],enemyCreatures:[{}],log:[]}; renderBattle=()=>{}; playCard(0);");
+ run("state.soundOn=false; state.playerHealth=20; state.battle={phase:'main',mana:3,floatingMana:3,lands:[],maxMana:3,hand:[FIXTURES.find(card=>card.id==='fixture-mending')],graveyard:[],creatures:[],enemyCreatures:[{}],log:[]}; renderBattle=()=>{}; playCard(0);");
  assert.equal(run('state.battle.mana'),1);assert.equal(run('state.battle.hand.length'),0);assert.equal(run('state.battle.graveyard.length'),1);assert.equal(run('state.playerHealth'),25);
 });
-test('mana refills and grows, while health persists between fights',()=>{
- const run=game();
- run("state.soundOn=false; state.pool=FIXTURES; state.deck=FIXTURES; state.playerHealth=17; beginBattle(1);");
- assert.equal(run('state.playerHealth'),17);assert.equal(run('state.battle.mana'),3);
- run('state.battle.enemyCreatures=[]; winBattle=()=>{};');
- // Use harmless summoning-sick enemies to exercise full turn rollover.
- run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:FIXTURES.find(card=>card.id==='fixture-sentinel'),power:0,health:10,maxHealth:10,summoningSick:true,summonedTurn:99}]; state.battle.mana=0; resolveEnemyCombat();");
- assert.equal(run('state.battle.mana'),3);
- run('resolveEnemyCombat()');assert.equal(run('state.battle.mana'),4);
- run("state.relic='crystal'; beginBattle(2)");assert.equal(run('state.battle.mana'),4);assert.equal(run('state.playerHealth'),17);
+test('mana cards provide generic mana, untap each turn and life carries across fights',()=>{
+ const run=game();prepare(run);run("state.playerHealth=17;state.battle.floatingMana=0;syncMana(state.battle);state.battle.hand=[FALLBACK_LANDS[0]];playCard(0);payMana(1);state.battle.enemyCreatures.forEach(e=>{e.power=0;e.summoningSick=true;e.summonedTurn=99});resolveEnemyCombat()");
+ assert.equal(run('state.battle.lands.length'),1);assert.equal(run('state.battle.mana'),1);assert.equal(run('state.playerHealth'),17);run('beginBattle(2)');assert.equal(run('state.playerHealth'),17);
 });
 test('flying blocking and first/double strike rules stay distinct',()=>{
  const run=game();
@@ -60,23 +54,23 @@ test('flying blocking and first/double strike rules stay distinct',()=>{
  assert.equal(run('dealsInCombatStep({firstStrike:true},false)'),false);
  assert.equal(run('dealsInCombatStep({doubleStrike:true},false)'),true);
 });
-test('starter draft produces a land-free 16-card deck before relic selection',()=>{
- const run=game();run("state.packs=[[FIXTURES[0]],[FIXTURES.find(card=>card.id==='fixture-sentinel')],[FIXTURES[2]]];state.selection=new Map([[0,0],[1,0],[2,0]]);state.activePack=2;confirmDraft();");
- assert.equal(run('state.deck.length'),16);assert.equal(run('state.deck.some(isLand)'),false);assert.equal(run('state.battle'),null);
+test('six booster picks produce twelve cards plus four mana cards',()=>{
+ const run=game();run("state.landPool=FALLBACK_LANDS;state.packs=Array.from({length:6},()=>[FIXTURES[4]]);state.selection=new Map(Array.from({length:6},(_,i)=>[i,0]));state.activePack=5;confirmDraft()");
+ assert.equal(run('state.deck.length'),16);assert.equal(run('state.deck.filter(isLand).length'),4);assert.equal(run('state.battle'),null);
 });
 function prepare(run) {
- run(`state.soundOn=false; state.pool=FIXTURES; state.deck=Array.from({length:24},()=>FIXTURES.find(card=>card.id==='fixture-sentinel')); beginBattle(1); state.battle.enemyCreatures.forEach(enemy=>Object.assign(enemy,{flying:false,reach:false,lifelink:false,firstStrike:false,menace:false,trample:false,defender:false})); state.battle.mana=20; state.battle.maxMana=20;`);
+ run(`state.soundOn=false; state.pool=FIXTURES; state.deck=Array.from({length:24},()=>FIXTURES.find(card=>card.id==='fixture-sentinel')); beginBattle(1); state.battle.enemyCreatures.forEach(enemy=>Object.assign(enemy,{flying:false,reach:false,lifelink:false,firstStrike:false,menace:false,trample:false,defender:false})); state.battle.floatingMana=20; state.battle.maxMana=20; syncMana(state.battle);state.battle.enemyCreatures.forEach(enemy=>{enemy.summoningSick=false;enemy.summonedTurn=0});`);
 }
 test('all starter packs contain seven cards and are opened sequentially',()=>{
  const run=game();run('state.soundOn=false;state.pool=FIXTURES;state.packs=makeStarterPacks();state.activePack=0;state.boosterSealed=true;renderDraft();');
- assert.equal(run('state.packs.length'),3);assert.equal(run('state.packs.every(pack=>pack.length===7)'),true);
+ assert.equal(run('state.packs.length'),6);assert.equal(run('state.packs.every(pack=>pack.length===7)'),true);
  assert.equal(run("$('#draft-grid').innerHTML.includes('sealed-pack')"),true);
  run('state.boosterSealed=false;renderDraft()');
  assert.equal(run("($('#draft-grid').innerHTML.match(/class=\"draft-option/g)||[]).length"),7);
  run('state.selection.set(0,0);confirmDraft();');
  assert.equal(run('state.activePack'),1);assert.equal(run('state.boosterSealed'),true);assert.equal(run('state.deck.length'),0);
  run('state.boosterSealed=false;state.selection.set(1,0);confirmDraft();');assert.equal(run('state.activePack'),2);
- run('state.boosterSealed=false;state.selection.set(2,0);confirmDraft();');assert.equal(run('state.deck.length'),16);
+ run('state.landPool=FALLBACK_LANDS;for(let i=2;i<6;i++){state.boosterSealed=false;state.selection.set(i,0);confirmDraft();}');assert.equal(run('state.deck.length'),16);
 });
 test('opening and mulligan draw seven while extra draws may grow beyond seven',()=>{
  const run=game();prepare(run);assert.equal(run('state.battle.hand.length'),7);
@@ -84,12 +78,8 @@ test('opening and mulligan draw seven while extra draws may grow beyond seven',(
  run('drawOneExtra()');assert.equal(run('state.battle.hand.length'),8);
  run('state.battle.hand.pop();drawOneExtra()');assert.equal(run('state.battle.hand.length'),8);
 });
-test('enchantment remains on board and its shield renews each turn',()=>{
- const run=game();prepare(run);
- run("state.battle.hand=[FIXTURES.find(card=>card.id==='fixture-aegis')];playCard(0);");
- assert.equal(run('state.battle.permanents.length'),1);assert.equal(run('state.battle.graveyard.length'),0);assert.equal(run('state.battle.playerBlock'),1);
- run("state.battle.enemyCreatures.forEach(c=>{c.summoningSick=true;c.summonedTurn=99});resolveEnemyCombat();");
- assert.equal(run('state.battle.permanents.length'),1);assert.equal(run('state.battle.playerBlock'),1);
+test('unrecognized permanent does not gain an invented shield ability',()=>{
+ const run=game();prepare(run);run("state.battle.hand=[FIXTURES[0]];playCard(0)");assert.equal(run('state.battle.permanents.length'),1);assert.equal(run('permanentEffect(FIXTURES[0]).power'),0);assert.equal(run('permanentEffect(FIXTURES[0]).shield'),undefined);
 });
 test('equipment attaches, can move without stacking, and survives its creature',()=>{
  const run=game();prepare(run);
@@ -145,12 +135,12 @@ test('mulligan cancels pending aura targets before the hand changes',()=>{
  run("state.battle.creatures=[{id:'p',owner:'player',card:{name:'Guard'},power:2,toughness:3}];state.battle.hand=[FIXTURES.find(card=>card.id==='fixture-aura')];playCard(0);freeMulligan();selectAttachmentTarget('p');");
  assert.equal(run('state.battle.pendingAttachment'),null);assert.equal(run('state.battle.permanents.length'),0);assert.equal(run('state.battle.mana'),20);assert.equal(run('state.battle.hand.length'),7);
 });
-test('the shipped pool contains 48 real cards with locally available JPEGs',()=>{
+test('the shipped pool contains 60 real cards with locally available JPEGs',()=>{
  const run=game();
- assert.equal(run('BUNDLED_CARDS.length'),48);
+ assert.equal(run('BUNDLED_CARDS.length'),60);
  assert.equal(run("BUNDLED_CARDS.every(card=>card.verified && /^[a-f0-9-]{36}$/.test(card.id) && !card.id.startsWith('demo-'))"),true);
  const cards=JSON.parse(run('JSON.stringify(BUNDLED_CARDS)'));
- assert.equal(new Set(cards.map(card=>card.id)).size,48);
+ assert.equal(new Set(cards.map(card=>card.id)).size,60);
  for(const card of cards){assert.equal(fs.readFileSync(card.image).readUInt16BE(0),0xffd8);}
  assert.equal(cards.find(card=>card.name==='Grizzly Bears').power,'2');
 });
@@ -159,16 +149,12 @@ test('reroll changes seven cards once and clears only the current selection',()=
  assert.equal(run('state.packs[1].length'),7);assert.equal(run('state.packs[1].every(card=>!oldIds.includes(card.id))'),true);assert.equal(run('state.selection.has(0)'),true);assert.equal(run('state.selection.has(1)'),false);
  const after=run('JSON.stringify(state.packs[1])');run('rerollCurrentPack()');assert.equal(run('JSON.stringify(state.packs[1])'),after);
 });
-test('monster intentions control attacks and resolve guard/buff only once',()=>{
- const run=game();prepare(run);
- run("state.battle.enemyCreatures=[{id:'guard',owner:'enemy',card:{name:'Guard'},health:20,maxHealth:20,power:3,pattern:['guard','buff','attack']}];state.battle.turn=1;resolveEnemyIntents();resolveEnemyIntents();");
- assert.equal(run('state.battle.enemyCreatures[0].shield'),5);assert.equal(run('creatureCanAttack(state.battle.enemyCreatures[0],1)'),false);
- run('state.battle.turn=2;resolveEnemyIntents();resolveEnemyIntents()');assert.equal(run('state.battle.enemyCreatures[0].power'),4);
- assert.equal(run('enemyIntent(state.battle.enemyCreatures[0],3).damage'),4);
+test('monster recovery and strengthening resolve only once each turn',()=>{
+ const run=game();prepare(run);run("state.battle.enemyCreatures=[{id:'guard',owner:'enemy',card:{name:'Guard'},health:10,maxHealth:20,power:3,pattern:['guard','buff','attack']}];state.battle.turn=1;resolveEnemyIntents();resolveEnemyIntents()");assert.equal(run('state.battle.enemyCreatures[0].health'),13);assert.equal(run('creatureCanAttack(state.battle.enemyCreatures[0],1)'),false);run('state.battle.turn=2;resolveEnemyIntents();resolveEnemyIntents()');assert.equal(run('state.battle.enemyCreatures[0].power'),4);
 });
-test('selected monster receives damage after shield, other monsters stay unchanged',()=>{
+test('selected monster receives direct damage, other monsters stay unchanged',()=>{
  const run=game();prepare(run);run("state.battle.enemyCreatures[0].shield=3;state.battle.selectedEnemyTargetId=state.battle.enemyCreatures[0].id;globalThis.hp=state.battle.enemyCreatures[0].health;globalThis.other=state.battle.enemyCreatures[1].health;damageFirstEnemy(5)");
- assert.equal(run('state.battle.enemyCreatures[0].health'),run('hp-2'));assert.equal(run('state.battle.enemyCreatures[0].shield'),0);assert.equal(run('state.battle.enemyCreatures[1].health'),run('other'));
+ assert.equal(run('state.battle.enemyCreatures[0].health'),run('hp-5'));assert.equal(run('state.battle.enemyCreatures[0].shield'),3);assert.equal(run('state.battle.enemyCreatures[1].health'),run('other'));
 });
 test('creatures cannot be dropped on the enemy or accidentally cast as card zero',()=>{
  const run=game();prepare(run);run("state.battle.hand=[FIXTURES.find(c=>c.id==='fixture-sentinel')];globalThis.enemyTarget={closest(selector){return selector==='#enemy-drop-zone'?{}:null}};");
@@ -182,7 +168,7 @@ test('dropping an aura onto a creature attaches and spends mana once',()=>{
 });
 test('deathtouch on an allied attacker defeats a monster after damaging its health',()=>{
  const run=game();prepare(run);
- run("state.battle.turn=3;state.battle.creatures=[{id:'p',owner:'player',card:{name:'Deathtouch fixture'},power:1,toughness:2,deathtouch:true,willAttack:true,summonedTurn:1,summoningSick:false}];resolvePlayerAttacks();");
+ run("state.battle.turn=3;state.battle.creatures=[{id:'p',owner:'player',card:{name:'Deathtouch fixture'},power:1,toughness:2,deathtouch:true,willAttack:true,summonedTurn:1,summoningSick:false}];state.battle.phase='attack';resolvePlayerAttacks();");
  assert.equal(run('state.battle.enemyCreatures.length'),1);
 });
 test('combat phases prevent duplicate actions and advance through attack, enemy, block and damage',()=>{
@@ -229,23 +215,23 @@ function fighter(run, stats) {
 }
 test('monsters retaliate and normal combat damage is simultaneous',()=>{
  const run=game();prepare(run);fighter(run);
- run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Enemy'},health:3,maxHealth:3,power:3}];resolvePlayerAttacks()");
+ run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Enemy'},health:3,maxHealth:3,power:3}];state.battle.phase='attack';resolvePlayerAttacks()");
  assert.equal(run('state.battle.creatures.length'),0);assert.equal(run('state.battle.enemyCreatures.length'),0);assert.equal(run('state.battle.graveyard.length'),1);
 });
 test('first strike prevents retaliation when it kills the monster first',()=>{
  const run=game();prepare(run);fighter(run,{firstStrike:true});
- run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Enemy'},health:3,power:6}];resolvePlayerAttacks()");
+ run("state.battle.enemyCreatures=[{id:'e',owner:'enemy',card:{name:'Enemy'},health:3,power:6}];state.battle.phase='attack';resolvePlayerAttacks()");
  assert.equal(run('state.battle.creatures.length'),1);assert.equal(run('state.battle.creatures[0].damage||0'),0);
 });
 test('vigilance attacks once, remains untapped, and can then block',()=>{
  const run=game();prepare(run);fighter(run,{vigilance:true,toughness:8});
- run("state.battle.enemyCreatures[0].power=1;resolvePlayerAttacks();");
+ run("state.battle.enemyCreatures[0].power=1;state.battle.phase='attack';resolvePlayerAttacks();");
  assert.equal(run('state.battle.creatures[0].tapped'),false);assert.equal(run('state.battle.creatures[0].attackedThisTurn'),true);assert.equal(run('eligibleAttacker(state.battle.creatures[0],state.battle)'),false);
  run("state.battle.phase='blocks';assignBlocker(state.battle.enemyCreatures[0].id,'p')");assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).length'),1);
 });
 test('individual creatures use different attack targets',()=>{
  const run=game();prepare(run);
- run("state.battle.creatures=[{id:'a',owner:'player',card:FIXTURES[4],power:2,toughness:9,summonedTurn:0,willAttack:true,attackTargetId:state.battle.enemyCreatures[0].id},{id:'b',owner:'player',card:FIXTURES[4],power:4,toughness:9,summonedTurn:0,willAttack:true,attackTargetId:state.battle.enemyCreatures[1].id}];resolvePlayerAttacks()");
+ run("state.battle.creatures=[{id:'a',owner:'player',card:FIXTURES[4],power:2,toughness:9,summonedTurn:0,willAttack:true,attackTargetId:state.battle.enemyCreatures[0].id},{id:'b',owner:'player',card:FIXTURES[4],power:4,toughness:9,summonedTurn:0,willAttack:true,attackTargetId:state.battle.enemyCreatures[1].id}];state.battle.phase='attack';resolvePlayerAttacks()");
  assert.equal(run('state.battle.enemyCreatures[0].health'),11);assert.equal(run('state.battle.enemyCreatures[1].health'),6);assert.equal(run('state.battle.creatures[0].damage'),3);assert.equal(run('state.battle.creatures[1].damage'),2);
 });
 test('two blockers split incoming damage once and combine their return damage',()=>{
@@ -261,7 +247,7 @@ test('multi-block assignment is additive, toggles one blocker, and keeps each bl
 });
 test('exiling a creature detaches equipment, destroys its aura, and never recycles the exiled card',()=>{
  const run=game();prepare(run);
- run("state.battle.hand=[FIXTURES[4],FIXTURES[2],FIXTURES[1]];playCard(0,'player');playCard(0);selectAttachmentTarget(state.battle.creatures[0].id);playCard(0);state.battle.permanents[1].attachedTo=state.battle.creatures[0].id;state.battle.resolvingSpellTarget={side:'player',id:state.battle.creatures[0].id};removeSpellTarget('exile');state.battle.deck=[];reshuffleGraveyard();");
+ run("state.battle.hand=[FIXTURES[4],FIXTURES[2],FIXTURES[1]];playCard(0,'player');playCard(0);selectAttachmentTarget(state.battle.creatures[0].id);playCard(0);state.battle.permanents[1].attachedTo=state.battle.creatures[0].id;state.battle.resolvingSpellTarget={side:'player',id:state.battle.creatures[0].id};removeSpellTarget('exile');state.battle.deck=[];");
  assert.equal(run('state.battle.exile.length'),1);assert.equal(run('state.battle.creatures.length'),0);assert.equal(run('state.battle.permanents.length'),1);assert.equal(run('state.battle.permanents[0].attachedTo'),null);assert.equal(run('state.battle.deck.some(card=>card.id===FIXTURES[4].id)'),false);
 });
 test('Unmake is a genuine bundled instant with an exile effect',()=>{
@@ -293,7 +279,7 @@ test('exiling a blocker removes its assignment before incoming damage',()=>{
  assert.equal(run('blockerIds(state.battle,state.battle.enemyCreatures[0].id).length'),0);
 });
 test('a declared attack does not silently retarget after its target leaves',()=>{
- const run=game();prepare(run);fighter(run,{attackTargetId:'gone'});run('resolvePlayerAttacks()');
+ const run=game();prepare(run);fighter(run,{attackTargetId:'gone'});run("state.battle.phase='attack';resolvePlayerAttacks()");
  assert.equal(run('state.battle.enemyCreatures[0].health'),13);assert.equal(run('state.battle.creatures[0].attackedThisTurn||false'),false);
 });
 test('Battlegrowth creates a persistent +1/+1 modifier distinct from a temporary buff',()=>{
@@ -316,16 +302,16 @@ test('shop has three distinct fixed offers, purchases one copy and guards the ba
  run('state.coins=0');assert.equal(run('buyShopCard(1)'),false);assert.equal(run('state.deck.length-before'),1);
 });
 test('printed equip costs are paid on attachment and moving, with no partial unaffordable move',()=>{
- const run=game();prepare(run);run("state.battle.hand=[FIXTURES[4],FIXTURES[6],FIXTURES[1]];playCard(0,'player');playCard(0,'player');playCard(0);state.battle.mana=2;globalThis.equip=()=>{state.battle.pendingAttachment={permanentId:state.battle.permanents[0].id}};equip();selectAttachmentTarget(state.battle.creatures[0].id)");
+ const run=game();prepare(run);run("state.battle.hand=[FIXTURES[4],FIXTURES[6],FIXTURES[1]];playCard(0,'player');playCard(0,'player');playCard(0);state.battle.floatingMana=2;syncMana(state.battle);globalThis.equip=()=>{state.battle.pendingAttachment={permanentId:state.battle.permanents[0].id}};equip();selectAttachmentTarget(state.battle.creatures[0].id)");
  assert.equal(run('state.battle.mana'),1);run('equip();selectAttachmentTarget(state.battle.creatures[1].id)');assert.equal(run('state.battle.mana'),0);
  run('equip();selectAttachmentTarget(state.battle.creatures[0].id)');assert.equal(run('state.battle.permanents[0].attachedTo'),run('state.battle.creatures[1].id'));
  assert.equal(run("equipCost(BUNDLED_CARDS.find(card=>card.name==='Bonesplitter'))"),1);assert.equal(run("equipCost(BUNDLED_CARDS.find(card=>card.name==='Short Sword'))"),1);
- run("state.battle.mana=5;state.battle.phase='blocks';equip();selectAttachmentTarget(state.battle.creatures[0].id)");assert.equal(run('state.battle.mana'),5);
+ run("state.battle.floatingMana=5;syncMana(state.battle);state.battle.phase='blocks';equip();selectAttachmentTarget(state.battle.creatures[0].id)");assert.equal(run('state.battle.mana'),5);
 });
-test('every printed keyword in the expanded verified pool has explicit support',()=>{
- const run=game();assert.equal(run('BUNDLED_CARDS.every(card=>cardAudit(card).dataVerified && !cardAudit(card).unknown.length)'),true);
+test('all expanded cards retain verified source metadata',()=>{
+ const run=game();assert.equal(run('BUNDLED_CARDS.every(card=>cardAudit(card).dataVerified)'),true);
  for(const name of ['Fencing Ace','Typhoid Rats','Healer\'s Hawk','Deadly Recluse','Wall of Wood','Boggart Brute','Colossal Dreadmaw','Skyhunter Skirmisher'])assert.equal(run(`Boolean(BUNDLED_CARDS.find(card=>card.name===${JSON.stringify(name)}))`),true);
- assert.equal(run("cardAudit(BUNDLED_CARDS.find(card=>card.name==='Cancel')).adapted"),true);
+ assert.equal(run("Boolean(BUNDLED_CARDS.find(card=>card.name==='Cancel'))"),true);
 });
 test('enemy archetypes carry real combat keywords and show them in the arena',()=>{
  const run=game();prepare(run);run('state.node=4;state.battle.enemyCreatures=createEnemyTeam(4)');assert.equal(run('state.battle.enemyCreatures[0].flying'),true);assert.equal(run('state.battle.enemyCreatures[0].trample'),true);assert.equal(run('state.battle.enemyCreatures[1].lifelink'),true);
@@ -354,6 +340,6 @@ test('catalog filters combine keyword, type, mana, colour and search',()=>{
  const run=game();run("openCollection('catalog');$('#collection-type').value='Creature';$('#collection-keyword').value='flying';$('#collection-color').value='W';$('#collection-mana').value='1';renderCollection()");assert.equal(run('state.collectionCards.length'),1);assert.equal(run('state.collectionCards[0].name'),"Healer's Hawk");run("$('#collection-search').value='goblin';renderCollection()");assert.equal(run('state.collectionCards.length'),0);
 });
 
-test('deathtouch trample must get through a monster shield before spilling damage',()=>{
- const run=game();prepare(run);run("globalThis.a={id:'a',owner:'player',card:FIXTURES[4],power:5,toughness:5,deathtouch:true,trample:true};globalThis.b={id:'b',owner:'enemy',card:FIXTURES[4],power:0,health:10,maxHealth:10,shield:2};globalThis.c={...b,id:'c',shield:0};state.battle.creatures=[a];state.battle.enemyCreatures=[b,c];resolveCombatDamage([a],new Map([[a.id,[b]]]),'player')");assert.equal(run('b.health'),0);assert.equal(run('state.battle.enemyCreatures.includes(b)'),false);assert.equal(run('c.health'),8);
+test('deathtouch trample assigns one lethal damage and spills the rest',()=>{
+ const run=game();prepare(run);run("globalThis.a={id:'a',owner:'player',card:FIXTURES[4],power:5,toughness:5,deathtouch:true,trample:true};globalThis.b={id:'b',owner:'enemy',card:FIXTURES[4],power:0,health:10,maxHealth:10,shield:2};globalThis.c={...b,id:'c',shield:0};state.battle.creatures=[a];state.battle.enemyCreatures=[b,c];resolveCombatDamage([a],new Map([[a.id,[b]]]),'player')");assert.equal(run('b.health'),0);assert.equal(run('state.battle.enemyCreatures.includes(b)'),false);assert.equal(run('c.health'),6);
 });

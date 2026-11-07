@@ -6,22 +6,25 @@
     <meta name="theme-color" content="#0b1015" />
     <meta name="description" content="Booster Tutor is a free, unofficial browser roguelike with a six-pack Magic draft, mana cards, and country-themed encounters." />
     <title>Booster Tutor — The Aether Expedition</title>
-    <link rel="stylesheet" href="style.css?v=0.24" />
-    <link rel="stylesheet" href="arena.css?v=0.24" />
-    <link rel="stylesheet" href="table.css?v=0.24" />
-    <link rel="stylesheet" href="expedition.css?v=0.24" />
-    <link rel="stylesheet" href="combat.css?v=0.24" />
-    <link rel="stylesheet" href="polish.css?v=0.24" />
-    <link rel="stylesheet" href="adventure.css?v=0.24" />
-    <link rel="stylesheet" href="market.css?v=0.24" />
-    <link rel="stylesheet" href="country.css?v=0.24" />
-    <link rel="stylesheet" href="mobile.css?v=0.24" />
-    <link rel="stylesheet" href="aether.css?v=0.24" />
-    <link rel="stylesheet" href="widescreen.css?v=0.24" />
-    <link rel="stylesheet" href="discoveries.css?v=0.24" />
-    <script src="cards.js?v=0.24" defer></script>
-    <script src="sounds.js?v=0.24" defer></script>
-    <script src="game.js?v=0.24" defer></script>
+    <link rel="stylesheet" href="style.css?v=0.25" />
+    <link rel="stylesheet" href="arena.css?v=0.25" />
+    <link rel="stylesheet" href="table.css?v=0.25" />
+    <link rel="stylesheet" href="expedition.css?v=0.25" />
+    <link rel="stylesheet" href="combat.css?v=0.25" />
+    <link rel="stylesheet" href="polish.css?v=0.25" />
+    <link rel="stylesheet" href="adventure.css?v=0.25" />
+    <link rel="stylesheet" href="market.css?v=0.25" />
+    <link rel="stylesheet" href="country.css?v=0.25" />
+    <link rel="stylesheet" href="mobile.css?v=0.25" />
+    <link rel="stylesheet" href="aether.css?v=0.25" />
+    <link rel="stylesheet" href="widescreen.css?v=0.25" />
+    <link rel="stylesheet" href="discoveries.css?v=0.25" />
+    <link rel="stylesheet" href="effects.css?v=0.25" />
+    <script src="cards.js?v=0.25" defer></script>
+    <script src="sounds.js?v=0.25" defer></script>
+    <script src="game.js?v=0.25" defer></script>
+    <script src="rules.js?v=0.25" defer></script>
+    <script src="effects.js?v=0.25" defer></script>
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
@@ -32,7 +35,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button><button class="quiet-button" id="fullscreen-button">⛶ Fullscreen</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.24 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.25 · <span id="global-phase">START</span></span>
         <button class="icon-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
     </header>
@@ -144,7 +147,7 @@
           <div class="battle-log" id="battle-log" aria-live="polite"></div>
         </div>
 
-        <div class="hand-panel"><p id="phase-status" class="phase-status" aria-live="polite"></p>
+        <div class="hand-panel"><span id="copy-spell-status" hidden></span><p id="phase-status" class="phase-status" aria-live="polite"></p>
           <div class="hand-heading"><div><span>YOUR HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
           <div class="hand-row" id="hand-row"></div>
           <button class="library-pile" id="library-button" aria-label="Inspect library contents without revealing draw order"><span class="library-label">LIBRARY</span><span class="library-stack"><img src="assets/mtg-card-back.jpg" alt="Magic: The Gathering card back — face-down library" draggable="false"></span><span class="library-caption"><b id="library-count">0</b> cards</span></button>
@@ -179,7 +182,7 @@
     </footer>
     </div>
 
-    <audio id="booster-audio" src="assets/audio/booster-open.mp3" preload="auto"></audio>
+    <audio id="booster-audio" src="assets/audio/pack-reveal.mp3" preload="auto"></audio>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="card-preview" id="card-preview" role="tooltip" hidden></div>
     <dialog class="graveyard-dialog" id="graveyard-dialog" aria-labelledby="graveyard-title">
@@ -190,9 +193,10 @@
     </dialog>
     <dialog class="collection-dialog" id="collection-dialog" aria-labelledby="collection-title">
       <header><div><span class="eyebrow" id="collection-kind">RUN DECK</span><h2 id="collection-title">Your deck</h2></div><button id="collection-close" class="graveyard-close" aria-label="Close card collection">×</button></header>
-      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><select id="collection-type" aria-label="Filter by card type"><option value="">All types</option><option>Creature</option><option>Instant</option><option>Sorcery</option><option>Enchantment</option><option>Equipment</option><option>Artifact</option></select><select id="collection-mana" aria-label="Filter by mana value"><option value="">Any mana</option><option value="0">Mana 0</option><option value="1">Mana 1</option><option value="2">Mana 2</option><option value="3">Mana 3</option><option value="4">Mana 4</option><option value="5">Mana 5</option><option value="6">Mana 6</option></select><select id="collection-keyword" aria-label="Filter by printed keyword"><option value="">All keywords</option><option value="flying">Flying</option><option value="reach">Reach</option><option value="lifelink">Lifelink</option><option value="deathtouch">Deathtouch</option><option value="first strike">First Strike</option><option value="double strike">Double Strike</option><option value="haste">Haste</option><option value="vigilance">Vigilance</option><option value="trample">Trample</option><option value="menace">Menace</option><option value="defender">Defender</option><option value="hexproof">Hexproof</option><option value="flash">Flash</option><option value="equip">Equip</option><option value="enchant">Enchant</option><option value="scry">Scry</option></select><select id="collection-color" aria-label="Filter by printed color identity"><option value="">All colours</option><option value="W">White</option><option value="U">Blue</option><option value="B">Black</option><option value="R">Red</option><option value="G">Green</option><option value="C">Colourless</option></select><select id="collection-seen" aria-label="Filter by discovery status" hidden><option value="">All discovery states</option><option value="seen">Seen</option><option value="unseen">Not seen</option></select><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
+      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><select id="collection-type" aria-label="Filter by card type"><option value="">All types</option><option>Creature</option><option>Instant</option><option>Sorcery</option><option>Enchantment</option><option>Equipment</option><option>Artifact</option></select><select id="collection-mana" aria-label="Filter by mana value"><option value="">Any mana</option><option value="0">Mana 0</option><option value="1">Mana 1</option><option value="2">Mana 2</option><option value="3">Mana 3</option><option value="4">Mana 4</option><option value="5">Mana 5</option><option value="6">Mana 6</option></select><select id="collection-keyword" aria-label="Filter by printed keyword"><option value="">All keywords</option><option value="flying">Flying</option><option value="reach">Reach</option><option value="lifelink">Lifelink</option><option value="deathtouch">Deathtouch</option><option value="first strike">First Strike</option><option value="double strike">Double Strike</option><option value="haste">Haste</option><option value="vigilance">Vigilance</option><option value="trample">Trample</option><option value="menace">Menace</option><option value="defender">Defender</option><option value="hexproof">Hexproof</option><option value="flash">Flash</option><option value="equip">Equip</option><option value="enchant">Enchant</option><option value="scry">Scry</option></select><select id="collection-color" aria-label="Filter by printed color identity"><option value="">All colours</option><option value="W">White</option><option value="U">Blue</option><option value="B">Black</option><option value="R">Red</option><option value="G">Green</option><option value="C">Colourless</option></select><select id="collection-rules" aria-label="Filter by rules support"><option value="">All rules states</option><option value="playable">Playable</option><option value="banned">Ban list</option></select><select id="collection-seen" aria-label="Filter by discovery status" hidden><option value="">All discovery states</option><option value="seen">Seen</option><option value="unseen">Not seen</option></select><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
     </dialog>
     <dialog class="scry-dialog" id="scry-dialog" aria-labelledby="scry-title"><span class="eyebrow">SCRY</span><h2 id="scry-title">Shape your next draw</h2><p>Click a card to send it to the bottom. Swap the cards to change their order.</p><div id="scry-grid"></div><div class="scry-actions"><button class="quiet-button" id="scry-swap">Swap order</button><button class="primary-button" id="scry-confirm">Confirm scry →</button></div></dialog>
+    <dialog class="rule-dialog" id="rule-dialog" aria-labelledby="rule-title"><span class="eyebrow">CARD CHOICES</span><h2 id="rule-title"></h2><p id="rule-instruction"></p><div id="rule-options"></div><p id="rule-progress"></p><div class="rule-actions"><button id="rule-cancel" class="quiet-button">Cancel · pay nothing</button><button id="rule-confirm" class="primary-button" disabled>Confirm →</button></div></dialog>
     <dialog class="confirm-dialog" id="quit-dialog">
       <h2>Abandon this run?</h2>
       <p>Your current progress will be lost.</p>

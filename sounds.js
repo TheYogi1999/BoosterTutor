@@ -46,7 +46,7 @@ function playSfx(name) {
     }
     const source = soundEngine.context.createBufferSource();
     const gain = soundEngine.context.createGain();
-    gain.gain.value = ({ select: 0.45, grab: 0.45, cancel: 0.4, creature: 0.84, cast: 0.8, hit: 0.82, block: 0.8, victory: 0.8 })[name] || 0.68;
+    gain.gain.value = ({ select: 0.45, grab: 0.45, cancel: 0.4, creature: 0.4, cast: 0.35, hit: 0.38, block: 0.3, victory: 0.45 })[name] || 0.3;
     source.voiceGain = gain;
     source.buffer = buffer; source.connect(gain); gain.connect(soundEngine.bus);
     source.onended = () => soundEngine.voices.delete(source);
@@ -54,3 +54,16 @@ function playSfx(name) {
     source.start(0, name === 'select' ? 0 : SFX_CUES[name].start, name === 'select' ? buffer.duration : SFX_CUES[name].duration);
   }).catch(() => {}); // Sound is optional; gameplay remains available.
 }
+
+// Recorded card Foley and a short acoustic jingle replace the prominent synthetic cues.
+const RECORDED_SFX={select:['assets/audio/card-place.ogg',.23],grab:['assets/audio/card-slide.ogg',.2],attach:['assets/audio/card-place.ogg',.3],cast:['assets/audio/card-fan.ogg',.32],creature:['assets/audio/card-fan.ogg',.36],shuffle:['assets/audio/card-shuffle.ogg',.28],intro:['assets/audio/expedition-start.mp3',.48]};
+RECORDED_SFX.turn=['assets/audio/card-place.ogg',.17];
+RECORDED_SFX.block=['assets/audio/card-place.ogg',.25];
+const recordedBuffers=new Map();const originalPlaySfx=playSfx;let lastRecordedCue=0;
+playSfx=function(name){
+ if(!state.soundOn)return;const entry=RECORDED_SFX[name];if(!entry)return originalPlaySfx(name);
+ const [path,level]=entry;const now=Date.now();if(name==='select'&&now-lastRecordedCue<65)return;lastRecordedCue=now;
+ const audioEpoch=soundEngine.epoch||0;
+ soundEngine.resume().then(async()=>{let loading=recordedBuffers.get(path);if(!loading){loading=fetch(path).then(response=>{if(!response.ok)throw Error('Audio unavailable');return response.arrayBuffer();}).then(bytes=>soundEngine.context.decodeAudioData(bytes));recordedBuffers.set(path,loading);}const buffer=await loading;if(!state.soundOn||(soundEngine.epoch||0)!==audioEpoch)return;const source=soundEngine.context.createBufferSource();const gain=soundEngine.context.createGain();gain.gain.value=level;source.buffer=buffer;source.connect(gain);gain.connect(soundEngine.bus);source.voiceGain=gain;soundEngine.voices.add(source);source.onended=()=>soundEngine.voices.delete(source);source.start();}).catch(()=>{});
+};
+const originalStopSounds=soundEngine.stop.bind(soundEngine);soundEngine.stop=function(){this.epoch=(this.epoch||0)+1;originalStopSounds();};

@@ -1,6 +1,26 @@
 # Booster Tutor — The Aether Expedition
 
-**Version 0.24** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
+## Version 0.25: reviewed cards and presentation
+
+The source catalog now includes 60 bundled real cards. Only rules-reviewed cards can enter new boosters, shops and decks (57 in the offline pool). The larger Scryfall list is audited on load: supported fixed-stat keyword creatures remain eligible; unimplemented triggers, costs and keywords are excluded. The catalog’s **Ban list** filter shows the exact reason. Cancel and Reverberate require a spell stack, and Duress requires an opponent hand; they are banned instead of being replaced by unrelated effects.
+
+Explicit choices now cover discard, sacrifice and targets. Village Rites / Altar’s Reap sacrifice a chosen creature; Thrill of Possibility / Cathartic Reunion discard chosen other cards. Costs are paid atomically after confirmation and not refunded after resolution. Cancelling pays nothing. Raise Dead selects a creature card in the graveyard. Snakeskin Veil restricts its target to your creatures; Hunger of the Howlpack checks whether a creature died this turn; Invigorating Surge doubles only actual +1/+1 counters. Auras may also target a legal monster and detach when it leaves.
+
+Doublecast copies the next instant or sorcery this turn without another mana or additional-cost payment. Copies keep the chosen target; they fizzle if it is gone, and the effect expires at cleanup. Clone copies a chosen allied creature’s printed characteristics, not its counters, equipment, damage or tapped state; Clone itself returns to the graveyard when the copy dies. This remains a monster-duel adaptation, without a complete opposing spell stack or enemy Magic creature cards.
+
+Recorded CC0 card Foley and a real packet-opening recording replace prominent synthetic effects; source details are in [assets/audio/SOURCES.md](assets/audio/SOURCES.md). Orange-white booster flares, centered NEW badges and glowing art frames accompany the reveal. Successful drags travel into their actual destination, cancelled drags return, and enemy hits flash and show floating damage. Reduced-motion settings shorten or disable movement. Four atmospheric stage scenes vary with the selected country. Existing portraits, avatar selection, six-booster draft, manual generic mana cards and fixed viewport layout remain in place.
+
+Current checks:
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs
+node tests/rules-effects-browser.test.cjs
+```
+
+The earlier UI test scripts describe older releases; use the reviewed-rules suite for the new target and cost dialogs.
+
+
+**Version 0.25** · A free, unofficial browser roguelike demo with genuine Magic cards and an explicitly adapted ruleset.
 
 Play: https://theyogi1999.github.io/BoosterTutor/
 
@@ -14,7 +34,7 @@ No build step or runtime dependencies. Every scene uses the same 1600×900 (16:9
 
 ## Draft, deck and card zones
 
-- The curated list in `card-pool.txt` contains 389 Magic card names. At the start of a run, the game resolves the list through Scryfall and loads card text, mana values, keywords and original images. The verified bundled cards remain available as the offline fallback.
+- The curated list in `card-pool.txt` contains a larger list of Magic card names. At the start of a run, the game resolves the list through Scryfall and loads card text, mana values, keywords and original images. The verified bundled cards remain available as the offline fallback.
 - Open six packs individually, with seven cards each. Pick one card per pack and receive two copies of each pick. Four basic mana cards complete the 16-card starter deck; there are no extra starter creatures.
 - Each opened pack has one free reroll. It replaces seven cards and clears only that pack's selection. Reward packs also contain seven cards.
 - Every booster card shows its type, mana value, printed power/toughness, keywords and a short in-game ability summary below its image. Noncreatures show a dash for power/toughness; full effect details remain available in the card preview.
@@ -34,7 +54,7 @@ No build step or runtime dependencies. Every scene uses the same 1600×900 (16:9
 - The card pool shows **Seen / Not seen** status and a discovery filter, without NEW badges. Browsing the pool does not mark its contents as seen. The redesigned title screen groups the main actions and avatar picker beside the card display and includes a persistent discovery count, all inside the same 16:9 frame.
 - Printed keywords in this pool have explicit support: flying, reach, lifelink, deathtouch, first/double strike, haste, vigilance, trample, menace, defender, hexproof, flash, enchant, equip and scry. Monsters can have combat keywords, shown under their intentions. Hexproof monsters cannot be targeted by player spells, but can still be attacked or blocked in combat.
 - Scry opens an ordered top-card chooser: keep cards on top, move them to the bottom, or swap their order. Omen scries before its draw and can be sacrificed for 3 mana to scry again. Fountain of Renewal gains life each upkeep and can be sacrificed for 3 mana to draw. Angelic Chorus gains life equal to an entering creature’s toughness; Llanowar Elves taps for generic mana after sickness ends. Rancor returns to hand when its host leaves. Juggernaut must attack when able and cannot be blocked by Walls.
-- Data verification means source metadata and original images match Scryfall. Combat remains an adapted monster-duel ruleset; Cancel interrupts a monster's attack for the turn instead of using a full spell stack.
+- Data verification means source metadata and original images match Scryfall. Combat remains an adapted monster-duel ruleset; Cancel is banned because opposing spells and a complete stack are not modeled.
 
 ## Mana, hand and life
 
@@ -76,7 +96,7 @@ Four encounters lead to the Shard Dragon. Each run draws four distinct stages fr
 
 Enemy groups vary their support opponent and, outside the boss fight, their positions. Encounter sizes stay at 2, 2, 3 and 2; later stages retain their elite enemies and the final Shard Dragon is guaranteed. The first fight always includes a grounded Moss Sentinel, draws only from the introductory opponents, and never gives an opponent Hexproof. Aether Wisps can appear in that first fight without Hexproof; later wisps keep it. A live encounter is generated once and does not reroll on turns or redraws.
 
-This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents use the stated roguelike interpretations. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system. This is a free, non-commercial fan demo for entertainment; it is not affiliated with or endorsed by Wizards of the Coast.
+This is **not a full Magic rules engine**. Effect descriptions and execution share the same effect plan, but unrecognized spells and permanents are banned from new runs until their rules are supported. Instants do not implement the complete Magic stack, protection rules are not simulated, and monster combat is an adapted duel system. This is a free, non-commercial fan demo for entertainment; it is not affiliated with or endorsed by Wizards of the Coast.
 
 ## Validation
 

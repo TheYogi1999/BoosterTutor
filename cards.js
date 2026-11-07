@@ -1,4 +1,3 @@
-// Genuine normal-layout Magic cards verified against Scryfall. Original full-card images are bundled.
 const BUNDLED_CARDS = [
   {
     "id": "409f9b88-f03e-40b6-9883-68c14c37c0de",
@@ -909,6 +908,214 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/adbf772f-ebdf-4c04-996f-0dbf1826049b.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/a/d/adbf772f-ebdf-4c04-996f-0dbf1826049b.jpg?1783938424",
     "uri": "https://scryfall.com/card/mm2/32/skyhunter-skirmisher?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "42ed35e9-51cd-468a-86a9-9412553cf50d",
+    "name": "Village Rites",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "As an additional cost to cast this spell, sacrifice a creature.\nDraw two cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/42ed35e9-51cd-468a-86a9-9412553cf50d.jpg",
+    "uri": "https://scryfall.com/card/inr/137/village-rites?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "ddb01913-ad41-4a20-bef0-cf8412cce39c",
+    "name": "Thrill of Possibility",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "As an additional cost to cast this spell, discard a card.\nDraw two cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/ddb01913-ad41-4a20-bef0-cf8412cce39c.jpg",
+    "uri": "https://scryfall.com/card/trc/455/thrill-of-possibility?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "e3bca51a-b9be-4be2-a256-b15853fde433",
+    "name": "Cathartic Reunion",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Sorcery",
+    "oracle_text": "As an additional cost to cast this spell, discard two cards.\nDraw three cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/e3bca51a-b9be-4be2-a256-b15853fde433.jpg",
+    "uri": "https://scryfall.com/card/ecc/91/cathartic-reunion?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "1db55625-25a5-46eb-9d9c-9b3ed219359f",
+    "name": "Altar's Reap",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "As an additional cost to cast this spell, sacrifice a creature.\nDraw two cards.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/1db55625-25a5-46eb-9d9c-9b3ed219359f.jpg",
+    "uri": "https://scryfall.com/card/cma/45/altars-reap?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "4950c3c2-80c1-4447-ac38-cf40f76b9545",
+    "name": "Raise Dead",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Return target creature card from your graveyard to your hand.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/4950c3c2-80c1-4447-ac38-cf40f76b9545.jpg",
+    "uri": "https://scryfall.com/card/w17/18/raise-dead?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "55a3153e-4259-4e03-bf79-8979d3c0db36",
+    "name": "Doublecast",
+    "mana_cost": "{R}{R}",
+    "cmc": 2.0,
+    "type_line": "Sorcery",
+    "oracle_text": "When you next cast an instant or sorcery spell this turn, copy that spell. You may choose new targets for the copy.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/55a3153e-4259-4e03-bf79-8979d3c0db36.jpg",
+    "uri": "https://scryfall.com/card/jmp/307/doublecast?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "5e648262-3b9b-4c58-8e29-48356e3cb064",
+    "name": "Clone",
+    "mana_cost": "{3}{U}",
+    "cmc": 4.0,
+    "type_line": "Creature — Shapeshifter",
+    "oracle_text": "You may have this creature enter as a copy of any creature on the battlefield.",
+    "power": "0",
+    "toughness": "0",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/5e648262-3b9b-4c58-8e29-48356e3cb064.jpg",
+    "uri": "https://scryfall.com/card/m14/47/clone?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "a3d2c692-7566-468e-9c86-47a9f768fde2",
+    "name": "Snakeskin Veil",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Put a +1/+1 counter on target creature you control. It gains hexproof until end of turn. (It can't be the target of spells or abilities your opponents control.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/a3d2c692-7566-468e-9c86-47a9f768fde2.jpg",
+    "uri": "https://scryfall.com/card/tdm/159/snakeskin-veil?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "23676697-2b84-4e9f-9e38-4fd58085a698",
+    "name": "Hunger of the Howlpack",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Put a +1/+1 counter on target creature.\nMorbid — Put three +1/+1 counters on that creature instead if a creature died this turn.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Morbid"
+    ],
+    "image": "assets/cards/23676697-2b84-4e9f-9e38-4fd58085a698.jpg",
+    "uri": "https://scryfall.com/card/cns/168/hunger-of-the-howlpack?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "472ff365-4c52-42be-9024-c3569014e25d",
+    "name": "Invigorating Surge",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Instant",
+    "oracle_text": "Put a +1/+1 counter on target creature you control, then double the number of +1/+1 counters on that creature.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Double"
+    ],
+    "image": "assets/cards/472ff365-4c52-42be-9024-c3569014e25d.jpg",
+    "uri": "https://scryfall.com/card/j25/673/invigorating-surge?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "34c3a894-ee75-4db9-a69f-711bb3cc150a",
+    "name": "Duress",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Target opponent reveals their hand. You choose a noncreature, nonland card from it. That player discards that card.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/34c3a894-ee75-4db9-a69f-711bb3cc150a.jpg",
+    "uri": "https://scryfall.com/card/fdn/606/duress?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "5996feb4-02ac-45e8-a7f2-966cf74391dc",
+    "name": "Reverberate",
+    "mana_cost": "{R}{R}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Copy target instant or sorcery spell. You may choose new targets for the copy.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/5996feb4-02ac-45e8-a7f2-966cf74391dc.jpg",
+    "uri": "https://scryfall.com/card/m13/145/reverberate?utm_source=api",
     "verified": true
   }
 ];
