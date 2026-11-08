@@ -1,0 +1,12 @@
+/* Decorative flights use viewport coordinates, outside the fitted 16:9 canvas. */
+.zone-flight{position:fixed;pointer-events:none;z-index:1350;transform-origin:center;perspective:900px;contain:layout style;will-change:transform,opacity}
+.zone-flight-turn{position:absolute;inset:0;transform-style:preserve-3d}
+.zone-flight-front,.zone-flight-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:6px;overflow:hidden;box-shadow:0 8px 22px #0008,0 0 0 1px #e9c38b77,0 0 16px #e7bc6a33;background:#151b20}
+.zone-flight-back{transform:rotateY(180deg)}
+.zone-flight img{display:block;width:100%;height:100%;object-fit:fill;border-radius:inherit}
+.zone-flight .printed-card{width:100%;height:100%;box-sizing:border-box}
+.game-shell .zone-arriving{opacity:0!important}
+.game-shell .zone-arriving:is(:focus-visible,.controller-focus){opacity:1!important}
+.player-hit-number{position:fixed;z-index:1400;pointer-events:none;color:#ffe1c4;font:750 27px/1 var(--sans);text-shadow:0 2px 5px #000,0 0 12px #f46b4f;transform:translate(-50%,-50%)}
+.game-shell .player-avatar.avatar-hit-active{border-color:#f39278!important;box-shadow:0 0 0 2px #ffbd9d66,0 0 22px #ed624699!important}
+@media(prefers-reduced-motion:reduce){.zone-flight{display:none}.game-shell .zone-arriving{opacity:1!important}}

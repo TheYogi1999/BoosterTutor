@@ -146,7 +146,7 @@ function commitRuleSpell(p){
 function resolveReviewedEffect(effect,target,context={}){
  const battle=state.battle;const unit=choiceTargetUnit(target,battle);
  if(effect.kind==='damage'){
-  if(target?.side==='life')state.playerHealth-=effect.amount;
+  if(target?.side==='life'){state.playerHealth-=effect.amount;if(typeof animatePlayerDamage==='function')animatePlayerDamage(effect.amount);}
   else if(unit?.owner==='enemy')damageFirstEnemy(effect.amount,unit);
   else if(unit){unit.damage=(unit.damage||0)+effect.amount;}
  }

@@ -697,7 +697,9 @@ function drawToHand(maxHand) {
       endRun(false, 'empty-library');
       return;
     }
-    battle.hand.push(battle.deck.pop());
+    const drawn = battle.deck.pop();
+    battle.hand.push(drawn);
+    if (typeof queueHandDraw === 'function') queueHandDraw(drawn, battle.hand.length - 1, battle);
   }
 }
 
@@ -1685,6 +1687,7 @@ function resolveEnemyCombat() {
   const incoming = damageToPlayer;
   if (incoming) {
     state.playerHealth -= incoming;
+    if (typeof animatePlayerDamage === 'function') animatePlayerDamage(incoming);
     addLog(`${incoming} damage gets through to you.`);
   } else if (attackers.length) {
     addLog('All enemy attacks were blocked.');
