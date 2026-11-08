@@ -27,10 +27,6 @@
 
   const canvas = document.getElementById('title-atmosphere');
   const ctx = canvas.getContext('2d');
-  const background = document.createElement('canvas');
-  background.width = 160; background.height = 100;
-  const bg = background.getContext('2d');
-  const pixels = bg.createImageData(160, 100);
   canvas.width = 1600; canvas.height = 900;
   const back = new Image(); back.src = 'assets/mtg-card-back.jpg';
   const flyers = Array.from({length:24}, (_, i) => ({
@@ -40,20 +36,12 @@
   let frame=0, previous=0, time=0, lastPaint=0, animations=[];
   let wasActive=false, hiddenAt=0;
   function paint(t) {
-    if (!ctx || !bg) return;
+    if (!ctx) return;
     if (!document.hidden && screen.classList.contains('active') && !motion.matches) {
       cards.forEach((card,i) => { if (time > 1.05 + i * .18) card.classList.add('is-revealed'); });
     }
-    for(let y=0;y<100;y++) for(let x=0;x<160;x++) {
-      const nx=(x-80)/65, ny=(y-50)/65;
-      const r=Math.hypot(nx,ny),a=Math.atan2(ny,nx);
-      const blend=(Math.sin(a*3+r*7-t*.28+Math.sin(nx*4+t*.13))+1)/2;
-      const shade=Math.max(.35,1-r*.25),p=(y*160+x)*4;
-      pixels.data[p]=(13+blend*48)*shade;
-      pixels.data[p+1]=(52-blend*25)*shade;
-      pixels.data[p+2]=(53-blend*20)*shade;pixels.data[p+3]=255;
-    }
-    bg.putImageData(pixels,0,0);ctx.drawImage(background,0,0,1600,900);
+    // Transparent intro layer over the same expedition artwork as the booster screen.
+    ctx.clearRect(0,0,1600,900);
     if(!motion.matches && t<4.2 && back.complete && back.naturalWidth) {
       flyers.forEach((c,i)=>{
         const p=Math.max(0,Math.min(1,(t-c.delay)/c.duration));
@@ -75,7 +63,7 @@
     if(previous)time+=Math.min(.08,(now-previous)/1000);
     previous=now;
     if(now-lastPaint>45){paint(time);lastPaint=now;}
-    frame=requestAnimationFrame(tick);
+    if(time<4.2)frame=requestAnimationFrame(tick);
   }
   function intro() {
     animations.forEach(animation=>animation.cancel()); animations=[];

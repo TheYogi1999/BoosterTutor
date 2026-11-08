@@ -1,5 +1,4 @@
 /* An uncluttered front door, inspired by the user's flying-card reference. */
-.game-shell.title-menu-active{background:#102827}
 .title-menu-active .topbar{position:absolute;inset:0 28px auto;width:auto;height:70px;border:0;background:none;z-index:10}
 .title-menu-active .topbar .brand,.title-menu-active .topbar-right>:not(#music-settings):not(#sound-toggle){display:none!important}
 .title-menu-active .topbar-right{margin-left:auto;gap:12px}
@@ -7,8 +6,8 @@
 .title-menu-active .site-footer{display:none!important}
 .title-menu-active main{width:1600px;height:900px;margin:0}
 .title-menu-active #start-screen{position:relative;width:1600px;height:900px;padding:0!important}
-#start-screen .title-stage{width:100%;height:100%;border:0;border-radius:0;background:#102827;box-shadow:none;isolation:isolate;overflow:hidden}
-#start-screen .title-stage:before{content:'';position:absolute;inset:0;border:0;border-radius:0;transform:none;background:linear-gradient(90deg,#07171988,transparent 65%),radial-gradient(ellipse at 50% 44%,transparent 25%,#04121599 100%);z-index:1;pointer-events:none}
+#start-screen .title-stage{width:100%;height:100%;border:0;border-radius:0;background:transparent;box-shadow:none;isolation:isolate;overflow:hidden}
+#start-screen .title-stage:before{display:none}
 #start-screen .title-stage:after{display:none}
 #title-atmosphere{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.8}
 #start-screen .title-copy{position:absolute;left:126px;top:154px;width:670px;padding:0;z-index:4}
