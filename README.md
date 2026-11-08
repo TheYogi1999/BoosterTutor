@@ -215,3 +215,10 @@ The combat wallet is labelled Coins and sits directly below life; the topbar wal
 Rune casters now cast **Shock**. Later Ember Duelists can cast **Lava Spike**, and Dusk Vampires cast **Sovereign’s Bite**. Each spell locks its target when cast, is independent of its caster, resolves once, and gets a separate response window before its effect. Opposing targeted spells still respect allied Hexproof and generic Ward. Normal attacks, Mill, Mend and Rally remain abilities rather than spells.
 
 Four new verified player cards use their oldest regular English paper artwork: **Counterspell**, **Negate**, **Dispel** and **Dismiss**. **Cancel** is now reviewed and playable too. Dispel targets only instants; Negate targets only noncreature spells; Dismiss draws one after countering. The player catalog has 104 cards, with 101 in the normal pool, two banned cards and the start-only Booster Tutor. Enemy-only sorceries stay outside the player pool. Cached collections merge new bundled cards so existing players receive the additions.
+
+
+### v0.39 — cinematic title entrance
+
+A warm summoning light, orbital arcs and a spiral of genuine MTG card backs introduce the three classic cards. The fan opens in depth, each card flips and receives a brief golden sheen, and the large title and menu arrive in staggered steps. After roughly three seconds the scene settles into restrained embers, slow arcs and the existing foil/parallax effect over the shared expedition background.
+
+Play, Options, Quit, Collections and audio controls remain available during the entrance. Canvas work pauses when the tab is hidden or another scene opens; returning to the title replays the entrance. Reduced motion shows the complete front-facing fan immediately with a static atmosphere.

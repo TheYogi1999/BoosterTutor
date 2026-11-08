@@ -51,3 +51,12 @@ html.fixed-game .title-options-dialog{width:700px!important;height:440px!importa
 .title-option-actions{display:flex;justify-content:space-between;gap:10px;margin-top:28px}.title-option-actions button{font-size:12px;padding:12px}
 html.fixed-game .title-exit-dialog{width:650px!important;height:340px!important}.title-exit-dialog p{color:#c0cdc5;font:14px/1.6 var(--sans);margin:0 0 28px}
 @media(prefers-reduced-motion:reduce){#start-screen .title-card-drift{animation:none;transform:none;transition:none}#start-screen .title-card-turn{transform:none!important;transition:none}#start-screen .title-card-back{display:none}#start-screen .title-menu button{transition:none}}
+
+/* A warm summoning light introduces the three-card fan, then settles quietly. */
+#title-atmosphere{opacity:1}
+#start-screen .title-copy #game-title{color:#f7edda;text-shadow:0 3px 0 #07151b66,0 12px 44px #0007}
+#start-screen .title-copy #game-title span{color:#edcb8f;background:linear-gradient(112deg,#a67945 0%,#f3dba9 25%,#fff0cb 42%,#c19353 59%,#e9c58a 80%,#a97c47 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
+#start-screen .hero-card-face,#start-screen .title-card-back{box-shadow:0 30px 50px #0008,0 0 0 1px #dfbd7866,0 0 25px #e5a64a14}
+#start-screen .title-reveal-shine{position:absolute;inset:-15% -20%;z-index:3;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent 30%,#ffd48a66 42%,#fff1c6c9 50%,#ffe2a455 58%,transparent 70%);mix-blend-mode:screen;will-change:transform,opacity}
+#start-screen:not(.active) .title-reveal-shine{display:none}
+@media(prefers-reduced-motion:reduce){#start-screen .title-reveal-shine{display:none}#start-screen .title-copy #game-title,#start-screen .title-menu button{animation:none!important;transition:none!important}}
