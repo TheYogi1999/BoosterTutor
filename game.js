@@ -354,29 +354,45 @@ function parseStats(card) {
 }
 
 const FOE_TYPES = {
-  sprout: { name: 'Moss Sentinel', health: 13, power: 3, pattern: ['attack', 'guard', 'attack'], keywords: ['reach'], bounty: 10 },
-  wisp: { name: 'Aether Wisp', health: 10, power: 2, pattern: ['buff', 'attack', 'attack'], keywords: ['flying','lifelink','hexproof'], bounty: 9 },
-  raider: { name: 'Rune Raider', health: 22, power: 4, pattern: ['attack', 'buff', 'attack', 'guard'], keywords: ['first strike'], bounty: 15 },
-  wolf: { name: 'Thornwolf', health: 20, power: 4, pattern: ['attack', 'attack', 'guard'], keywords: ['menace'], bounty: 14 },
-  dragon: { name: 'Shard Dragon', health: 60, power: 7, pattern: ['guard', 'attack', 'buff', 'attack'], keywords: ['flying','trample'], bounty: 40 }
+  sprout: { name: 'Moss Sentinel', tier:'skirmish', health:13, power:3, pattern:['attack','guard','attack'], keywords:['reach'], bounty:10 },
+  wisp: { name: 'Aether Wisp', tier:'skirmish', health:10, power:2, pattern:['buff','attack','attack'], keywords:['flying','lifelink','hexproof'], bounty:9 },
+  duelist: { name:'Ember Duelist', tier:'skirmish', health:11, power:3, pattern:['attack','guard','attack','buff'], keywords:['first strike'], bounty:10 },
+  boar: { name:'Ridge Boar', tier:'skirmish', health:14, power:3, pattern:['buff','attack','attack','guard'], keywords:['trample'], bounty:10 },
+  sprite: { name:'Mist Sprite', tier:'skirmish', health:9, power:1, pattern:['mend','attack','attack'], keywords:['flying'], mend:3, bounty:9 },
+  raider: { name:'Rune Raider', tier:'elite', health:22, power:4, pattern:['attack','buff','attack','guard'], keywords:['first strike'], bounty:15 },
+  wolf: { name:'Thornwolf', tier:'elite', health:20, power:4, pattern:['attack','attack','guard'], keywords:['menace'], bounty:14 },
+  stalker: { name:'Bog Stalker', tier:'elite', minNode:3, health:16, power:2, pattern:['guard','attack','attack','buff'], keywords:['deathtouch'], bounty:16 },
+  bulwark: { name:'Iron Bulwark', tier:'elite', health:25, power:3, pattern:['guard','buff','attack'], keywords:['reach','first strike'], ward:1, bounty:17 },
+  archivist: { name:'Rune Archivist', tier:'elite', health:17, power:2, pattern:['rune','mill','attack','guard'], keywords:[], ward:2, mill:1, runeMana:2, bounty:16 },
+  vampire: { name:'Dusk Vampire', tier:'elite', health:18, power:3, pattern:['attack','attack','buff','guard'], keywords:['flying','lifelink'], ward:1, bounty:16 },
+  dragon: { name:'Shard Dragon', tier:'boss', health:60, power:7, pattern:['guard','attack','buff','attack'], keywords:['flying','trample'], bounty:40 },
+  tyrant: { name:'Ash Tyrant', tier:'boss', health:54, power:6, pattern:['rally','attack','attack','guard'], keywords:['trample','menace'], ward:2, bounty:42 },
+  sphinx: { name:'Tide Sphinx', tier:'boss', health:52, power:5, pattern:['rune','mill','attack','mend','attack'], keywords:['flying'], ward:3, mill:2, runeMana:2, mend:4, bounty:42 }
 };
 function createEnemyTeam(encounter) {
   const node = ENCOUNTERS.indexOf(encounter) + 1 || state.node;
-  const support = Math.random() < 0.5 ? 'sprout' : 'wisp';
-  // Vary support and positioning without changing encounter sizes or allowing
-  // elite foes/dragons in the opening fight. The final boss stays recognizable.
-  const teams = [['sprout', support], ['raider', support], ['wolf', 'raider', support], ['dragon', support]];
-  const kinds = node === ENCOUNTERS.length ? teams[node - 1] : shuffle(teams[node - 1]);
-  return kinds.map(kind => {
-    const template = FOE_TYPES[kind];
-    const keywords = template.keywords.filter(keyword => node !== 1 || keyword !== 'hexproof');
-    const card = { name: template.name, type_line: 'Monster', oracle_text: keywords.join(', ') };
-    return { id: `enemy-${state.nextPermanentId++}`, kind, card, ...creatureKeywords(card), bounty: template.bounty, owner: 'enemy', health: template.health, maxHealth: template.health, power: template.power, pattern: template.pattern, summonedTurn: 1, summoningSick: true };
-  });
+  const roster = Object.keys(FOE_TYPES);
+  const early = roster.filter(kind=>FOE_TYPES[kind].tier==='skirmish');
+  const elites = roster.filter(kind=>FOE_TYPES[kind].tier==='elite'&&(FOE_TYPES[kind].minNode||2)<=node);
+  const lead = shuffle(elites.filter(kind=>kind!=='stalker'))[0];
+  const bosses = roster.filter(kind=>FOE_TYPES[kind].tier==='boss');
+  const support = shuffle(early)[0];
+  const kinds = node===1?shuffle(early).slice(0,2):node===2?[lead,support]:node===3?[lead,shuffle(elites.filter(kind=>kind!==lead))[0],support]:[shuffle(bosses)[0],support];
+  return (node===4?kinds:shuffle(kinds)).map(kind=>createFoe(kind,node));
 }
+function createFoe(kind,node=state.node){
+  const template=FOE_TYPES[kind];
+  if(!template)throw new Error('Unknown enemy type');
+  const keywords=template.keywords.filter(keyword=>node!==1||keyword!=='hexproof');
+  const card={name:template.name,type_line:'Monster',oracle_text:keywords.join(', ')};
+  return {id:`enemy-${state.nextPermanentId++}`,kind,tier:template.tier,card,...creatureKeywords(card),ward:node>1?(template.ward||0):0,bounty:template.bounty,owner:'enemy',health:template.health,maxHealth:template.health,power:template.power,pattern:[...template.pattern],millAmount:template.mill||0,runeMana:template.runeMana||1,mendAmount:template.mend||3,rallyAmount:1,summonedTurn:1,summoningSick:true};
+}
+
 function enemyIntent(enemy, turn = state.battle?.turn || 1) {
   const pattern = enemy.pattern ? enemy.pattern[(turn - 1) % enemy.pattern.length] : 'attack';
   const kind = pattern === 'guard' ? 'recover' : pattern;
+  if(kind==='mend')return {kind,damage:0,label:`Mend ally · ${enemy.mendAmount||3} life`,icon:'✚'};
+  if(kind==='rally')return {kind,damage:0,label:`Rally · team +${enemy.rallyAmount||1} damage`,icon:'✦'};
   return { kind, damage: kind === 'attack' ? Math.max(0, enemy.power) : 0,
     label: kind === 'attack' ? `Attack · ${enemy.power} damage` : kind === 'recover' ? 'Recover · 3 life' : 'Strengthen · +1 damage', icon: kind === 'attack' ? '⚔' : kind === 'recover' ? '✚' : '✦' };
 }
@@ -392,6 +408,11 @@ function resolveEnemyIntents() {
       if (recovered) addLog(`${enemy.card.name} recovers ${recovered} life.`);
     }
     if (intent.kind === 'buff') { enemy.power += 1; addLog(`${enemy.card.name} gains 1 damage.`); }
+    if(intent.kind==='mend'){
+      const ally=battle.enemyCreatures.filter(unit=>unit.health>0&&unit.health<unit.maxHealth).sort((a,b)=>a.health/a.maxHealth-b.health/b.maxHealth)[0];
+      if(ally){const amount=Math.min(enemy.mendAmount||3,ally.maxHealth-ally.health);ally.health+=amount;addLog(`${enemy.card.name} restores ${amount} life to ${ally.card.name}.`);}
+    }
+    if(intent.kind==='rally'){const amount=enemy.rallyAmount||1;for(const ally of battle.enemyCreatures)if(ally.health>0)ally.power+=amount;addLog(`${enemy.card.name} rallies its team: +${amount} damage.`);}
   }
 }
 
@@ -652,6 +673,7 @@ function beginBattle(node) {
     enemy,
     stage,
     enemyArt: enemyCreatures[0]?.card.art || '',
+    bossName: enemyCreatures.find(enemy=>enemy.tier==='boss')?.card.name || null,
     enemyCreatures,
     mana: STARTING_MANA_IN_PLAY,
     maxMana: STARTING_MANA_IN_PLAY,
@@ -1819,7 +1841,7 @@ function endRun(won, reason = null) {
   $('#end-eyebrow').textContent = won ? 'CAMPAIGN COMPLETE' : 'RUN OVER';
   $('#end-title').textContent = won ? 'The mana path is yours.' : 'The path ends here.';
   $('#end-message').textContent = won
-    ? 'You defeated the Shard Dragon and completed the run. Your booster deck came through.'
+    ? `You defeated ${state.battle?.bossName || 'the final guardian'} and completed the run. Your booster deck came through.`
     : reason === 'empty-library' ? 'You tried to draw from an empty library. Your expedition ends here.' : `You fell in fight ${state.node}. Adjust your draft and try again.`;
   $('#run-summary').innerHTML = `<span>RUN <b>${state.node} / 4</b></span><span>DECK <b>${state.deck.length}</b></span><span>LIFE <b>${Math.max(0, state.playerHealth)}</b></span>`;
   showScreen('end-screen');

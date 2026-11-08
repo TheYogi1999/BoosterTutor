@@ -313,8 +313,9 @@ test('all expanded cards retain verified source metadata',()=>{
  for(const name of ['Fencing Ace','Typhoid Rats','Healer\'s Hawk','Deadly Recluse','Wall of Wood','Boggart Brute','Colossal Dreadmaw','Skyhunter Skirmisher'])assert.equal(run(`Boolean(BUNDLED_CARDS.find(card=>card.name===${JSON.stringify(name)}))`),true);
  assert.equal(run("Boolean(BUNDLED_CARDS.find(card=>card.name==='Cancel'))"),true);
 });
-test('enemy archetypes carry real combat keywords and show them in the arena',()=>{
- const run=game();prepare(run);run('state.node=4;state.battle.enemyCreatures=createEnemyTeam(4)');assert.equal(run('state.battle.enemyCreatures[0].flying'),true);assert.equal(run('state.battle.enemyCreatures[0].trample'),true);assert.equal(run('state.battle.enemyCreatures[1].lifelink'),true);
+test('enemy archetypes carry their declared combat keywords',()=>{
+ const run=game();prepare(run);
+ assert.equal(run(`Object.keys(FOE_TYPES).every(kind=>{const foe=createFoe(kind,4);return FOE_TYPES[kind].keywords.every(keyword=>hasCreatureKeyword(foe,keyword));})`),true);
 });
 test('trample assigns lethal to a blocker and spills only the excess to the player',()=>{
  const run=game();prepare(run);run("globalThis.a={id:'trampler',owner:'enemy',card:FIXTURES[4],power:7,health:20,maxHealth:20,trample:true};globalThis.b={id:'blocker',owner:'player',card:FIXTURES[4],power:2,toughness:3,damage:0};state.battle.enemyCreatures=[a];state.battle.creatures=[b];globalThis.result=resolveCombatDamage([a],new Map([[a.id,[b]]]),'enemy')");assert.equal(run('result.damageToPlayer'),4);assert.equal(run('state.battle.creatures.length'),0);assert.equal(run('a.health'),18);

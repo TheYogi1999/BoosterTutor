@@ -1,0 +1,28 @@
+/* Nine additional original enemy portraits; the player avatars stay on their own sheet. */
+:is(.monster-figure,.collection-monster) .walker-portrait:is(.portrait-duelist,.portrait-boar,.portrait-sprite,.portrait-stalker,.portrait-bulwark,.portrait-archivist,.portrait-vampire,.portrait-tyrant,.portrait-sphinx){background-image:url('assets/portraits/foes.webp?v=0.36')!important}
+.portrait-duelist{--portrait-x:0%;--portrait-y:0%}
+.portrait-boar{--portrait-x:50%;--portrait-y:0%}
+.portrait-sprite{--portrait-x:100%;--portrait-y:0%}
+.portrait-stalker{--portrait-x:0%;--portrait-y:50%}
+.portrait-bulwark{--portrait-x:50%;--portrait-y:50%}
+.portrait-archivist{--portrait-x:100%;--portrait-y:50%}
+.portrait-vampire{--portrait-x:0%;--portrait-y:100%}
+.portrait-tyrant{--portrait-x:50%;--portrait-y:100%}
+.portrait-sphinx{--portrait-x:100%;--portrait-y:100%}
+.game-shell :is(.monster-tyrant,.monster-sphinx){flex-basis:190px;width:190px}
+.game-shell :is(.monster-tyrant,.monster-sphinx) .monster-figure{width:170px}
+.game-shell .monster-tyrant .walker-portrait{border-color:#dd795b;box-shadow:0 0 20px #cf522a33}
+.game-shell .monster-sphinx .walker-portrait{border-color:#8bc0d1;box-shadow:0 0 20px #4bb4d533}
+.game-shell .intent-mend{color:#c3dfad;border-color:#99bd7f77;background:#1a3229}
+.game-shell .intent-rally{color:#f1cd94;border-color:#d1a46d77;background:#382b24}
+/* Reserve two lines for full keyword and Ward costs, including elite groups. */
+.game-shell .monster{grid-template-rows:30px 132px 20px 22px 6px 28px 20px!important;height:274px}
+.game-shell .monster-keywords{white-space:normal;overflow:visible;text-overflow:clip;line-height:13px;text-wrap:balance;align-self:start}
+@media(orientation:portrait){
+ html.portrait-combat .game-shell .monster{grid-template-rows:36px minmax(20px,1fr) 28px 32px 6px 48px 20px!important;height:100%}
+ html.portrait-combat .game-shell .monster-keywords{line-height:24px}
+}
+@media(orientation:portrait) and (min-aspect-ratio:2/3){
+ html.portrait-combat .game-shell .monster{grid-template-rows:32px minmax(0,1fr) 24px 28px 6px 40px 0!important}
+ html.portrait-combat .game-shell .monster-keywords{line-height:20px}
+}

@@ -121,7 +121,7 @@ confirmDraft=function(){const flow=state.boosterInterruption;if(!flow){const sta
 // The original listener captured confirmDraft; route it through the interrupt-aware entry point.
 $('#draft-confirm').removeEventListener('click',baseConfirmDraft27);$('#draft-confirm').addEventListener('click',confirmDraft);
 const baseEnemyTeam27=createEnemyTeam;
-createEnemyTeam=function(encounter){const team=baseEnemyTeam27(encounter);const node=ENCOUNTERS.indexOf(encounter)+1||state.node;for(const enemy of team){enemy.ward=node>=2?(enemy.kind==='dragon'?3:['raider','wolf'].includes(enemy.kind)?node>=3?2:1:0):0;if(enemy.ward)enemy.card={...enemy.card,oracle_text:enemy.card.oracle_text+`\nWard {${enemy.ward}}`};if(enemy.kind==='wisp'){enemy.pattern=['buff','mill','attack'];enemy.millAmount=node>=4?3:2;}}return team;};
+createEnemyTeam=function(encounter){const team=baseEnemyTeam27(encounter);const node=ENCOUNTERS.indexOf(encounter)+1||state.node;for(const enemy of team){enemy.ward=Math.max(enemy.ward||0,node>=2?(enemy.kind==='dragon'?3:['raider','wolf'].includes(enemy.kind)?node>=3?2:1:0):0);if(enemy.ward)enemy.card={...enemy.card,oracle_text:enemy.card.oracle_text+`\nWard {${enemy.ward}}`};if(enemy.kind==='wisp'){enemy.pattern=['buff','mill','attack'];enemy.millAmount=node>=4?3:2;}}return team;};
 const baseEnemyIntent27=enemyIntent;
 enemyIntent=function(enemy,turn=state.battle?.turn||1){if(enemy.pattern?.[(turn-1)%enemy.pattern.length]==='mill')return{kind:'mill',damage:0,mill:enemy.millAmount||2,label:`Mill · ${enemy.millAmount||2} cards`,icon:'▤'};return baseEnemyIntent27(enemy,turn);};
 function millLibrary27(count){const b=state.battle;const cards=b.deck.splice(Math.max(0,b.deck.length-count)).reverse();b.graveyard.push(...cards);return cards.length;}

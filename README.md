@@ -192,3 +192,10 @@ Camp supplies replace passive mana/hand-size bonuses and direct Rest/Study rewar
 Card art uses the oldest available regular English paper printing, with promo artwork as a fallback. The art print is tracked separately from the verified rules/rarity print; this preserves premium-pack guarantees while using classic artwork. The same policy covers the five basic lands and Treasure/Food/Clue tokens. The title fan uses Alpha Grizzly Bears, Serra Angel and Lightning Bolt. Sources: [Original print manifest](assets/cards/ORIGINAL_PRINTS.md).
 
 Shop packs are selected with one click, then bought with a separate confirmation action. Selecting the same offer again does not deselect it or spend coins. Revealed-card choices likewise stay selected until confirmed. Equipment wrappers are silver, Mythic red with a glow, Instant blue, Creature green and Booster Tutor violet; the type colours carry through the opening effect.
+
+
+### v0.36 — more enemy encounters
+
+Fourteen enemy archetypes now include Ember Duelist, Ridge Boar, Mist Sprite, Bog Stalker, Iron Bulwark, Rune Archivist, Dusk Vampire, Ash Tyrant and Tide Sphinx. Teams draw distinct enemies from tier-appropriate pools; the opening encounter has no elites, bosses, Hexproof or Deathtouch. The four encounter sizes remain 2 / 2 / 3 / 2. The final fight randomly selects Shard Dragon, Ash Tyrant or Tide Sphinx.
+
+Mend restores the weakest injured living ally, capped at maximum life. Rally grants the living enemy team +1 power. Neither intent also attacks. Ward, Rune bolt, Mill, healing and buffs resolve once per turn and retain the existing instant-response windows. New original portraits share one cached nine-cell atlas.
