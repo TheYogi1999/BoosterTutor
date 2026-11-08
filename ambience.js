@@ -106,4 +106,37 @@
     });
   }, {passive:true});
   stage.addEventListener('pointerleave', () => { cancelAnimationFrame(pointerFrame); stack.removeAttribute('style'); });
+  // Delegation also covers newly rendered starter, shop and Booster Tutor packs.
+  let packFrame = 0, activePack = null;
+  const packProperties = ['--pack-tilt-x', '--pack-tilt-y', '--pack-light-x', '--pack-light-y'];
+  function resetPack() {
+    cancelAnimationFrame(packFrame);
+    if (activePack) packProperties.forEach(property => activePack.style.removeProperty(property));
+    activePack = null;
+  }
+  document.addEventListener('pointermove', event => {
+    if (motion.matches || event.pointerType === 'touch') return;
+    const packStage = event.target.closest?.('.pack-stage');
+    const pack = packStage?.querySelector('.sealed-pack:not(.pack-opening-flight)');
+    if (!pack || pack.disabled) { resetPack(); return; }
+    if (activePack !== pack) { resetPack(); activePack = pack; }
+    // Offset coordinates stay stable while the wrapper itself tilts and breathes.
+    const rect = packStage.getBoundingClientRect();
+    const scale = rect.width / packStage.offsetWidth;
+    const x = Math.max(0, Math.min(1, ((event.clientX - rect.left) / scale - pack.offsetLeft) / pack.offsetWidth));
+    const y = Math.max(0, Math.min(1, ((event.clientY - rect.top) / scale - pack.offsetTop) / pack.offsetHeight));
+    cancelAnimationFrame(packFrame);
+    packFrame = requestAnimationFrame(() => {
+      if (!pack.isConnected || pack.classList.contains('pack-opening-flight')) return;
+      pack.style.setProperty('--pack-tilt-x', `${(x - .5) * 16}deg`);
+      pack.style.setProperty('--pack-tilt-y', `${(.5 - y) * 12}deg`);
+      pack.style.setProperty('--pack-light-x', `${x * 100}%`);
+      pack.style.setProperty('--pack-light-y', `${y * 100}%`);
+    });
+  }, {passive:true});
+  document.addEventListener('pointerout', event => {
+    if (activePack && !event.relatedTarget?.closest?.('.pack-stage')) resetPack();
+  }, {passive:true});
+  motion.addEventListener('change', resetPack);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) resetPack(); });
 })();
