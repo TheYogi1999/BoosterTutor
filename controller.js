@@ -10,7 +10,7 @@ const controller = {
   candidates(){
     const scope=this.scope();if(!scope||(state.screen==='draft-screen'&&boosterTravel))return[];
     const roots=this.modal()?[scope]:[scope,document.querySelector('.topbar')];
-    return [...new Set(roots.flatMap(root=>root?[...root.querySelectorAll(this.buttons)]:[]))].filter(element=>this.visible(element)&&!element.closest('#card-preview')&&element.id!=='controller-help-button');
+    return [...new Set(roots.flatMap(root=>root?[...root.querySelectorAll(this.buttons)]:[]))].filter(element=>this.visible(element)&&!element.closest('#card-preview'));
   },
   elementKey(element){
     if(element.id)return`id:${element.id}`;

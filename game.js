@@ -668,7 +668,7 @@ function beginBattle(node) {
   drawToHand(state.battle.openingHandSize);
   if (state.battle.phase === 'complete') return;
   syncMana(state.battle);
-  addLog(`${enemy.name} confronts you with ${enemyCreatures.length} creatures in ${stage.country}. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
+  addLog(`An encounter in ${stage.country}: ${enemyCreatures.length} creatures. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
   renderBattle();
   showScreen('combat-screen');
   playSfx('turn');
@@ -880,11 +880,10 @@ function renderBattle() {
   const enemy = battle.enemy;
   $('#node-counter').textContent = String(state.node).padStart(2, '0');
   const stage = battle.stage || COUNTRY_STAGES[(state.node - 1) % COUNTRY_STAGES.length];
-  $('#location-name').hidden = false;
-  $('#location-name').textContent = `${stage.country} · ${stage.region}`;
   $('.arena-table').style.setProperty('--stage-accent', stage.color);
   $('#enemy-rank').textContent = enemy.rank;
-  $('#enemy-name').textContent = enemy.name;
+  $('#enemy-name').textContent = stage.country;
+  $('#enemy-name').title = stage.region;
   const enemyCount = battle.enemyCreatures.length;
   $('#enemy-count-label').textContent = `${enemyCount} REMAINING`;
   $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)}`;
@@ -1780,7 +1779,7 @@ function handleCombatAction() {
 function winBattle() {
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
-  addLog(`${state.battle.enemy.name} has been defeated.`);
+  addLog(`Encounter in ${state.battle.stage?.country || 'the Aether'} cleared.`);
   if (node >= ENCOUNTERS.length) return endRun(true);
   state.node += 1;
   state.packs = [chooseRandomCards(state.pool, PACK_SIZE)];
@@ -1791,7 +1790,7 @@ function winBattle() {
   state.selection.clear();
   renderDraft();
   showScreen('draft-screen');
-  showToast(`${state.battle.enemy.name} defeated. Choose a reward, then rest before the next encounter.`);
+  showToast(`Encounter in ${state.battle.stage?.country || 'the Aether'} cleared. Choose a reward, then rest.`);
   playSfx('victory');
 }
 
@@ -2033,7 +2032,7 @@ function showJourney() {
   const first = state.node === 1;
   $('#journey-title').textContent = first ? 'Choose your relic' : 'A moment by the fire';
   $('#journey-description').textContent = first ? 'Choose a relic for this run.' : 'Rest, refine your deck, then continue.';
-  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
+  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${escapeHtml((state.stageLocations[index] || COUNTRY_STAGES[index]).country)}</b></div>`).join('');
   $('#journey-options').innerHTML = first
     ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="lens"><span>⌖</span><h3>Wayfinder’s Lens</h3><p>Begin each battle with one extra card.</p></button>'
     : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life. No life cap.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add Divination: draw two cards.</p></button>';

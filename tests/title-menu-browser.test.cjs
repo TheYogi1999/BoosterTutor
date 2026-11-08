@@ -24,7 +24,7 @@ const assert=require('node:assert/strict');
  assert.equal(await page.evaluate(()=>state.selectedAvatar),'ranger');
  await page.click('#title-audio');assert.equal(await page.locator('#music-dialog').evaluate(e=>e.open),true);
  await page.click('#music-close');assert.equal(await page.locator('#title-options-dialog').evaluate(e=>e.open),true);
- await page.click('#title-controls');assert.equal(await page.locator('#controller-dialog').evaluate(e=>e.open),true);
+ await page.click('#controller-help-button');assert.equal(await page.locator('#controller-dialog').evaluate(e=>e.open),true);
  await page.click('#controller-close');await page.click('#title-options-close');
  await page.click('#title-quit');assert.equal(await page.evaluate(()=>state.soundOn),false);
  assert.equal(await page.locator('#background-music').evaluate(a=>a.paused),true);
@@ -41,7 +41,8 @@ const assert=require('node:assert/strict');
  await page.click('#start-button');
  await page.waitForFunction(()=>document.getElementById('draft-screen').classList.contains('active'));
  assert.equal(await page.locator('#game-shell').evaluate(e=>e.classList.contains('title-menu-active')),false);
- assert.equal(await page.locator('#fullscreen-button').isVisible(),true);
+ assert.equal(await page.locator('#fullscreen-button').isVisible(),false);
+ assert.equal(await page.locator('#options-button').isVisible(),true);
  await page.evaluate(()=>showScreen('start-screen'));await page.waitForTimeout(100);
  assert.equal(await page.locator('#game-shell').evaluate(e=>e.classList.contains('title-menu-active')),true);
  for(const viewport of [{width:1280,height:720},{width:820,height:1180}]){

@@ -5,9 +5,9 @@
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const cards = [...screen.querySelectorAll('.hero-card')];
   const options = document.getElementById('title-options-dialog');
-  document.getElementById('title-options').addEventListener('click', () => options.showModal());
+  for (const id of ['title-options','options-button']) document.getElementById(id).addEventListener('click', () => options.showModal());
   document.getElementById('title-options-close').addEventListener('click', () => options.close());
-  for (const [button, target] of [['title-audio','music-settings'], ['title-fullscreen','fullscreen-button'], ['title-controls','controller-help-button']]) {
+  for (const [button, target] of [['title-audio','music-settings']]) {
     document.getElementById(button).addEventListener('click', () => document.getElementById(target).click());
   }
   const exit = document.getElementById('title-exit-dialog');
