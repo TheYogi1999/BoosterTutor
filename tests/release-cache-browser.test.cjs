@@ -12,7 +12,9 @@ const { chromium, devices } = require('playwright');
   const version = html.match(/\bv(\d+\.\d+)\s*·/)[1];
   const sources = [...html.matchAll(/(?:src|href)="([^\"]+\.(?:js|css)(?:\?[^\"]*)?)"/g)].map(match => match[1]);
   assert.ok(sources.length > 0);
-  for (const source of sources) assert.equal(new URL(source, 'http://localhost').searchParams.get('v'), version, `${source} must match the displayed release`);
+  for (const source of sources) assert.match(new URL(source, 'http://localhost').searchParams.get('v') || '', /^\d+\.\d+(?:\.\d+)?$/, `${source} must have a cache version`);
+  assert.ok(sources.includes(`game.js?v=${version}`), 'changed game code matches the displayed release');
+  assert.ok(sources.includes(`waves.js?v=${version}`), 'wave code matches the displayed release');
 
   let upgraded = false;
   const requests = [];
@@ -60,7 +62,7 @@ const { chromium, devices } = require('playwright');
       await page.locator('.draft-option').first().tap();
       await page.locator('#draft-confirm').tap();
     }
-    await page.locator('[data-relic="crystal"]').tap();
+    await page.locator('[data-camp-token="treasure"]').tap();
     await page.waitForSelector('#combat-screen.active');
     for (const source of sources) assert.ok(requests.includes(`/${source}`), `${source} was fetched instead of reusing the old cache`);
 
@@ -97,7 +99,7 @@ const { chromium, devices } = require('playwright');
     assert.ok(visibleBounds.y>=19 && visibleBounds.y+visibleBounds.height<=1081,'canvas stays inside Safari visible viewport, including browser bar offset');
     await page.evaluate(()=>{
       for(const key of ['width','height','offsetTop','offsetLeft','scale']) delete visualViewport[key];
-      state.node=1;winBattle();
+      state.node=1;state.battle.waves=[[]];state.battle.waveIndex=0;state.battle.enemyCreatures=[];winBattle();
     });
     await page.setViewportSize({width:390,height:844});
     await page.locator('.sealed-pack').tap();

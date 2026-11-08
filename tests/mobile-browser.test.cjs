@@ -64,7 +64,7 @@ async function assertVisibleBoard(page) {
     for (const [width,height] of [[320,568],[360,640],[390,844],[430,932],[768,1024],[1024,1366],[844,390],[667,375],[1280,720],[1600,900]]) {
       await page.setViewportSize({width,height});
       await page.evaluate(() => {
-        state.pool=BUNDLED_CARDS;state.landPool=FALLBACK_LANDS;state.deck=Array.from({length:50},(_,i)=>BUNDLED_CARDS[i%BUNDLED_CARDS.length]);state.deck.push(...generateStarterManaCards(4));state.relic='crystal';beginBattle(3);state.battle.enemyCreatures.push({...state.battle.enemyCreatures[0],id:'extra-layout-foe'});
+        state.pool=BUNDLED_CARDS;state.landPool=FALLBACK_LANDS;state.deck=Array.from({length:50},(_,i)=>BUNDLED_CARDS[i%BUNDLED_CARDS.length]);state.deck.push(...generateStarterManaCards(4));state.relic='crystal';beginBattle(3);while(state.battle.enemyCreatures.length<4)state.battle.enemyCreatures.push({...state.battle.enemyCreatures[0],id:`extra-layout-foe-${state.battle.enemyCreatures.length}`});
         state.battle.floatingMana=40;
         state.battle.hand=['Grizzly Bears','Savannah Lions','Llanowar Elves','Fountain of Renewal','Bonesplitter'].map(name=>BUNDLED_CARDS.find(c=>c.name===name));
         for(let i=0;i<5;i++)playCard(0,'player');
@@ -102,7 +102,7 @@ async function assertVisibleBoard(page) {
     await page.locator('#inspector-content [data-activate-permanent]').tap();
     assert.equal(await page.evaluate(()=>state.battle.permanents.some(p=>p.card.name==='Fountain of Renewal')),false,'card inspector activates a permanent');
     // Returning to drafting keeps the same fitted 16:9 frame and reward summaries.
-    await page.evaluate(()=>{state.battle.phase='main';state.node=1;winBattle()});
+    await page.evaluate(()=>{state.battle.phase='main';state.node=1;state.battle.waves=[[]];state.battle.waveIndex=0;state.battle.enemyCreatures=[];winBattle()});
     assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('fixed-game')),true);
     await page.locator('.sealed-pack').tap();
     assert.equal(await page.locator('.draft-card-summary').count(),7);

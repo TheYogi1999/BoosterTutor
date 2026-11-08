@@ -264,3 +264,12 @@ Rune Archivist and Tide Sphinx can hold **Counterspell (2 mana)** from encounter
 The enemy responds after a player spell’s casting/additional costs are paid but before it enters or resolves. A reaction panel shows the enemy Counterspell and its target. The player can respond with instants, including their own counterspell or Booster Tutor, then continue. If stopped, the original spell resumes without another mana payment; otherwise one spell/copy is countered and its costs remain paid. Creatures, Equipment, Auras and Clone are supported. Killing the caster does not remove a Counterspell already pending. Original target restrictions and Ward still apply when the saved spell resumes.
 
 The current combat phase and earlier spell window are restored after the reaction. The block-assignment panel temporarily yields its space to the reaction panel while retaining its assignments. Opening fights and encounter-two casters never gain this reaction.
+
+
+### v0.45 — two waves in the last two fights
+
+Encounters one and two remain single-wave fights. Encounters three and four have two waves: a smaller skirmish vanguard, followed by two elites in fight three or the boss and its support in fight four. The boss appears only in the last wave. The enemy header shows **WAVE 1 / 2** and **WAVE 2 / 2**, with a brief arrival fade/toast.
+
+One battle object, life total, library, hand, player battlefield, Equipment/Auras, tokens, graveyards and exile carry across waves. Defeated enemies keep their normal coin bounties. Clearing during main phase preserves remaining mana, land drop, turn effects and attack usage; clearing in combat performs the normal turn cleanup once, untaps, and draws one card for the next turn. Incoming enemies start their own intention pattern and have arrival-turn summoning sickness. Old attack/block targets and combat callbacks are cleared.
+
+Pending spells, Counterspell responses and all spell copies finish before a wave can advance. No reward booster, shop/camp transition or campaign victory occurs until the last wave is defeated. The library never refills at a transition, and a failed mandatory draw can still end the run.

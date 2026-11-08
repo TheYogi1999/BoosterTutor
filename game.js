@@ -672,7 +672,8 @@ function beginBattle(node) {
   state.node = node;
   const enemy = ENCOUNTERS[node - 1];
   const stage = state.stageLocations[node - 1] || LAND_STAGES[(node - 1) % LAND_STAGES.length];
-  const enemyCreatures = createEnemyTeam(enemy);
+  const waves = typeof createEncounterWaves45 === 'function' ? createEncounterWaves45(enemy) : [createEnemyTeam(enemy)];
+  const enemyCreatures = waves[0];
   const shuffledDeck = shuffle(state.deck);
   const startingManaCards = shuffledDeck.filter(card => card.runMana).slice(0, STARTING_MANA_IN_PLAY);
   const startingManaIds = new Set(startingManaCards.map(card => card.instanceId));
@@ -680,7 +681,9 @@ function beginBattle(node) {
     enemy,
     stage,
     enemyArt: enemyCreatures[0]?.card.art || '',
-    bossName: enemyCreatures.find(enemy=>enemy.tier==='boss')?.card.name || null,
+    bossName: waves.flat().find(enemy=>enemy.tier==='boss')?.card.name || null,
+    waves,
+    waveIndex: 0,
     enemyCreatures,
     mana: STARTING_MANA_IN_PLAY,
     maxMana: STARTING_MANA_IN_PLAY,
@@ -710,7 +713,7 @@ function beginBattle(node) {
   drawToHand(state.battle.openingHandSize);
   if (state.battle.phase === 'complete') return;
   syncMana(state.battle);
-  addLog(`An encounter in ${stage.name}: ${enemyCreatures.length} creatures. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
+  addLog(`An encounter in ${stage.name}: ${enemyCreatures.length} creatures${waves.length>1?` · Wave 1 / ${waves.length}`:''}. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
   renderBattle();
   showScreen('combat-screen');
   playSfx('turn');
@@ -926,7 +929,10 @@ function renderBattle() {
   $('#node-counter').textContent = String(state.node).padStart(2, '0');
   const stage = battle.stage || LAND_STAGES[(state.node - 1) % LAND_STAGES.length];
   $('.arena-table').style.setProperty('--stage-accent', stage.color);
-  $('#enemy-rank').textContent = enemy.rank;
+  const waveCount=battle.waves?.length||1;
+  const waveRank=waveCount>1&&battle.waveIndex<waveCount-1?'VANGUARD':enemy.rank;
+  const waveLabel=waveCount>1?`${waveRank} · WAVE ${battle.waveIndex+1} / ${waveCount}`:enemy.rank;
+  if($('#enemy-rank').textContent!==waveLabel)$('#enemy-rank').textContent=waveLabel;
   $('#enemy-name').textContent = stage.name;
   const enemyCount = battle.enemyCreatures.length;
   $('#enemy-count-label').textContent = `${enemyCount} REMAINING`;
@@ -1758,6 +1764,11 @@ function resolveEnemyCombat() {
   if (state.playerHealth <= 0) return endRun(false);
   if (!battle.enemyCreatures.length) return winBattle();
 
+  beginNextPlayerTurn45(battle);
+}
+
+function beginNextPlayerTurn45(battle = state.battle) {
+  if (!battle || state.battle !== battle || battle.phase === 'complete') return;
   battle.creatures.forEach(creature => { creature.damage = 0; creature.deathtouchDamage = false; });
   expireTurnEffects(battle);
   battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy');
@@ -1843,8 +1854,13 @@ function handleCombatAction() {
 }
 
 function winBattle() {
+  const battle=state.battle;
+  if(!battle||battle.phase==='complete')return;
+  if(battle.enemyCreatures.length){renderBattle();return;}
   if (state.battle.enemyCounterWindow) { renderBattle(); return; }
   if (typeof pendingEnemySpells38 === 'function' && pendingEnemySpells38(state.battle).length) { renderBattle(); return; }
+  if(battle.resolutionTask||battle.choice||battle.scry||battle.libraryOrder||battle.interruption){renderBattle();return;}
+  if(typeof advanceEncounterWave45==='function'&&advanceEncounterWave45(battle))return;
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
   addLog(`Encounter in ${state.battle.stage?.name || 'the Aether'} cleared.`);
