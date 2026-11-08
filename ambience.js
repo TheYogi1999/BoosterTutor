@@ -34,8 +34,8 @@
     const from = audio.volume, start = performance.now();
     const frame = now => {
       if (!wanted()) { stop(); return; }
-      const t = Math.min(1, (now - start) / 1400);
-      audio.volume = from + (target - from) * t;
+      const t = Math.max(0, Math.min(1, (now - start) / 1400));
+      audio.volume = Math.max(0, Math.min(1, from + (target - from) * t));
       if (t < 1) fade = requestAnimationFrame(frame);
     };
     fade = requestAnimationFrame(frame);
