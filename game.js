@@ -2394,8 +2394,19 @@ $('#inspector-content').addEventListener('click',event=>{const button=event.targ
 $('#card-preview').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button){hideCardPreview();activatePermanent(button.dataset.activatePermanent);}});
 
 function printedKeywords(card){return (card.keywords || [...COMBAT_KEYWORDS.filter(keyword=>hasKeywordLine(card.oracle_text||'',keyword)),...(hasFlash(card)?['flash']:[])]).map(keyword=>keyword.toLowerCase());}
+function wardCostText(value){
+ if(Number(value?.ward)>0)return `${Number(value.ward)} mana`;
+ const card=value?.card||value;
+ const raw=(card?.oracle_text||'').match(/\bWard\s*(?:[—–-]\s*)?([^\n(]+)/i)?.[1]?.trim().replace(/\.$/,'')||'';
+ const mana=raw.match(/^((?:\{[^}]+\})+)/)?.[1];
+ if(mana)return `${mana.replace(/[{}]/g,'')} mana`;
+ const life=raw.match(/^Pay (\d+) life$/i);if(life)return `${life[1]} life`;
+ const discard=raw.match(/^Discard (a|an|one|two|three|\d+) cards?$/i);
+ if(discard){const n=Number(discard[1])||({a:1,an:1,one:1,two:2,three:3}[discard[1].toLowerCase()]);return `discard ${n} card${n===1?'':'s'}`;}
+ return raw.replace(/^Pay /i,'').replace(/^Sacrifice (?:a|an) /i,'sac. 1 ').replace(/^Sacrifice /i,'sac. ');
+}
 function displayKeywords(card){
- const cost=(card.oracle_text||'').match(/\bWard(?:\s+|[—–]\s*)([^)(\n,]+)/i)?.[1]?.trim().replace(/[{}]/g,'');
+ const cost=wardCostText(card);
  return printedKeywords(card).map(keyword=>keyword==='ward'&&cost?`Ward (${cost})`:keyword);
 }
 
