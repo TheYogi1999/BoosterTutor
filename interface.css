@@ -1,0 +1,54 @@
+/* Shared typography and quiet surfaces from the minimal title menu.
+   Zone dimensions, card controls and combat colours retain their own rules. */
+:root{--ui-cream:#f1e6cd;--ui-gold:#dfba80;--ui-muted:#bbc4bf;--ui-line:#cdb58338}
+.game-shell .screen:not(#start-screen) .eyebrow,dialog .eyebrow{color:#bfad87;letter-spacing:2.5px;font-weight:500}
+.game-shell .screen-heading h2,.game-shell #journey-title,.game-shell #shop-title,.game-shell #end-title,.game-shell .loading-frame h2{font-family:Georgia,serif;font-weight:500;letter-spacing:-.5px;color:var(--ui-cream)}
+.game-shell #draft-title{font-size:37px;line-height:1.2}
+.game-shell #journey-title,.game-shell #shop-title{font-size:36px}
+.game-shell #end-title{font-size:52px}
+.game-shell .screen-heading p,.game-shell #journey-description,.game-shell .shop-heading p{color:var(--ui-muted);font-size:14px}
+.game-shell .screen:not(#start-screen) :is(.primary-button,.quiet-button,.danger-button,.end-turn-button,.mulligan-button,.graveyard-button),dialog :is(.primary-button,.quiet-button,.danger-button){background:transparent!important;border:1px solid transparent!important;border-bottom-color:var(--ui-line)!important;border-radius:0!important;box-shadow:none!important;color:var(--ui-muted)!important;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;transition:color .2s,border-color .2s,background-color .2s;filter:none}
+.game-shell .screen:not(#start-screen) :is(.primary-button,.end-turn-button),dialog .primary-button{color:#f2cc95!important;font-weight:600;border-bottom-color:#d3b17680!important}
+.game-shell .screen:not(#start-screen) .danger-button,dialog .danger-button{color:#e9a697!important;border-bottom-color:#cd8e7655!important}
+.game-shell .screen:not(#start-screen) :is(.primary-button,.quiet-button,.danger-button,.end-turn-button,.mulligan-button,.graveyard-button):hover:not(:disabled),dialog :is(.primary-button,.quiet-button,.danger-button):hover:not(:disabled){color:#fff1d5!important;background:#d8b98309!important;border-bottom-color:#e6c18c!important;transform:none;filter:none}
+.game-shell .screen:not(#start-screen) :is(.primary-button,.quiet-button,.danger-button,.end-turn-button,.mulligan-button,.graveyard-button):focus-visible,dialog :is(.primary-button,.quiet-button,.danger-button):focus-visible{outline:1px solid #f0d3a1;outline-offset:4px}
+.game-shell :is(.primary-button,.quiet-button,.end-turn-button,.mulligan-button):disabled,dialog :is(.primary-button,.quiet-button):disabled{opacity:.36;cursor:not-allowed}
+/* The top edge stays compact during a run. */
+.game-shell:not(.title-menu-active) .topbar{border-color:#cdb58325;background:transparent}
+.game-shell:not(.title-menu-active) .topbar :is(.quiet-button,.icon-button){background:transparent;border-color:transparent;border-radius:0;color:#c4c8bb;box-shadow:none;letter-spacing:1px}
+.game-shell:not(.title-menu-active) .topbar :is(.quiet-button,.icon-button):hover:not(:disabled){color:#f0ce96;border-bottom-color:#d7b98677}
+.game-shell .pack-ribbon{border-color:#be99634d;background:transparent;letter-spacing:2px;color:#d4b48b}
+.game-shell .deck-counter,.game-shell .shop-wallet{background:#10202888;border-color:var(--ui-line);border-radius:6px;box-shadow:none}
+.game-shell .screen:not(#start-screen)>.source-note{display:none}
+.game-shell .draft-footer,.game-shell .shop-footer{border-color:var(--ui-line)}
+.game-shell .selection-status,.game-shell .journey-life{color:#c7c4ac}
+/* Quiet, consistent windows; keep native dialog behaviour and internal scroll areas. */
+html.fixed-game dialog{background:linear-gradient(135deg,#182c30f7,#0d1c24fc),url('assets/expedition.svg') center/cover!important;border:1px solid #cdb58355!important;border-radius:10px!important;box-shadow:0 30px 100px #0009;color:var(--ui-cream)}
+html.fixed-game dialog::backdrop{background:#030a10b8;backdrop-filter:blur(6px)}
+html.fixed-game dialog h2{font-family:Georgia,serif;font-size:31px;font-weight:500;letter-spacing:-.35px;line-height:1.2;color:var(--ui-cream)}
+html.fixed-game dialog>p{color:var(--ui-muted)}
+html.fixed-game dialog .graveyard-close{background:transparent;border:1px solid #cdb58333;border-radius:50%;color:#d6ccae;box-shadow:none}
+html.fixed-game dialog .graveyard-close:hover{border-color:#e2bf80;color:#fff0cd}
+html.fixed-game dialog :is(input:not([type="range"]),select){background:#0b1b23;border:1px solid var(--ui-line);border-radius:3px;color:#e0dfcc;box-shadow:none}
+html.fixed-game dialog :is(input,select):focus-visible{outline:1px solid #ddbd84;outline-offset:2px}
+html.fixed-game dialog .collection-entry,html.fixed-game dialog .collection-monster{background:#10202899;border-color:#baa47b33;border-radius:6px}
+html.fixed-game dialog .collection-rules-label{color:#d4b585;font-weight:500;letter-spacing:2px}
+html.fixed-game dialog .collection-full-rules{color:#e3e5d8}
+html.fixed-game dialog .catalog-discovery{background:transparent;border-color:#a9ae8644;border-radius:2px}
+html.fixed-game dialog .catalog-discovery.is-seen{color:#bad0ad;border-color:#a3c09155}
+html.fixed-game dialog .controller-bindings kbd{background:#0d2028;border-color:var(--ui-line);color:#e4ca9e;border-radius:3px;font-weight:500}
+html.fixed-game dialog .ward-actions{border-color:var(--ui-line)}
+/* Purchases, relics and camp choices keep their full clickable areas. */
+.game-shell .shop-screen{background:transparent}
+.game-shell .shop-offer,.game-shell .shop-pack,.game-shell .journey-options>button{background:#102029b3;border:1px solid #c6ad793d;border-radius:6px;box-shadow:none;color:#e6dfca}
+.game-shell .shop-offer:hover,.game-shell .journey-options>button:hover{border-color:#d7b7828c;background:#1c3035bd}
+.game-shell .shop-offer .draft-card-name,.game-shell .shop-pack-copy b,.game-shell .journey-options h3{font-family:Georgia,serif;font-weight:500;color:#f0dfbd;letter-spacing:0}
+.game-shell .journey-options h3{font-size:26px}
+.game-shell .journey-options p{color:#c4cdc5}
+.game-shell .path-node{border-color:#c3ac7b33;background:#10202a99;box-shadow:none}
+.game-shell .path-node.current{border-color:#dab780;box-shadow:0 0 22px #d6ab4520}
+.game-shell .run-summary,.game-shell .loading-frame{border-color:var(--ui-line);background:#10202899;box-shadow:none}
+/* Subtle panel edges without weakening targets, attachment markers or stat colours. */
+.game-shell .card-inspector,.game-shell .table-graveyard,.game-shell .blocking-panel{border-color:#bbaa7a38;background:#102029c9}
+.game-shell .arena-zone-header,.game-shell .inspector-heading{color:#c6b38c;border-color:var(--ui-line);font-weight:500}
+@media(prefers-reduced-motion:reduce){.game-shell .screen:not(#start-screen) :is(.primary-button,.quiet-button,.end-turn-button),dialog :is(.primary-button,.quiet-button){transition:none}}

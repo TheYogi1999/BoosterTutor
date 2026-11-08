@@ -86,7 +86,7 @@ async function preparePack(page, indices=[0,1,2,3,4,5,6]){
       await page.evaluate(()=>showScreen('start-screen'));
       const home=await page.evaluate(()=>{
         const frame=document.querySelector('.title-stage').getBoundingClientRect();
-        return{frame:frame.toJSON(),controls:[...document.querySelectorAll('#start-button,#card-catalog-button,.avatar-choice,.hero-discoveries')].map(e=>e.getBoundingClientRect().toJSON()),shell:document.querySelector('.game-shell').getBoundingClientRect().toJSON()};
+        return{frame:frame.toJSON(),controls:[...document.querySelectorAll('.title-menu button')].map(e=>e.getBoundingClientRect().toJSON()),shell:document.querySelector('.game-shell').getBoundingClientRect().toJSON()};
       });
       assert.ok(Math.abs(home.shell.width/home.shell.height-16/9)<.002);
       for(const r of home.controls)assert.ok(r.left>=home.frame.left&&r.right<=home.frame.right&&r.top>=home.frame.top&&r.bottom<=home.frame.bottom,'home controls stay in the hero');

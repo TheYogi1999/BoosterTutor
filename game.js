@@ -533,13 +533,13 @@ function renderDraft() {
   if (!state.boosterSealed && !boosterTravel) recordSeenCards(pack);
   $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF ${STARTER_BOOSTER_COUNT}` : 'REWARD';
   $('#draft-title').textContent = state.boosterSealed ? 'Your next booster' : 'Which card joins your journey?';
-  $('#draft-instruction').textContent = state.boosterSealed ? 'Open the pack to reveal seven cards.' : `Choose one of seven cards. Receive ${COPIES_PER_DRAFT_PICK} copies. Type, power/toughness and keywords are listed below each card.`;
+  $('#draft-instruction').textContent = state.boosterSealed ? 'Seven cards. One choice.' : `Choose one card · ${COPIES_PER_DRAFT_PICK} copies for your deck.`;
   $('#pack-number').textContent = `${packIndex + 1} / ${starter ? STARTER_BOOSTER_COUNT : 1}`;
   $('#deck-count').textContent = String(state.deck.length + state.selection.size * COPIES_PER_DRAFT_PICK);
   $('#draft-grid').innerHTML = state.boosterSealed
     ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-shine-window" aria-hidden="true"><span class="pack-foil"></span></span><span class="pack-seal pack-seal-top" aria-hidden="true"></span><span class="pack-seal pack-seal-bottom" aria-hidden="true"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
     : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${pack.map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex, newCards.has(cardDiscoveryKey(card)))).join('')}</div></section>`;
-  $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'The tooltip shows costs and actual in-game effects.';
+  $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'Choose a card to continue.';
   $('#pack-reroll').disabled = state.boosterSealed || Boolean(state.rerolledPacks?.has(packIndex));
   $('#pack-reroll').textContent = state.rerolledPacks?.has(packIndex) ? '↻ Reroll used' : '↻ Reroll pack · 1×';
   $('#draft-confirm').disabled = state.boosterSealed || !chosen;
@@ -2032,7 +2032,7 @@ document.addEventListener('keydown', (event) => {
 function showJourney() {
   const first = state.node === 1;
   $('#journey-title').textContent = first ? 'Choose your relic' : 'A moment by the fire';
-  $('#journey-description').textContent = first ? 'One relic. A different way to play. Your choice lasts for this run.' : 'Life carries between encounters. Prepare before you continue.';
+  $('#journey-description').textContent = first ? 'Choose a relic for this run.' : 'Rest, refine your deck, then continue.';
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${encounter.name}</b></div>`).join('');
   $('#journey-options').innerHTML = first
     ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="lens"><span>⌖</span><h3>Wayfinder’s Lens</h3><p>Begin each battle with one extra card.</p></button>'
