@@ -22,17 +22,17 @@ const AVATARS = [
   { id: 'guardian', name: 'Iron Guardian', symbol: '⛨' },
   { id: 'dragon', name: 'Ember Adept', symbol: '♨' }
 ];
-const COUNTRY_STAGES = [
-  { country: 'Iceland', region: 'The Crystal Fjord', color: '#67b8d8' },
-  { country: 'Morocco', region: 'The Amber Dunes', color: '#db9861' },
-  { country: 'Japan', region: 'The Blossom Highlands', color: '#d98595' },
-  { country: 'Kenya', region: 'The Sunlit Savanna', color: '#d6b95f' },
-  { country: 'Brazil', region: 'The Emerald Canopy', color: '#64b887' },
-  { country: 'Greece', region: 'The Aegean Cliffs', color: '#68a9d1' },
-  { country: 'Norway', region: 'The Northern Reach', color: '#7b98d1' },
-  { country: 'India', region: 'The Saffron Valley', color: '#d88a54' },
-  { country: 'New Zealand', region: 'The Mistbound Range', color: '#80b6a2' },
-  { country: 'Peru', region: 'The Cloud Forest', color: '#c67a65' }
+const LAND_STAGES = [
+  { name: 'Glacial Fortress', color: '#67b8d8', scene: 'fjord' },
+  { name: 'Arid Mesa', color: '#db9861', scene: 'dunes' },
+  { name: 'Temple Garden', color: '#abc482', scene: 'forest' },
+  { name: 'Sunpetal Grove', color: '#d6b95f', scene: 'forest' },
+  { name: 'Breeding Pool', color: '#64b8aa', scene: 'forest' },
+  { name: 'Hallowed Fountain', color: '#8fbcd8', scene: 'temple' },
+  { name: 'Shivan Reef', color: '#a78bc9', scene: 'fjord' },
+  { name: 'Stomping Ground', color: '#d88a54', scene: 'dunes' },
+  { name: 'Misty Rainforest', color: '#80b6a2', scene: 'forest' },
+  { name: 'Overgrown Tomb', color: '#90a276', scene: 'forest' }
 ];
 const FALLBACK_LANDS = [
   ['Plains', 'W'], ['Island', 'U'], ['Swamp', 'B'], ['Mountain', 'R'], ['Forest', 'G']
@@ -316,7 +316,7 @@ function startNewRun() {
   state.coins = 0; state.shop = null; syncCoins();
   state.node = 1;
   state.battle = null;
-  state.stageLocations = shuffle(COUNTRY_STAGES).slice(0, ENCOUNTERS.length);
+  state.stageLocations = shuffle(LAND_STAGES).slice(0, ENCOUNTERS.length);
   state.selection.clear();
   showScreen('loading-screen');
   ensureCardPool().then(({ cards, lands, fallback, missingCount, sourceCount, warning }) => {
@@ -631,7 +631,7 @@ function confirmDraft() {
 function beginBattle(node) {
   state.node = node;
   const enemy = ENCOUNTERS[node - 1];
-  const stage = state.stageLocations[node - 1] || COUNTRY_STAGES[(node - 1) % COUNTRY_STAGES.length];
+  const stage = state.stageLocations[node - 1] || LAND_STAGES[(node - 1) % LAND_STAGES.length];
   const enemyCreatures = createEnemyTeam(enemy);
   const shuffledDeck = shuffle(state.deck);
   const startingManaCards = shuffledDeck.filter(card => card.runMana).slice(0, STARTING_MANA_IN_PLAY);
@@ -668,7 +668,7 @@ function beginBattle(node) {
   drawToHand(state.battle.openingHandSize);
   if (state.battle.phase === 'complete') return;
   syncMana(state.battle);
-  addLog(`An encounter in ${stage.country}: ${enemyCreatures.length} creatures. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
+  addLog(`An encounter in ${stage.name}: ${enemyCreatures.length} creatures. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
   renderBattle();
   showScreen('combat-screen');
   playSfx('turn');
@@ -879,11 +879,10 @@ function renderBattle() {
   if (battle.phase === 'main') for (const creature of battle.creatures) { if (creature.attackTargetId && !battle.enemyCreatures.some(enemy => enemy.id === creature.attackTargetId)) { creature.attackTargetId = null; creature.willAttack = false; } }
   const enemy = battle.enemy;
   $('#node-counter').textContent = String(state.node).padStart(2, '0');
-  const stage = battle.stage || COUNTRY_STAGES[(state.node - 1) % COUNTRY_STAGES.length];
+  const stage = battle.stage || LAND_STAGES[(state.node - 1) % LAND_STAGES.length];
   $('.arena-table').style.setProperty('--stage-accent', stage.color);
   $('#enemy-rank').textContent = enemy.rank;
-  $('#enemy-name').textContent = stage.country;
-  $('#enemy-name').title = stage.region;
+  $('#enemy-name').textContent = stage.name;
   const enemyCount = battle.enemyCreatures.length;
   $('#enemy-count-label').textContent = `${enemyCount} REMAINING`;
   $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)}`;
@@ -1779,7 +1778,7 @@ function handleCombatAction() {
 function winBattle() {
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
-  addLog(`Encounter in ${state.battle.stage?.country || 'the Aether'} cleared.`);
+  addLog(`Encounter in ${state.battle.stage?.name || 'the Aether'} cleared.`);
   if (node >= ENCOUNTERS.length) return endRun(true);
   state.node += 1;
   state.packs = [chooseRandomCards(state.pool, PACK_SIZE)];
@@ -1790,7 +1789,7 @@ function winBattle() {
   state.selection.clear();
   renderDraft();
   showScreen('draft-screen');
-  showToast(`Encounter in ${state.battle.stage?.country || 'the Aether'} cleared. Choose a reward, then rest.`);
+  showToast(`Encounter in ${state.battle.stage?.name || 'the Aether'} cleared. Choose a reward, then rest.`);
   playSfx('victory');
 }
 
@@ -2032,7 +2031,7 @@ function showJourney() {
   const first = state.node === 1;
   $('#journey-title').textContent = first ? 'Choose your relic' : 'A moment by the fire';
   $('#journey-description').textContent = first ? 'Choose a relic for this run.' : 'Rest, refine your deck, then continue.';
-  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${escapeHtml((state.stageLocations[index] || COUNTRY_STAGES[index]).country)}</b></div>`).join('');
+  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${escapeHtml((state.stageLocations[index] || LAND_STAGES[index]).name)}</b></div>`).join('');
   $('#journey-options').innerHTML = first
     ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="lens"><span>⌖</span><h3>Wayfinder’s Lens</h3><p>Begin each battle with one extra card.</p></button>'
     : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life. No life cap.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add Divination: draw two cards.</p></button>';

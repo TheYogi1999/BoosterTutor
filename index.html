@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0b1015" />
-    <meta name="description" content="Booster Tutor is a free, unofficial browser roguelike with a six-pack Magic draft, mana cards, and country-themed encounters." />
+    <meta name="description" content="Booster Tutor is a free, unofficial browser roguelike with a six-pack Magic draft, mana cards, and MTG land-themed encounters." />
     <title>Booster Tutor — The Aether Expedition</title>
     <link rel="stylesheet" href="style.css?v=0.25" />
     <link rel="stylesheet" href="arena.css?v=0.25" />
@@ -24,13 +24,13 @@
     <link rel="stylesheet" href="expansion.css?v=0.27" />
     <link rel="stylesheet" href="ambience.css?v=0.29.3" />
     <link rel="stylesheet" href="title-screen.css?v=0.30.1" />
-    <link rel="stylesheet" href="interface.css?v=0.32" />
+    <link rel="stylesheet" href="interface.css?v=0.32.1" />
     <script src="cards.js?v=0.27" defer></script>
     <script src="sounds.js?v=0.25" defer></script>
-    <script src="game.js?v=0.32" defer></script>
+    <script src="game.js?v=0.32.1" defer></script>
     <script src="rules.js?v=0.27" defer></script>
     <script src="expansion.js?v=0.27" defer></script>
-    <script src="effects.js?v=0.25" defer></script>
+    <script src="effects.js?v=0.32.1" defer></script>
     <script src="controller.js?v=0.32" defer></script>
     <script src="ambience.js?v=0.29.3" defer></script>
     <script src="title-screen.js?v=0.32" defer></script>
@@ -44,7 +44,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.32 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.32.1 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Background music settings">♫ Music</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
@@ -137,7 +137,7 @@
           <section class="enemy-panel arena-side drop-zone" id="enemy-drop-zone" data-side="enemy" aria-label="Enemy battlefield. Drop spells here to target the enemy.">
             <div class="side-header enemy-side-header">
               <div class="side-identity enemy-identity">
-                <span class="enemy-rank" id="enemy-rank">SKIRMISH</span><h2 id="enemy-name">Iceland</h2>
+                <span class="enemy-rank" id="enemy-rank">SKIRMISH</span><h2 id="enemy-name">Glacial Fortress</h2>
                 <div class="health-label"><span>ENEMIES</span><b id="enemy-count-label">2 ENEMIES REMAIN</b></div>
               </div>
               <div class="enemy-art" id="enemy-art" aria-hidden="true"><img id="enemy-art-image" alt="" /><span class="enemy-sprite">♟</span><div class="enemy-shadow"></div></div>
