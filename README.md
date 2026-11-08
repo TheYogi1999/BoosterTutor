@@ -255,3 +255,12 @@ Preview playback is manual and exclusive, with category tabs, a shared volume sl
 The user's selected **D1 / X3 / E3 / P3** set is active: actual library-to-hand draws use Paper Slide, rejected actions use Retro Denied, enemy damage uses Retro Impact and damage to the player or allied creatures uses Retro Damage. Zero/countered hits and informational/success toasts stay silent. Graveyard returns, tutoring and Mill are not library draws.
 
 Opening and multi-card draws are staggered at 160 ms for ordinary batches, independently of visual/reduced-motion settings. Larger bursts are compressed into a bounded audio window with gain compensation and a 24-voice ceiling. Short per-cue cooldowns merge simultaneous hits and prevent rejection spam. Buffers warm after a user gesture. Master mute, hidden tabs and leaving combat cancel queued draw effects; stale loads cannot replay a draw after the scene changes. The C → music sequence and B Play cue remain active.
+
+
+### v0.44 — enemy Counterspell reactions
+
+Rune Archivist and Tide Sphinx can hold **Counterspell (2 mana)** from encounter three onward. They are ready on even-numbered turns; a visible label shows ready, spent or next-turn status. The entire enemy team gets at most one such reaction per turn, and casting spends the caster’s reserved two mana. Mana cards and activated abilities are not spells.
+
+The enemy responds after a player spell’s casting/additional costs are paid but before it enters or resolves. A reaction panel shows the enemy Counterspell and its target. The player can respond with instants, including their own counterspell or Booster Tutor, then continue. If stopped, the original spell resumes without another mana payment; otherwise one spell/copy is countered and its costs remain paid. Creatures, Equipment, Auras and Clone are supported. Killing the caster does not remove a Counterspell already pending. Original target restrictions and Ward still apply when the saved spell resumes.
+
+The current combat phase and earlier spell window are restored after the reaction. The block-assignment panel temporarily yields its space to the reaction panel while retaining its assignments. Opening fights and encounter-two casters never gain this reaction.

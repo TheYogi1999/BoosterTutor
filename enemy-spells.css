@@ -25,3 +25,6 @@
  html.portrait-combat .game-shell .enemy-spell-copy p{font-size:16px;line-height:20px}
  html.portrait-combat .game-shell .enemy-spell-panel>button{font-size:17px!important;padding:8px!important}
 }
+
+/* Readiness remains on the foe; the reaction uses the existing response panel. */
+.game-shell .enemy-spell-panel:has(.enemy-spell-copy){align-self:end}

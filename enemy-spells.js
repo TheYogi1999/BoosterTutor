@@ -103,8 +103,9 @@ function prepareEnemySpells38(battle) {
  battle.activeEnemySpellId=null;
 }
 function resolveEnemySpell38(spell,battle=state.battle) {
+ if(spell?.intent==='counterspell')return settleEnemyCounter44(battle);
  if(!spell||spell.status!=='pending'||state.battle!==battle||battle.phase==='complete')return;
- const target=spell.target.side==='player'?battle.creatures.find(unit=>unit.id===spell.target.id):null;
+ const target=spell.intent==='counterspell'?b.enemyCounterWindow?.card.name||'your spell':spell.target.side==='player'?battle.creatures.find(unit=>unit.id===spell.target.id):null;
  if(spell.target.side==='player'&&(!target||hasCreatureKeyword(target,'hexproof'))) {
   finishEnemySpell38(spell,'fizzled',battle);addLog(`${spell.card.name} has no legal target and does not resolve.`);return;
  }
@@ -156,12 +157,13 @@ function enemySpellWindow38(battle,continuation) {
 
 function renderEnemySpells38() {
  const b=state.battle;const panel=$('#enemy-spell-panel');const spell=activeEnemySpell38(b);
- panel.hidden=!spell||b.phase!=='enemy';
+ panel.hidden=!spell||(b.phase!=='enemy'&&!b.enemyCounterWindow);
+ if(b.enemyCounterWindow)$('#blocking-panel').hidden=true;
  if(panel.hidden){panel.innerHTML='';return;}
- const target=spell.target.side==='player'?b.creatures.find(unit=>unit.id===spell.target.id)?.card.name||'departed creature':'your life';
+ const target=spell.intent==='counterspell'?b.enemyCounterWindow?.card.name||'your spell':spell.target.side==='player'?b.creatures.find(unit=>unit.id===spell.target.id)?.card.name||'departed creature':'your life';
  const index=b.enemySpells.indexOf(spell)+1;
- panel.innerHTML=`<div class="enemy-spell-copy"><span>ENEMY SPELL · ${index} / ${b.enemySpells.length}</span><strong>${escapeHtml(spell.card.name)} <small>${escapeHtml(spell.card.type_line)}</small></strong><p>${escapeHtml(spell.sourceName)} → ${escapeHtml(target)}</p><p class="enemy-spell-status">${spell.status==='countered'?'COUNTERED · no effect':spell.intent==='rune'?'2 damage · cast an instant or pass':spell.intent==='drain'?'You lose 3 life; caster gains 3 · respond or pass':'3 damage to you · cast an instant or pass'}</p></div><button class="quiet-button" data-pass-enemy-spell ${!b.priorityCallback||b.resolutionTask?'disabled':''}>${spell.status==='countered'?'Continue':'Resolve spell'} →</button>`;
+ panel.innerHTML=`<div class="enemy-spell-copy"><span>${spell.intent==='counterspell'?'ENEMY REACTION · 2 MANA PAID':`ENEMY SPELL · ${index} / ${b.enemySpells.length}`}</span><strong>${escapeHtml(spell.card.name)} <small>${escapeHtml(spell.card.type_line)}</small></strong><p>${escapeHtml(spell.sourceName)} → ${escapeHtml(target)}</p><p class="enemy-spell-status">${spell.status==='countered'?'COUNTERED · no effect':spell.intent==='counterspell'?'Stops your spell · respond with an instant or pass':spell.intent==='rune'?'2 damage · cast an instant or pass':spell.intent==='drain'?'You lose 3 life; caster gains 3 · respond or pass':'3 damage to you · cast an instant or pass'}</p></div><button class="quiet-button" data-pass-enemy-spell ${!b.priorityCallback||b.resolutionTask||b.choice||b.scry||b.libraryOrder||b.interruption?'disabled':''}>${spell.status==='countered'?'Continue':'Resolve spell'} →</button>`;
  $('#phase-status').textContent=spell.status==='countered'?`${spell.card.name} was countered. Continue when ready.`:`${spell.sourceName} casts ${spell.card.name}. Cast an instant, or continue to let it resolve.`;
- $('#combat-action-hint').textContent='Enemy spell response: counter the spell, protect its target, or continue.';
+ $('#combat-action-hint').textContent=spell.intent==='counterspell'?'Your spell costs are paid. Counter this Counterspell, cast another instant, or continue.':'Enemy spell response: counter the spell, protect its target, or continue.';
 }
 $('#enemy-spell-panel').addEventListener('click',event=>{if(event.target.closest('[data-pass-enemy-spell]')&&!state.battle?.resolutionTask)handleCombatAction();});

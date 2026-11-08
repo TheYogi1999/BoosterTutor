@@ -36,12 +36,13 @@ choiceTargetUnit=function(target,battle=state.battle){if(target?.side==='permane
 const baseCanCast27=canCastNow;
 canCastNow=function(card,battle=state.battle){return Boolean(battle&&!battle.resolutionTask&&!battle.libraryOrder&&!battle.interruption&&baseCanCast27(card,battle));};
 const baseBeat27=afterCombatBeat;
-afterCombatBeat=function(battle,phase,callback){const resume=()=>{if(battle.resolutionTask||battle.libraryOrder||battle.interruption){battle.deferredBeat=resume;return;}callback();};return baseBeat27(battle,phase,resume);};
+afterCombatBeat=function(battle,phase,callback){const resume=()=>{if(battle.resolutionTask||battle.libraryOrder||battle.interruption||battle.enemyCounterWindow){battle.deferredBeat=resume;return;}callback();};return baseBeat27(battle,phase,resume);};
 function finishResolution27(task){
  const b=task.battle;if(state.battle!==b)return;
  b.resolutionTask=null;b.wardTask=null;b.mulliganAvailable=false;refreshPermanentEffects();b.creatures=removeDeadCreatures(b.creatures,'player');b.enemyCreatures=removeDeadCreatures(b.enemyCreatures,'enemy');
  if(b.phase==='complete')return;
  addLog(`${task.p.card.name} finishes resolving${task.copies>1?` (${task.copies} spell resolutions)`:''}.`);playSfx('cast');
+ if(b.enemyCounterWindow){renderBattle();return;}
  if(!b.enemyCreatures.length)return winBattle();renderBattle();
  if(b.deferredBeat){const resume=b.deferredBeat;b.deferredBeat=null;afterCombatBeat(b,b.phase,resume);}
 }
@@ -49,7 +50,13 @@ function advanceResolution27(task){
  const b=task.battle;if(state.battle!==b||b.phase==='complete'){if(state.battle===b)b.resolutionTask=null;return;}
  if(task.copy>=task.copies)return finishResolution27(task);
  const p=task.p;const target=task.target;const unit=choiceTargetUnit(target,b);
- if(p.rule.target){const valid=target.side==='grave'?b.graveyard.includes(task.graveCard):target.side==='life'||Boolean(unit);if(!valid){addLog(`${p.card.name}: the target is gone; this resolution has no effect.`);task.copy++;task.effect=0;task.wardPaid=false;return advanceResolution27(task);}}
+ if(p.rule.target){const valid=target.side==='grave'?b.graveyard.includes(task.graveCard):target.side==='life'||Boolean(unit);if(!valid){addLog(`${p.card.name}: the target is gone; this resolution has no effect.`);if(isAura(p.card))b.graveyard.push(p.card);task.copy++;task.effect=0;task.wardPaid=false;return advanceResolution27(task);}}
+ if(!task.enemyCounterChecked&&task.effect===0){
+  task.enemyCounterChecked=true;
+  const resume=()=>advanceResolution27(task);
+  const countered=()=>{if(isAura(p.card))b.graveyard.push(p.card);task.copy++;task.effect=0;task.wardPaid=false;advanceResolution27(task);};
+  if(typeof offerEnemyCounter44==='function'&&offerEnemyCounter44(p.card,b,resume,countered))return;
+ }
  const ward=unit?.owner==='enemy'?wardCost(unit):0;
  if(ward&&!task.wardPaid){renderBattle();b.wardTask=task;$('#ward-title').textContent=`${unit.card.name} · Ward (${ward} mana)`;$('#ward-description').textContent=`Pay ${ward} extra generic mana or ${p.card.name}${task.copies>1?' (this spell copy)':''} is countered. Casting and additional costs have already been paid.`;$('#ward-pay').textContent=`Pay ${ward} mana →`;$('#ward-pay').disabled=!paymentPlan({cmc:ward});$('#ward-progress').textContent=`Resolution ${task.copy+1} of ${task.copies} · ${b.mana} mana available`;$('#ward-dialog').showModal();return;}
  b.wardTask=null;
@@ -76,7 +83,12 @@ commitRuleSpell=function(p){
  if(!payMana(p.card.cmc,b))return false;
  const spell=isInstant(p.card)||/\bSorcery\b/.test(p.card.type_line);const copies=spell?1+(b.copyNextSpell||0):1;if(spell)b.copyNextSpell=0;
  for(const i of discards)b.graveyard.push(b.hand[i]);const removed=new Set([p.index,...discards]);b.hand=b.hand.filter((card,i)=>!removed.has(i));for(const unit of sacrificed)sacrificeRuleCreature(unit);
- if(clone){const card={...clone.card};const unit={id:`player-${state.nextPermanentId++}`,card,originalCard:p.card,owner:'player',...parseStats(card),...creatureKeywords(card),summonedTurn:b.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false};b.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);return finishResolution27({battle:b,p,copies:1});}
+ if(clone){
+  const resolve=()=>{const chosen=choiceTargetUnit(target,b);if(chosen){const card={...chosen.card};const unit={id:`player-${state.nextPermanentId++}`,card,originalCard:p.card,owner:'player',...parseStats(card),...creatureKeywords(card),summonedTurn:b.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false};b.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);}else b.graveyard.push(p.card);return finishResolution27({battle:b,p,copies:1});};
+  const countered=()=>{b.graveyard.push(p.card);finishResolution27({battle:b,p,copies:1});};
+  if(typeof offerEnemyCounter44==='function'&&offerEnemyCounter44(p.card,b,resolve,countered))return true;
+  return resolve();
+ }
  if(!isAura(p.card))b.graveyard.push(p.card);
  const task={battle:b,p,target,graveCard,copies,copy:0,effect:0,wardPaid:false};b.resolutionTask=task;b.mulliganAvailable=false;advanceResolution27(task);return true;
 };

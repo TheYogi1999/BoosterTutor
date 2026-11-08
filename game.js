@@ -632,11 +632,13 @@ $('#creature-row').addEventListener('click', (event) => {
   if (!creature) return;
   if (battle.pendingAttachment) return selectAttachmentTarget(creature.id);
   if (battle.phase === 'blocks') {
+    if (battle.enemyCounterWindow) return showActionError('Finish the spell response before assigning blockers.');
     if (creature.tapped) return showActionError('Tapped creatures cannot block.');
     if (!battle.selectedEnemyAttackerId) return showActionError('Choose an attacker on the right first.');
     return assignBlocker(battle.selectedEnemyAttackerId, creature.id);
   }
   if (battle.phase !== 'main') return;
+  if (battle.enemyCounterWindow) return showActionError('Finish the spell response before queuing attacks.');
   if (!eligibleAttacker(creature, battle)) return showActionError(hasCreatureKeyword(creature,'defender') ? 'Defender creatures cannot attack.' : creature.tapped ? 'Tapped creatures cannot attack.' : creature.attackedThisTurn ? 'This creature already attacked.' : 'Summoning sickness: this creature cannot attack yet.');
   if (/attacks each combat if able/i.test(creature.card.oracle_text||'')) return showActionError('This creature must attack if able. Choose its target or use Queue attack.');
   if (creature.willAttack) withdrawAttack(creature.id);
@@ -898,7 +900,7 @@ function showCardPreview(card, element) {
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
-  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
+  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
@@ -1379,6 +1381,7 @@ function cleanupAttachments(deadIds) {
 function selectAttachmentTarget(creatureId) {
   const battle = state.battle;
   const pending = battle?.pendingAttachment;
+  if (battle?.enemyCounterWindow) return showActionError('Equip only when no spell is pending.');
   if (!pending || battle.phase !== 'main') return;
   const creature = battle.creatures.find(item => item.id === creatureId);
   if (!creature) return;
@@ -1448,6 +1451,13 @@ function playCard(index, targetSide = 'enemy') {
   battle.mulliganAvailable = false;
   if (!payMana(card.cmc, battle)) return showActionError('Not enough generic mana for this card.');
   battle.hand.splice(index, 1);
+  const resolve=()=>resolvePaidCard44(card,battle);
+  const countered=()=>{battle.graveyard.push(card);if(!battle.enemyCreatures.length)return winBattle();renderBattle();};
+  if(typeof offerEnemyCounter44==='function'&&offerEnemyCounter44(card,battle,resolve,countered))return;
+  resolve();
+}
+function resolvePaidCard44(card,battle=state.battle){
+  if(state.battle!==battle||battle.phase==='complete')return;
   if (isCreature(card)) {
     const stats = parseStats(card);
     const keywords = creatureKeywords(card);
@@ -1652,6 +1662,7 @@ function withdrawAttack(creatureId) {
 function queueCreatureAttack(creatureId, targetId = null) {
   const battle = state.battle;
   const creature = battle?.creatures.find(item => item.id === creatureId);
+  if (battle?.enemyCounterWindow) { showActionError('Finish the spell response before queuing attacks.'); return false; }
   if (!battle || battle.phase !== 'main' || !creature || !eligibleAttacker(creature, battle)) return false;
   const target = targetId ? battle.enemyCreatures.find(enemy => enemy.id === targetId && canAttackEnemy(creature,enemy)) : attackTarget(battle, creature);
   if (!target) { showActionError('Flying enemies can only be attacked by creatures with Flying or Reach.'); return false; }
@@ -1789,7 +1800,7 @@ function afterCombatBeat(battle, phase, callback) {
 
 function finishTurn() {
   const battle = state.battle;
-  if (!battle || battle.phase !== 'main') return;
+  if (!battle || battle.phase !== 'main' || battle.enemyCounterWindow) return;
   battle.mulliganAvailable = false;
   battle.pendingAttachment = null;
   for (const creature of battle.creatures) { if (/attacks each combat if able/i.test(creature.card.oracle_text || '') && eligibleAttacker(creature, battle) && attackTarget(battle,creature)) creature.willAttack = true; }
@@ -1825,12 +1836,14 @@ function beginEnemyDamage() {
   afterCombatBeat(battle, 'damage', resolveEnemyCombat);
 }
 function handleCombatAction() {
+  if (state.battle?.enemyCounterWindow && typeof enemyCounterBusy44 === 'function' && enemyCounterBusy44(state.battle)) return;
   if (state.battle?.priorityCallback) { const callback = state.battle.priorityCallback; state.battle.priorityCallback = null; callback(); return; }
   if (state.battle?.phase === 'blocks') beginEnemyDamage();
   else if (state.battle?.phase === 'main') finishTurn();
 }
 
 function winBattle() {
+  if (state.battle.enemyCounterWindow) { renderBattle(); return; }
   if (typeof pendingEnemySpells38 === 'function' && pendingEnemySpells38(state.battle).length) { renderBattle(); return; }
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
