@@ -30,7 +30,7 @@ const SPELL_RULES = {
 };
 const MANUAL_BANS = {
  Cancel:'A true counterspell needs an opposing spell stack. Cancelling a monster attack is not its printed effect.',
- Reverberate:'Targets a spell on the stack. The game currently supports next-spell copying with Doublecast instead.',
+ Reverberate:'Copying an opposing spell and choosing its targets is not implemented. Use Doublecast for your next own instant or sorcery.',
  Duress:'Opponents do not have a hand from which to choose a noncreature, nonland card.'
 };
 function rulesAudit(card){
@@ -93,7 +93,7 @@ playCard=function(index,targetSide='enemy'){
   const requested=battle.pendingSpellTarget;
   const key=requested?`${requested.side}:${requested.id}`:null;
   if(key&&ruleTargetOptions(pending.rule.target,battle).some(item=>item.key===key))pending.picks.target=[key];
-  else pending.steps.push({kind:'target',count:1,title:pending.rule.target==='grave-creature'?'Choose a creature from your graveyard':pending.rule.target==='own-creature'?'Choose a creature you control':pending.rule.target==='clone'?'Choose a creature to copy':'Choose a legal target'});
+  else pending.steps.push({kind:'target',count:1,title:pending.rule.target.startsWith('opposing-')?'Choose the enemy spell to counter':pending.rule.target==='grave-creature'?'Choose a creature from your graveyard':pending.rule.target==='own-creature'?'Choose a creature you control':pending.rule.target==='clone'?'Choose a creature to copy':'Choose a legal target'});
  }
  if(pending.rule.discard)pending.steps.push({kind:'discard',count:pending.rule.discard,title:`Discard ${pending.rule.discard} other card${pending.rule.discard>1?'s':''} as an additional cost`});
  if(pending.rule.sacrifice)pending.steps.push({kind:'sacrifice',count:1,title:'Sacrifice a creature you control as an additional cost'});

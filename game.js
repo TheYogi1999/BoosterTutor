@@ -234,7 +234,9 @@ async function loadCardPool() {
     try {
       const value = JSON.parse(cached);
       if (Date.now() - value.savedAt < CARD_CACHE_TTL && value.cards?.length > BUNDLED_CARDS.length && value.lands?.length >= 5) {
-        return { cards: value.cards, lands: value.lands, cached: true, missingCount: value.missingCount || 0, sourceCount: value.sourceCount || 0 };
+        const merged = new Map(value.cards.map(card=>[card.name.toLowerCase(),card]));
+        for (const card of BUNDLED_CARDS) merged.set(card.name.toLowerCase(),card);
+        return { cards: [...merged.values()], lands: value.lands, cached: true, missingCount: value.missingCount || 0, sourceCount: value.sourceCount || 0 };
       }
     } catch { /* Ignore a malformed card cache. */ }
   }
@@ -894,7 +896,7 @@ function showCardPreview(card, element) {
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
-  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? 'Only instants can be cast outside the main phase.' : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
+  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
@@ -972,6 +974,7 @@ function renderBattle() {
   }
   renderDropZones();
   updatePhaseDisplay();
+  if (typeof renderEnemySpells38 === 'function') renderEnemySpells38();
   requestAnimationFrame(drawCombatArrows);
 }
 
@@ -982,7 +985,7 @@ function renderHand() {
     const position = index - center;
     const canPay = Boolean(paymentPlan(card));
     const selected = battle.pendingAttachment?.handIndex === index;
-    return `<button type="button" class="hand-card${!canCastNow(card, battle) ? ' timing-unavailable' : ''}${(isInstant(card) || hasFlash(card)) && battle.phase !== 'main' ? ' instant-response' : ''}${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${canCastNow(card, battle)}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
+    return `<button type="button" class="hand-card${!canCastNow(card, battle) ? ' timing-unavailable' : ''}${(isInstant(card) || hasFlash(card)) && battle.phase !== 'main' && canCastNow(card,battle) ? ' instant-response' : ''}${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${canCastNow(card, battle)}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
   }).join('');
   fitHand();
   $('#hand-row').querySelectorAll('.hand-card').forEach(button => {
@@ -1825,6 +1828,7 @@ function handleCombatAction() {
 }
 
 function winBattle() {
+  if (typeof pendingEnemySpells38 === 'function' && pendingEnemySpells38(state.battle).length) { renderBattle(); return; }
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
   addLog(`Encounter in ${state.battle.stage?.name || 'the Aether'} cleared.`);
@@ -2364,7 +2368,7 @@ function incomingThreat(attacker, blockers) {
   for(let hit=0;hit<hits;hit++){ threat += Math.max(0,attacker.power-capacity); capacity=Math.max(0,capacity-attacker.power); }
   return threat;
 }
-function syncCoins() { $('#coin-count').textContent=String(state.coins||0); $('#shop-coins').textContent=String(state.coins||0); }
+function syncCoins() { $('#coin-count').textContent=String(state.coins||0); $('#shop-coins').textContent=String(state.coins||0); $('#battle-coin-count').textContent=String(state.coins||0); }
 function awardBounty(enemy) {
   if (!enemy || enemy.owner !== 'enemy' || enemy.bountyClaimed) return 0;
   enemy.bountyClaimed=true;

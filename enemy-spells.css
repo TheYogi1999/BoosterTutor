@@ -1,0 +1,27 @@
+/* Coins belong to the planeswalker; the title/shop retain the run wallet. */
+.game-shell:has(#combat-screen.active) .topbar .coin-purse{display:none}
+.game-shell .player-side-header .side-identity{flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start;gap:1px!important}
+.combat-coins{display:flex;align-items:center;gap:6px;white-space:nowrap;color:#e6c88e;font:12px/16px var(--sans)}
+.combat-coins>span:first-child{color:#aebcae;font-size:10px;letter-spacing:.7px}
+.combat-coins>b{font-weight:650;font-variant-numeric:tabular-nums}
+.combat-coins>span:last-child{font-size:10px}
+.enemy-spell-panel[hidden]{display:none!important}
+.enemy-spell-panel{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;margin-top:9px;border:1px solid #cfb27a77;border-radius:6px;background:linear-gradient(120deg,#1c3546ed,#18272eee);box-shadow:0 0 20px #9ccae414;min-width:0}
+.enemy-spell-copy{min-width:0}
+.enemy-spell-copy>span{font:9px/14px var(--sans);letter-spacing:1.2px;color:#cfb683}
+.enemy-spell-copy>strong{display:block;font:600 16px/21px var(--sans);color:#f0e7ce}
+.enemy-spell-copy strong small{font-size:10px;font-weight:400;color:#a4bfc8;margin-left:8px}
+.enemy-spell-copy p{margin:2px 0;font:11px/15px var(--sans);color:#b5c9d0}
+.enemy-spell-copy .enemy-spell-status{color:#e4c98d}
+.enemy-spell-panel>button{flex:none;white-space:nowrap;font-size:11px!important;padding:8px!important}
+@media(orientation:portrait){
+ html.portrait-combat .game-shell .combat-coins{font-size:18px;line-height:20px;gap:6px}
+ html.portrait-combat .game-shell .combat-coins>span:first-child{font-size:15px}
+ html.portrait-combat .game-shell .combat-coins>span:last-child{font-size:14px}
+ html.portrait-combat .game-shell .enemy-spell-panel{margin-top:0;padding:7px 10px;gap:8px}
+ html.portrait-combat .game-shell .enemy-spell-copy>span{font-size:13px;line-height:16px}
+ html.portrait-combat .game-shell .enemy-spell-copy>strong{font-size:20px;line-height:24px}
+ html.portrait-combat .game-shell .enemy-spell-copy strong small{font-size:14px}
+ html.portrait-combat .game-shell .enemy-spell-copy p{font-size:16px;line-height:20px}
+ html.portrait-combat .game-shell .enemy-spell-panel>button{font-size:17px!important;padding:8px!important}
+}

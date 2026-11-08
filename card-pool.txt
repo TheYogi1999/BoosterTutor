@@ -441,3 +441,7 @@ Seething Song
 Disenchant
 Naturalize
 Angel's Mercy
+Counterspell
+Negate
+Dispel
+Cancel

@@ -2774,7 +2774,107 @@ const BUNDLED_CARDS = [
       "rarity": "common",
       "uri": "https://scryfall.com/card/m10/2/angels-mercy?utm_source=api"
     }
+  },
+{
+  "id": "0df55e3f-14de-46ef-b6b1-616618724d9e",
+  "name": "Counterspell",
+  "mana_cost": "{U}{U}",
+  "cmc": 2.0,
+  "type_line": "Instant",
+  "oracle_text": "Counter target spell.",
+  "color_identity": [
+    "U"
+  ],
+  "keywords": [],
+  "rarity": "uncommon",
+  "image": "assets/cards/0df55e3f-14de-46ef-b6b1-616618724d9e.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/0/d/0df55e3f-14de-46ef-b6b1-616618724d9e.jpg?1783948707",
+  "uri": "https://scryfall.com/card/lea/54/counterspell?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "0df55e3f-14de-46ef-b6b1-616618724d9e",
+    "set": "lea",
+    "set_name": "Limited Edition Alpha",
+    "released_at": "1993-08-05",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/lea/54/counterspell?utm_source=api"
   }
+},
+{
+  "id": "5a501252-e722-4ebf-bcf7-f53a42745fa7",
+  "name": "Negate",
+  "mana_cost": "{1}{U}",
+  "cmc": 2.0,
+  "type_line": "Instant",
+  "oracle_text": "Counter target noncreature spell.",
+  "color_identity": [
+    "U"
+  ],
+  "keywords": [],
+  "rarity": "common",
+  "image": "assets/cards/5a501252-e722-4ebf-bcf7-f53a42745fa7.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/5/a/5a501252-e722-4ebf-bcf7-f53a42745fa7.jpg?1783942799",
+  "uri": "https://scryfall.com/card/mor/43/negate?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "5a501252-e722-4ebf-bcf7-f53a42745fa7",
+    "set": "mor",
+    "set_name": "Morningtide",
+    "released_at": "2008-02-01",
+    "rarity": "common",
+    "uri": "https://scryfall.com/card/mor/43/negate?utm_source=api"
+  }
+},
+{
+  "id": "f178d0cc-5dd1-41ab-a2e8-218ece6f2a86",
+  "name": "Dispel",
+  "mana_cost": "{U}",
+  "cmc": 1.0,
+  "type_line": "Instant",
+  "oracle_text": "Counter target instant spell.",
+  "color_identity": [
+    "U"
+  ],
+  "keywords": [],
+  "rarity": "common",
+  "image": "assets/cards/f178d0cc-5dd1-41ab-a2e8-218ece6f2a86.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/f/1/f178d0cc-5dd1-41ab-a2e8-218ece6f2a86.jpg?1783942063",
+  "uri": "https://scryfall.com/card/wwk/26/dispel?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "f178d0cc-5dd1-41ab-a2e8-218ece6f2a86",
+    "set": "wwk",
+    "set_name": "Worldwake",
+    "released_at": "2010-02-05",
+    "rarity": "common",
+    "uri": "https://scryfall.com/card/wwk/26/dispel?utm_source=api"
+  }
+},
+{
+  "id": "1e55d6be-7682-4786-9872-e847afd710b0",
+  "name": "Dismiss",
+  "mana_cost": "{2}{U}{U}",
+  "cmc": 4.0,
+  "type_line": "Instant",
+  "oracle_text": "Counter target spell.\nDraw a card.",
+  "color_identity": [
+    "U"
+  ],
+  "keywords": [],
+  "rarity": "uncommon",
+  "image": "assets/cards/1e55d6be-7682-4786-9872-e847afd710b0.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/1/e/1e55d6be-7682-4786-9872-e847afd710b0.jpg?1783946657",
+  "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "1e55d6be-7682-4786-9872-e847afd710b0",
+    "set": "tmp",
+    "set_name": "Tempest",
+    "released_at": "1997-10-14",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api"
+  }
+}
 ];
 const CAMP_TOKEN_CARDS = {
   "treasure": {
@@ -2990,6 +3090,61 @@ const BUNDLED_LANDS = [
       "released_at": "1993-08-05",
       "rarity": "common",
       "uri": "https://scryfall.com/card/lea/294/forest?utm_source=api"
+    }
+  }
+];
+
+
+// Enemy-only spells never enter the player booster or shop pool.
+const BUNDLED_ENEMY_SPELLS = [
+  {
+    "id": "60b2fae1-242b-45e0-a757-b1adc02c06f3",
+    "name": "Lava Spike",
+    "mana_cost": "{R}",
+    "cmc": 1.0,
+    "type_line": "Sorcery — Arcane",
+    "oracle_text": "Lava Spike deals 3 damage to target player or planeswalker.",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/60b2fae1-242b-45e0-a757-b1adc02c06f3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/0/60b2fae1-242b-45e0-a757-b1adc02c06f3.jpg?1783944298",
+    "uri": "https://scryfall.com/card/chk/178/lava-spike?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "60b2fae1-242b-45e0-a757-b1adc02c06f3",
+      "set": "chk",
+      "set_name": "Champions of Kamigawa",
+      "released_at": "2004-10-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/chk/178/lava-spike?utm_source=api"
+    }
+  },
+  {
+    "id": "5326d251-bb91-4653-b1fa-44f14c4e0b88",
+    "name": "Sovereign's Bite",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Target player loses 3 life and you gain 3 life.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/5326d251-bb91-4653-b1fa-44f14c4e0b88.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/3/5326d251-bb91-4653-b1fa-44f14c4e0b88.jpg?1783934562",
+    "uri": "https://scryfall.com/card/m19/120/sovereigns-bite?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "5326d251-bb91-4653-b1fa-44f14c4e0b88",
+      "set": "m19",
+      "set_name": "Core Set 2019",
+      "released_at": "2018-07-13",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m19/120/sovereigns-bite?utm_source=api"
     }
   }
 ];

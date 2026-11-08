@@ -110,3 +110,13 @@ Artwork uses the earliest available regular English paper printing (promos only 
 - **Swamp** — Limited Edition Alpha (1993-08-05) · https://scryfall.com/card/lea/290/swamp?utm_source=api
 - **Mountain** — Limited Edition Alpha (1993-08-05) · https://scryfall.com/card/lea/292/mountain?utm_source=api
 - **Forest** — Limited Edition Alpha (1993-08-05) · https://scryfall.com/card/lea/294/forest?utm_source=api
+
+
+## v0.38 — counterspells and enemy spells
+
+ - **Counterspell** — Limited Edition Alpha (1993-08-05) · https://scryfall.com/card/lea/54/counterspell?utm_source=api
+ - **Negate** — Morningtide (2008-02-01) · https://scryfall.com/card/mor/43/negate?utm_source=api
+ - **Dispel** — Worldwake (2010-02-05) · https://scryfall.com/card/wwk/26/dispel?utm_source=api
+ - **Dismiss** — Tempest (1997-10-14) · https://scryfall.com/card/tmp/58/dismiss?utm_source=api
+ - **Lava Spike** — Champions of Kamigawa (2004-10-01) · https://scryfall.com/card/chk/178/lava-spike?utm_source=api
+ - **Sovereign's Bite** — Core Set 2019 (2018-07-13) · https://scryfall.com/card/m19/120/sovereigns-bite?utm_source=api

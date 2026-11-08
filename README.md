@@ -206,3 +206,12 @@ Mend restores the weakest injured living ally, capped at maximum life. Rally gra
 Flying monsters can only be attacked by creatures with Flying or Reach. This game rule applies to click/target controls, drag feedback and drops, mandatory attacks, combat damage and trample overflow. Temporary and attached keyword grants count. Invalid targets are disabled; an attack that becomes illegal before damage is cancelled without tapping or silently changing targets.
 
 Ward now refreshes the battlefield while its payment dialog is open, including between copied spell resolutions. Casting costs and extra Ward costs immediately show the actual tapped mana cards and remaining floating mana. Floating mana is still spent first; insufficient or declined Ward payments never tap additional lands.
+
+
+### v0.38 — Coins under life and enemy counterspell windows
+
+The combat wallet is labelled Coins and sits directly below life; the topbar wallet is hidden during combat. Both displays update immediately when bounties or purchases change the run balance.
+
+Rune casters now cast **Shock**. Later Ember Duelists can cast **Lava Spike**, and Dusk Vampires cast **Sovereign’s Bite**. Each spell locks its target when cast, is independent of its caster, resolves once, and gets a separate response window before its effect. Opposing targeted spells still respect allied Hexproof and generic Ward. Normal attacks, Mill, Mend and Rally remain abilities rather than spells.
+
+Four new verified player cards use their oldest regular English paper artwork: **Counterspell**, **Negate**, **Dispel** and **Dismiss**. **Cancel** is now reviewed and playable too. Dispel targets only instants; Negate targets only noncreature spells; Dismiss draws one after countering. The player catalog has 104 cards, with 101 in the normal pool, two banned cards and the start-only Booster Tutor. Enemy-only sorceries stay outside the player pool. Cached collections merge new bundled cards so existing players receive the additions.

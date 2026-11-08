@@ -8,7 +8,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  for(const kind of ['duelist','boar','sprite','stalker','bulwark','archivist','vampire','tyrant','sphinx']){
   const result=await page.evaluate(kind=>{const b=state.battle;b.enemyCreatures=[createFoe(kind,4)];b.turn=1;renderBattle();const portrait=document.querySelector('.monster .walker-portrait'),s=getComputedStyle(portrait);return {art:s.backgroundImage,cell:s.backgroundPosition,keywords:document.querySelector('.monster-keywords').textContent,intent:document.querySelector('.monster-intent').textContent}},kind);
   assert.match(result.art,/foes\.webp/);cells.add(result.cell);if(['bulwark','archivist','vampire','tyrant','sphinx'].includes(kind))assert.match(result.keywords,/Ward \(\d mana\)/);
-  if(kind==='sprite')assert.match(result.intent,/Mend ally/);if(kind==='tyrant')assert.match(result.intent,/Rally/);if(['archivist','sphinx'].includes(kind))assert.match(result.intent,/Rune bolt/);
+  if(kind==='sprite')assert.match(result.intent,/Mend ally/);if(kind==='tyrant')assert.match(result.intent,/Rally/);if(['archivist','sphinx'].includes(kind))assert.match(result.intent,/Cast Shock/);
  }
  assert.equal(cells.size,9);
  await page.evaluate(()=>{const b=state.battle;b.enemyCreatures=['bulwark','archivist','vampire'].map(kind=>createFoe(kind,3));renderBattle()});
