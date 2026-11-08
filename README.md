@@ -222,3 +222,8 @@ Four new verified player cards use their oldest regular English paper artwork: *
 A warm summoning light, orbital arcs and a spiral of genuine MTG card backs introduce the three classic cards. The fan opens in depth, each card flips and receives a brief golden sheen, and the large title and menu arrive in staggered steps. After roughly three seconds the scene settles into restrained embers, slow arcs and the existing foil/parallax effect over the shared expedition background.
 
 Play, Options, Quit, Collections and audio controls remain available during the entrance. Canvas work pauses when the tab is hidden or another scene opens; returning to the title replays the entrance. Reduced motion shows the complete front-facing fan immediately with a static atmosphere.
+
+
+### v0.39.1 — Booster Tutor on the title screen
+
+Booster Tutor takes the central position in the three-card title fan, using its original Unhinged artwork (2004). The card-back entrance, flip and golden reveal remain intact.
