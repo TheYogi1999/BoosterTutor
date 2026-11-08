@@ -1,6 +1,6 @@
 # Card and combat sound auditions
 
-Twelve original short-effect sketches and three seven-card draw demonstrations, created for Booster Tutor. These are auditions only, pending the user's selection.
+Twelve original short-effect sketches and three seven-card draw demonstrations, created for Booster Tutor. Selected for gameplay in v0.43: D1 for actual library draws, X3 for rejected actions, E3 for enemy damage and P3 for damage on the player side. Other files remain audition alternatives.
 
 | Group | 1 · tactile | 2 · arcane | 3 · retro |
 |---|---|---|---|

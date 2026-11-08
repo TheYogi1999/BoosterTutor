@@ -116,6 +116,7 @@ function resolveEnemySpell38(spell,battle=state.battle) {
  // Mark first: repeats, stale callbacks and source removal cannot apply the effect twice.
  finishEnemySpell38(spell,'resolved',battle);
  const amount=spell.intent==='rune'?2:3;
+ playSfx('player-hit');
  if(target) {
   target.damage=(target.damage||0)+amount;
   addLog(`${spell.sourceName}'s ${spell.card.name} deals ${amount} damage to ${target.card.name}${ward?` after paying Ward ${ward}`:''}.`);

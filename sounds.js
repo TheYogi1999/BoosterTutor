@@ -60,10 +60,92 @@ const RECORDED_SFX={select:['assets/audio/card-place.ogg',.23],grab:['assets/aud
 RECORDED_SFX.turn=['assets/audio/card-place.ogg',.17];
 RECORDED_SFX.block=['assets/audio/card-place.ogg',.25];
 const recordedBuffers=new Map();const originalPlaySfx=playSfx;let lastRecordedCue=0;
+Object.assign(RECORDED_SFX,{
+ draw:['assets/audio/action-previews/d1-paper-slide.mp3',.7],
+ invalid:['assets/audio/action-previews/x3-retro-denied.mp3',.75],
+ 'enemy-hit':['assets/audio/action-previews/e3-retro-impact.mp3',.85],
+ 'player-hit':['assets/audio/action-previews/p3-retro-damage.mp3',.85]
+});
+const selectedActionCues=['draw','invalid','enemy-hit','player-hit'];
+const cueCooldowns={invalid:180,'enemy-hit':65,'player-hit':65};
+const lastActionCue=new Map();
+function recordedSoundBuffer(path){
+ let loading=recordedBuffers.get(path);
+ if(!loading){
+  loading=fetch(path).then(response=>{if(!response.ok)throw Error('Audio unavailable');return response.arrayBuffer();}).then(bytes=>soundEngine.context.decodeAudioData(bytes)).catch(error=>{recordedBuffers.delete(path);throw error;});
+  recordedBuffers.set(path,loading);
+ }
+ return loading;
+}
+function startRecordedVoice(name,buffer,when=null,scale=1){
+ while(soundEngine.voices.size>=24){
+  const oldest=soundEngine.voices.values().next().value;
+  try{oldest.voiceGain?.gain.setTargetAtTime(0,soundEngine.context.currentTime,.008);oldest.stop(soundEngine.context.currentTime+.025);}catch{}
+  soundEngine.voices.delete(oldest);
+ }
+ const source=soundEngine.context.createBufferSource(),gain=soundEngine.context.createGain();
+ gain.gain.value=RECORDED_SFX[name][1]*scale;source.buffer=buffer;
+ source.connect(gain);gain.connect(soundEngine.bus);source.voiceGain=gain;source.cueName=name;
+ source.scheduledAt=when??soundEngine.context.currentTime;
+ soundEngine.voices.add(source);source.onended=()=>soundEngine.voices.delete(source);source.start(source.scheduledAt);
+ return source;
+}
 playSfx=function(name){
- if(!state.soundOn)return;const entry=RECORDED_SFX[name];if(!entry)return originalPlaySfx(name);
- const [path,level]=entry;const now=Date.now();if(name==='select'&&now-lastRecordedCue<65)return;lastRecordedCue=now;
- const audioEpoch=soundEngine.epoch||0;
- soundEngine.resume().then(async()=>{let loading=recordedBuffers.get(path);if(!loading){loading=fetch(path).then(response=>{if(!response.ok)throw Error('Audio unavailable');return response.arrayBuffer();}).then(bytes=>soundEngine.context.decodeAudioData(bytes));recordedBuffers.set(path,loading);}const buffer=await loading;if(!state.soundOn||(soundEngine.epoch||0)!==audioEpoch)return;const source=soundEngine.context.createBufferSource();const gain=soundEngine.context.createGain();gain.gain.value=level;source.buffer=buffer;source.connect(gain);gain.connect(soundEngine.bus);source.voiceGain=gain;soundEngine.voices.add(source);source.onended=()=>soundEngine.voices.delete(source);source.start();}).catch(()=>{});
+ if(!state.soundOn||document.hidden)return;
+ const entry=RECORDED_SFX[name];if(!entry)return originalPlaySfx(name);
+ const now=Date.now();
+ if(cueCooldowns[name]){if(now-(lastActionCue.get(name)||0)<cueCooldowns[name])return;lastActionCue.set(name,now);}
+ if(name==='select'&&now-lastRecordedCue<65)return;lastRecordedCue=now;
+ const epoch=soundEngine.epoch||0;
+ soundEngine.resume().then(async()=>{
+  const buffer=await recordedSoundBuffer(entry[0]);
+  if(!state.soundOn||document.hidden||(soundEngine.epoch||0)!==epoch||Date.now()-now>1200)return;
+  startRecordedVoice(name,buffer);
+ }).catch(()=>{});
 };
-const originalStopSounds=soundEngine.stop.bind(soundEngine);soundEngine.stop=function(){this.epoch=(this.epoch||0)+1;originalStopSounds();};
+
+// Actual library draws queue independently of the visual/reduced-motion effects.
+let drawSoundTimer=0,drawSoundGeneration=0,drawSoundTail=new WeakMap();
+const pendingDrawSounds=new Map();
+function queueDrawSound(battle){
+ if(!state.soundOn||document.hidden||state.battle!==battle||battle.phase==='complete')return;
+ pendingDrawSounds.set(battle,Math.min(24,(pendingDrawSounds.get(battle)||0)+1));
+ if(!drawSoundTimer)drawSoundTimer=setTimeout(flushDrawSounds,0);
+}
+function flushDrawSounds(){
+ drawSoundTimer=0;
+ const batches=[...pendingDrawSounds];pendingDrawSounds.clear();
+ const generation=drawSoundGeneration,epoch=soundEngine.epoch||0;
+ soundEngine.resume().then(async()=>{
+  const buffer=await recordedSoundBuffer(RECORDED_SFX.draw[0]);
+  if(!state.soundOn||document.hidden||generation!==drawSoundGeneration||(soundEngine.epoch||0)!==epoch)return;
+  for(const [battle,count] of batches){
+   if(state.battle!==battle||state.screen!=='combat-screen'||battle.phase==='complete')continue;
+   const now=soundEngine.context.currentTime;
+   const start=Math.max(now+.008,Math.min(drawSoundTail.get(battle)||0,now+.45));
+   const gap=Math.min(.16,1.2/Math.max(1,count-1));
+   const overlap=Math.max(2,Math.ceil(buffer.duration/gap)),scale=Math.min(1,Math.sqrt(2/overlap));
+   for(let i=0;i<count;i++)startRecordedVoice('draw',buffer,start+i*gap,scale);
+   drawSoundTail.set(battle,start+count*gap);
+  }
+ }).catch(()=>{});
+}
+function cancelDrawSounds(){
+ drawSoundGeneration++;clearTimeout(drawSoundTimer);drawSoundTimer=0;pendingDrawSounds.clear();drawSoundTail=new WeakMap();
+ for(const voice of [...soundEngine.voices])if(voice.cueName==='draw'){try{voice.stop();}catch{}soundEngine.voices.delete(voice);}
+}
+const originalStopSounds=soundEngine.stop.bind(soundEngine);
+soundEngine.stop=function(){this.epoch=(this.epoch||0)+1;cancelDrawSounds();lastActionCue.clear();originalStopSounds();};
+let actionsWarmed=false;
+function warmActionSounds(event){
+ if(!event.isTrusted||!state.soundOn||document.hidden||actionsWarmed)return;
+ actionsWarmed=true;
+ soundEngine.resume().then(()=>Promise.allSettled(selectedActionCues.map(name=>recordedSoundBuffer(RECORDED_SFX[name][0])))).catch(()=>{actionsWarmed=false;});
+}
+document.addEventListener('pointerdown',warmActionSounds,{passive:true});
+document.addEventListener('keydown',warmActionSounds);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)soundEngine.stop();});
+if(typeof MutationObserver!=='undefined'){
+ const combat=document.getElementById('combat-screen');
+ if(combat)new MutationObserver(()=>{if(!combat.classList.contains('active'))cancelDrawSounds();}).observe(combat,{attributes:true,attributeFilter:['class']});
+}

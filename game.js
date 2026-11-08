@@ -632,12 +632,13 @@ $('#creature-row').addEventListener('click', (event) => {
   if (!creature) return;
   if (battle.pendingAttachment) return selectAttachmentTarget(creature.id);
   if (battle.phase === 'blocks') {
-    if (creature.tapped) return;
-    if (!battle.selectedEnemyAttackerId) return showToast('Choose an attacker on the right first.');
+    if (creature.tapped) return showActionError('Tapped creatures cannot block.');
+    if (!battle.selectedEnemyAttackerId) return showActionError('Choose an attacker on the right first.');
     return assignBlocker(battle.selectedEnemyAttackerId, creature.id);
   }
-  if (battle.phase !== 'main' || !eligibleAttacker(creature, battle)) return;
-  if (/attacks each combat if able/i.test(creature.card.oracle_text||'')) return showToast('This creature must attack if able. Choose its target or use Queue attack.');
+  if (battle.phase !== 'main') return;
+  if (!eligibleAttacker(creature, battle)) return showActionError(hasCreatureKeyword(creature,'defender') ? 'Defender creatures cannot attack.' : creature.tapped ? 'Tapped creatures cannot attack.' : creature.attackedThisTurn ? 'This creature already attacked.' : 'Summoning sickness: this creature cannot attack yet.');
+  if (/attacks each combat if able/i.test(creature.card.oracle_text||'')) return showActionError('This creature must attack if able. Choose its target or use Queue attack.');
   if (creature.willAttack) withdrawAttack(creature.id);
   else queueCreatureAttack(creature.id);
 });
@@ -656,7 +657,7 @@ function confirmDraft() {
   }
   const selected = selectedDraftCards();
   if (!selected) {
-    showToast(starter ? `Choose exactly one card from each of the ${STARTER_BOOSTER_COUNT} boosters.` : 'Choose a card from the booster first.');
+    showActionError(starter ? `Choose exactly one card from each of the ${STARTER_BOOSTER_COUNT} boosters.` : 'Choose a card from the booster first.');
     return;
   }
   for (const card of selected) for (let i = 0; i < COPIES_PER_DRAFT_PICK; i += 1) state.deck.push(card);
@@ -738,6 +739,7 @@ function drawToHand(maxHand) {
     }
     const drawn = battle.deck.pop();
     battle.hand.push(drawn);
+    if (typeof queueDrawSound === 'function') queueDrawSound(battle);
     if (typeof queueHandDraw === 'function') queueHandDraw(drawn, battle.hand.length - 1, battle);
   }
 }
@@ -1065,7 +1067,7 @@ $('#player-drop-zone').addEventListener('click', event => {
   if (!permanent) return;
   if (!/Equipment/.test(permanent.card.type_line)) { inspectBattlefieldCard(permanent.card, {dataset:{previewId:permanent.id}}); return; }
   if (battle.phase !== 'main') return;
-  if (!battle.creatures.length) return showToast('Play a creature first.');
+  if (!battle.creatures.length) return showActionError('Play a creature first.');
   battle.pendingAttachment = { permanentId: permanent.id };
   renderBattle();
 });
@@ -1219,7 +1221,7 @@ document.addEventListener('drop', event => {
   event.preventDefault();
   const allowed = dropFeedback(state.dragPayload, event.target);
   if (allowed) handleCardDrop(state.dragPayload, event.target);
-  else playSfx('cancel');
+  else playSfx('invalid');
   finishDrag();
 });
 document.addEventListener('dragend', () => { if (!pointerDrag) finishDrag(); });
@@ -1267,7 +1269,7 @@ document.addEventListener('pointerup', event => {
   const target = document.elementFromPoint(event.clientX, event.clientY);
   const flight = captureCardFlight(pointerDrag, target);
   const accepted = dropFeedback(pointerDrag.payload, target) && handleCardDrop(pointerDrag.payload, target);
-  if (!accepted) playSfx('cancel');
+  if (!accepted) playSfx('invalid');
   finishDrag();
   animateCardLanding(flight, accepted);
 });
@@ -1287,7 +1289,7 @@ function damageFirstEnemy(amount, explicitTarget = null) {
   if (!enemy || amount <= 0) return 0;
   const dealt = Math.min(enemy.health, amount);
   enemy.health = Math.max(0, enemy.health - dealt);
-  if (dealt > 0) playSfx('hit');
+  if (dealt > 0) playSfx('enemy-hit');
   if (enemy.health <= 0) {
     battle.enemyCreatures = battle.enemyCreatures.filter((creature) => creature !== enemy);
     battle.enemyGraveyard.push(enemy.card);
@@ -1383,7 +1385,7 @@ function selectAttachmentTarget(creatureId) {
   if (pending.handIndex !== undefined) {
     const card = battle.hand[pending.handIndex];
     if (!card || !isAura(card)) { battle.pendingAttachment = null; renderBattle(); return; }
-    if (!paymentPlan(card) || !payMana(card.cmc, battle)) return showToast('Not enough generic mana.');
+    if (!paymentPlan(card) || !payMana(card.cmc, battle)) return showActionError('Not enough generic mana.');
     battle.hand.splice(pending.handIndex, 1);
     battle.permanents.push({ id: `permanent-${state.nextPermanentId++}`, card, attachedTo: creatureId });
     battle.mulliganAvailable = false;
@@ -1392,7 +1394,7 @@ function selectAttachmentTarget(creatureId) {
     if (!permanent) return;
     if (permanent.attachedTo === creatureId) { battle.pendingAttachment = null; renderBattle(); return; }
     const cost = equipCost(permanent.card);
-    if (cost === null || battle.mana < cost || !payMana(cost, battle)) return showToast(`Equipping requires ${cost ?? '?'} generic mana.`);
+    if (cost === null || battle.mana < cost || !payMana(cost, battle)) return showActionError(`Equipping requires ${cost ?? '?'} generic mana.`);
     battle.mulliganAvailable = false;
     permanent.attachedTo = creatureId;
   }
@@ -1407,10 +1409,10 @@ function playCard(index, targetSide = 'enemy') {
   const battle = state.battle;
   const card = battle?.hand[index];
   if (!card) return;
-  if (!canCastNow(card, battle)) return showToast(isLand(card) ? 'You may play one mana card during your main phase.' : 'Only instants can be cast outside your main phase.');
+  if (!canCastNow(card, battle)) return showActionError(isLand(card) ? 'You may play one mana card during your main phase.' : 'Only instants can be cast outside your main phase.');
   if (isAura(card)) {
-    if (!battle.creatures.length) return showToast('This aura requires an allied creature.');
-    if (!paymentPlan(card)) return showToast('Not enough generic mana.');
+    if (!battle.creatures.length) return showActionError('This aura requires an allied creature.');
+    if (!paymentPlan(card)) return showActionError('Not enough generic mana.');
     battle.pendingAttachment = { handIndex: index };
     renderBattle();
     return;
@@ -1419,7 +1421,7 @@ function playCard(index, targetSide = 'enemy') {
   battle.resolvingSpellTarget = battle.pendingSpellTarget || null;
   battle.pendingSpellTarget = null;
   if (isLand(card)) {
-    if (!battle.landAvailable || battle.phase !== 'main') return showToast('You may play one mana card during your main phase.');
+    if (!battle.landAvailable || battle.phase !== 'main') return showActionError('You may play one mana card during your main phase.');
     battle.mulliganAvailable = false;
     battle.hand.splice(index, 1);
     battle.lands.push({ id: `mana-${state.nextPermanentId++}`, card, tapped: false });
@@ -1431,20 +1433,20 @@ function playCard(index, targetSide = 'enemy') {
     playSfx('select');
     return;
   }
-  if (isCreature(card) && battle.creatures.length >= 3) return showToast('Your creature board is full.');
-  if (targetSide === 'enemy' && isCreature(card)) return showToast('Creatures enter your battlefield. Drag one to the left side.');
+  if (isCreature(card) && battle.creatures.length >= 3) return showActionError('Your creature board is full.');
+  if (targetSide === 'enemy' && isCreature(card)) return showActionError('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
-  if (!payment) return showToast('Not enough generic mana for this card.');
+  if (!payment) return showActionError('Not enough generic mana for this card.');
   const targetsEnemy = !isPermanent(card) && cardEffects(card, isCreature(card)).some(effect => ['damage', 'cancel', 'destroy', 'exile'].includes(effect.kind));
   if (targetsEnemy) {
     const requestedId = battle.pendingSpellTarget?.side === 'enemy' ? battle.pendingSpellTarget.id : battle.selectedEnemyTargetId;
     const enemyTarget = battle.enemyCreatures.find(enemy => enemy.id === requestedId) || battle.enemyCreatures.find(enemy => !hasCreatureKeyword(enemy, 'hexproof'));
-    if (!enemyTarget) return showToast('Every monster has Hexproof. These effects cannot target them.');
-    if (hasCreatureKeyword(enemyTarget, 'hexproof')) return showToast(`${enemyTarget.card.name} has Hexproof and cannot be targeted by your spells.`);
+    if (!enemyTarget) return showActionError('Every monster has Hexproof. These effects cannot target them.');
+    if (hasCreatureKeyword(enemyTarget, 'hexproof')) return showActionError(`${enemyTarget.card.name} has Hexproof and cannot be targeted by your spells.`);
     battle.resolvingSpellTarget = { side: 'enemy', id: enemyTarget.id };
   }
   battle.mulliganAvailable = false;
-  if (!payMana(card.cmc, battle)) return showToast('Not enough generic mana for this card.');
+  if (!payMana(card.cmc, battle)) return showActionError('Not enough generic mana for this card.');
   battle.hand.splice(index, 1);
   if (isCreature(card)) {
     const stats = parseStats(card);
@@ -1552,7 +1554,7 @@ function dealCreatureDamage(source, target, controller, battle, amount = Math.ma
     if (hasCreatureKeyword(source, 'deathtouch')) target.deathtouchDamage = true;
   }
   gainLifelinkLife(source, controller, dealt, battle);
-  if (dealt) playSfx('hit');
+  if (dealt) playSfx(target.owner === 'enemy' ? 'enemy-hit' : 'player-hit');
 }
 function blockerIds(battle, attackerId) {
   const value = battle.blockAssignments.get(attackerId);
@@ -1652,7 +1654,7 @@ function queueCreatureAttack(creatureId, targetId = null) {
   const creature = battle?.creatures.find(item => item.id === creatureId);
   if (!battle || battle.phase !== 'main' || !creature || !eligibleAttacker(creature, battle)) return false;
   const target = targetId ? battle.enemyCreatures.find(enemy => enemy.id === targetId && canAttackEnemy(creature,enemy)) : attackTarget(battle, creature);
-  if (!target) { showToast('Flying enemies can only be attacked by creatures with Flying or Reach.'); return false; }
+  if (!target) { showActionError('Flying enemies can only be attacked by creatures with Flying or Reach.'); return false; }
   battle.pendingAttachment = null;
   battle.mulliganAvailable = false;
   creature.attackTargetId = target.id;
@@ -1668,7 +1670,7 @@ function assignBlocker(attackerId, blockerId) {
   const attacker = battle.enemyCreatures.find(creature => creature.id === attackerId && creatureCanAttack(creature, battle.turn));
   const blocker = battle.creatures.find(creature => creature.id === blockerId && !creature.tapped);
   if (!attacker || !blocker) return;
-  if (!canBlockCreature(blocker, attacker)) return showToast('Flying attackers require flying or reach to block.');
+  if (!canBlockCreature(blocker, attacker)) return showActionError('Flying attackers require flying or reach to block.');
   const already = blockerIds(battle, attackerId).includes(blockerId);
   for (const [id] of battle.blockAssignments) {
     const ids = blockerIds(battle, id).filter(item => item !== blockerId);
@@ -1736,6 +1738,7 @@ function resolveEnemyCombat() {
   const incoming = damageToPlayer;
   if (incoming) {
     state.playerHealth -= incoming;
+    playSfx('player-hit');
     if (typeof animatePlayerDamage === 'function') animatePlayerDamage(incoming);
     addLog(`${incoming} damage gets through to you.`);
   } else if (attackers.length) {
@@ -1816,7 +1819,7 @@ function finishTurn() {
 function beginEnemyDamage() {
   const battle = state.battle;
   if (!battle || !['blocks', 'enemy'].includes(battle.phase)) return;
-  if(hasInvalidMenaceBlock(battle))return showToast('Menace requires at least two blockers. Add another blocker or remove the assignment.');
+  if(hasInvalidMenaceBlock(battle))return showActionError('Menace requires at least two blockers. Add another blocker or remove the assignment.');
   battle.phase = 'damage';
   renderBattle();
   afterCombatBeat(battle, 'damage', resolveEnemyCombat);
@@ -1859,6 +1862,11 @@ function endRun(won, reason = null) {
   $('#run-summary').innerHTML = `<span>RUN <b>${state.node} / 4</b></span><span>DECK <b>${state.deck.length}</b></span><span>LIFE <b>${Math.max(0, state.playerHealth)}</b></span>`;
   showScreen('end-screen');
   playSfx(won ? 'victory' : 'defeat');
+}
+
+function showActionError(message) {
+  playSfx('invalid');
+  return showToast(message);
 }
 
 function showToast(message) {
@@ -2125,7 +2133,7 @@ function rerollCurrentPack() {
   const excluded = new Set(state.packs.flat().map(card => card.id));
   let candidates = state.pool.filter(card => !excluded.has(card.id));
   if (candidates.length < PACK_SIZE) candidates = state.pool.filter(card => !state.packs[index].some(old => old.id === card.id));
-  if (candidates.length < PACK_SIZE) return showToast('Not enough different cards to reroll.');
+  if (candidates.length < PACK_SIZE) return showActionError('Not enough different cards to reroll.');
   state.packs[index] = shuffle(candidates).slice(0, PACK_SIZE);
   state.selection.delete(index);
   state.rerolledPacks.add(index);

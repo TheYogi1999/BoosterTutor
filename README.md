@@ -248,3 +248,10 @@ The master switch mutes all three channels; the Music setting controls only the 
 [Battle sound previews](action-sounds.html) provides three alternatives for each of four actions: drawing a card (D1–D3), an invalid action (X1–X3), hitting an enemy (E1–E3) and receiving player damage (P1–P3). The three families are tactile, magical and restrained retro sounds. Draw previews also include a seven-card sequence at 160 ms intervals.
 
 Preview playback is manual and exclusive, with category tabs, a shared volume slider and one preference per category. Copy the four selected codes to choose them in chat. These are auditions; the active game cues are not replaced until selection. The selected C title intro, B Play cue and music sequence stay active.
+
+
+### v0.43 — selected card and combat effects
+
+The user's selected **D1 / X3 / E3 / P3** set is active: actual library-to-hand draws use Paper Slide, rejected actions use Retro Denied, enemy damage uses Retro Impact and damage to the player or allied creatures uses Retro Damage. Zero/countered hits and informational/success toasts stay silent. Graveyard returns, tutoring and Mill are not library draws.
+
+Opening and multi-card draws are staggered at 160 ms for ordinary batches, independently of visual/reduced-motion settings. Larger bursts are compressed into a bounded audio window with gain compensation and a 24-voice ceiling. Short per-cue cooldowns merge simultaneous hits and prevent rejection spam. Buffers warm after a user gesture. Master mute, hidden tabs and leaving combat cancel queued draw effects; stale loads cannot replay a draw after the scene changes. The C → music sequence and B Play cue remain active.

@@ -84,8 +84,8 @@ function choiceTargetUnit(target,battle=state.battle){return target?.side==='pla
 const originalPlayCard=playCard;
 playCard=function(index,targetSide='enemy'){
  const battle=state.battle;const card=battle?.hand[index];if(!card)return;
- if(!rulesAudit(card).playable)return showToast(`Banned: ${rulesAudit(card).reason}`);
- if(!canCastNow(card,battle)||!paymentPlan(card))return showToast('This card needs a legal target, payable mana and all additional costs.');
+ if(!rulesAudit(card).playable)return showActionError(`Banned: ${rulesAudit(card).reason}`);
+ if(!canCastNow(card,battle)||!paymentPlan(card))return showActionError('This card needs a legal target, payable mana and all additional costs.');
  const rule=SPELL_RULES[card.name]||(isAura(card)?{target:'creature',effects:[{kind:'aura'}]}:null);
  if(!rule&&card.name!=='Clone')return originalPlayCard(index,targetSide);
  const pending={card,index,rule:rule||{target:'clone',effects:[{kind:'clone'}]},steps:[],picks:{},selected:new Set()};
@@ -152,9 +152,9 @@ function commitRuleSpell(p){
 function resolveReviewedEffect(effect,target,context={}){
  const battle=state.battle;const unit=choiceTargetUnit(target,battle);
  if(effect.kind==='damage'){
-  if(target?.side==='life'){state.playerHealth-=effect.amount;if(typeof animatePlayerDamage==='function')animatePlayerDamage(effect.amount);}
+  if(target?.side==='life'){state.playerHealth-=effect.amount;if(effect.amount>0)playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(effect.amount);}
   else if(unit?.owner==='enemy')damageFirstEnemy(effect.amount,unit);
-  else if(unit){unit.damage=(unit.damage||0)+effect.amount;}
+  else if(unit){unit.damage=(unit.damage||0)+effect.amount;if(effect.amount>0)playSfx('player-hit');}
  }
  if(effect.kind==='heal')state.playerHealth+=effect.amount;
  if(effect.kind==='draw')for(let n=0;n<effect.amount&&battle.phase!=='complete';n++)drawOneCard();
