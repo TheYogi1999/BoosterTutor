@@ -30,6 +30,12 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  }
  await page.evaluate(()=>beginBattle(2));assert.equal(await page.locator('#enemy-name').textContent(),'Temple Garden');assert.equal(await page.locator('.arena-table').getAttribute('data-scene'),'forest');assert.notEqual(await page.locator('.arena-table').evaluate(e=>getComputedStyle(e).backgroundImage),first);
  await page.evaluate(()=>showJourney());assert.deepEqual(await page.locator('.path-node b').allTextContents(),['Arid Mesa','Temple Garden','Breeding Pool','Glacial Fortress']);
+ assert.equal(await page.locator('#journey-location').textContent(),'Temple Garden · Camp');
+ assert.equal(await page.locator('#journey-screen').getAttribute('data-scene'),'forest');
+ await page.evaluate(()=>{state.coins=100;showShop()});
+ assert.equal(await page.locator('#shop-location').textContent(),'Temple Garden · Trading post');
+ assert.equal(await page.locator('#shop-screen').getAttribute('data-scene'),'forest');
+ assert.ok(await page.locator('#shop-screen').evaluate(e=>getComputedStyle(e).backgroundImage.includes('forest.svg?v=0.32.2')));
  assert.deepEqual(errors,[]);console.log('PASS options, credits, deck/library access, shared audio style, mana placement, stable MTG lands and matching scene colours across viewports');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

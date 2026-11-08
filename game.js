@@ -2027,8 +2027,18 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' && $('#start-screen').classList.contains('active') && !event.target.closest('button, a, input, select, textarea')) startNewRun();
 });
 
+function styleTravelStop(screenId, labelId, kind) {
+  const stage = state.stageLocations[state.node - 1] || LAND_STAGES[(state.node - 1) % LAND_STAGES.length];
+  const screen = $('#' + screenId);
+  screen.dataset.scene = stage.scene;
+  screen.style.setProperty('--stage-accent', stage.color);
+  screen.style.setProperty('--stage-scene', `url('assets/stages/${stage.scene}.svg?v=0.32.2')`);
+  $('#' + labelId).textContent = `${stage.name} · ${kind}`;
+}
+
 function showJourney() {
   const first = state.node === 1;
+  styleTravelStop('journey-screen', 'journey-location', first ? 'Expedition' : 'Camp');
   $('#journey-title').textContent = first ? 'Choose your relic' : 'A moment by the fire';
   $('#journey-description').textContent = first ? 'Choose a relic for this run.' : 'Rest, refine your deck, then continue.';
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${escapeHtml((state.stageLocations[index] || LAND_STAGES[index]).name)}</b></div>`).join('');
@@ -2332,6 +2342,7 @@ function showShop() {
 }
 function renderShop(){
   syncCoins();
+  styleTravelStop('shop-screen', 'shop-location', 'Trading post');
   const cards = state.shop.offers.map(offer => offer.card);
   const newCards = discoveryView(cards, state.shopDiscoveryView ||= {});
   recordSeenCards(cards);

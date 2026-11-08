@@ -76,3 +76,11 @@ html.fixed-game .title-options-dialog{height:480px!important}
 /* Keep selection light and attack arrows; targeting uses a regular pointer. */
 .game-shell .monster{cursor:pointer}
 .game-shell .monster.selected:after{content:none;display:none}
+
+/* The same upcoming MTG land accompanies the trading post and camp. */
+.game-shell :is(.journey-screen,.shop-screen){background-image:linear-gradient(90deg,#0b171de8,#102027bf 50%,#0b171de0),linear-gradient(125deg,color-mix(in srgb,var(--stage-accent,#78998a) 32%,transparent),transparent 70%),var(--stage-scene,url('assets/expedition.svg'));background-position:center;background-size:cover;border-radius:8px}
+.game-shell :is(#journey-location,#shop-location){color:color-mix(in srgb,var(--stage-accent,#d5b578) 42%,#ebd5aa);letter-spacing:2.2px}
+.game-shell .journey-screen .journey-options>button,.game-shell .shop-screen .shop-offer{background:#0d1e27d9;border-color:color-mix(in srgb,var(--stage-accent,#c6ad79) 30%,#65716c44)}
+.game-shell .journey-screen .path-node{background:#0d1e27c4}
+.game-shell .journey-screen .path-node.current{border-color:color-mix(in srgb,var(--stage-accent,#d5b578) 50%,#d5b578);box-shadow:0 0 26px color-mix(in srgb,var(--stage-accent,#d5b578) 14%,transparent)}
+.game-shell .shop-screen .shop-pack{background:#0d1e27d9;border-color:color-mix(in srgb,var(--stage-accent,#c6ad79) 30%,#65716c44)}
