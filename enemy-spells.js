@@ -162,8 +162,18 @@ function renderEnemySpells38() {
  if(panel.hidden){panel.innerHTML='';return;}
  const target=spell.intent==='counterspell'?b.enemyCounterWindow?.card.name||'your spell':spell.target.side==='player'?b.creatures.find(unit=>unit.id===spell.target.id)?.card.name||'departed creature':'your life';
  const index=b.enemySpells.indexOf(spell)+1;
- panel.innerHTML=`<div class="enemy-spell-copy"><span>${spell.intent==='counterspell'?'ENEMY REACTION · 2 MANA PAID':`ENEMY SPELL · ${index} / ${b.enemySpells.length}`}</span><strong>${escapeHtml(spell.card.name)} <small>${escapeHtml(spell.card.type_line)}</small></strong><p>${escapeHtml(spell.sourceName)} → ${escapeHtml(target)}</p><p class="enemy-spell-status">${spell.status==='countered'?'COUNTERED · no effect':spell.intent==='counterspell'?'Stops your spell · respond with an instant or pass':spell.intent==='rune'?'2 damage · cast an instant or pass':spell.intent==='drain'?'You lose 3 life; caster gains 3 · respond or pass':'3 damage to you · cast an instant or pass'}</p></div><button class="quiet-button" data-pass-enemy-spell ${!b.priorityCallback||b.resolutionTask||b.choice||b.scry||b.libraryOrder||b.interruption?'disabled':''}>${spell.status==='countered'?'Continue':'Resolve spell'} →</button>`;
+ const reaction=spell.intent==='counterspell';
+ const response=reaction&&typeof enemyCounterResponses46==='function'?enemyCounterResponses46(b)[0]:null;
+ const busy=!b.priorityCallback||b.resolutionTask||b.choice||b.scry||b.libraryOrder||b.interruption;
+ const shortcut=response?`<button type="button" class="quiet-button counter-response-button" data-enemy-counter-response="${response.index}" data-response-spell="${escapeHtml(spell.id)}" data-response-card="${escapeHtml(response.card.name)}" ${!response.payable?'disabled':''}>Cast ${escapeHtml(response.card.name)} · ${response.cost} mana</button>`:'';
+ const status=spell.status==='countered'?(reaction?'COUNTERED · your spell can resolve':'COUNTERED · no effect'):reaction?response&&!response.payable?`Your spell is waiting · ${response.cost} mana needed to counter`:'Your spell is waiting · counter this Counterspell':spell.intent==='rune'?'2 damage · cast an instant or pass':spell.intent==='drain'?'You lose 3 life; caster gains 3 · respond or pass':'3 damage to you · cast an instant or pass';
+ const passLabel=reaction?(spell.status==='countered'?'Resolve your spell':'Let it resolve'):spell.status==='countered'?'Continue':'Resolve spell';
+ panel.innerHTML=`<div class="enemy-spell-copy"><span>${reaction?'YOUR RESPONSE · 2 MANA PAID':`ENEMY SPELL · ${index} / ${b.enemySpells.length}`}</span><strong>${escapeHtml(spell.card.name)} <small>${escapeHtml(spell.card.type_line)}</small></strong><p>${escapeHtml(spell.sourceName)} → ${escapeHtml(target)}</p><p class="enemy-spell-status">${escapeHtml(status)}</p></div><div class="enemy-reaction-actions">${shortcut}<button type="button" class="quiet-button" data-pass-enemy-spell ${busy?'disabled':''}>${passLabel} →</button></div>`;
  $('#phase-status').textContent=spell.status==='countered'?`${spell.card.name} was countered. Continue when ready.`:`${spell.sourceName} casts ${spell.card.name}. Cast an instant, or continue to let it resolve.`;
  $('#combat-action-hint').textContent=spell.intent==='counterspell'?'Your spell costs are paid. Counter this Counterspell, cast another instant, or continue.':'Enemy spell response: counter the spell, protect its target, or continue.';
 }
-$('#enemy-spell-panel').addEventListener('click',event=>{if(event.target.closest('[data-pass-enemy-spell]')&&!state.battle?.resolutionTask)handleCombatAction();});
+$('#enemy-spell-panel').addEventListener('click',event=>{
+ const response=event.target.closest('[data-enemy-counter-response]');
+ if(response){if(!response.disabled)castEnemyCounterResponse46(Number(response.dataset.enemyCounterResponse),response.dataset.responseSpell,response.dataset.responseCard);return;}
+ if(event.target.closest('[data-pass-enemy-spell]')&&!state.battle?.resolutionTask)handleCombatAction();
+});

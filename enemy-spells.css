@@ -13,7 +13,7 @@
 .enemy-spell-copy strong small{font-size:10px;font-weight:400;color:#a4bfc8;margin-left:8px}
 .enemy-spell-copy p{margin:2px 0;font:11px/15px var(--sans);color:#b5c9d0}
 .enemy-spell-copy .enemy-spell-status{color:#e4c98d}
-.enemy-spell-panel>button{flex:none;white-space:nowrap;font-size:11px!important;padding:8px!important}
+.enemy-reaction-actions>button{flex:none;white-space:nowrap;font-size:11px!important;padding:8px!important}
 @media(orientation:portrait){
  html.portrait-combat .game-shell .combat-coins{font-size:18px;line-height:20px;gap:6px}
  html.portrait-combat .game-shell .combat-coins>span:first-child{font-size:15px}
@@ -23,8 +23,12 @@
  html.portrait-combat .game-shell .enemy-spell-copy>strong{font-size:20px;line-height:24px}
  html.portrait-combat .game-shell .enemy-spell-copy strong small{font-size:14px}
  html.portrait-combat .game-shell .enemy-spell-copy p{font-size:16px;line-height:20px}
- html.portrait-combat .game-shell .enemy-spell-panel>button{font-size:17px!important;padding:8px!important}
+ html.portrait-combat .game-shell .enemy-reaction-actions>button{font-size:17px!important;padding:8px!important}
 }
 
 /* Readiness remains on the foe; the reaction uses the existing response panel. */
 .game-shell .enemy-spell-panel:has(.enemy-spell-copy){align-self:end}
+
+.enemy-reaction-actions{display:flex;flex-direction:column;align-items:stretch;gap:7px;flex:none;max-width:200px}
+.game-shell .enemy-reaction-actions .counter-response-button{border-color:#e9c783!important;color:#fff0c7!important;background:linear-gradient(120deg,#66502b,#293c46)!important;box-shadow:0 0 15px #dfba6530}
+.game-shell .enemy-reaction-actions .counter-response-button:disabled{opacity:.45;box-shadow:none;cursor:default}

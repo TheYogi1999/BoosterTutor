@@ -117,3 +117,28 @@ test('copied mass exile finishes all copies before the next wave arrives',()=>{c
 test('enemy Counterspell and the original player spell finish before wave advancement',()=>{const r=waveGame45();r(`b.turn=2;b.enemyCreatures[0].counterspell=true;hand('Divination','Murder','Murder','Dispel');globalThis.n=b.deck.length;playCard(0);globalThis.first=b.enemyCreatures[0].id;playCard(0);pick('enemy:'+first);playCard(0);pick('enemy:'+b.enemyCreatures[0].id);playCard(0);pick('spell:'+b.enemyCounterWindow.spell.id)`);assert.equal(r('b.enemyCreatures.length'),0);assert.equal(r('b.waveIndex'),0);assert.notEqual(r('b.enemyCounterWindow'),null);r('handleCombatAction()');assert.equal(r('b.waveIndex'),1);assert.equal(r('b.hand.length'),2);assert.equal(r('b.deck.length'),r('n-2'));assert.equal(r('b.turn'),2);assert.equal(r('b.enemyCounterUsedTurn'),2);});
 test('wave cleanup removes old enemy Auras but preserves player Equipment',()=>{const r=waveGame45();r(`ally();b.permanents=[{id:'rancor',card:card('Rancor'),attachedTo:b.enemyCreatures[0].id},{id:'sword',card:card('Short Sword'),attachedTo:'a'}];globalThis.n=b.deck.length;clearWave()`);assert.equal(r('b.permanents.length'),1);assert.equal(r('b.permanents[0].attachedTo'),'a');assert.equal(r('b.hand[0].name'),'Rancor');assert.equal(r('b.deck.length'),r('n'));});
 test('an empty-library draw at a combat wave transition loses instead of refilling',()=>{const r=waveGame45();r(`b.deck=[];b.phase='damage';clearWave()`);assert.equal(r('state.screen'),'end-screen');assert.equal(r('b.phase'),'complete');assert.equal(r('state.node'),3);assert.equal(r('b.deck.length'),0);});
+
+test('direct counter response pays once and resumes the original paid spell only after continuing',()=>{
+ const r=counterGame44();r(`hand('Divination','Counterspell');globalThis.m=b.mana;globalThis.n=b.deck.length;playCard(0);globalThis.cs=activeEnemySpell38()`);
+ assert.equal(r(`enemyCounterResponses46()[0].card.name`),'Counterspell');
+ assert.equal(r(`castEnemyCounterResponse46(0,cs.id,'Counterspell')`),true);
+ assert.equal(r('cs.status'),'countered');assert.equal(r('b.mana'),r('m-5'));
+ assert.equal(r('b.deck.length'),r('n'));assert.notEqual(r('b.enemyCounterWindow'),null);
+ assert.equal(r(`castEnemyCounterResponse46(0,cs.id,'Counterspell')`),false);
+ r('handleCombatAction()');assert.equal(r('b.hand.length'),2);assert.equal(r('b.deck.length'),r('n-2'));assert.equal(r('b.mana'),r('m-5'));
+});
+test('direct counter response rejects insufficient mana, open choices and stale spell IDs',()=>{
+ const r=counterGame44();r(`hand('Divination','Counterspell');b.lands=[];b.floatingMana=3;syncMana(b);playCard(0);globalThis.cs=activeEnemySpell38();globalThis.m=b.mana`);
+ assert.equal(r('enemyCounterResponses46()[0].payable'),false);
+ assert.equal(r(`castEnemyCounterResponse46(0,cs.id,'Counterspell')`),false);assert.equal(r('b.mana'),r('m'));
+ r('b.floatingMana=10;syncMana(b)');assert.equal(r(`castEnemyCounterResponse46(0,'stale-id','Counterspell')`),false);
+ r('b.choice={};');assert.equal(r('enemyCounterResponses46().length'),0);r('b.choice=null;handleCombatAction()');
+ assert.equal(r('b.hand[0].name'),'Counterspell');assert.equal(r('b.enemyCounterWindow'),null);
+});
+test('direct counter response recommends the cheapest payable legal counter and excludes other instants',()=>{
+ const r=counterGame44();r(`hand('Divination','Dismiss','Counterspell','Dispel','Shock');playCard(0)`);
+ assert.equal(r(`enemyCounterResponses46().map(item=>item.card.name).join(',')`),'Dispel,Counterspell,Dismiss');
+ assert.equal(r(`castEnemyCounterResponse46(3,activeEnemySpell38().id,'Shock')`),false);
+ assert.equal(r(`castEnemyCounterResponse46(2,activeEnemySpell38().id,'Dispel')`),true);
+ assert.equal(r('activeEnemySpell38().status'),'countered');
+});

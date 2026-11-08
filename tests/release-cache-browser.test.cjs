@@ -14,7 +14,6 @@ const { chromium, devices } = require('playwright');
   assert.ok(sources.length > 0);
   for (const source of sources) assert.match(new URL(source, 'http://localhost').searchParams.get('v') || '', /^\d+\.\d+(?:\.\d+)?$/, `${source} must have a cache version`);
   assert.ok(sources.includes(`game.js?v=${version}`), 'changed game code matches the displayed release');
-  assert.ok(sources.includes(`waves.js?v=${version}`), 'wave code matches the displayed release');
 
   let upgraded = false;
   const requests = [];

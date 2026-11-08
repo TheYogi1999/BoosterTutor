@@ -22,6 +22,26 @@ canCastNow=function(card,battle=state.battle){
 function enemyCounterBusy44(battle){
  return Boolean(battle.resolutionTask||battle.choice||battle.scry||battle.libraryOrder||battle.interruption);
 }
+function enemyCounterResponses46(battle=state.battle){
+ const window=battle?.enemyCounterWindow;
+ if(!window||window.closed||window.spell.status!=='pending'||activeEnemySpell38(battle)!==window.spell||enemyCounterBusy44(battle))return [];
+ return battle.hand.flatMap((card,index)=>{
+  const rule=SPELL_RULES[card.name];
+  if(!rule?.effects.some(effect=>effect.kind==='counter-spell')||!canCastNow(card,battle))return [];
+  return [{card,index,cost:Math.ceil(card.cmc||0),payable:Boolean(paymentPlan(card,battle))}];
+ }).sort((a,b)=>Number(b.payable)-Number(a.payable)||a.cost-b.cost||Number(b.card.name==='Counterspell')-Number(a.card.name==='Counterspell'));
+}
+function castEnemyCounterResponse46(index,spellId,cardName){
+ const battle=state.battle;
+ if(!battle?.enemyCounterWindow||activeEnemySpell38(battle)?.id!==spellId)return false;
+ const response=enemyCounterResponses46(battle).find(item=>item.index===index&&item.card.name===cardName&&item.payable);
+ if(!response)return false;
+ hideCardPreview();
+ // The shortcut targets only the announced spell; normal casting still pays all costs.
+ battle.pendingSpellTarget={side:'spell',id:spellId};
+ playCard(index);
+ return true;
+}
 function offerEnemyCounter44(card,battle,resume,countered){
  if(state.battle!==battle||battle.phase==='complete'||battle.enemyCounterWindow||isLand(card))return false;
  const source=battle.enemyCreatures.find(enemy=>enemyCounterReady44(enemy,battle));

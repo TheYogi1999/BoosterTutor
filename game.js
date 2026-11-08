@@ -995,7 +995,7 @@ function renderHand() {
     const position = index - center;
     const canPay = Boolean(paymentPlan(card));
     const selected = battle.pendingAttachment?.handIndex === index;
-    return `<button type="button" class="hand-card${!canCastNow(card, battle) ? ' timing-unavailable' : ''}${(isInstant(card) || hasFlash(card)) && battle.phase !== 'main' && canCastNow(card,battle) ? ' instant-response' : ''}${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${canCastNow(card, battle)}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
+    return `<button type="button" class="hand-card${!canCastNow(card, battle) ? ' timing-unavailable' : ''}${(isInstant(card) || hasFlash(card)) && (battle.phase !== 'main' || battle.enemyCounterWindow) && canCastNow(card,battle) ? ' instant-response' : ''}${!canPay ? ' insufficient-mana' : ''}${selected ? ' targeting-card' : ''}" style="--fan-angle:${position * Math.min(4, 16 / Math.max(1, battle.hand.length - 1))}deg;--fan-lift:${Math.pow(position / Math.max(1, center), 2) * 12}px;--fan-index:${index}" data-hand-index="${index}" data-preview-owner="hand" draggable="${canCastNow(card, battle)}" aria-label="${escapeHtml(card.name)}, ${Math.ceil(card.cmc || 0)} Mana" aria-pressed="${selected}">${cardFace(card)}</button>`;
   }).join('');
   fitHand();
   $('#hand-row').querySelectorAll('.hand-card').forEach(button => {

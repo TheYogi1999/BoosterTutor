@@ -273,3 +273,10 @@ Encounters one and two remain single-wave fights. Encounters three and four have
 One battle object, life total, library, hand, player battlefield, Equipment/Auras, tokens, graveyards and exile carry across waves. Defeated enemies keep their normal coin bounties. Clearing during main phase preserves remaining mana, land drop, turn effects and attack usage; clearing in combat performs the normal turn cleanup once, untaps, and draws one card for the next turn. Incoming enemies start their own intention pattern and have arrival-turn summoning sickness. Old attack/block targets and combat callbacks are cleared.
 
 Pending spells, Counterspell responses and all spell copies finish before a wave can advance. No reward booster, shop/camp transition or campaign victory occurs until the last wave is defeated. The library never refills at a transition, and a failed mandatory draw can still end the run.
+
+
+### v0.46 — counter the enemy Counterspell
+
+Enemy Counterspell reactions now explicitly show **YOUR RESPONSE** and a **Cast Counterspell · 2 mana** shortcut when that card is in hand (or another supported counterspell, using the cheapest payable option). The shortcut targets the pending enemy Counterspell and uses normal casting/payment rules; an unaffordable counter shows its required mana and cannot be cast. Instants glow in the hand during a reaction in main phase as well as during combat.
+
+The original paid spell waits until the player continues. Countering the reaction changes the action to **Resolve your spell**; passing without countering is labelled **Let it resolve**. Normal hand casting and other instant responses remain available. Stale response controls cannot target a different spell or spend mana twice.
