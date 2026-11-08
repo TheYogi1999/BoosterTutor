@@ -15,14 +15,14 @@ const controller = {
   elementKey(element){
     if(element.id)return`id:${element.id}`;
     const entry=element.closest('.collection-entry')?.querySelector('[data-collection-index]');if(element.tagName==='SUMMARY'&&entry)return`printed:${entry.dataset.collectionIndex}`;
-    for(const attribute of ['data-rule-pick','data-library-pick','data-scry-index','data-hand-index','data-creature-id','data-unit-target','data-unit-attack','data-unit-withdraw','data-unit-mana','data-enemy-attacker','data-permanent-id','data-buy-card','data-relic','data-camp','data-avatar-choice','data-block-attacker','data-activate-permanent','data-open-pack','data-collection-index'])if(element.hasAttribute(attribute))return`${attribute}:${element.getAttribute(attribute)}`;
+    for(const attribute of ['data-rule-pick','data-library-pick','data-scry-index','data-hand-index','data-creature-id','data-unit-target','data-unit-attack','data-unit-withdraw','data-unit-mana','data-enemy-attacker','data-permanent-id','data-buy-card','data-buy-pack','data-camp-token','data-relic','data-camp','data-avatar-choice','data-block-attacker','data-activate-permanent','data-open-pack','data-collection-index'])if(element.hasAttribute(attribute))return`${attribute}:${element.getAttribute(attribute)}`;
     if(element.hasAttribute('data-card-index'))return`draft:${element.dataset.packIndex}:${element.dataset.cardIndex}`;
     return`item:${element.tagName}:${element.getAttribute('href')||element.getAttribute('aria-label')||element.textContent.trim().slice(0,80)}`;
   },
   initial(items){
     const modal=this.modal();
     if(modal)return items.find(element=>element.matches('[data-rule-pick],[data-library-pick],[data-scry-index],.collection-card,.graveyard-card'))||items.find(element=>element.id==='quit-cancel')||items[0];
-    const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','journey-screen':'[data-relic],[data-camp]','shop-screen':'[data-buy-card]','end-screen':'#restart-button' }[state.screen||'start-screen'];
+    const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','journey-screen':'[data-camp-token]','shop-screen':'[data-buy-card]','end-screen':'#restart-button' }[state.screen||'start-screen'];
     return items.find(element=>preferred&&element.matches(preferred))||items[0];
   },
   focus(element){

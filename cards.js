@@ -15,7 +15,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/4/0/409f9b88-f03e-40b6-9883-68c14c37c0de.jpg?1783943001",
     "uri": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "9c9ac1bc-cdf3-4fa6-8319-a7ea164e9e47",
@@ -33,7 +34,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/9c9ac1bc-cdf3-4fa6-8319-a7ea164e9e47.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/9/c/9c9ac1bc-cdf3-4fa6-8319-a7ea164e9e47.jpg?1783909083",
     "uri": "https://scryfall.com/card/fdn/146/savannah-lions?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "5e227a63-abea-494e-9d66-6ff0a3da14ca",
@@ -53,7 +55,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/5e227a63-abea-494e-9d66-6ff0a3da14ca.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/5/e/5e227a63-abea-494e-9d66-6ff0a3da14ca.jpg?1783937211",
     "uri": "https://scryfall.com/card/kld/70/wind-drake?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "213c9202-b6f4-43ab-b57f-b97a1da5e263",
@@ -73,7 +76,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/213c9202-b6f4-43ab-b57f-b97a1da5e263.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/2/1/213c9202-b6f4-43ab-b57f-b97a1da5e263.jpg?1783918443",
     "uri": "https://scryfall.com/card/dmr/163/giant-spider?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "7aff07f9-9528-4149-9af0-f4e3c66c9dc5",
@@ -95,7 +99,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/7aff07f9-9528-4149-9af0-f4e3c66c9dc5.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/7/a/7aff07f9-9528-4149-9af0-f4e3c66c9dc5.jpg?1787562825",
     "uri": "https://scryfall.com/card/fdn/757/vampire-nighthawk?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "305078a5-ac18-4721-bba2-3434eba5b1cf",
@@ -113,7 +118,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/305078a5-ac18-4721-bba2-3434eba5b1cf.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/3/0/305078a5-ac18-4721-bba2-3434eba5b1cf.jpg?1783918410",
     "uri": "https://scryfall.com/card/dmr/233/ornithopter?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "f4468fff-cd6f-428c-b7a0-ff89f5bbea2e",
@@ -129,10 +135,11 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/f4468fff-cd6f-428c-b7a0-ff89f5bbea2e.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/f/4/f4468fff-cd6f-428c-b7a0-ff89f5bbea2e.jpg?1783909048",
     "uri": "https://scryfall.com/card/fdn/255/juggernaut?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
-    "id": "6a0b230b-d391-4998-a3f7-7b158a0ec2cd",
+    "id": "cd43a84a-cde2-48f8-b6ab-1ec023c9e0c3",
     "name": "Llanowar Elves",
     "mana_cost": "{G}",
     "cmc": 1.0,
@@ -144,9 +151,10 @@ const BUNDLED_CARDS = [
       "G"
     ],
     "keywords": [],
-    "image": "assets/cards/6a0b230b-d391-4998-a3f7-7b158a0ec2cd.jpg",
-    "art": "https://cards.scryfall.io/art_crop/front/6/a/6a0b230b-d391-4998-a3f7-7b158a0ec2cd.jpg?1783909057",
-    "uri": "https://scryfall.com/card/fdn/227/llanowar-elves?utm_source=api",
+    "rarity": "mythic",
+    "image": "assets/cards/cd43a84a-cde2-48f8-b6ab-1ec023c9e0c3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/d/cd43a84a-cde2-48f8-b6ab-1ec023c9e0c3.jpg?1783908987",
+    "uri": "https://scryfall.com/card/fdn/429/llanowar-elves?utm_source=api",
     "verified": true
   },
   {
@@ -165,10 +173,11 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/e8b67ee8-3189-4426-8b1a-b540267768fd.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/e/8/e8b67ee8-3189-4426-8b1a-b540267768fd.jpg?1783932966",
     "uri": "https://scryfall.com/card/m20/168/centaur-courser?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
-    "id": "b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d",
+    "id": "d9d994b6-d043-42af-8e95-f4e856a7f8b4",
     "name": "Serra Angel",
     "mana_cost": "{3}{W}{W}",
     "cmc": 5.0,
@@ -183,9 +192,10 @@ const BUNDLED_CARDS = [
       "Flying",
       "Vigilance"
     ],
-    "image": "assets/cards/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg",
-    "art": "https://cards.scryfall.io/art_crop/front/b/8/b8c5e74c-96e7-4a1f-93b7-14d776fe4b2d.jpg?1787563091",
-    "uri": "https://scryfall.com/card/fdn/740/serra-angel?utm_source=api",
+    "rarity": "mythic",
+    "image": "assets/cards/d9d994b6-d043-42af-8e95-f4e856a7f8b4.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/9/d9d994b6-d043-42af-8e95-f4e856a7f8b4.jpg?1783938265",
+    "uri": "https://scryfall.com/card/v15/14/serra-angel?utm_source=api",
     "verified": true
   },
   {
@@ -204,7 +214,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/7/6/7673784e-db4b-43a1-8d55-1bb9fc1e284f.jpg?1783903008",
     "uri": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "b23900fb-efe9-43ab-9f67-4545dd01fb9c",
@@ -222,7 +233,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/b23900fb-efe9-43ab-9f67-4545dd01fb9c.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/b/2/b23900fb-efe9-43ab-9f67-4545dd01fb9c.jpg?1783903007",
     "uri": "https://scryfall.com/card/msc/809/shock?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "88b13bc0-da54-4c3b-917c-7c8345a329f5",
@@ -240,7 +252,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/88b13bc0-da54-4c3b-917c-7c8345a329f5.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/8/88b13bc0-da54-4c3b-917c-7c8345a329f5.jpg?1783902927",
     "uri": "https://scryfall.com/card/msh/142/lightning-strike?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "a5ae9732-9332-4f53-8608-52ecea32c5d2",
@@ -258,7 +271,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/a5ae9732-9332-4f53-8608-52ecea32c5d2.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/a/5/a5ae9732-9332-4f53-8608-52ecea32c5d2.jpg?1783908793",
     "uri": "https://scryfall.com/card/j25/244/revitalize?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "cb3b35b8-f321-46d8-a441-6b9a6efa9021",
@@ -276,7 +290,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/cb3b35b8-f321-46d8-a441-6b9a6efa9021.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/c/b/cb3b35b8-f321-46d8-a441-6b9a6efa9021.jpg?1783934590",
     "uri": "https://scryfall.com/card/m19/51/divination?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "2b34e76b-86b3-464e-93e7-c3f2074028fb",
@@ -294,7 +309,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/2b34e76b-86b3-464e-93e7-c3f2074028fb.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/2/b/2b34e76b-86b3-464e-93e7-c3f2074028fb.jpg?1783944536",
     "uri": "https://scryfall.com/card/mrd/113/battlegrowth?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "fd1f95bf-48ea-455a-8a6c-0249b11c8900",
@@ -312,7 +328,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/fd1f95bf-48ea-455a-8a6c-0249b11c8900.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/f/d/fd1f95bf-48ea-455a-8a6c-0249b11c8900.jpg?1783902918",
     "uri": "https://scryfall.com/card/msh/167/giant-growth?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "46917de3-5e98-4dd6-8950-fc10338515df",
@@ -330,7 +347,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/46917de3-5e98-4dd6-8950-fc10338515df.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/4/6/46917de3-5e98-4dd6-8950-fc10338515df.jpg?1783915076",
     "uri": "https://scryfall.com/card/woe/191/titanic-growth?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "1f29d9e4-3100-43cb-9723-7d5c23f89b12",
@@ -348,7 +366,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/1f29d9e4-3100-43cb-9723-7d5c23f89b12.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/1/f/1f29d9e4-3100-43cb-9723-7d5c23f89b12.jpg?1783908723",
     "uri": "https://scryfall.com/card/j25/467/murder?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "475bff39-220a-4490-9c2e-d311e306a6db",
@@ -366,7 +385,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/475bff39-220a-4490-9c2e-d311e306a6db.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/4/7/475bff39-220a-4490-9c2e-d311e306a6db.jpg?1783908966",
     "uri": "https://scryfall.com/card/fdn/505/cancel?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "6d0dea1b-43dc-4e76-aabd-f12e121a78af",
@@ -385,7 +405,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/6d0dea1b-43dc-4e76-aabd-f12e121a78af.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/6/d/6d0dea1b-43dc-4e76-aabd-f12e121a78af.jpg?1783940077",
     "uri": "https://scryfall.com/card/ddk/27/unmake?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "ac0987b8-755e-42f1-bd6d-1401fecd4171",
@@ -405,7 +426,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/ac0987b8-755e-42f1-bd6d-1401fecd4171.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/a/c/ac0987b8-755e-42f1-bd6d-1401fecd4171.jpg?1783941836",
     "uri": "https://scryfall.com/card/m11/16/holy-strength?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "f42c9574-2f09-4cb0-80cb-10fb8c592e6f",
@@ -425,10 +447,11 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/f42c9574-2f09-4cb0-80cb-10fb8c592e6f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/f/4/f42c9574-2f09-4cb0-80cb-10fb8c592e6f.jpg?1783938778",
     "uri": "https://scryfall.com/card/dvd/47/unholy-strength?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
-    "id": "86d6b411-4a31-4bfc-8dd6-e19f553bb29b",
+    "id": "377792bf-2d72-40eb-9e47-1d4a86980fa4",
     "name": "Rancor",
     "mana_cost": "{G}",
     "cmc": 1.0,
@@ -442,9 +465,10 @@ const BUNDLED_CARDS = [
     "keywords": [
       "Enchant"
     ],
-    "image": "assets/cards/86d6b411-4a31-4bfc-8dd6-e19f553bb29b.jpg",
-    "art": "https://cards.scryfall.io/art_crop/front/8/6/86d6b411-4a31-4bfc-8dd6-e19f553bb29b.jpg?1783921864",
-    "uri": "https://scryfall.com/card/2x2/156/rancor?utm_source=api",
+    "rarity": "mythic",
+    "image": "assets/cards/377792bf-2d72-40eb-9e47-1d4a86980fa4.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/7/377792bf-2d72-40eb-9e47-1d4a86980fa4.jpg?1783903309",
+    "uri": "https://scryfall.com/card/mar/82/rancor?utm_source=api",
     "verified": true
   },
   {
@@ -463,7 +487,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/690972a8-72df-4050-a353-16e45589167c.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/6/9/690972a8-72df-4050-a353-16e45589167c.jpg?1783928693",
     "uri": "https://scryfall.com/card/cmr/458/bonesplitter?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "973c166e-3e93-4ed5-b4c5-84dc158a8e4f",
@@ -481,7 +506,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/973c166e-3e93-4ed5-b4c5-84dc158a8e4f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/9/7/973c166e-3e93-4ed5-b4c5-84dc158a8e4f.jpg?1783930656",
     "uri": "https://scryfall.com/card/m21/236/short-sword?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "8554c2a8-d3cc-4ae9-a8ae-34815cf299db",
@@ -499,7 +525,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/8554c2a8-d3cc-4ae9-a8ae-34815cf299db.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/5/8554c2a8-d3cc-4ae9-a8ae-34815cf299db.jpg?1783908821",
     "uri": "https://scryfall.com/card/j25/152/leonin-scimitar?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "86c9838e-aa72-49fc-bae2-f880bcbc9313",
@@ -517,7 +544,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/86c9838e-aa72-49fc-bae2-f880bcbc9313.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/6/86c9838e-aa72-49fc-bae2-f880bcbc9313.jpg?1783942125",
     "uri": "https://scryfall.com/card/zen/209/trusty-machete?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "17d154d3-7ae5-43ff-9978-d974285e2c89",
@@ -535,7 +563,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/17d154d3-7ae5-43ff-9978-d974285e2c89.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/1/7/17d154d3-7ae5-43ff-9978-d974285e2c89.jpg?1783930741",
     "uri": "https://scryfall.com/card/m21/21/glorious-anthem?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "rare"
   },
   {
     "id": "26894980-8961-4479-85dd-5f01c899718b",
@@ -551,7 +580,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/26894980-8961-4479-85dd-5f01c899718b.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/2/6/26894980-8961-4479-85dd-5f01c899718b.jpg?1783934511",
     "uri": "https://scryfall.com/card/m19/235/fountain-of-renewal?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "e7175448-d126-4402-96db-5392f95138b4",
@@ -572,7 +602,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/e7175448-d126-4402-96db-5392f95138b4.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/e/7/e7175448-d126-4402-96db-5392f95138b4.jpg?1783908763",
     "uri": "https://scryfall.com/card/j25/336/omen-of-the-sea?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "d9e966cb-bb42-49d8-b351-114619b31497",
@@ -590,7 +621,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/d9e966cb-bb42-49d8-b351-114619b31497.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/d/9/d9e966cb-bb42-49d8-b351-114619b31497.jpg?1783934847",
     "uri": "https://scryfall.com/card/bbd/87/angelic-chorus?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "rare"
   },
   {
     "id": "1ddc3ccf-797d-45b2-a791-83d22481920c",
@@ -610,7 +642,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/1ddc3ccf-797d-45b2-a791-83d22481920c.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/1/d/1ddc3ccf-797d-45b2-a791-83d22481920c.jpg?1783908807",
     "uri": "https://scryfall.com/card/j25/199/fencing-ace?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "3d1a3fec-39de-4223-9da2-22749a58cd62",
@@ -630,7 +663,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/3d1a3fec-39de-4223-9da2-22749a58cd62.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/3/d/3d1a3fec-39de-4223-9da2-22749a58cd62.jpg?1783932662",
     "uri": "https://scryfall.com/card/eld/37/youthful-knight?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "6c37f680-770b-4d0e-8bf7-44ba3449d419",
@@ -650,7 +684,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/6c37f680-770b-4d0e-8bf7-44ba3449d419.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/6/c/6c37f680-770b-4d0e-8bf7-44ba3449d419.jpg?1783908707",
     "uri": "https://scryfall.com/card/j25/497/typhoid-rats?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "069cfaa5-bba4-4503-b54e-b98fa9f0a0fc",
@@ -671,7 +706,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/069cfaa5-bba4-4503-b54e-b98fa9f0a0fc.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/0/6/069cfaa5-bba4-4503-b54e-b98fa9f0a0fc.jpg?1787563133",
     "uri": "https://scryfall.com/card/fdn/734/healers-hawk?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "3480927c-10da-4817-9954-10aea2bc7100",
@@ -691,7 +727,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/3480927c-10da-4817-9954-10aea2bc7100.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/3/4/3480927c-10da-4817-9954-10aea2bc7100.jpg?1783934405",
     "uri": "https://scryfall.com/card/oana/43/raging-goblin?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "d432d17e-052b-4a81-bad8-14babf6e593f",
@@ -712,7 +749,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/d432d17e-052b-4a81-bad8-14babf6e593f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/d/4/d432d17e-052b-4a81-bad8-14babf6e593f.jpg?1783915635",
     "uri": "https://scryfall.com/card/cmm/282/deadly-recluse?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "1864e25e-f940-47e5-9439-ab721049c690",
@@ -732,7 +770,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/1864e25e-f940-47e5-9439-ab721049c690.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/1/8/1864e25e-f940-47e5-9439-ab721049c690.jpg?1783942988",
     "uri": "https://scryfall.com/card/10e/309/wall-of-wood?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "9d0b52b3-2845-449c-a3af-fa471724b7ef",
@@ -752,7 +791,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/9d0b52b3-2845-449c-a3af-fa471724b7ef.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/9/d/9d0b52b3-2845-449c-a3af-fa471724b7ef.jpg?1783908696",
     "uri": "https://scryfall.com/card/j25/526/boggart-brute?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "053b59b4-a22c-4228-aadc-ae9da6bb465e",
@@ -770,7 +810,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/053b59b4-a22c-4228-aadc-ae9da6bb465e.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/0/5/053b59b4-a22c-4228-aadc-ae9da6bb465e.jpg?1783930696",
     "uri": "https://scryfall.com/card/m21/128/walking-corpse?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "93a56610-482b-4ddf-88e1-e4a2edf4fa0f",
@@ -788,7 +829,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/93a56610-482b-4ddf-88e1-e4a2edf4fa0f.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/9/3/93a56610-482b-4ddf-88e1-e4a2edf4fa0f.jpg?1783930355",
     "uri": "https://scryfall.com/card/jmp/426/rumbling-baloth?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "bee08d2f-e875-473c-adc6-8dc286792ab5",
@@ -808,7 +850,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/bee08d2f-e875-473c-adc6-8dc286792ab5.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/b/e/bee08d2f-e875-473c-adc6-8dc286792ab5.jpg?1783908649",
     "uri": "https://scryfall.com/card/j25/646/colossal-dreadmaw?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "01e7af76-e505-49ca-a91e-8167027560ff",
@@ -829,7 +872,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/01e7af76-e505-49ca-a91e-8167027560ff.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/0/1/01e7af76-e505-49ca-a91e-8167027560ff.jpg?1783928785",
     "uri": "https://scryfall.com/card/cmr/253/sentinel-spider?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "81ac7bdf-a722-4bed-b480-a1c2f80c5d64",
@@ -849,7 +893,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/81ac7bdf-a722-4bed-b480-a1c2f80c5d64.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/8/1/81ac7bdf-a722-4bed-b480-a1c2f80c5d64.jpg?1783908780",
     "uri": "https://scryfall.com/card/j25/284/air-elemental?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "083ec3e7-950c-4e9d-aba5-02ed13d723f0",
@@ -867,7 +912,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/083ec3e7-950c-4e9d-aba5-02ed13d723f0.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/0/8/083ec3e7-950c-4e9d-aba5-02ed13d723f0.jpg?1783941070",
     "uri": "https://scryfall.com/card/m12/141/goblin-piker?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "b8d8806c-43c5-4c6c-9420-6210a17ec2b0",
@@ -887,7 +933,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/b8d8806c-43c5-4c6c-9420-6210a17ec2b0.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/b/8/b8d8806c-43c5-4c6c-9420-6210a17ec2b0.jpg?1783941062",
     "uri": "https://scryfall.com/card/m12/175/garruks-companion?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "adbf772f-ebdf-4c04-996f-0dbf1826049b",
@@ -908,7 +955,8 @@ const BUNDLED_CARDS = [
     "image": "assets/cards/adbf772f-ebdf-4c04-996f-0dbf1826049b.jpg",
     "art": "https://cards.scryfall.io/art_crop/front/a/d/adbf772f-ebdf-4c04-996f-0dbf1826049b.jpg?1783938424",
     "uri": "https://scryfall.com/card/mm2/32/skyhunter-skirmisher?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "42ed35e9-51cd-468a-86a9-9412553cf50d",
@@ -925,7 +973,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/42ed35e9-51cd-468a-86a9-9412553cf50d.jpg",
     "uri": "https://scryfall.com/card/inr/137/village-rites?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "ddb01913-ad41-4a20-bef0-cf8412cce39c",
@@ -942,7 +991,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/ddb01913-ad41-4a20-bef0-cf8412cce39c.jpg",
     "uri": "https://scryfall.com/card/trc/455/thrill-of-possibility?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "e3bca51a-b9be-4be2-a256-b15853fde433",
@@ -959,7 +1009,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/e3bca51a-b9be-4be2-a256-b15853fde433.jpg",
     "uri": "https://scryfall.com/card/ecc/91/cathartic-reunion?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "1db55625-25a5-46eb-9d9c-9b3ed219359f",
@@ -976,7 +1027,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/1db55625-25a5-46eb-9d9c-9b3ed219359f.jpg",
     "uri": "https://scryfall.com/card/cma/45/altars-reap?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "4950c3c2-80c1-4447-ac38-cf40f76b9545",
@@ -993,7 +1045,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/4950c3c2-80c1-4447-ac38-cf40f76b9545.jpg",
     "uri": "https://scryfall.com/card/w17/18/raise-dead?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "55a3153e-4259-4e03-bf79-8979d3c0db36",
@@ -1010,10 +1063,11 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/55a3153e-4259-4e03-bf79-8979d3c0db36.jpg",
     "uri": "https://scryfall.com/card/jmp/307/doublecast?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
-    "id": "5e648262-3b9b-4c58-8e29-48356e3cb064",
+    "id": "3065a184-58f8-43d4-9d9f-ed0f266ec8c9",
     "name": "Clone",
     "mana_cost": "{3}{U}",
     "cmc": 4.0,
@@ -1025,8 +1079,10 @@ const BUNDLED_CARDS = [
       "U"
     ],
     "keywords": [],
-    "image": "assets/cards/5e648262-3b9b-4c58-8e29-48356e3cb064.jpg",
-    "uri": "https://scryfall.com/card/m14/47/clone?utm_source=api",
+    "rarity": "mythic",
+    "image": "assets/cards/3065a184-58f8-43d4-9d9f-ed0f266ec8c9.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/0/3065a184-58f8-43d4-9d9f-ed0f266ec8c9.jpg?1783904860",
+    "uri": "https://scryfall.com/card/tle/11/clone?utm_source=api",
     "verified": true
   },
   {
@@ -1044,7 +1100,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/a3d2c692-7566-468e-9c86-47a9f768fde2.jpg",
     "uri": "https://scryfall.com/card/tdm/159/snakeskin-veil?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "23676697-2b84-4e9f-9e38-4fd58085a698",
@@ -1063,7 +1120,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/23676697-2b84-4e9f-9e38-4fd58085a698.jpg",
     "uri": "https://scryfall.com/card/cns/168/hunger-of-the-howlpack?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "472ff365-4c52-42be-9024-c3569014e25d",
@@ -1082,7 +1140,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/472ff365-4c52-42be-9024-c3569014e25d.jpg",
     "uri": "https://scryfall.com/card/j25/673/invigorating-surge?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "34c3a894-ee75-4db9-a69f-711bb3cc150a",
@@ -1099,7 +1158,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/34c3a894-ee75-4db9-a69f-711bb3cc150a.jpg",
     "uri": "https://scryfall.com/card/fdn/606/duress?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "5996feb4-02ac-45e8-a7f2-966cf74391dc",
@@ -1116,7 +1176,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/5996feb4-02ac-45e8-a7f2-966cf74391dc.jpg",
     "uri": "https://scryfall.com/card/m13/145/reverberate?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "rare"
   },
   {
     "id": "1ede3080-8c47-48a0-b757-92c3fa91fac0",
@@ -1133,7 +1194,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/1ede3080-8c47-48a0-b757-92c3fa91fac0.jpg",
     "uri": "https://scryfall.com/card/trc/434/brainstorm?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "bbc99a51-1501-4525-a3cc-f48249b64bed",
@@ -1152,7 +1214,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/bbc99a51-1501-4525-a3cc-f48249b64bed.jpg",
     "uri": "https://scryfall.com/card/tdc/158/opt?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "dd29a0e5-c1de-4e8a-8866-715e9f9cde1f",
@@ -1171,7 +1234,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/dd29a0e5-c1de-4e8a-8866-715e9f9cde1f.jpg",
     "uri": "https://scryfall.com/card/tdc/161/preordain?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "5b75eb6b-d76c-4b92-b042-13493f9ef164",
@@ -1190,7 +1254,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/5b75eb6b-d76c-4b92-b042-13493f9ef164.jpg",
     "uri": "https://scryfall.com/card/otc/112/serum-visions?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "2d4f0bc7-da7c-4749-a24c-b01f3eb5860c",
@@ -1207,7 +1272,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/2d4f0bc7-da7c-4749-a24c-b01f3eb5860c.jpg",
     "uri": "https://scryfall.com/card/sos/65/quick-study?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "c2ce12b6-2a6e-4179-9056-3eae7e5e7aab",
@@ -1224,7 +1290,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/c2ce12b6-2a6e-4179-9056-3eae7e5e7aab.jpg",
     "uri": "https://scryfall.com/card/j25/301/concentrate?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "4e9c9e24-7f41-402c-b346-e553cee90c58",
@@ -1241,7 +1308,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/4e9c9e24-7f41-402c-b346-e553cee90c58.jpg",
     "uri": "https://scryfall.com/card/trc/464/harmonize?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "31072355-0b20-4830-9d46-ca71783af84b",
@@ -1260,7 +1328,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/31072355-0b20-4830-9d46-ca71783af84b.jpg",
     "uri": "https://scryfall.com/card/9ed/52/veteran-cavalier?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "34ad8e5d-0c26-4588-8161-b22197715d63",
@@ -1279,7 +1348,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/34ad8e5d-0c26-4588-8161-b22197715d63.jpg",
     "uri": "https://scryfall.com/card/m19/206/vigilant-baloth?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "bf87803b-e7c6-4122-add4-72e596167b7e",
@@ -1299,7 +1369,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/bf87803b-e7c6-4122-add4-72e596167b7e.jpg",
     "uri": "https://scryfall.com/card/isd/1/abbey-griffin?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "4fb01cf8-9bca-4446-9e56-62777c6dfbe8",
@@ -1319,7 +1390,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/4fb01cf8-9bca-4446-9e56-62777c6dfbe8.jpg",
     "uri": "https://scryfall.com/card/2xm/68/serra-sphinx?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "1af85ada-7d0c-4b0c-bbff-d294318d3d9f",
@@ -1339,7 +1411,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/1af85ada-7d0c-4b0c-bbff-d294318d3d9f.jpg",
     "uri": "https://scryfall.com/card/pca/1/armored-griffin?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "c7745439-f40b-4647-8bff-53751d511bbd",
@@ -1358,7 +1431,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/c7745439-f40b-4647-8bff-53751d511bbd.jpg",
     "uri": "https://scryfall.com/card/bro/195/tomakul-honor-guard?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "7bc6966c-18d9-4675-9594-6f0b2d11c405",
@@ -1378,7 +1452,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/7bc6966c-18d9-4675-9594-6f0b2d11c405.jpg",
     "uri": "https://scryfall.com/card/stx/61/waterfall-aerialist?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "767b499e-3bdb-4809-b430-6e965bd100d4",
@@ -1397,7 +1472,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/767b499e-3bdb-4809-b430-6e965bd100d4.jpg",
     "uri": "https://scryfall.com/card/afr/69/rimeshield-frost-giant?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "bb04dad2-4561-4cef-9cee-80d6f1a44bee",
@@ -1415,7 +1491,8 @@ const BUNDLED_CARDS = [
     ],
     "image": "assets/cards/bb04dad2-4561-4cef-9cee-80d6f1a44bee.jpg",
     "uri": "https://scryfall.com/card/bro/249/su-chi-cave-guard?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "uncommon"
   },
   {
     "id": "6e47edb2-e43d-479f-a911-e72b67a06c3b",
@@ -1430,7 +1507,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/6e47edb2-e43d-479f-a911-e72b67a06c3b.jpg",
     "uri": "https://scryfall.com/card/bfz/13/scour-from-existence?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "e792e689-0cf8-4bd0-b2f1-4edff9972e18",
@@ -1447,7 +1525,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/e792e689-0cf8-4bd0-b2f1-4edff9972e18.jpg",
     "uri": "https://scryfall.com/card/cmr/25/ionas-judgment?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "7f8ea0f4-277d-48d3-b36b-066409ddb159",
@@ -1464,7 +1543,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/7f8ea0f4-277d-48d3-b36b-066409ddb159.jpg",
     "uri": "https://scryfall.com/card/j25/164/angelic-edict?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "common"
   },
   {
     "id": "2503e136-031f-498a-b042-4077baebe8f8",
@@ -1481,7 +1561,8 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/2503e136-031f-498a-b042-4077baebe8f8.jpg",
     "uri": "https://scryfall.com/card/bok/4/final-judgment?utm_source=api",
-    "verified": true
+    "verified": true,
+    "rarity": "rare"
   },
   {
     "id": "0a5718db-e67d-468a-95ba-11a08fcf9fea",
@@ -1498,6 +1579,424 @@ const BUNDLED_CARDS = [
     "keywords": [],
     "image": "assets/cards/0a5718db-e67d-468a-95ba-11a08fcf9fea.jpg",
     "uri": "https://scryfall.com/card/und/33/booster-tutor?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon"
+  },
+  {
+    "id": "14c2be6a-9ca6-4d3a-8dd0-db4ea40799f8",
+    "name": "Hill Giant",
+    "mana_cost": "{3}{R}",
+    "cmc": 4.0,
+    "type_line": "Creature — Giant",
+    "oracle_text": "",
+    "power": "3",
+    "toughness": "3",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/14c2be6a-9ca6-4d3a-8dd0-db4ea40799f8.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/4/14c2be6a-9ca6-4d3a-8dd0-db4ea40799f8.jpg?1783943018",
+    "uri": "https://scryfall.com/card/10e/212/hill-giant?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "3875f73d-6108-488b-bd34-4cf2c23ce6b3",
+    "name": "Craw Wurm",
+    "mana_cost": "{4}{G}{G}",
+    "cmc": 6.0,
+    "type_line": "Creature — Wurm",
+    "oracle_text": "",
+    "power": "6",
+    "toughness": "4",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/3875f73d-6108-488b-bd34-4cf2c23ce6b3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/8/3875f73d-6108-488b-bd34-4cf2c23ce6b3.jpg?1783942364",
+    "uri": "https://scryfall.com/card/m10/173/craw-wurm?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "39421ce8-86d5-4739-b6fd-78d63c0bb258",
+    "name": "Ancient Brontodon",
+    "mana_cost": "{6}{G}{G}",
+    "cmc": 8.0,
+    "type_line": "Creature — Dinosaur",
+    "oracle_text": "",
+    "power": "9",
+    "toughness": "9",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/39421ce8-86d5-4739-b6fd-78d63c0bb258.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/9/39421ce8-86d5-4739-b6fd-78d63c0bb258.jpg?1783935731",
+    "uri": "https://scryfall.com/card/xln/175/ancient-brontodon?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "54069e65-eef4-4fb8-bb0d-932a4c9889b3",
+    "name": "Enormous Baloth",
+    "mana_cost": "{6}{G}",
+    "cmc": 7.0,
+    "type_line": "Creature — Beast",
+    "oracle_text": "",
+    "power": "7",
+    "toughness": "7",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "uncommon",
+    "image": "assets/cards/54069e65-eef4-4fb8-bb0d-932a4c9889b3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/4/54069e65-eef4-4fb8-bb0d-932a4c9889b3.jpg?1783942363",
+    "uri": "https://scryfall.com/card/m10/180/enormous-baloth?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "025b3156-975d-4f64-b19c-172cb21266c5",
+    "name": "Silverback Ape",
+    "mana_cost": "{3}{G}{G}",
+    "cmc": 5.0,
+    "type_line": "Creature — Ape",
+    "oracle_text": "",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "uncommon",
+    "image": "assets/cards/025b3156-975d-4f64-b19c-172cb21266c5.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/2/025b3156-975d-4f64-b19c-172cb21266c5.jpg?1783944853",
+    "uri": "https://scryfall.com/card/8ed/S7/silverback-ape?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "20471a3b-90f9-4463-9b43-fc7b9b28f5d1",
+    "name": "Orazca Frillback",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Creature — Dinosaur",
+    "oracle_text": "",
+    "power": "4",
+    "toughness": "2",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/20471a3b-90f9-4463-9b43-fc7b9b28f5d1.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/0/20471a3b-90f9-4463-9b43-fc7b9b28f5d1.jpg?1783930358",
+    "uri": "https://scryfall.com/card/jmp/416/orazca-frillback?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "38bbf983-df71-4403-86f3-2e86aa8765b8",
+    "name": "Alpine Grizzly",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Creature — Bear",
+    "oracle_text": "",
+    "power": "4",
+    "toughness": "2",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/38bbf983-df71-4403-86f3-2e86aa8765b8.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/8/38bbf983-df71-4403-86f3-2e86aa8765b8.jpg?1783939069",
+    "uri": "https://scryfall.com/card/ktk/127/alpine-grizzly?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "923cb904-c725-4d57-bc17-7aa87a7cd8e0",
+    "name": "Dune Beetle",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Creature — Insect",
+    "oracle_text": "",
+    "power": "1",
+    "toughness": "4",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/923cb904-c725-4d57-bc17-7aa87a7cd8e0.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/2/923cb904-c725-4d57-bc17-7aa87a7cd8e0.jpg?1783936506",
+    "uri": "https://scryfall.com/card/akh/89/dune-beetle?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "97a74ccf-8165-4db1-a87c-52c2d8ea0058",
+    "name": "Coral Merfolk",
+    "mana_cost": "{1}{U}",
+    "cmc": 2.0,
+    "type_line": "Creature — Merfolk",
+    "oracle_text": "",
+    "power": "2",
+    "toughness": "1",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/97a74ccf-8165-4db1-a87c-52c2d8ea0058.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/7/97a74ccf-8165-4db1-a87c-52c2d8ea0058.jpg?1783932908",
+    "uri": "https://scryfall.com/card/m20/315/coral-merfolk?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "a73f186b-c897-4a98-bc25-8e4aa348d8c9",
+    "name": "Yoked Ox",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Ox",
+    "oracle_text": "",
+    "power": "0",
+    "toughness": "4",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/a73f186b-c897-4a98-bc25-8e4aa348d8c9.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/7/a73f186b-c897-4a98-bc25-8e4aa348d8c9.jpg?1783933018",
+    "uri": "https://scryfall.com/card/m20/41/yoked-ox?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "dc3d19ff-b618-4b07-99a8-ea6e7ee72459",
+    "name": "Bone Saw",
+    "mana_cost": "{0}",
+    "cmc": 0.0,
+    "type_line": "Artifact — Equipment",
+    "oracle_text": "Equipped creature gets +1/+0.\nEquip {1} ({1}: Attach to target creature you control. Equip only as a sorcery.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
+    "rarity": "common",
+    "image": "assets/cards/dc3d19ff-b618-4b07-99a8-ea6e7ee72459.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/c/dc3d19ff-b618-4b07-99a8-ea6e7ee72459.jpg?1783937894",
+    "uri": "https://scryfall.com/card/ogw/161/bone-saw?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "63b4041d-7c95-4cb9-a18b-6568db05942b",
+    "name": "Greatsword",
+    "mana_cost": "{3}",
+    "cmc": 3.0,
+    "type_line": "Artifact — Equipment",
+    "oracle_text": "Equipped creature gets +3/+0.\nEquip {3} ({3}: Attach to target creature you control. Equip only as a sorcery.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
+    "rarity": "uncommon",
+    "image": "assets/cards/63b4041d-7c95-4cb9-a18b-6568db05942b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/3/63b4041d-7c95-4cb9-a18b-6568db05942b.jpg?1783941050",
+    "uri": "https://scryfall.com/card/m12/209/greatsword?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "033aa2cd-531c-4594-a7eb-b3cbeb2c5a3c",
+    "name": "Vulshok Morningstar",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact — Equipment",
+    "oracle_text": "Equipped creature gets +2/+2.\nEquip {2} ({2}: Attach to target creature you control. Equip only as a sorcery.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [
+      "Equip"
+    ],
+    "rarity": "uncommon",
+    "image": "assets/cards/033aa2cd-531c-4594-a7eb-b3cbeb2c5a3c.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/3/033aa2cd-531c-4594-a7eb-b3cbeb2c5a3c.jpg?1783940759",
+    "uri": "https://scryfall.com/card/ddi/66/vulshok-morningstar?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "11e12a84-e7be-4afc-a230-c2e644743fa8",
+    "name": "Dark Ritual",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Add {B}{B}{B}.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "uncommon",
+    "image": "assets/cards/11e12a84-e7be-4afc-a230-c2e644743fa8.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/1/11e12a84-e7be-4afc-a230-c2e644743fa8.jpg?1783903013",
+    "uri": "https://scryfall.com/card/msc/793/dark-ritual?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "1e577638-a7ed-4bcc-90fb-0cffe87d5a28",
+    "name": "Pyretic Ritual",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Add {R}{R}{R}.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/1e577638-a7ed-4bcc-90fb-0cffe87d5a28.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/e/1e577638-a7ed-4bcc-90fb-0cffe87d5a28.jpg?1783941802",
+    "uri": "https://scryfall.com/card/m11/153/pyretic-ritual?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "f493ce26-005c-4ddc-80f0-47bea4fd013a",
+    "name": "Seething Song",
+    "mana_cost": "{2}{R}",
+    "cmc": 3.0,
+    "type_line": "Instant",
+    "oracle_text": "Add {R}{R}{R}{R}{R}.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/f493ce26-005c-4ddc-80f0-47bea4fd013a.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/4/f493ce26-005c-4ddc-80f0-47bea4fd013a.jpg?1783927539",
+    "uri": "https://scryfall.com/card/c21/179/seething-song?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "7ac43e16-8b14-46f2-877a-600ea918766b",
+    "name": "Disenchant",
+    "mana_cost": "{1}{W}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target artifact or enchantment.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/7ac43e16-8b14-46f2-877a-600ea918766b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/a/7ac43e16-8b14-46f2-877a-600ea918766b.jpg?1783908940",
+    "uri": "https://scryfall.com/card/fdn/572/disenchant?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "390c40ba-2464-44ae-8d67-93c72ab3c425",
+    "name": "Naturalize",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target artifact or enchantment.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/390c40ba-2464-44ae-8d67-93c72ab3c425.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/9/390c40ba-2464-44ae-8d67-93c72ab3c425.jpg?1783934532",
+    "uri": "https://scryfall.com/card/m19/190/naturalize?utm_source=api",
+    "verified": true
+  },
+  {
+    "id": "43e6d650-4e96-43a3-8b94-7f044d3b2f82",
+    "name": "Angel's Mercy",
+    "mana_cost": "{2}{W}{W}",
+    "cmc": 4.0,
+    "type_line": "Instant",
+    "oracle_text": "You gain 7 life.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/43e6d650-4e96-43a3-8b94-7f044d3b2f82.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/3/43e6d650-4e96-43a3-8b94-7f044d3b2f82.jpg?1783940523",
+    "uri": "https://scryfall.com/card/m13/3/angels-mercy?utm_source=api",
     "verified": true
   }
 ];
+const CAMP_TOKEN_CARDS = {
+  "treasure": {
+    "id": "b8e8c3b4-3b8d-48a4-b427-a2b8ac3e2f8b",
+    "name": "Treasure",
+    "mana_cost": "",
+    "cmc": 0.0,
+    "type_line": "Token Artifact — Treasure",
+    "oracle_text": "{T}, Sacrifice this token: Add one mana of any color.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/b8e8c3b4-3b8d-48a4-b427-a2b8ac3e2f8b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/8/b8e8c3b4-3b8d-48a4-b427-a2b8ac3e2f8b.jpg?1793364377",
+    "uri": "https://scryfall.com/card/ttrk/26/treasure?utm_source=api",
+    "verified": true,
+    "campToken": true
+  },
+  "food": {
+    "id": "dd703147-f546-45af-8511-2d108afd0ad2",
+    "name": "Food",
+    "mana_cost": "",
+    "cmc": 0.0,
+    "type_line": "Token Artifact — Food",
+    "oracle_text": "{2}, {T}, Sacrifice this token: You gain 3 life.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/dd703147-f546-45af-8511-2d108afd0ad2.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/d/dd703147-f546-45af-8511-2d108afd0ad2.jpg?1793364343",
+    "uri": "https://scryfall.com/card/ttrk/23/food?utm_source=api",
+    "verified": true,
+    "campToken": true
+  },
+  "clue": {
+    "id": "306c8271-ddfc-45a4-bd23-bf31212f813d",
+    "name": "Clue",
+    "mana_cost": "",
+    "cmc": 0.0,
+    "type_line": "Token Artifact — Clue",
+    "oracle_text": "{2}, Sacrifice this token: Draw a card.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "rarity": "common",
+    "image": "assets/cards/306c8271-ddfc-45a4-bd23-bf31212f813d.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/0/306c8271-ddfc-45a4-bd23-bf31212f813d.jpg?1793365062",
+    "uri": "https://scryfall.com/card/ttrk/21/clue?utm_source=api",
+    "verified": true,
+    "campToken": true
+  }
+};

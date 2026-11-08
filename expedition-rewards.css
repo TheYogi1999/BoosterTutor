@@ -1,0 +1,17 @@
+/* Two stable, specialised booster offers, beside the three single-card offers. */
+.game-shell .shop-pack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0!important;border:0!important;background:none!important;min-height:82px}
+.shop-booster-offer{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:10px;min-width:0;min-height:82px;padding:10px 12px;box-sizing:border-box;border:1px solid #baa77955;border-radius:6px;background:#102029eb}
+.game-shell .shop-pack .shop-pack-copy b{font:500 16px/1.25 Georgia,serif;color:#eed6aa}
+.game-shell .shop-pack .shop-pack-copy span{font:11px/1.5 var(--sans);color:#bdc9c4}
+.game-shell .shop-pack .shop-booster-offer button{min-width:88px!important;max-width:100px;padding:8px 3px!important;font-size:11px!important;white-space:normal;line-height:1.5;letter-spacing:.5px}
+.shop-pack-emblem{display:grid;place-items:center;width:28px;height:44px;border:1px solid #bca16e77;border-top:3px ridge #bca16e77;border-bottom:3px ridge #bca16e77;border-radius:2px;color:#d9c18a;background:linear-gradient(135deg,#5b4630,#1b2832);font:20px Georgia}
+[data-pack-type="mythic"] .shop-pack-emblem{color:#ffe8ae;background:linear-gradient(135deg,#b96c31,#3b2734);box-shadow:0 0 12px #e8a34b25}
+.game-shell .journey-options{gap:18px}
+.game-shell .journey-options>button[data-camp-token]{width:270px;min-height:220px;padding:22px 25px}
+.game-shell .journey-options>button[data-camp-token] small{font:11px/1.5 var(--sans);color:#bcae8e}
+.floating-mana{display:inline-flex;align-items:center;gap:3px;margin-left:5px;color:#ffd38a;cursor:help}
+.floating-mana[hidden]{display:none}
+.game-shell .mana-display .floating-mana b{font-size:17px!important;color:#ffd38a}
+.game-shell .mana-display .floating-mana>span{font-size:17px;text-shadow:0 0 10px #e8aa6755}
+.game-shell .mana-land-row{padding-left:250px}
+.game-shell .permanent-card[data-camp-token-kind] .field-caption small{color:#d8c89f}

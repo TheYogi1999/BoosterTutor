@@ -102,15 +102,15 @@ resolveReviewedEffect=function(effect,target,context={}){
  return baseResolveEffect27(effect,target,context);
 };
 const DRAFT_FIELDS27=['packs','selection','draftKind','activePack','rerolledPacks','boosterSealed'];
-function beginBoosterInterruption27(kind,resume=null){
+function beginBoosterInterruption27(kind,resume=null,contents=null,packName=null){
  if(state.boosterInterruption)return false;
  const saved=Object.fromEntries(DRAFT_FIELDS27.map(key=>[key,state[key]]));const battle=state.battle;
- state.boosterInterruption={kind,saved,resume,battle,screen:state.screen};if(kind==='tutor')battle.interruption=true;
- state.packs=[shuffle([...chooseRandomCards(state.pool.length?state.pool:BUNDLED_CARDS,PACK_SIZE-1),generateStarterManaCards(1)[0]])];state.selection=new Map();state.draftKind=kind;state.activePack=0;state.rerolledPacks=new Set([0]);state.boosterSealed=true;
+ state.boosterInterruption={kind,saved,resume,battle,screen:state.screen,packName};if(kind==='tutor')battle.interruption=true;
+ state.packs=[contents || shuffle([...chooseRandomCards(state.pool.length?state.pool:BUNDLED_CARDS,PACK_SIZE-1),generateStarterManaCards(1)[0]])];state.selection=new Map();state.draftKind=kind;state.activePack=0;state.rerolledPacks=new Set([0]);state.boosterSealed=true;
  renderDraft();showScreen('draft-screen');return true;
 }
 const baseRenderDraft27=renderDraft;
-renderDraft=function(){baseRenderDraft27();const flow=state.boosterInterruption;if(!flow){if(state.draftKind==='starter'){$('#deck-count').textContent=String(state.deck.length+state.selection.size*COPIES_PER_DRAFT_PICK+STARTING_MANA_CARDS+1);$('#selection-status').textContent='Starter bonus: 4 mana cards + 1 Booster Tutor.';}return;}const tutor=flow.kind==='tutor';$('#draft-step').textContent=tutor?'BOOSTER TUTOR · BATTLE PAUSED':'PURCHASED BOOSTER';$('#draft-title').textContent=state.boosterSealed?'Open your booster':tutor?'Choose one card for your hand':'Your seven new cards';$('#draft-instruction').textContent=tutor?'Choose one of seven cards. Put one copy into your current hand, then resume the same combat phase.':'All seven cards are added to your run deck. No selection is required.';$('#pack-number').textContent='1 / 1';$('#pack-reroll').disabled=true;$('#pack-reroll').textContent='No reroll for this pack';$('#draft-confirm').textContent=tutor?'ADD TO HAND & RESUME →':'ADD ALL 7 & RETURN TO SHOP →';$('#draft-confirm').disabled=state.boosterSealed||Boolean(boosterTravel)||(tutor&&!state.selection.has(0));$('#selection-status').textContent=state.boosterSealed?'Open the booster to continue.':tutor?'The other six cards stay outside this game.':'Seven cards · one copy each · already paid';};
+renderDraft=function(){baseRenderDraft27();const flow=state.boosterInterruption;if(!flow){if(state.draftKind==='starter'){$('#deck-count').textContent=String(state.deck.length+state.selection.size*COPIES_PER_DRAFT_PICK+STARTING_MANA_CARDS+1);$('#selection-status').textContent='Starter bonus: 4 mana cards + 1 Booster Tutor.';}return;}const tutor=flow.kind==='tutor';$('#draft-step').textContent=tutor?'BOOSTER TUTOR · BATTLE PAUSED':flow.packName||'PURCHASED BOOSTER';$('#draft-title').textContent=state.boosterSealed?'Open your booster':tutor?'Choose one card for your hand':'Your seven new cards';$('#draft-instruction').textContent=tutor?'Choose one of seven cards. Put one copy into your current hand, then resume the same combat phase.':'All seven cards are added to your run deck. No selection is required.';$('#pack-number').textContent='1 / 1';$('#pack-reroll').disabled=true;$('#pack-reroll').textContent='No reroll for this pack';$('#draft-confirm').textContent=tutor?'ADD TO HAND & RESUME →':'ADD ALL 7 & RETURN TO SHOP →';$('#draft-confirm').disabled=state.boosterSealed||Boolean(boosterTravel)||(tutor&&!state.selection.has(0));$('#selection-status').textContent=state.boosterSealed?'Open the booster to continue.':tutor?'The other six cards stay outside this game.':'Seven cards · one copy each · already paid';};
 const baseConfirmDraft27=confirmDraft;
 confirmDraft=function(){const flow=state.boosterInterruption;if(!flow){const starter=state.draftKind==='starter'&&state.activePack===STARTER_BOOSTER_COUNT-1&&Boolean(selectedDraftCards());const value=baseConfirmDraft27();if(starter){const tutor=BUNDLED_CARDS.find(card=>card.name==='Booster Tutor');state.deck=state.deck.filter(card=>card.name!=='Booster Tutor');state.deck.push(tutor);if(state.screen==='journey-screen')showJourney();}return value;}
  if(state.screen!=='draft-screen'||state.boosterSealed||boosterTravel)return false;
@@ -120,10 +120,6 @@ confirmDraft=function(){const flow=state.boosterInterruption;if(!flow){const sta
 };
 // The original listener captured confirmDraft; route it through the interrupt-aware entry point.
 $('#draft-confirm').removeEventListener('click',baseConfirmDraft27);$('#draft-confirm').addEventListener('click',confirmDraft);
-const baseShopRender27=renderShop;
-renderShop=function(){baseShopRender27();if(!state.shop)return;state.shop.packPrice??=30;$('#shop-pack').innerHTML=`<div class="shop-pack-copy"><b>Sealed expedition booster</b><span>6 spells + 1 mana card · all seven join your deck · one per camp</span></div><button class="primary-button" id="buy-shop-pack" ${state.shop.packSold||(state.coins||0)<(state.shop.packPrice??30)?'disabled':''}>${state.shop.packSold?'BOOSTER SOLD':`Open pack · ${state.shop.packPrice} coins`}</button>`;};
-function buyShopPack27(){if(state.screen!=='shop-screen'||!state.shop||state.shop.packSold||state.boosterInterruption||(state.coins||0)<(state.shop.packPrice??30))return false;state.coins-=(state.shop.packPrice??30);state.shop.packSold=true;syncCoins();return beginBoosterInterruption27('shop');}
-$('#shop-pack').addEventListener('click',event=>{if(event.target.closest('#buy-shop-pack'))buyShopPack27();});
 const baseEnemyTeam27=createEnemyTeam;
 createEnemyTeam=function(encounter){const team=baseEnemyTeam27(encounter);const node=ENCOUNTERS.indexOf(encounter)+1||state.node;for(const enemy of team){enemy.ward=node>=2?(enemy.kind==='dragon'?3:['raider','wolf'].includes(enemy.kind)?node>=3?2:1:0):0;if(enemy.ward)enemy.card={...enemy.card,oracle_text:enemy.card.oracle_text+`\nWard {${enemy.ward}}`};if(enemy.kind==='wisp'){enemy.pattern=['buff','mill','attack'];enemy.millAmount=node>=4?3:2;}}return team;};
 const baseEnemyIntent27=enemyIntent;
@@ -152,7 +148,7 @@ const baseShowShop27=showShop;
 showShop=function(){state.pool=playableCards(state.pool.length?state.pool:BUNDLED_CARDS);return baseShowShop27();};
 // Su-Chi's death mana is a printed trigger, not an entry or exile effect.
 SPECIAL_CREATURES.add('Su-Chi Cave Guard');
-function suChiDeathMana27(unit,owner='player'){if(owner!=='player'||unit.card.name!=='Su-Chi Cave Guard'||unit.deathManaPaid27)return;unit.deathManaPaid27=true;const b=state.battle;b.floatingMana=(b.floatingMana||0)+8;b.maxMana+=8;syncMana(b);addLog('Su-Chi Cave Guard dies: add 8 generic mana until end of turn.');}
+function suChiDeathMana27(unit,owner='player'){if(owner!=='player'||unit.card.name!=='Su-Chi Cave Guard'||unit.deathManaPaid27)return;unit.deathManaPaid27=true;const b=state.battle;b.floatingMana=(b.floatingMana||0)+8;syncMana(b);addLog('Su-Chi Cave Guard dies: add 8 generic mana until end of turn.');}
 const baseDead27=removeDeadCreatures;
 removeDeadCreatures=function(creatures,owner='player',clearDamage=false){const dead=creatures.filter(unit=>!creatureAlive(unit));const result=baseDead27(creatures,owner,clearDamage);for(const unit of dead)suChiDeathMana27(unit,owner);return result;};
 const baseSacrifice27=sacrificeRuleCreature;

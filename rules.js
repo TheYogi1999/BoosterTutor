@@ -1,7 +1,13 @@
 /* Reviewed card rules. Unsupported cards stay visible in the catalog but never enter a run. */
-const REVIEWED_PERMANENTS = new Set(['Holy Strength','Unholy Strength','Rancor','Bonesplitter','Short Sword','Leonin Scimitar','Trusty Machete','Glorious Anthem','Fountain of Renewal','Omen of the Sea','Angelic Chorus']);
+const REVIEWED_PERMANENTS = new Set(['Holy Strength','Unholy Strength','Rancor','Bonesplitter','Short Sword','Leonin Scimitar','Trusty Machete','Glorious Anthem','Fountain of Renewal','Omen of the Sea','Angelic Chorus','Bone Saw','Greatsword','Vulshok Morningstar']);
 const SPECIAL_CREATURES = new Set(['Juggernaut','Llanowar Elves','Clone']);
 const SPELL_RULES = {
+ 'Dark Ritual':{effects:[{kind:'mana',amount:3}]},
+ 'Pyretic Ritual':{effects:[{kind:'mana',amount:3}]},
+ 'Seething Song':{effects:[{kind:'mana',amount:5}]},
+ 'Disenchant':{target:'artifact-or-enchantment',effects:[{kind:'destroy'}]},
+ 'Naturalize':{target:'artifact-or-enchantment',effects:[{kind:'destroy'}]},
+ "Angel's Mercy":{effects:[{kind:'heal',amount:7}]},
  'Lightning Bolt':{target:'any',effects:[{kind:'damage',amount:3}]},
  'Shock':{target:'any',effects:[{kind:'damage',amount:2}]},
  'Lightning Strike':{target:'any',effects:[{kind:'damage',amount:3}]},
@@ -189,6 +195,7 @@ effectDescriptions=function(card){
  for(const effect of rule.effects){
   if(effect.kind==='damage')lines.push(`Deal ${effect.amount} damage to the chosen target.`);
   if(effect.kind==='heal')lines.push(`Gain ${effect.amount} life.`);
+  if(effect.kind==='mana')lines.push(`Add ${effect.amount} floating generic mana. Spend it this turn; unused floating mana expires at turn end.`);
   if(effect.kind==='draw')lines.push(`Draw ${effect.amount} cards, one at a time. Drawing from an empty library loses the run.`);
   if(effect.kind==='counter')lines.push(`Put ${effect.amount} permanent +1/+1 counter on the chosen creature.`);
   if(effect.kind==='morbid-counter')lines.push('Put one +1/+1 counter on the target, or three if any creature died this turn. Sacrifice counts; exile does not.');

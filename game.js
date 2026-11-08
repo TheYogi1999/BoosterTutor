@@ -8,7 +8,7 @@ const STARTING_LIFE = 20;
 const CARD_POOL_FILE = 'card-pool.txt';
 const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
 const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
-const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v3';
+const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v4';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
 const SEEN_CARD_KEY = 'booster-tutor-seen-cards-v1';
 const seenCardKeys = new Set();
@@ -203,6 +203,7 @@ function normalizeScryfallCard(card) {
     image: images.normal || images.large || '',
     art: images.art_crop || '',
     uri: card.scryfall_uri || '',
+    rarity: card.rarity || 'common',
     verified: true
   };
 }
@@ -312,6 +313,7 @@ function startNewRun() {
   if (state.soundOn) soundEngine.unlock().catch(() => {});
   state.deck = [];
   state.relic = null;
+  state.campTokens = [];
   state.playerHealth = STARTING_LIFE;
   state.coins = 0; state.shop = null; syncCoins();
   state.node = 1;
@@ -647,7 +649,7 @@ function beginBattle(node) {
     lands: startingManaCards.map(card => ({ id: `mana-${state.nextPermanentId++}`, card, tapped: false })),
     landAvailable: true,
     mulliganAvailable: true,
-    openingHandSize: HAND_SIZE + (state.relic === 'lens' ? 1 : 0),
+    openingHandSize: HAND_SIZE,
     turn: 1,
     phase: 'main',
     deck: shuffledDeck.filter(card => !startingManaIds.has(card.instanceId)),
@@ -665,6 +667,7 @@ function beginBattle(node) {
     turnEffects: [],
     log: []
   };
+  if (typeof deployCampTokens === 'function') deployCampTokens(state.battle);
   drawToHand(state.battle.openingHandSize);
   if (state.battle.phase === 'complete') return;
   syncMana(state.battle);
@@ -727,7 +730,7 @@ function syncMana(battle = state.battle) {
   if (!battle) return;
   battle.floatingMana ||= 0;
   battle.mana = battle.lands.filter(land => !land.tapped).length + battle.floatingMana;
-  if (!Number.isFinite(battle.maxMana)) battle.maxMana = battle.lands.length + battle.floatingMana;
+  battle.maxMana = battle.lands.length;
 }
 
 function payMana(amount, battle = state.battle) {
@@ -861,7 +864,7 @@ function showCardPreview(card, element) {
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: only flying or reach can block it.', reach:'Reach: can block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
-  if (permanent && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>Pay ${permanentActivationCost(card)} · sacrifice · ${card.name === 'Fountain of Renewal' ? 'draw 1' : 'scry 2'}</button>`;
+  if (permanent && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>Pay ${permanentActivationCost(card)} · sacrifice · ${typeof permanentActionLabel==='function'?permanentActionLabel(card):card.name === 'Fountain of Renewal' ? 'draw 1' : 'scry 2'}</button>`;
   preview.hidden = false;
   positionCardPreview();
   requestAnimationFrame(positionCardPreview);
@@ -888,8 +891,10 @@ function renderBattle() {
   const enemyCount = battle.enemyCreatures.length;
   $('#enemy-count-label').textContent = `${enemyCount} REMAINING`;
   $('#player-health-label').textContent = `${Math.max(0, state.playerHealth)}`;
-  const availableMana = battle.mana;
-  $('#mana-label').textContent = `${availableMana} / ${battle.maxMana}`;
+  const availableMana = battle.lands.filter(land => !land.tapped).length;
+  $('#mana-label').textContent = `${availableMana} / ${battle.lands.length}`;
+  $('#floating-mana').hidden = !battle.floatingMana;
+  $('#floating-mana-count').textContent = String(battle.floatingMana);
   renderManaLands();
   $('#enemy-art-image').src = battle.enemyArt || '';
   $('#enemy-art-image').hidden = !battle.enemyArt;
@@ -989,7 +994,7 @@ function renderCreatures() {
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? `${permanentActivationCost(permanent.card)} mana · ${permanentActionLabel(permanent.card)}` : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
@@ -1702,7 +1707,7 @@ function resolveEnemyCombat() {
   battle.creatures = removeDeadCreatures(battle.creatures, 'player');
   battle.turn += 1;
   battle.lands.forEach(land => { land.tapped = false; });
-  battle.floatingMana = state.relic === 'crystal' ? 1 : 0;
+  battle.floatingMana = 0;
   battle.maxMana = battle.lands.length + battle.floatingMana;
   battle.landAvailable = true;
   syncMana(battle);
@@ -2042,12 +2047,10 @@ function styleTravelStop(screenId, labelId, kind) {
 function showJourney() {
   const first = state.node === 1;
   styleTravelStop('journey-screen', 'journey-location', first ? 'Expedition' : 'Camp');
-  $('#journey-title').textContent = first ? 'Choose your relic' : 'A moment by the fire';
-  $('#journey-description').textContent = first ? 'Choose a relic for this run.' : 'Rest, refine your deck, then continue.';
+  $('#journey-title').textContent = first ? 'Choose your supplies' : 'A moment by the fire';
+  $('#journey-description').textContent = 'Choose one token. It stays with you until spent.';
   $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${escapeHtml((state.stageLocations[index] || LAND_STAGES[index]).name)}</b></div>`).join('');
-  $('#journey-options').innerHTML = first
-    ? '<button data-relic="crystal"><span>◈</span><h3>Aether Crystal</h3><p>Gain 1 extra mana at the start of each later turn.</p></button><button data-relic="lens"><span>⌖</span><h3>Wayfinder’s Lens</h3><p>Begin each battle with one extra card.</p></button>'
-    : '<button data-camp="rest"><span>✦</span><h3>Rest</h3><p>Restore 10 life. No life cap.</p></button><button data-camp="study"><span>▣</span><h3>Study</h3><p>Add Divination: draw two cards.</p></button>';
+  $('#journey-options').innerHTML = typeof campRewardMarkup === 'function' ? campRewardMarkup() : '';
   $('#journey-life').textContent = `${state.playerHealth} LIFE · ${state.deck.length} CARDS · ${state.coins || 0} COINS`;
   $('#return-shop').hidden = first;
   syncCoins();
@@ -2056,9 +2059,7 @@ function showJourney() {
 $('#journey-options').addEventListener('click', event => {
   const choice = event.target.closest('button');
   if (!choice) return;
-  if (choice.dataset.relic) state.relic = choice.dataset.relic;
-  if (choice.dataset.camp === 'rest') state.playerHealth += 10;
-  if (choice.dataset.camp === 'study') state.deck.push(BUNDLED_CARDS.find(card => card.name === 'Divination'));
+  if (!choice.dataset.campToken || typeof grantCampToken !== 'function' || !grantCampToken(choice.dataset.campToken)) return;
   beginBattle(state.node);
 });
 
@@ -2096,7 +2097,7 @@ function inspectBattlefieldCard(card, element) {
   const creature = battle?.creatures.find(item => item.id === element.dataset.previewId);
   const permanent = battle?.permanents.find(item => item.id === element.dataset.previewId);
   const attached = battle?.creatures.find(item => item.id === permanent?.attachedTo);
-  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>Pay ${permanentActivationCost(permanent.card)} · sacrifice · ${permanent.card.name==='Fountain of Renewal'?'draw 1':'scry 2'}</button>`:''}</div>`;
+  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>Pay ${permanentActivationCost(permanent.card)} · sacrifice · ${typeof permanentActionLabel==='function'?permanentActionLabel(permanent.card):permanent.card.name==='Fountain of Renewal'?'draw 1':'scry 2'}</button>`:''}</div>`;
 }
 function fitGameCanvas() {
   const root = document.documentElement;
@@ -2133,7 +2134,7 @@ const COMBAT_PHASES = [
 function phaseInfo(id) { return COMBAT_PHASES.find(phase => phase.id === id) || COMBAT_PHASES[0]; }
 function updatePhaseDisplay() {
   const screen = state.screen || 'start-screen';
-  const labels = { 'start-screen': 'START', 'loading-screen': 'PREPARING DECK', 'draft-screen': state.boosterSealed ? 'OPEN BOOSTER' : 'PICK A CARD', 'journey-screen': state.node === 1 ? 'CHOOSE RELIC' : 'CAMP', 'shop-screen': 'CARD SHOP', 'end-screen': 'RUN COMPLETE' };
+  const labels = { 'start-screen': 'START', 'loading-screen': 'PREPARING DECK', 'draft-screen': state.boosterSealed ? 'OPEN BOOSTER' : 'PICK A CARD', 'journey-screen': state.node === 1 ? 'CHOOSE SUPPLIES' : 'CAMP', 'shop-screen': 'CARD SHOP', 'end-screen': 'RUN COMPLETE' };
   const phase = phaseInfo(state.battle?.phase);
   $('.arrow-legend').dataset.phase = phase.id;
   $('#global-phase').textContent = screen === 'combat-screen' ? phase.label.toUpperCase() : labels[screen] || 'EXPEDITION';

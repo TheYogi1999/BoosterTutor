@@ -176,3 +176,12 @@ Card metadata and original images were retrieved from [Scryfall](https://scryfal
 `.github/workflows/pages.yml` publishes changes pushed to `main` automatically, and can also be run manually.
 
 For a release, update the displayed version, README version, and every JavaScript/CSS `?v=` URL in `index.html` together. Versioned asset URLs prevent a newly loaded page from reusing a cached script or stylesheet from an older release. Changing only the page URL does not invalidate its cached assets. Every scene follows the visible viewport (including browser bars), keeps its 16:9 aspect ratio and fixes the page body in place.
+
+
+### v0.34 — supplies and specialised shop packs
+
+The shop keeps three single cards and offers two randomly selected, distinct pack types per camp: Mythic (45 coins), Equipment (27), Instant (24), or Creature (24). Each seven-card pack can be bought once; the same offers and sold states remain when returning from camp. Type packs contain seven unique cards of that type. Mythic packs guarantee one actual Mythic printing and six rare/uncommon cards.
+
+The 100-card verified catalog adds 10 vanilla creatures, three Equipment and six spells, including Dark Ritual, Pyretic Ritual, Seething Song, Disenchant, Naturalize and Angel’s Mercy. All costs and produced mana remain generic. Floating mana is shown as a gold ✦, is spent before untapped mana cards and expires at turn end.
+
+Camp supplies replace passive mana/hand-size bonuses and direct Rest/Study rewards. Choose one Treasure, Food or Clue token. Unspent tokens enter subsequent battlefields and carry until consumed or destroyed. Treasure: tap/sacrifice for one floating mana; Food: pay two, tap/sacrifice for three life; Clue: pay two and sacrifice to draw one. Tokens never enter the run deck or persist in graveyards/exile. Artwork sources: [assets/cards/SOURCES.md](assets/cards/SOURCES.md).
