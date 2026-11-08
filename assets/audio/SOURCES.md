@@ -7,3 +7,5 @@
 The retained `sfx-suite.mp3` contains the project's original quieter combat/health cues. No audio was extracted from MTG Arena or a video.
 
 - `rising-moon.mp3`: **Fantasy: Rising Moon** by RandomMind (MP3 metadata: RandomMynd), 2018. https://opengameart.org/content/fantasy-rising-moon — **CC0**. Original full composition, converted to 96 kbps stereo, normalized to -22 LUFS; the final eight seconds crossfade into the opening eight seconds for a circular ambient loop. A separate music volume control defaults to 35%, with gentle fade-in, master mute and hidden-tab pause. Not audio from MTG Arena.
+
+- `bards-tale.mp3`: **[Chiptune] Medieval: The Bard’s Tale** by RandomMind (2019), **CC0**. Source and license: https://opengameart.org/content/chiptune-medieval-the-bards-tale . Downloaded the author-provided `CHIPTUNE_Loop_The_Bards_Tale.wav`, preserving the full loop, normalized to -22 LUFS / -3 dBTP and encoded to 96 kbps stereo MP3. Replaces Rising Moon as the active soundtrack; separate volume, master mute, gesture unlock and hidden-tab pause remain.
