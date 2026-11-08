@@ -199,3 +199,10 @@ Shop packs are selected with one click, then bought with a separate confirmation
 Fourteen enemy archetypes now include Ember Duelist, Ridge Boar, Mist Sprite, Bog Stalker, Iron Bulwark, Rune Archivist, Dusk Vampire, Ash Tyrant and Tide Sphinx. Teams draw distinct enemies from tier-appropriate pools; the opening encounter has no elites, bosses, Hexproof or Deathtouch. The four encounter sizes remain 2 / 2 / 3 / 2. The final fight randomly selects Shard Dragon, Ash Tyrant or Tide Sphinx.
 
 Mend restores the weakest injured living ally, capped at maximum life. Rally grants the living enemy team +1 power. Neither intent also attacks. Ward, Rune bolt, Mill, healing and buffs resolve once per turn and retain the existing instant-response windows. New original portraits share one cached nine-cell atlas.
+
+
+### v0.37 — flying opponents and visible Ward payments
+
+Flying monsters can only be attacked by creatures with Flying or Reach. This game rule applies to click/target controls, drag feedback and drops, mandatory attacks, combat damage and trample overflow. Temporary and attached keyword grants count. Invalid targets are disabled; an attack that becomes illegal before damage is cancelled without tapping or silently changing targets.
+
+Ward now refreshes the battlefield while its payment dialog is open, including between copied spell resolutions. Casting costs and extra Ward costs immediately show the actual tapped mana cards and remaining floating mana. Floating mana is still spent first; insufficient or declined Ward payments never tap additional lands.
