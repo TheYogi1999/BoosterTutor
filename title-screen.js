@@ -45,6 +45,11 @@
   let frame=0, previous=0, time=0, lastPaint=0, animations=[];
   let wasActive=false, hiddenAt=0;
   const revealAt=[1.42,1.14,1.68];
+  const tutorPrints=[
+    {edition:'unh/51',image:'assets/cards/c3a5b25e-c5af-417e-8675-162ab18ac2b1.jpg'},
+    {edition:'und/33',image:'assets/cards/0a5718db-e67d-468a-95ba-11a08fcf9fea.jpg'},
+    {edition:'pal04/11',image:'assets/cards/cae082e5-f757-4e7e-9d8c-7d916adf3308.jpg'}
+  ];
   function phase(value){if(screen.dataset.titlePhase!==value)screen.dataset.titlePhase=value;}
   function paint(t) {
     const still=motion.matches;
@@ -142,6 +147,8 @@
   function intro() {
     animations.forEach(animation=>animation.cancel());animations=[];
     phase(motion.matches?'ready':'opening');
+    const prints=shuffle(tutorPrints);
+    cards.forEach((card,i)=>{card.dataset.titlePrint=prints[i].edition;card.querySelector('.hero-card-face img').src=prints[i].image;});
     cards.forEach((card,i)=>{
       card.classList.remove('is-peeking');card.classList.toggle('is-revealed',motion.matches);
       if(motion.matches)return;

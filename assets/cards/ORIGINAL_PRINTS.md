@@ -82,7 +82,7 @@ Artwork uses the earliest available regular English paper printing (promos only 
 - **Iona's Judgment** — Worldwake (2010-02-05) · https://scryfall.com/card/wwk/8/ionas-judgment?utm_source=api
 - **Angelic Edict** — Gatecrash (2013-02-01) · https://scryfall.com/card/gtc/2/angelic-edict?utm_source=api
 - **Final Judgment** — Betrayers of Kamigawa (2005-02-04) · https://scryfall.com/card/bok/4/final-judgment?utm_source=api
-- **Booster Tutor** — Unhinged (2004-11-19) · https://scryfall.com/card/unh/51/booster-tutor?utm_source=api
+- **Booster Tutor** — Unsanctioned #33 (2020-02-29) · https://scryfall.com/card/und/33/booster-tutor?utm_source=api · user-selected artwork exception
 - **Hill Giant** — Limited Edition Alpha (1993-08-05) · https://scryfall.com/card/lea/157/hill-giant?utm_source=api
 - **Craw Wurm** — Limited Edition Alpha (1993-08-05) · https://scryfall.com/card/lea/190/craw-wurm?utm_source=api
 - **Ancient Brontodon** — Ixalan (2017-09-29) · https://scryfall.com/card/xln/175/ancient-brontodon?utm_source=api
@@ -120,3 +120,12 @@ Artwork uses the earliest available regular English paper printing (promos only 
  - **Dismiss** — Tempest (1997-10-14) · https://scryfall.com/card/tmp/58/dismiss?utm_source=api
  - **Lava Spike** — Champions of Kamigawa (2004-10-01) · https://scryfall.com/card/chk/178/lava-spike?utm_source=api
  - **Sovereign's Bite** — Core Set 2019 (2018-07-13) · https://scryfall.com/card/m19/120/sovereigns-bite?utm_source=api
+
+
+## Randomized Booster Tutor title prints
+
+The title shows all three English paper prints in shuffled positions. Unhinged #51, Unsanctioned #33 and Arena League 2004 #11 are title artwork variants; they are not extra gameplay cards. Gameplay uses the user-selected UND #33.
+
+- **Booster Tutor** — Arena League 2004 #11 · https://scryfall.com/card/pal04/11/booster-tutor?utm_source=api
+- **Booster Tutor** — Unhinged #51 · https://scryfall.com/card/unh/51/booster-tutor?utm_source=api
+- **Booster Tutor** — Unsanctioned #33 · https://scryfall.com/card/und/33/booster-tutor?utm_source=api

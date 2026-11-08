@@ -1,8 +1,8 @@
 const{chromium}=require('playwright');const assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});try{
  const p=await browser.newPage({viewport:{width:1600,height:900}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000');
- const art=await p.evaluate(()=>({bears:BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'),lands:BUNDLED_LANDS,tokens:Object.values(CAMP_TOKEN_CARDS)}));assert.equal(art.bears.art_print.set,'lea');assert.ok(art.lands.every(c=>c.art_print.set==='lea'));assert.ok(art.tokens.every(c=>c.art_print.released_at));
- assert.equal(await p.locator('.hero-card img').first().getAttribute('src'),art.bears.image);
+ const art=await p.evaluate(()=>({bears:BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'),tutor:BUNDLED_CARDS.find(c=>c.name==='Booster Tutor'),lands:BUNDLED_LANDS,tokens:Object.values(CAMP_TOKEN_CARDS)}));assert.equal(art.bears.art_print.set,'lea');assert.ok(art.lands.every(c=>c.art_print.set==='lea'));assert.ok(art.tokens.every(c=>c.art_print.released_at));
+ assert.equal(art.tutor.art_print.set,'und');assert.equal(art.tutor.image,'assets/cards/0a5718db-e67d-468a-95ba-11a08fcf9fea.jpg');assert.deepEqual(await p.locator('.hero-card').evaluateAll(cards=>cards.map(c=>c.dataset.titleCard)),['Booster Tutor','Booster Tutor','Booster Tutor']);assert.deepEqual((await p.locator('.hero-card').evaluateAll(cards=>cards.map(c=>c.dataset.titlePrint))).sort(),['pal04/11','und/33','unh/51']);
  await p.evaluate(()=>{state.soundOn=false;state.pool=playableCards(BUNDLED_CARDS);state.deck=Array.from({length:30},()=>BUNDLED_CARDS[0]);state.node=2;state.coins=100;showShop();state.shop.packs=[{type:'equipment',sold:false},{type:'mythic',sold:false}];renderShop()});
  assert.equal(await p.locator('#shop-pack-confirm').isDisabled(),true);
  await p.click('[data-select-pack="0"]');assert.equal(await p.locator('[data-select-pack="0"]').getAttribute('aria-pressed'),'true');assert.equal(await p.evaluate(()=>state.coins),100);assert.equal(await p.locator('#shop-pack-confirm').isEnabled(),true);
@@ -19,5 +19,5 @@ const{chromium}=require('playwright');const assert=require('node:assert/strict')
  assert.equal(await p.locator('.draft-option').nth(2).getAttribute('aria-pressed'),'true');assert.equal(await p.locator('#draft-confirm').isEnabled(),true);
  await p.locator('.draft-option').nth(2).click();assert.equal(await p.locator('.draft-option').nth(2).getAttribute('aria-pressed'),'true');assert.equal(await p.evaluate(()=>state.activePack),0);
  await p.click('#draft-confirm');assert.equal(await p.evaluate(()=>state.activePack),1);
- assert.deepEqual(errors,[]);console.log('PASS oldest title/basic-land/token art, pack colours, one-click selection and separate purchase/card confirmation');
+ assert.deepEqual(errors,[]);console.log('PASS UND Booster Tutor, randomized Tutor title fan, oldest basic-land/token art, pack colours, one-click selection and separate purchase/card confirmation');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

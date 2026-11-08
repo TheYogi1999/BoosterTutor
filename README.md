@@ -227,3 +227,10 @@ Play, Options, Quit, Collections and audio controls remain available during the 
 ### v0.39.1 — Booster Tutor on the title screen
 
 Booster Tutor takes the central position in the three-card title fan, using its original Unhinged artwork (2004). The card-back entrance, flip and golden reveal remain intact.
+
+
+### v0.40 — randomized Booster Tutor title prints and audio auditions
+
+The three-card title fan now shows only Booster Tutor: **Unhinged #51, Unsanctioned #33 and Arena League 2004 #11**, shuffled into new positions on title entry. These are the three available English paper printings; the Arena and UND prints share an illustration. Gameplay uses the user-selected **UND #33** artwork instead of the normal oldest-print preference. No additional card copies or rules enter the player pool.
+
+[Intro sound previews](intro-sounds.html) offers three original audio sketches: Arcane Bloom, Velvet Shuffle and Aether Awakening. Preview playback is manual and exclusive. A sound will be selected before any is connected to the title animation. Music and existing game effects are unchanged.

@@ -2248,18 +2248,18 @@ const BUNDLED_CARDS = [
       "B"
     ],
     "keywords": [],
-    "image": "assets/cards/c3a5b25e-c5af-417e-8675-162ab18ac2b1.jpg",
+    "image": "assets/cards/0a5718db-e67d-468a-95ba-11a08fcf9fea.jpg",
     "uri": "https://scryfall.com/card/und/33/booster-tutor?utm_source=api",
     "verified": true,
     "rarity": "uncommon",
-    "art": "https://cards.scryfall.io/art_crop/front/c/3/c3a5b25e-c5af-417e-8675-162ab18ac2b1.jpg?1783944252",
+    "art": "https://cards.scryfall.io/art_crop/front/0/a/0a5718db-e67d-468a-95ba-11a08fcf9fea.jpg?1783931339",
     "art_print": {
-      "id": "c3a5b25e-c5af-417e-8675-162ab18ac2b1",
-      "set": "unh",
-      "set_name": "Unhinged",
-      "released_at": "2004-11-19",
+      "id": "0a5718db-e67d-468a-95ba-11a08fcf9fea",
+      "set": "und",
+      "set_name": "Unsanctioned",
+      "released_at": "2020-02-29",
       "rarity": "uncommon",
-      "uri": "https://scryfall.com/card/unh/51/booster-tutor?utm_source=api"
+      "uri": "https://scryfall.com/card/und/33/booster-tutor?utm_source=api"
     }
   },
   {
