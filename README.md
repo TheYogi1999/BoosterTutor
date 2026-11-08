@@ -241,3 +241,10 @@ The three-card title fan now shows only Booster Tutor: **Unhinged #51, Unsanctio
 **C · Aether Awakening** plays once on title entry, then **The Bard’s Tale** starts and loops at the saved music volume. If a browser requires user activation, the first click or key starts C and replays the visual entrance in sync. **B · Velvet Shuffle** plays immediately when starting or restarting a run, replacing the previous delayed start jingle. Pressing Play during C skips it, plays B, then starts the score; an already-playing score continues beneath B. Gameplay never waits for audio.
 
 The master switch mutes all three channels; the Music setting controls only the score. Hidden tabs pause C and the score and stop the short Play cue. Returning resumes paused audio without restarting C, and returning to the title later does not replay its sound. Errors or blocked media cannot prevent Play.
+
+
+### v0.42 — card and combat sound auditions
+
+[Battle sound previews](action-sounds.html) provides three alternatives for each of four actions: drawing a card (D1–D3), an invalid action (X1–X3), hitting an enemy (E1–E3) and receiving player damage (P1–P3). The three families are tactile, magical and restrained retro sounds. Draw previews also include a seven-card sequence at 160 ms intervals.
+
+Preview playback is manual and exclusive, with category tabs, a shared volume slider and one preference per category. Copy the four selected codes to choose them in chat. These are auditions; the active game cues are not replaced until selection. The selected C title intro, B Play cue and music sequence stay active.
