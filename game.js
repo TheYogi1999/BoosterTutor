@@ -492,7 +492,7 @@ function draftAbilitySummary(card) {
   return summary.length > 110 ? `${summary.slice(0, 107).trimEnd()}…` : summary;
 }
 function cardFactsMarkup(card) {
-  const keywords = printedKeywords(card).join(', ') || 'None';
+  const keywords = displayKeywords(card).join(', ') || 'None';
   const stats = isCreature(card) ? `${card.power ?? '—'}/${card.toughness ?? '—'}` : '—';
   const ability = draftAbilitySummary(card);
   return `<span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">${isCreature(card)?combatStats(card.power,card.toughness):'—'}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span>`;
@@ -2293,7 +2293,7 @@ function renderCollection() {
 function collectionEntryMarkup(card, index, kind) {
   if (card.enemyKind) return `<div class="collection-monster">${walkerPortrait(card.enemyKind)}<b>${escapeHtml(card.name)}</b><span>Exiled monster</span></div>`;
   const seen = hasSeenCard(card);
-  const catalog = kind === 'catalog' ? `<p class="catalog-discovery ${seen ? 'is-seen' : 'is-unseen'}" data-discovery-status="${seen ? 'seen' : 'unseen'}">${seen ? '✓ Seen' : '◌ Not seen'}</p><p class="catalog-keywords">${escapeHtml(printedKeywords(card).join(' · ') || 'No printed keywords')}</p><p class="catalog-audit">${rulesAudit(card).playable?'Playable · reviewed rules':`BANNED · ${escapeHtml(rulesAudit(card).reason)}`}</p><a class="catalog-source" href="${escapeHtml(card.uri)}" target="_blank" rel="noreferrer">Scryfall ↗</a>` : '';
+  const catalog = kind === 'catalog' ? `<p class="catalog-discovery ${seen ? 'is-seen' : 'is-unseen'}" data-discovery-status="${seen ? 'seen' : 'unseen'}">${seen ? '✓ Seen' : '◌ Not seen'}</p><p class="catalog-keywords">${escapeHtml(displayKeywords(card).join(' · ') || 'No printed keywords')}</p><p class="catalog-audit">${rulesAudit(card).playable?'Playable · reviewed rules':`BANNED · ${escapeHtml(rulesAudit(card).reason)}`}</p><a class="catalog-source" href="${escapeHtml(card.uri)}" target="_blank" rel="noreferrer">Scryfall ↗</a>` : '';
   return `<article class="collection-entry"><button class="collection-card" data-preview-owner="collection" data-collection-index="${index}" aria-label="${card.count} copies of ${escapeHtml(card.name)}">${cardFace(card)}<span><b>${escapeHtml(card.name)}</b><strong>×${card.count}</strong></span></button>${catalog}</article>`;
 }
 $('#deck-button').addEventListener('click', () => openCollection('deck'));
@@ -2394,6 +2394,11 @@ $('#inspector-content').addEventListener('click',event=>{const button=event.targ
 $('#card-preview').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button){hideCardPreview();activatePermanent(button.dataset.activatePermanent);}});
 
 function printedKeywords(card){return (card.keywords || [...COMBAT_KEYWORDS.filter(keyword=>hasKeywordLine(card.oracle_text||'',keyword)),...(hasFlash(card)?['flash']:[])]).map(keyword=>keyword.toLowerCase());}
+function displayKeywords(card){
+ const cost=(card.oracle_text||'').match(/\bWard(?:\s+|[—–]\s*)([^)(\n,]+)/i)?.[1]?.trim().replace(/[{}]/g,'');
+ return printedKeywords(card).map(keyword=>keyword==='ward'&&cost?`Ward (${cost})`:keyword);
+}
+
 function cardAudit(card){const unknown=printedKeywords(card).filter(keyword=>!SUPPORTED_KEYWORDS.includes(keyword));return{dataVerified:Boolean(card.verified),unknown,adapted:card.name==='Cancel'};}
 function matchesCardFilters(card,query=''){
  const type=$('#collection-type').value;const mana=$('#collection-mana').value;const keyword=$('#collection-keyword').value;const color=$('#collection-color').value;
