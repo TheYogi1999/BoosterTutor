@@ -8,7 +8,7 @@ const STARTING_LIFE = 20;
 const CARD_POOL_FILE = 'card-pool.txt';
 const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
 const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
-const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v4';
+const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v5';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
 const SEEN_CARD_KEY = 'booster-tutor-seen-cards-v1';
 const seenCardKeys = new Set();
@@ -34,9 +34,7 @@ const LAND_STAGES = [
   { name: 'Misty Rainforest', color: '#80b6a2', scene: 'forest' },
   { name: 'Overgrown Tomb', color: '#90a276', scene: 'forest' }
 ];
-const FALLBACK_LANDS = [
-  ['Plains', 'W'], ['Island', 'U'], ['Swamp', 'B'], ['Mountain', 'R'], ['Forest', 'G']
-].map(([name, color]) => ({ id: `offline-${name.toLowerCase()}`, name, mana_cost: '', cmc: 0, type_line: `Basic Land — ${name}`, oracle_text: '{T}: Add one mana.', power: '', toughness: '', color_identity: [color], keywords: [], image: '', art: '', uri: `https://scryfall.com/search?q=!${name}`, verified: true }));
+const FALLBACK_LANDS = BUNDLED_LANDS.map(card => ({...card, oracle_text: '{T}: Add one mana.'}));
 const ENCOUNTERS = [
   { name: 'Mosswood Ambush', rank: 'SKIRMISH', location: 'THE FORGOTTEN GLADE', foeCount: 2 },
   { name: 'Rune Hunter Patrol', rank: 'ELITE', location: 'THE BROKEN PASS', foeCount: 2 },
@@ -189,6 +187,7 @@ function creatureKeywordLabels(creature) {
 function normalizeScryfallCard(card) {
   const face = card.card_faces?.[0] || {};
   const images = card.image_uris || face.image_uris || {};
+  const original = [...BUNDLED_CARDS,...BUNDLED_LANDS].find(item=>item.name===(card.name||face.name));
   return {
     id: card.id,
     name: card.name || face.name || 'Unknown card',
@@ -200,8 +199,8 @@ function normalizeScryfallCard(card) {
     toughness: card.toughness || face.toughness || '',
     color_identity: card.color_identity || [],
     keywords: card.keywords || [],
-    image: images.normal || images.large || '',
-    art: images.art_crop || '',
+    image: original?.image || images.normal || images.large || '',
+    art: original?.art || images.art_crop || '',
     uri: card.scryfall_uri || '',
     rarity: card.rarity || 'common',
     verified: true
@@ -531,6 +530,8 @@ function renderDraft() {
   const chosen = state.selection.has(packIndex);
   const last = !starter || packIndex === STARTER_BOOSTER_COUNT - 1;
   const pack = state.packs[packIndex];
+  const packType=state.boosterInterruption?.packType || (state.boosterInterruption?.kind==='tutor'?'tutor':'standard');
+  $('#draft-screen').dataset.packType=packType;
   const newCards = state.boosterSealed ? new Set() : discoveryView(pack);
   if (!state.boosterSealed && !boosterTravel) recordSeenCards(pack);
   $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF ${STARTER_BOOSTER_COUNT}` : 'REWARD';
@@ -539,7 +540,7 @@ function renderDraft() {
   $('#pack-number').textContent = `${packIndex + 1} / ${starter ? STARTER_BOOSTER_COUNT : 1}`;
   $('#deck-count').textContent = String(state.deck.length + state.selection.size * COPIES_PER_DRAFT_PICK);
   $('#draft-grid').innerHTML = state.boosterSealed
-    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-shine-window" aria-hidden="true"><span class="pack-foil"></span></span><span class="pack-seal pack-seal-top" aria-hidden="true"></span><span class="pack-seal pack-seal-bottom" aria-hidden="true"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">AETHER EXPEDITION</span><span class="pack-card-count">7 CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
+    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-pack-type="${packType}" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-shine-window" aria-hidden="true"><span class="pack-foil"></span></span><span class="pack-seal pack-seal-top" aria-hidden="true"></span><span class="pack-seal pack-seal-bottom" aria-hidden="true"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">${state.boosterInterruption?.packName ? escapeHtml(state.boosterInterruption.packName.toUpperCase()) : 'AETHER EXPEDITION'}</span><span class="pack-card-count">7 CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
     : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${pack.map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex, newCards.has(cardDiscoveryKey(card)))).join('')}</div></section>`;
   $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'Choose a card to continue.';
   $('#pack-reroll').disabled = state.boosterSealed || Boolean(state.rerolledPacks?.has(packIndex));
@@ -555,17 +556,26 @@ $('#draft-grid').addEventListener('click', (event) => {
     return;
   }
   const button = event.target.closest('.draft-option');
-  if (!button || boosterTravel) return;
+  if (!button || (boosterTravel && !boosterTravel.revealed) || state.boosterInterruption?.kind==='shop') return;
   const packIndex = Number(button.dataset.packIndex);
   const cardIndex = Number(button.dataset.cardIndex);
   if (!Number.isInteger(packIndex) || !Number.isInteger(cardIndex) || !state.packs[packIndex]?.[cardIndex]) return;
-  if (state.selection.get(packIndex) === cardIndex) state.selection.delete(packIndex);
-  else state.selection.set(packIndex, cardIndex);
-  clearTimeout(state.openingTimer);
-  $('#draft-screen').classList.remove('opening');
-  renderDraft();
+  state.selection.set(packIndex, cardIndex);
+  // Keep the clicked DOM node stable; repeated clicks never undo the pick.
+  if (!boosterTravel) {clearTimeout(state.openingTimer);$('#draft-screen').classList.remove('opening');}
+  syncDraftSelection();
   playSfx('select');
 });
+
+function syncDraftSelection(){
+ const index=state.activePack||0, chosen=state.selection.get(index);
+ document.querySelectorAll('.draft-option').forEach(button=>{const picked=Number(button.dataset.packIndex)===index&&Number(button.dataset.cardIndex)===chosen;button.classList.toggle('selected',picked);button.setAttribute('aria-pressed',String(picked));});
+ const heading=document.querySelector('.booster-pack header small');if(heading)heading.textContent=state.boosterInterruption?.kind==='shop'?'ALL 7 CARDS':Number.isInteger(chosen)?'1 CARD SELECTED':'CHOOSE 1 OF 7';
+ $('#deck-count').textContent=String(state.boosterInterruption?state.deck.length:state.deck.length+state.selection.size*COPIES_PER_DRAFT_PICK+(state.draftKind==='starter'?STARTING_MANA_CARDS+1:0));
+ $('#draft-confirm').disabled=state.boosterSealed||Boolean(boosterTravel)||!Number.isInteger(chosen);
+ $('#selection-status').textContent=Number.isInteger(chosen)?'Selected · confirm to continue.':'Choose one card.';
+ if(typeof syncBoosterConfirm27==='function')syncBoosterConfirm27();
+}
 
 $('#draft-confirm').addEventListener('click', confirmDraft);
 
@@ -1945,8 +1955,7 @@ async function openCurrentBooster() {
       grid.removeAttribute('aria-busy');
       if (state.screen === 'draft-screen') {
         $('#pack-reroll').disabled = Boolean(state.rerolledPacks?.has(travel.index));
-        $('#selection-status').textContent = 'Choose one of seven cards.';
-        if (typeof syncBoosterConfirm27 === 'function') syncBoosterConfirm27();
+        syncDraftSelection();
       }
     }
   }

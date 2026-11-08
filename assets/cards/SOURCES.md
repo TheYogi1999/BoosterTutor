@@ -1,5 +1,7 @@
 # Card and token artwork
 
+Current displayed art follows the [original English print manifest](ORIGINAL_PRINTS.md). The v0.34 import below records rules/rarity printings; art-print metadata is stored separately.
+
 Card metadata and original card images are sourced from the Scryfall API. Card artwork belongs to its respective artists and Wizards of the Coast; this is an unofficial fan game. The in-game Options menu links to Scryfall and the Wizards Fan Content Policy.
 
 v0.34 adds 10 vanilla creatures, 3 simple Equipment and 6 spells. Four existing cards use actual Mythic printings so the premium booster guarantee matches the displayed card. Tokens are separate consumable rewards and do not enter the player card pool.

@@ -91,14 +91,21 @@ const sourceShopRender34=renderShop;
 renderShop=function(){
  sourceShopRender34();const shop=state.shop;if(!shop)return;
  if(!shop.packs){const eligible=SHOP_PACK_TYPES.filter(type=>{const pool=packCandidates(type.id);return pool.length>=PACK_SIZE&&(type.id!=='mythic'||pool.some(card=>card.rarity==='mythic'));});shop.packs=shuffle(eligible).slice(0,2).map(type=>({type:type.id,sold:false}));}
- $('#shop-pack').innerHTML=shop.packs.map((offer,index)=>{const type=SHOP_PACK_TYPES.find(t=>t.id===offer.type);return `<article class="shop-booster-offer" data-pack-type="${type.id}"><span class="shop-pack-emblem" aria-hidden="true">${type.symbol}</span><div class="shop-pack-copy"><b>${type.name}</b><span>${type.description} · all 7 join your deck</span></div><button class="primary-button" data-buy-pack="${index}" ${(offer.sold||(state.coins||0)<type.price)?'disabled':''}>${offer.sold?'SOLD':`Buy · ${type.price} coins`}</button></article>`;}).join('');
+ if(shop.packs[shop.selectedPack]?.sold)shop.selectedPack=null;
+ const selected=shop.packs[shop.selectedPack],selectedType=SHOP_PACK_TYPES.find(type=>type.id===selected?.type);
+ $('#shop-pack').innerHTML=shop.packs.map((offer,index)=>{const type=SHOP_PACK_TYPES.find(t=>t.id===offer.type);return `<button type="button" class="shop-booster-offer${shop.selectedPack===index?' selected':''}" data-pack-type="${type.id}" data-select-pack="${index}" aria-pressed="${shop.selectedPack===index}" ${offer.sold?'disabled':''}><span class="shop-pack-emblem" aria-hidden="true">${type.symbol}</span><span class="shop-pack-copy"><b>${type.name}</b><span>${type.description}</span><small>${offer.sold?'SOLD':`${type.price} coins · 7 cards`}</small></span></button>`;}).join('')+`<button id="shop-pack-confirm" class="primary-button" ${!selectedType||selected.sold||(state.coins||0)<selectedType.price?'disabled':''}>${selectedType?`Buy ${selectedType.name} · ${selectedType.price} coins`:'Choose a pack'}</button>`;
+
 };
 function buyShopPack34(index){
  const shop=state.shop,offer=shop?.packs?.[index],type=SHOP_PACK_TYPES.find(t=>t.id===offer?.type);
  if(state.screen!=='shop-screen'||!type||offer.sold||state.boosterInterruption||(state.coins||0)<type.price)return false;
  const cards=buildShopPack(type.id);if(!cards)return false;
  offer.sold=true;state.coins-=type.price;syncCoins();
- if(!beginBoosterInterruption27('shop',null,cards,type.name)){offer.sold=false;state.coins+=type.price;syncCoins();return false;}
+ if(!beginBoosterInterruption27('shop',null,cards,type.name,type.id)){offer.sold=false;state.coins+=type.price;syncCoins();return false;}
  return true;
 }
-$('#shop-pack').addEventListener('click',event=>{const button=event.target.closest('[data-buy-pack]');if(button)buyShopPack34(Number(button.dataset.buyPack));});
+$('#shop-pack').addEventListener('click',event=>{
+ const button=event.target.closest('[data-select-pack]');
+ if(button){const index=Number(button.dataset.selectPack);if(state.shop?.packs[index]&&!state.shop.packs[index].sold){state.shop.selectedPack=index;renderShop();}return;}
+ if(event.target.closest('#shop-pack-confirm')&&Number.isInteger(state.shop?.selectedPack))buyShopPack34(state.shop.selectedPack);
+});

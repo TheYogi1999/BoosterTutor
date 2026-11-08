@@ -185,3 +185,10 @@ The shop keeps three single cards and offers two randomly selected, distinct pac
 The 100-card verified catalog adds 10 vanilla creatures, three Equipment and six spells, including Dark Ritual, Pyretic Ritual, Seething Song, Disenchant, Naturalize and Angel’s Mercy. All costs and produced mana remain generic. Floating mana is shown as a gold ✦, is spent before untapped mana cards and expires at turn end.
 
 Camp supplies replace passive mana/hand-size bonuses and direct Rest/Study rewards. Choose one Treasure, Food or Clue token. Unspent tokens enter subsequent battlefields and carry until consumed or destroyed. Treasure: tap/sacrifice for one floating mana; Food: pay two, tap/sacrifice for three life; Clue: pay two and sacrifice to draw one. Tokens never enter the run deck or persist in graveyards/exile. Artwork sources: [assets/cards/SOURCES.md](assets/cards/SOURCES.md).
+
+
+### v0.35 — original artwork and deliberate pack selection
+
+Card art uses the oldest available regular English paper printing, with promo artwork as a fallback. The art print is tracked separately from the verified rules/rarity print; this preserves premium-pack guarantees while using classic artwork. The same policy covers the five basic lands and Treasure/Food/Clue tokens. The title fan uses Alpha Grizzly Bears, Serra Angel and Lightning Bolt. Sources: [Original print manifest](assets/cards/ORIGINAL_PRINTS.md).
+
+Shop packs are selected with one click, then bought with a separate confirmation action. Selecting the same offer again does not deselect it or spend coins. Revealed-card choices likewise stay selected until confirmed. Equipment wrappers are silver, Mythic red with a glow, Instant blue, Creature green and Booster Tutor violet; the type colours carry through the opening effect.

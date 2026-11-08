@@ -11,15 +11,15 @@ const{chromium}=require('playwright');const assert=require('node:assert/strict')
  await p.evaluate(()=>{state.battle.hand=[BUNDLED_CARDS.find(c=>c.name==='Dark Ritual')];renderBattle()});await p.click('[data-hand-index="0"]');
  assert.equal(await p.evaluate(()=>state.battle.floatingMana),3,'Ritual pays with the Treasure mana and adds three');
  assert.equal(await p.locator('#floating-mana-count').textContent(),'3');
- await p.evaluate(()=>{state.node=2;state.coins=200;state.shop=null;showShop()});assert.equal(await p.locator('[data-buy-pack]').count(),2);assert.equal(await p.locator('.shop-offer').count(),3);
+ await p.evaluate(()=>{state.node=2;state.coins=200;state.shop=null;showShop()});assert.equal(await p.locator('[data-select-pack]').count(),2);assert.equal(await p.locator('.shop-offer').count(),3);
  const types=await p.locator('[data-pack-type]').evaluateAll(es=>es.map(e=>e.dataset.packType));await p.click('#shop-continue');await p.click('#return-shop');assert.deepEqual(await p.locator('[data-pack-type]').evaluateAll(es=>es.map(e=>e.dataset.packType)),types);
  // Force each advertised type into an existing offer to exercise the entire opening flow.
  for(const type of ['mythic','equipment','instant','creature']){
   await p.evaluate(type=>{state.shop.packs=[{type,sold:false},{type:type==='instant'?'creature':'instant',sold:false}];state.coins=200;renderShop();window.deckBefore=state.deck.length},type);
-  await p.click('[data-buy-pack="0"]');await p.locator('[data-open-pack]').click({force:true});await p.waitForFunction(()=>!boosterTravel&&!document.querySelector('#draft-confirm').disabled);
+  await p.click('[data-select-pack="0"]');assert.equal(await p.evaluate(()=>state.screen),'shop-screen');await p.click('#shop-pack-confirm');await p.locator('[data-open-pack]').click({force:true});await p.waitForFunction(()=>!boosterTravel&&!document.querySelector('#draft-confirm').disabled);
   assert.equal(await p.locator('.draft-option').count(),7);
   assert.ok(await p.evaluate(type=>type==='mythic'?state.packs[0].some(c=>c.rarity==='mythic'):state.packs[0].every(c=>type==='equipment'?/Equipment/.test(c.type_line):type==='creature'?isCreature(c):isInstant(c)),type));
-  await p.click('#draft-confirm');assert.equal(await p.evaluate(()=>state.deck.length-deckBefore),7);assert.equal(await p.locator('[data-buy-pack="0"]').isDisabled(),true);
+  await p.click('#draft-confirm');assert.equal(await p.evaluate(()=>state.deck.length-deckBefore),7);assert.equal(await p.locator('[data-select-pack="0"]').isDisabled(),true);
  }
  await p.click('#shop-continue');await p.click('[data-camp-token="clue"]');await p.waitForFunction(()=>!document.querySelector('.zone-flight'));
  const count=await p.evaluate(()=>state.battle.hand.length);await p.click('[data-camp-token-kind="clue"]');await p.click('#inspector-content [data-activate-permanent]');assert.equal(await p.evaluate(()=>state.battle.hand.length),count+1);

@@ -15,3 +15,28 @@
 .game-shell .mana-display .floating-mana>span{font-size:17px;text-shadow:0 0 10px #e8aa6755}
 .game-shell .mana-land-row{padding-left:250px}
 .game-shell .permanent-card[data-camp-token-kind] .field-caption small{color:#d8c89f}
+
+/* One click selects a pack; a separate action confirms the purchase. */
+.game-shell .shop-pack{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 158px}
+.game-shell .shop-pack .shop-booster-offer{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;width:100%;min-width:0;max-width:none;min-height:84px;padding:10px 12px!important;text-align:left;cursor:pointer;border:1px solid #82918d55;border-radius:6px;background:#102029eb;color:#e7dfc7;white-space:normal;letter-spacing:0}
+.game-shell .shop-pack .shop-booster-offer .shop-pack-copy{display:flex;flex-direction:column;gap:4px}
+.shop-pack-copy small{font:11px/1.3 var(--sans);color:#d9c7a3}
+.game-shell .shop-pack .shop-booster-offer.selected{border-color:var(--pack-color,#f0c68a);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pack-color) 25%,transparent),0 0 15px color-mix(in srgb,var(--pack-color) 15%,transparent)}
+.game-shell .shop-pack #shop-pack-confirm{min-width:0!important;width:158px;max-width:158px;padding:10px!important;white-space:normal;font-size:11px!important;line-height:1.6;align-self:center}
+:is(.shop-booster-offer,.sealed-pack,.draft-screen)[data-pack-type="equipment"]{--pack-color:#d5e1ed;--pack-dark:#202d3c;--pack-mid:#74899d}
+:is(.shop-booster-offer,.sealed-pack,.draft-screen)[data-pack-type="mythic"]{--pack-color:#ff6554;--pack-dark:#33151e;--pack-mid:#a72f30}
+:is(.shop-booster-offer,.sealed-pack,.draft-screen)[data-pack-type="instant"]{--pack-color:#83ceff;--pack-dark:#112844;--pack-mid:#386fa2}
+:is(.shop-booster-offer,.sealed-pack,.draft-screen)[data-pack-type="creature"]{--pack-color:#a4d880;--pack-dark:#1b3024;--pack-mid:#507d43}
+:is(.shop-booster-offer,.sealed-pack,.draft-screen)[data-pack-type="tutor"]{--pack-color:#c7a0ff;--pack-dark:#251a39;--pack-mid:#765399}
+.game-shell .shop-pack [data-pack-type] .shop-pack-emblem{background:linear-gradient(135deg,var(--pack-mid),var(--pack-dark));color:var(--pack-color);border-color:var(--pack-color);box-shadow:0 0 15px color-mix(in srgb,var(--pack-color) 24%,transparent)}
+.game-shell .shop-pack [data-pack-type="mythic"] .shop-pack-emblem{box-shadow:0 0 15px #ff463977,inset 0 0 9px #ff9a6177;color:#fff0cc}
+.game-shell .sealed-pack:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]){border-color:var(--pack-color)!important;background:linear-gradient(115deg,var(--pack-mid),var(--pack-dark) 29%,var(--pack-mid) 51%,var(--pack-dark) 80%);box-shadow:0 0 38px color-mix(in srgb,var(--pack-color) 35%,transparent),0 16px 45px #0009!important;color:color-mix(in srgb,var(--pack-color) 40%,#fff3da)}
+.game-shell .sealed-pack:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]):hover{box-shadow:0 0 58px color-mix(in srgb,var(--pack-color) 55%,transparent),0 16px 45px #0009!important}
+.game-shell .sealed-pack[data-pack-type="mythic"]{box-shadow:0 0 40px #ff46395c,0 0 80px #e52c3328,0 16px 45px #0009!important}
+.game-shell .sealed-pack[data-pack-type="equipment"] .pack-seal{background:repeating-linear-gradient(90deg,#1d263b88 0 1px,#eef6ffaa 1px 2px,#4f5e7777 2px 4px),linear-gradient(180deg,#d8e5ef,#657e91 20%,#273444 48%,#99afbd 75%,#eaf5ff 94%,#1e2b3b)}
+.game-shell .sealed-pack[data-pack-type] .pack-emblem{text-shadow:0 0 24px var(--pack-color,#e7b979)}
+.game-shell .draft-screen.opening:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]) .draft-grid:after{background:radial-gradient(ellipse closest-side at 50% 50%,#fff7df 0%,color-mix(in srgb,var(--pack-color) 75%,transparent) 12%,color-mix(in srgb,var(--pack-color) 48%,transparent) 24%,color-mix(in srgb,var(--pack-color) 20%,transparent) 42%,transparent 65%)!important}
+.game-shell .draft-screen.opening:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]) .reveal-sparks i{background:color-mix(in srgb,var(--pack-color) 35%,#fff7de)!important;box-shadow:0 0 8px var(--pack-color),0 0 18px color-mix(in srgb,var(--pack-color) 60%,transparent)!important}
+.game-shell .draft-screen:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]) .pack-stage:before{background:radial-gradient(ellipse closest-side,color-mix(in srgb,var(--pack-color) 26%,transparent),transparent 85%)}
+.game-shell .sealed-pack:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]) .pack-emblem{color:color-mix(in srgb,var(--pack-color) 70%,#fff)!important}
+.game-shell .draft-screen:is([data-pack-type="equipment"],[data-pack-type="mythic"],[data-pack-type="instant"],[data-pack-type="creature"],[data-pack-type="tutor"]) :is(.pack-particles,.pack-stage>p){color:color-mix(in srgb,var(--pack-color) 70%,#fff)}
