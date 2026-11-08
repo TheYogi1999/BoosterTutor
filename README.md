@@ -234,3 +234,10 @@ Booster Tutor takes the central position in the three-card title fan, using its 
 The three-card title fan now shows only Booster Tutor: **Unhinged #51, Unsanctioned #33 and Arena League 2004 #11**, shuffled into new positions on title entry. These are the three available English paper printings; the Arena and UND prints share an illustration. Gameplay uses the user-selected **UND #33** artwork instead of the normal oldest-print preference. No additional card copies or rules enter the player pool.
 
 [Intro sound previews](intro-sounds.html) offers three original audio sketches: Arcane Bloom, Velvet Shuffle and Aether Awakening. Preview playback is manual and exclusive. A sound will be selected before any is connected to the title animation. Music and existing game effects are unchanged.
+
+
+### v0.41 — selected intro and Play sounds
+
+**C · Aether Awakening** plays once on title entry, then **The Bard’s Tale** starts and loops at the saved music volume. If a browser requires user activation, the first click or key starts C and replays the visual entrance in sync. **B · Velvet Shuffle** plays immediately when starting or restarting a run, replacing the previous delayed start jingle. Pressing Play during C skips it, plays B, then starts the score; an already-playing score continues beneath B. Gameplay never waits for audio.
+
+The master switch mutes all three channels; the Music setting controls only the score. Hidden tabs pause C and the score and stop the short Play cue. Returning resumes paused audio without restarting C, and returning to the title later does not replay its sound. Errors or blocked media cannot prevent Play.

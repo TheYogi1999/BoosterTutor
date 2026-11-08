@@ -315,6 +315,7 @@ function makeStarterPacks() {
 }
 
 function startNewRun() {
+  if (typeof window.playRunStartAudio === 'function') window.playRunStartAudio();
   if (state.soundOn) soundEngine.unlock().catch(() => {});
   state.deck = [];
   state.relic = null;
@@ -342,7 +343,6 @@ function startNewRun() {
     state.boosterSealed = true;
     renderDraft();
     showScreen('draft-screen');
-    playSfx('intro');
   });
 }
 

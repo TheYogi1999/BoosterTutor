@@ -192,6 +192,7 @@
   });
   new MutationObserver(sync).observe(screen,{attributes:true,attributeFilter:['class']});
   document.addEventListener('visibilitychange',sync);
+  document.addEventListener('booster:title-intro-start',()=>{if(screen.classList.contains('active')){wasActive=false;sync();}});
   motion.addEventListener('change',()=>{wasActive=false;sync();});
   back.addEventListener('load',()=>{if(motion.matches)paint(0);});
   sync();

@@ -1,6 +1,6 @@
 # Intro sound auditions
 
-Three original procedural sound-design sketches made for Booster Tutor. They are previews only and are not connected to the game's title animation yet.
+Three original procedural sound-design sketches made for Booster Tutor. Selection in v0.41: C is the title intro, followed by background music; B plays immediately on Play. A remains an audition alternative.
 
 - A · Arcane Bloom · 3.35 seconds: warm pad, filtered air and soft glass harmonics.
 - B · Velvet Shuffle · 2.90 seconds: mellow tine keyboard, rounded bass and a quiet layer of the existing `card-fan.ogg` Foley, credited in [audio sources](../SOURCES.md).
