@@ -445,3 +445,11 @@ Counterspell
 Negate
 Dispel
 Cancel
+Canopy Spider
+Grappler Spider
+Thornweald Archer
+Kessig Recluse
+Rib Cage Spider
+Sporecap Spider
+Mammoth Spider
+Archweaver

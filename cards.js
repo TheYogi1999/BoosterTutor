@@ -2874,7 +2874,242 @@ const BUNDLED_CARDS = [
     "rarity": "uncommon",
     "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api"
   }
-}
+},
+  {
+    "id": "afc114b0-2e95-4143-a4b6-6537813946e7",
+    "name": "Canopy Spider",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)",
+    "power": "1",
+    "toughness": "3",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "image": "assets/cards/afc114b0-2e95-4143-a4b6-6537813946e7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/f/afc114b0-2e95-4143-a4b6-6537813946e7.jpg?1783946620",
+    "uri": "https://scryfall.com/card/tmp/217/canopy-spider?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "afc114b0-2e95-4143-a4b6-6537813946e7",
+      "set": "tmp",
+      "set_name": "Tempest",
+      "released_at": "1997-10-14",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/tmp/217/canopy-spider?utm_source=api"
+    }
+  },
+  {
+    "id": "e2324d0b-ac63-45e5-ba27-a643c61538c7",
+    "name": "Grappler Spider",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)",
+    "power": "2",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "image": "assets/cards/e2324d0b-ac63-45e5-ba27-a643c61538c7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/2/e2324d0b-ac63-45e5-ba27-a643c61538c7.jpg?1783942045",
+    "uri": "https://scryfall.com/card/wwk/102/grappler-spider?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "e2324d0b-ac63-45e5-ba27-a643c61538c7",
+      "set": "wwk",
+      "set_name": "Worldwake",
+      "released_at": "2010-02-05",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/wwk/102/grappler-spider?utm_source=api"
+    }
+  },
+  {
+    "id": "783a50a0-9394-4d97-856f-21eb126a0018",
+    "name": "Thornweald Archer",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Elf Archer",
+    "oracle_text": "Reach (This creature can block creatures with flying.)\nDeathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "power": "2",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Deathtouch"
+    ],
+    "image": "assets/cards/783a50a0-9394-4d97-856f-21eb126a0018.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/8/783a50a0-9394-4d97-856f-21eb126a0018.jpg?1783943094",
+    "uri": "https://scryfall.com/card/fut/154/thornweald-archer?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "783a50a0-9394-4d97-856f-21eb126a0018",
+      "set": "fut",
+      "set_name": "Future Sight",
+      "released_at": "2007-05-04",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/fut/154/thornweald-archer?utm_source=api"
+    }
+  },
+  {
+    "id": "695b8abe-796e-4d9b-aad3-4e03e925d2a7",
+    "name": "Kessig Recluse",
+    "mana_cost": "{2}{G}{G}",
+    "cmc": 4.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)\nDeathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "power": "2",
+    "toughness": "3",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Deathtouch"
+    ],
+    "image": "assets/cards/695b8abe-796e-4d9b-aad3-4e03e925d2a7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/9/695b8abe-796e-4d9b-aad3-4e03e925d2a7.jpg?1783940804",
+    "uri": "https://scryfall.com/card/dka/121/kessig-recluse?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "695b8abe-796e-4d9b-aad3-4e03e925d2a7",
+      "set": "dka",
+      "set_name": "Dark Ascension",
+      "released_at": "2012-02-03",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/dka/121/kessig-recluse?utm_source=api"
+    }
+  },
+  {
+    "id": "d71bebea-1634-4d9a-b3ad-2e01ecacad7e",
+    "name": "Rib Cage Spider",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)",
+    "power": "1",
+    "toughness": "4",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "image": "assets/cards/d71bebea-1634-4d9a-b3ad-2e01ecacad7e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/7/d71bebea-1634-4d9a-b3ad-2e01ecacad7e.jpg?1783945771",
+    "uri": "https://scryfall.com/card/pcy/121/rib-cage-spider?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "d71bebea-1634-4d9a-b3ad-2e01ecacad7e",
+      "set": "pcy",
+      "set_name": "Prophecy",
+      "released_at": "2000-06-05",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/pcy/121/rib-cage-spider?utm_source=api"
+    }
+  },
+  {
+    "id": "abb1d18f-7a94-4a2f-a60c-0af852d44501",
+    "name": "Sporecap Spider",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach",
+    "power": "1",
+    "toughness": "5",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "image": "assets/cards/abb1d18f-7a94-4a2f-a60c-0af852d44501.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/b/abb1d18f-7a94-4a2f-a60c-0af852d44501.jpg?1783941960",
+    "uri": "https://scryfall.com/card/roe/209/sporecap-spider?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "abb1d18f-7a94-4a2f-a60c-0af852d44501",
+      "set": "roe",
+      "set_name": "Rise of the Eldrazi",
+      "released_at": "2010-04-23",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/roe/209/sporecap-spider?utm_source=api"
+    }
+  },
+  {
+    "id": "db18bbcd-527d-4134-a6ae-6f4381419867",
+    "name": "Mammoth Spider",
+    "mana_cost": "{4}{G}",
+    "cmc": 5.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)",
+    "power": "3",
+    "toughness": "5",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "image": "assets/cards/db18bbcd-527d-4134-a6ae-6f4381419867.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/b/db18bbcd-527d-4134-a6ae-6f4381419867.jpg?1783934976",
+    "uri": "https://scryfall.com/card/dom/171/mammoth-spider?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "db18bbcd-527d-4134-a6ae-6f4381419867",
+      "set": "dom",
+      "set_name": "Dominaria",
+      "released_at": "2018-04-27",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/dom/171/mammoth-spider?utm_source=api"
+    }
+  },
+  {
+    "id": "f99dc8ff-932c-4d56-9253-99ce9e145306",
+    "name": "Archweaver",
+    "mana_cost": "{5}{G}{G}",
+    "cmc": 7.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach, trample",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Trample"
+    ],
+    "image": "assets/cards/f99dc8ff-932c-4d56-9253-99ce9e145306.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/9/f99dc8ff-932c-4d56-9253-99ce9e145306.jpg?1783940352",
+    "uri": "https://scryfall.com/card/rtr/114/archweaver?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "f99dc8ff-932c-4d56-9253-99ce9e145306",
+      "set": "rtr",
+      "set_name": "Return to Ravnica",
+      "released_at": "2012-10-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/rtr/114/archweaver?utm_source=api"
+    }
+  }
 ];
 const CAMP_TOKEN_CARDS = {
   "treasure": {

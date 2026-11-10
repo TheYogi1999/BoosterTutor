@@ -290,3 +290,11 @@ Enemies now show larger, high-contrast colored keyword badges under their portra
 ### v0.48 — five-color mana icon
 
 The shared mana display uses the requested five-color wheel instead of the diamond. The image is bundled locally, keeps its transparent background, and is displayed at 24 × 24 without changing mana/payment rules. The floating-mana indicator remains distinct. Matching image source: [MTG Wiki, 5Colors.png](https://static.wikia.nocookie.net/mtgsalvation_gamepedia/images/c/c8/5Colors.png).
+
+### v0.49 — library progress and eight Reach creatures
+
+The physical library displays **remaining / total run-deck cards** with a short label. The full deck/library review repeats this progress while in combat. The total includes cards in hand, on the battlefield, in graveyard or exile; drawing and enemy Mill reduce the remaining count, while Brainstorm can return cards to it. Cards temporarily inspected with Scry still count as library cards. Camp tokens and temporary Booster Tutor picks do not enlarge the permanent run deck.
+
+The reviewed pool adds Canopy Spider, Grappler Spider, Thornweald Archer, Kessig Recluse, Rib Cage Spider, Sporecap Spider, Mammoth Spider and Archweaver: **112 bundled cards, 109 ordinary playable cards**, including **11 Reach creatures**. Each uses its oldest regular English paper printing and a bundled card image. Printed costs and stats are unchanged; Reach, Deathtouch and Trample use the existing combat rules. They are available in boosters, Creature packs, shops and the filtered collection.
+
+Silver-border candidates reviewed for a future expansion (not in this release): Growth Spurt (D6 temporary boost), Elvish Impersonators (two D6 determine base stats), Goblin Tutor (D6 chooses the searched card type), and Jack-in-the-Mox (risky die-based mana artifact, adapted to the shared generic pool). Their complete rules need implementation before they can enter the verified pool.

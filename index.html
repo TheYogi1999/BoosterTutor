@@ -32,9 +32,10 @@
     <link rel="stylesheet" href="enemy-spells.css?v=0.46" />
     <link rel="stylesheet" href="battle-details.css?v=0.47" />
     <link rel="stylesheet" href="mana-icon.css?v=0.48" />
-    <script src="cards.js?v=0.40" defer></script>
+    <link rel="stylesheet" href="deck-progress.css?v=0.49" />
+    <script src="cards.js?v=0.49" defer></script>
     <script src="sounds.js?v=0.43" defer></script>
-    <script src="game.js?v=0.48" defer></script>
+    <script src="game.js?v=0.49" defer></script>
     <script src="rules.js?v=0.43" defer></script>
     <script src="expansion.js?v=0.44" defer></script>
     <script src="expedition-rewards.js?v=0.35" defer></script>
@@ -57,7 +58,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.48 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.49 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Background music settings">♫ Music</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
@@ -177,7 +178,7 @@
         <div class="hand-panel"><span id="copy-spell-status" hidden></span><p id="phase-status" class="phase-status" aria-live="polite"></p>
           <div class="hand-heading"><div><span>YOUR HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
           <div class="hand-row" id="hand-row"></div>
-          <div class="library-zone"><div class="library-zone-heading"><span class="library-label">LIBRARY</span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button></div><button class="library-pile" id="library-button" aria-label="Inspect library contents without revealing draw order"><span class="library-stack"><img src="assets/mtg-card-back.jpg" alt="Magic: The Gathering card back — face-down library" draggable="false"></span><span class="library-caption"><b id="library-count">0</b> cards</span></button></div>
+          <div class="library-zone"><div class="library-zone-heading"><span class="library-label">LIBRARY</span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button></div><button class="library-pile" id="library-button" aria-label="Inspect library contents without revealing draw order"><span class="library-stack"><img src="assets/mtg-card-back.jpg" alt="Magic: The Gathering card back — face-down library" draggable="false"></span><span class="library-caption"><b id="library-count">0</b><span class="library-count-divider"> / </span><b id="library-total">0</b><small>left / total cards</small></span></button></div>
           <div class="turn-footer">
             <div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div>
             <button class="mulligan-button" id="mulligan-button" type="button">FREE MULLIGAN <span>↻</span></button>

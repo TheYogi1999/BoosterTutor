@@ -18,7 +18,7 @@ async function preparePack(page, indices=[0,1,2,3,4,5,6]){
     await page.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
     await page.evaluate(()=>{state.soundOn=false;state.pool=BUNDLED_CARDS;openCollection('catalog');});
     assert.equal(await page.locator('#collection-grid [data-discovery-status="seen"]').count(),0);
-    assert.equal(await page.locator('#collection-grid [data-discovery-status="unseen"]').count(),81);
+    assert.equal(await page.locator('#collection-grid [data-discovery-status="unseen"]').count(),await page.evaluate(()=>BUNDLED_CARDS.length));
     assert.equal(await page.locator('#collection-dialog .new-card-badge').count(),0,'pool only shows status');
     await page.locator('#collection-search').fill('Grizzly');
     assert.equal(await page.evaluate(()=>seenCardKeys.size),0,'browsing the pool does not discover its contents');
@@ -47,7 +47,7 @@ async function preparePack(page, indices=[0,1,2,3,4,5,6]){
     assert.equal(await page.locator('.collection-entry').count(),1,'discovery and text filters combine');
     await page.locator('#collection-search').fill('');
     await page.locator('#collection-seen').selectOption('unseen');
-    assert.equal(await page.locator('.collection-entry').count(),74);
+    assert.equal(await page.locator('.collection-entry').count(),await page.evaluate(()=>BUNDLED_CARDS.length-7));
     assert.equal(await page.locator('#collection-dialog .new-card-badge').count(),0);
     await page.locator('#collection-close').click();
 

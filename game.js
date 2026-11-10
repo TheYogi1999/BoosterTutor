@@ -921,6 +921,10 @@ function hideCardPreview() {
   previewAnchor = null;
 }
 
+function libraryCardCount49(battle = state.battle) {
+  return (battle?.deck.length || 0) + (battle?.scry?.cards.length || 0);
+}
+
 function renderBattle() {
   const battle = state.battle;
   if (!battle) return;
@@ -961,9 +965,13 @@ function renderBattle() {
   $('#turn-display').textContent = `Turn ${battle.turn}`;
   $('#progress-pips').innerHTML = ENCOUNTERS.map((_, index) => `<i class="${index < state.node ? 'done ' : ''}${index === 3 ? 'boss' : ''}" aria-label="Fight ${index + 1}"></i>`).join('');
   $('#graveyard-count').textContent = String(battle.graveyard.length);
-  $('#library-count').textContent = String(battle.deck.length);
+  const remainingCards = libraryCardCount49(battle);
+  $('#library-count').textContent = String(remainingCards);
+  $('#library-total').textContent = String(state.deck.length);
   $('#library-button').classList.toggle('is-empty', !battle.deck.length);
-  $('#library-button').setAttribute('aria-label', `Library, ${battle.deck.length} cards. Inspect sorted contents without revealing draw order.`);
+  $('#library-button').setAttribute('aria-label', `Library, ${remainingCards} cards remaining / ${state.deck.length} cards in your run deck. Inspect sorted contents without revealing draw order.`);
+  $('#library-button').title = `${remainingCards} remaining in library / ${state.deck.length} cards in your run deck`;
+  $('#deck-button').setAttribute('aria-label', `Inspect your run deck: ${state.deck.length} cards total, ${remainingCards} remaining in library`);
   $('#hand-count').textContent = `${battle.hand.length} CARDS`;
   $('#mulligan-button').disabled = !battle.mulliganAvailable || battle.phase !== 'main';
   $('#mulligan-button').innerHTML = battle.mulliganAvailable ? 'FREE MULLIGAN <span>↻</span>' : 'MULLIGAN USED';
@@ -2372,7 +2380,8 @@ function renderCollection() {
   state.collectionCards = [...groups.values()].filter(card => matchesCardFilters(card,query) && (kind!=='catalog'||!$('#collection-rules').value||rulesAudit(card).playable===($('#collection-rules').value==='playable')) && (!seenFilter || hasSeenCard(card) === (seenFilter === 'seen'))).sort((a, b) => (a.cmc || 0) - (b.cmc || 0) || a.name.localeCompare(b.name));
   const average = cards.length ? cards.reduce((sum, card) => sum + (card.cmc || 0), 0) / cards.length : 0;
   const seenCount = [...groups.values()].filter(hasSeenCard).length;
-  $('#collection-stats').textContent = `${cards.length} cards · ${state.collectionCards.length} shown${kind === 'catalog' ? ` · ${seenCount} seen` : ''} · average mana ${average.toFixed(1)}`;
+  const deckProgress = state.screen === 'combat-screen' && ['deck', 'library'].includes(kind) ? ` · Library ${libraryCardCount49()} / ${state.deck.length}` : '';
+  $('#collection-stats').textContent = `${cards.length} cards · ${state.collectionCards.length} shown${kind === 'catalog' ? ` · ${seenCount} seen` : ''}${deckProgress} · average mana ${average.toFixed(1)}`;
   $('#collection-grid').innerHTML = state.collectionCards.length ? state.collectionCards.map((card, index) => collectionEntryMarkup(card, index, kind)).join('') : '<p class="collection-empty">No cards in this zone.</p>';
 }
 function collectionEntryMarkup(card, index, kind) {
