@@ -3161,6 +3161,114 @@ const BUNDLED_CARDS = [
       "rarity": "common",
       "uri": "https://scryfall.com/card/ugl/56/elvish-impersonators?utm_source=api"
     }
+  },
+  {
+    "id": "23bc822d-a028-4162-bf23-6ff4b9f43688",
+    "name": "Goblin Tutor",
+    "mana_cost": "{R}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Roll a six-sided die. If you roll a 1, Goblin Tutor has no effect. Otherwise, search your library for the indicated card, reveal it, put it into your hand, then shuffle.\n2 — A card named Goblin Tutor\n3 — An enchantment\n4 — An artifact\n5 — A creature\n6 — An instant or sorcery",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/23bc822d-a028-4162-bf23-6ff4b9f43688.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/3/23bc822d-a028-4162-bf23-6ff4b9f43688.jpg?1783946428",
+    "uri": "https://scryfall.com/card/ugl/45/goblin-tutor?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "23bc822d-a028-4162-bf23-6ff4b9f43688",
+      "set": "ugl",
+      "set_name": "Unglued",
+      "released_at": "1998-08-11",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/ugl/45/goblin-tutor?utm_source=api"
+    }
+  },
+  {
+    "id": "1834ac92-8b4e-4442-a834-acd580e1ef99",
+    "name": "Jack-in-the-Mox",
+    "mana_cost": "{0}",
+    "cmc": 0.0,
+    "type_line": "Artifact",
+    "oracle_text": "{T}: Roll a six-sided die. This ability has the indicated effect.\n1 — Sacrifice this artifact and you lose 5 life.\n2 — Add {W}.\n3 — Add {U}.\n4 — Add {B}.\n5 — Add {R}.\n6 — Add {G}.",
+    "color_identity": [
+      "B",
+      "G",
+      "R",
+      "U",
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/1834ac92-8b4e-4442-a834-acd580e1ef99.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/8/1834ac92-8b4e-4442-a834-acd580e1ef99.jpg?1783946419",
+    "uri": "https://scryfall.com/card/ugl/75/jack-in-the-mox?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "1834ac92-8b4e-4442-a834-acd580e1ef99",
+      "set": "ugl",
+      "set_name": "Unglued",
+      "released_at": "1998-08-11",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/ugl/75/jack-in-the-mox?utm_source=api"
+    }
+  },
+  {
+    "id": "2729cce6-f380-4c94-ac64-3a2487da6130",
+    "name": "Adorable Kitten",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Host Creature — Cat",
+    "oracle_text": "When this creature enters, roll a six-sided die. You gain life equal to the result.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/2729cce6-f380-4c94-ac64-3a2487da6130.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/7/2729cce6-f380-4c94-ac64-3a2487da6130.jpg?1783935467",
+    "uri": "https://scryfall.com/card/ust/1/adorable-kitten?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "2729cce6-f380-4c94-ac64-3a2487da6130",
+      "set": "ust",
+      "set_name": "Unstable",
+      "released_at": "2017-12-08",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ust/1/adorable-kitten?utm_source=api"
+    }
+  },
+  {
+    "id": "a93e96d8-2c6d-43c6-b9c9-512fdb98a30d",
+    "name": "Mother Kangaroo",
+    "mana_cost": "{4}{G}",
+    "cmc": 5.0,
+    "type_line": "Host Creature — Kangaroo",
+    "oracle_text": "When this creature enters, roll a six-sided die. Put a number of +1/+1 counters on this creature equal to the result.",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/a93e96d8-2c6d-43c6-b9c9-512fdb98a30d.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/9/a93e96d8-2c6d-43c6-b9c9-512fdb98a30d.jpg?1783935403",
+    "uri": "https://scryfall.com/card/ust/116/mother-kangaroo?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "a93e96d8-2c6d-43c6-b9c9-512fdb98a30d",
+      "set": "ust",
+      "set_name": "Unstable",
+      "released_at": "2017-12-08",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ust/116/mother-kangaroo?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {
