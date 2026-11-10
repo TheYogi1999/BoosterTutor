@@ -5,7 +5,7 @@ const{chromium}=require('playwright');const assert=require('node:assert/strict')
  assert.equal(await p.locator('[data-camp-token]').count(),3);assert.equal(await p.locator('[data-relic],[data-camp]').count(),0);
  await p.click('[data-camp-token="treasure"]');await p.waitForFunction(()=>!document.querySelector('.zone-flight'));
  assert.equal(await p.evaluate(()=>state.battle.hand.length),7);
- await p.click('[data-camp-token-kind="treasure"]');await p.click('#inspector-content [data-activate-permanent]');
+ await p.click('[data-camp-token-kind="treasure"]');await p.click('#token-action-confirm');
  assert.equal(await p.locator('#floating-mana-count').textContent(),'1');assert.equal(await p.locator('#floating-mana').isVisible(),true);
  assert.equal(await p.evaluate(()=>state.campTokens.length),0);assert.equal(await p.evaluate(()=>state.battle.lands.length),2);
  await p.evaluate(()=>{state.battle.hand=[BUNDLED_CARDS.find(c=>c.name==='Dark Ritual')];renderBattle()});await p.click('[data-hand-index="0"]');
@@ -22,10 +22,10 @@ const{chromium}=require('playwright');const assert=require('node:assert/strict')
   await p.click('#draft-confirm');assert.equal(await p.evaluate(()=>state.deck.length-deckBefore),7);assert.equal(await p.locator('[data-select-pack="0"]').isDisabled(),true);
  }
  await p.click('#shop-continue');await p.click('[data-camp-token="clue"]');await p.waitForFunction(()=>!document.querySelector('.zone-flight'));
- const count=await p.evaluate(()=>state.battle.hand.length);await p.click('[data-camp-token-kind="clue"]');await p.click('#inspector-content [data-activate-permanent]');assert.equal(await p.evaluate(()=>state.battle.hand.length),count+1);
+ const count=await p.evaluate(()=>state.battle.hand.length);await p.click('[data-camp-token-kind="clue"]');await p.click('#token-action-confirm');assert.equal(await p.evaluate(()=>state.battle.hand.length),count+1);
  assert.equal(await p.evaluate(()=>state.campTokens.length),0);assert.equal(await p.evaluate(()=>state.battle.graveyard.some(c=>c.campToken)),false);
  await p.evaluate(()=>{state.node=3;showJourney()});await p.click('[data-camp-token="food"]');await p.waitForFunction(()=>!document.querySelector('.zone-flight'));
- const life=await p.evaluate(()=>state.playerHealth);await p.click('[data-camp-token-kind="food"]');await p.click('#inspector-content [data-activate-permanent]');assert.equal(await p.evaluate(()=>state.playerHealth),life+3);
+ const life=await p.evaluate(()=>state.playerHealth);await p.click('[data-camp-token-kind="food"]');await p.click('#token-action-confirm');assert.equal(await p.evaluate(()=>state.playerHealth),life+3);
  await p.evaluate(()=>{state.node=3;state.shop=null;state.coins=200;showShop()});
  for(const size of[{width:1600,height:900},{width:820,height:1180},{width:1280,height:720}]){await p.setViewportSize(size);await p.waitForTimeout(150);assert.equal(await p.evaluate(()=>document.documentElement.scrollHeight>innerHeight),false);assert.ok(await p.evaluate(()=>{const top=document.querySelector('.shop-footer').getBoundingClientRect().top;return [...document.querySelectorAll('.shop-booster-offer')].every(e=>e.getBoundingClientRect().bottom<=top)}));}
  assert.deepEqual(errors,[]);console.log('PASS four booster types, two stable offers, purchase/open/sold flow, Treasure/Dark Ritual floating mana, Clue/Food costs and viewport bounds');

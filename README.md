@@ -280,3 +280,9 @@ Pending spells, Counterspell responses and all spell copies finish before a wave
 Enemy Counterspell reactions now explicitly show **YOUR RESPONSE** and a **Cast Counterspell · 2 mana** shortcut when that card is in hand (or another supported counterspell, using the cheapest payable option). The shortcut targets the pending enemy Counterspell and uses normal casting/payment rules; an unaffordable counter shows its required mana and cannot be cast. Instants glow in the hand during a reaction in main phase as well as during combat.
 
 The original paid spell waits until the player continues. Countering the reaction changes the action to **Resolve your spell**; passing without countering is labelled **Let it resolve**. Normal hand casting and other instant responses remain available. Stale response controls cannot target a different spell or spend mana twice.
+
+### v0.47 — click-to-use tokens and enemy keyword badges
+
+Click a Treasure, Food or Clue token on the battlefield to open its action window. The window shows its effect, full activation costs (including tapping/sacrifice), and an explicit **Sacrifice** action. **Keep token**, Escape, backdrop clicks and controller Back cancel without paying. Token activation moved out of the hover/side inspector. The normal payment and single-use rules still apply; insufficient mana, tapped tokens and unfinished card choices disable activation. Availability refreshes with the battlefield, and a removed token or scene change closes its stale window.
+
+Enemies now show larger, high-contrast colored keyword badges under their portraits, with explanations on hover. Ward keeps its numeric mana cost, Mill stays visible, and ready Counterspell reactions have a gold badge. Spent/next-turn Counterspell status updates as before. The fixed 16:9 battlefield reserves room for the badges above block/spell response controls.

@@ -119,6 +119,7 @@ function walkerPortrait(kind) {
 
 function showScreen(id) {
   if (id !== 'draft-screen') cancelBoosterTravel();
+  if (id !== 'combat-screen' && typeof closeTokenAction47 === 'function') closeTokenAction47();
   state.screen = id;
   hideCardPreview();
   updatePhaseDisplay();
@@ -836,8 +837,9 @@ function renderEnemyBoard() {
     const selected = battle.phase === 'blocks' ? battle.selectedEnemyAttackerId === enemy.id : battle.selectedEnemyTargetId === enemy.id;
     const blocker = assignedBlockerName(battle, enemy.id);
     const keywords = creatureKeywordLabels(enemy);
+    const keywordMarkup = typeof enemyKeywordBadges47 === 'function' ? enemyKeywordBadges47(enemy) : escapeHtml(keywords || 'No keywords');
     const healthPercent = Math.max(0, Math.min(100, enemy.health / enemy.maxHealth * 100));
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure">${walkerPortrait(enemy.kind || 'sprout')}</span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords" title="${escapeHtml(keywords)}">${escapeHtml(keywords || 'No keywords')}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}, ${escapeHtml(keywords || 'No keywords')}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure">${walkerPortrait(enemy.kind || 'sprout')}</span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords">${keywordMarkup}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -907,7 +909,7 @@ function showCardPreview(card, element) {
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
-  if (permanent && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>Pay ${permanentActivationCost(card)} · sacrifice · ${typeof permanentActionLabel==='function'?permanentActionLabel(card):card.name === 'Fountain of Renewal' ? 'draw 1' : 'scry 2'}</button>`;
+  if (permanent && !card.campToken && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>Pay ${permanentActivationCost(card)} · sacrifice · ${typeof permanentActionLabel==='function'?permanentActionLabel(card):card.name === 'Fountain of Renewal' ? 'draw 1' : 'scry 2'}</button>`;
   preview.hidden = false;
   positionCardPreview();
   requestAnimationFrame(positionCardPreview);
@@ -985,6 +987,7 @@ function renderBattle() {
   renderDropZones();
   updatePhaseDisplay();
   if (typeof renderEnemySpells38 === 'function') renderEnemySpells38();
+  if (typeof renderTokenAction47 === 'function') renderTokenAction47();
   requestAnimationFrame(drawCombatArrows);
 }
 
@@ -1041,7 +1044,7 @@ function renderCreatures() {
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? `${permanentActivationCost(permanent.card)} mana · ${permanentActionLabel(permanent.card)}` : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}" aria-haspopup="dialog" title="Click to use this token"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
@@ -1073,6 +1076,7 @@ $('#player-drop-zone').addEventListener('click', event => {
   if (!button || !battle || Date.now() < (state.suppressClickUntil || 0)) return;
   const permanent = battle.permanents.find(item => item.id === button.dataset.permanentId);
   if (!permanent) return;
+  if (permanent.card.campToken && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
   if (!/Equipment/.test(permanent.card.type_line)) { inspectBattlefieldCard(permanent.card, {dataset:{previewId:permanent.id}}); return; }
   if (battle.phase !== 'main') return;
   if (!battle.creatures.length) return showActionError('Play a creature first.');
@@ -2178,7 +2182,7 @@ function inspectBattlefieldCard(card, element) {
   const creature = battle?.creatures.find(item => item.id === element.dataset.previewId);
   const permanent = battle?.permanents.find(item => item.id === element.dataset.previewId);
   const attached = battle?.creatures.find(item => item.id === permanent?.attachedTo);
-  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>Pay ${permanentActivationCost(permanent.card)} · sacrifice · ${typeof permanentActionLabel==='function'?permanentActionLabel(permanent.card):permanent.card.name==='Fountain of Renewal'?'draw 1':'scry 2'}</button>`:''}</div>`;
+  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${card.campToken ? '<p>Click this token on the battlefield to use it.</p>' : ''}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && !card.campToken && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>Pay ${permanentActivationCost(permanent.card)} · sacrifice · ${typeof permanentActionLabel==='function'?permanentActionLabel(permanent.card):permanent.card.name==='Fountain of Renewal'?'draw 1':'scry 2'}</button>`:''}</div>`;
 }
 function fitGameCanvas() {
   const root = document.documentElement;

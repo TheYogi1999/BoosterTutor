@@ -1,0 +1,28 @@
+/* Abilities stay visible beneath each foe, clear of the response/block panel. */
+html.fixed-game .game-shell .monster{height:292px;grid-template-rows:30px 116px 20px 22px 6px 66px 18px!important}
+html.fixed-game .game-shell .monster-figure{height:116px!important}
+html.fixed-game .game-shell .monster-keywords{display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;gap:4px;padding-top:4px;min-width:0;max-width:100%;font:600 11px/15px var(--sans);text-wrap:initial}
+.enemy-keyword-badge{display:inline-block;box-sizing:border-box;max-width:100%;padding:2px 6px;border:1px solid #d4bb7b66;border-radius:5px;color:#f3dfaf;background:#3b3224;white-space:nowrap;letter-spacing:0;text-shadow:0 1px 2px #0009}
+.enemy-keyword-badge.keyword-evasion{color:#d0edff;background:#203e52;border-color:#80bbdc88}
+.enemy-keyword-badge.keyword-life{color:#cdf2c0;background:#29452f;border-color:#91c87c88}
+.enemy-keyword-badge.keyword-lethal{color:#eccaff;background:#452c51;border-color:#c190d188}
+.enemy-keyword-badge.keyword-protection{color:#ffe8b6;background:#514024;border-color:#e1bc7088}
+.enemy-keyword-badge.keyword-magic{color:#dbd4ff;background:#36304e;border-color:#a69ada88}
+.enemy-keyword-badge.keyword-counter-ready{color:#fff0be;background:#69502a;border-color:#f0cd83;box-shadow:0 0 10px #e5be4933}
+.enemy-keyword-empty{color:#aebdbd;font-weight:400;padding-top:3px}
+/* The action appears on click, with no payment until the player confirms. */
+html.fixed-game dialog.token-action-dialog{width:520px!important;height:auto!important;min-height:290px;padding:28px;border:1px solid #d8bb7a99;border-radius:10px;background:radial-gradient(ellipse at 0 0,#96722c29,transparent 65%),#101e27;color:#e8e8db;overflow:visible}
+.token-action-dialog::backdrop{background:#030b12b8;backdrop-filter:blur(3px)}
+.token-action-dialog header{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.token-action-dialog h2{font:600 27px/34px var(--sans);margin:4px 0 0}
+.token-action-dialog .eyebrow{font:11px/16px var(--sans);letter-spacing:2px;color:#d7bd85}
+.token-action-symbol{display:grid;place-items:center;width:66px;height:66px;flex:none;border:1px solid #dcbe7e88;border-radius:50%;font:36px/1 var(--sans);color:#ffe4a6;background:#6650293d;box-shadow:0 0 24px #dcb76516}
+.token-action-dialog[data-kind="food"] .token-action-symbol{color:#cfe5ac;border-color:#a7c18a88;background:#384e2f66}
+.token-action-dialog[data-kind="clue"] .token-action-symbol{color:#bce4f5;border-color:#8ab8cc88;background:#2d465966}
+.token-action-dialog #token-action-effect{font:600 24px/30px var(--sans);margin:0 0 16px;color:#f8efd9}
+.token-action-cost-label{font:10px/15px var(--sans);letter-spacing:1.8px;color:#b9c6c8;margin:0}
+.token-action-dialog #token-action-cost{font:15px/23px var(--sans);margin:4px 0 12px;color:#e4c88f}
+.token-action-dialog #token-action-status{font:13px/20px var(--sans);color:#b6c5c9;min-height:20px;margin:0 0 24px}
+.token-action-buttons{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.token-action-buttons button{font:600 14px/20px var(--sans)!important;white-space:nowrap;padding:11px 14px!important}
+.token-action-buttons button:disabled{opacity:.42;cursor:default}
