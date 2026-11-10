@@ -120,6 +120,7 @@ function walkerPortrait(kind) {
 function showScreen(id) {
   if (id !== 'draft-screen') cancelBoosterTravel();
   if (id !== 'combat-screen' && typeof closeTokenAction47 === 'function') closeTokenAction47();
+  if (id !== 'combat-screen' && typeof abortDiceRoll50 === 'function') abortDiceRoll50();
   state.screen = id;
   hideCardPreview();
   updatePhaseDisplay();
@@ -996,6 +997,7 @@ function renderBattle() {
   updatePhaseDisplay();
   if (typeof renderEnemySpells38 === 'function') renderEnemySpells38();
   if (typeof renderTokenAction47 === 'function') renderTokenAction47();
+  if (typeof syncDiceWindow50 === 'function') syncDiceWindow50();
   requestAnimationFrame(drawCombatArrows);
 }
 
@@ -1823,7 +1825,7 @@ function afterCombatBeat(battle, phase, callback) {
 
 function finishTurn() {
   const battle = state.battle;
-  if (!battle || battle.phase !== 'main' || battle.enemyCounterWindow) return;
+  if (!battle || battle.phase !== 'main' || battle.enemyCounterWindow || battle.diceRoll) return;
   battle.mulliganAvailable = false;
   battle.pendingAttachment = null;
   for (const creature of battle.creatures) { if (/attacks each combat if able/i.test(creature.card.oracle_text || '') && eligibleAttacker(creature, battle) && attackTarget(battle,creature)) creature.willAttack = true; }
@@ -1859,6 +1861,7 @@ function beginEnemyDamage() {
   afterCombatBeat(battle, 'damage', resolveEnemyCombat);
 }
 function handleCombatAction() {
+  if (state.battle?.diceRoll) return;
   if (state.battle?.enemyCounterWindow && typeof enemyCounterBusy44 === 'function' && enemyCounterBusy44(state.battle)) return;
   if (state.battle?.priorityCallback) { const callback = state.battle.priorityCallback; state.battle.priorityCallback = null; callback(); return; }
   if (state.battle?.phase === 'blocks') beginEnemyDamage();

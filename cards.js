@@ -3109,6 +3109,58 @@ const BUNDLED_CARDS = [
       "rarity": "uncommon",
       "uri": "https://scryfall.com/card/rtr/114/archweaver?utm_source=api"
     }
+  },
+  {
+    "id": "2905accf-ea94-48fa-8dbe-b4a7dd57a277",
+    "name": "Growth Spurt",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Roll a six-sided die. Target creature gets +X/+X until end of turn, where X is the result.",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/2905accf-ea94-48fa-8dbe-b4a7dd57a277.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/9/2905accf-ea94-48fa-8dbe-b4a7dd57a277.jpg?1783946423",
+    "uri": "https://scryfall.com/card/ugl/61/growth-spurt?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "2905accf-ea94-48fa-8dbe-b4a7dd57a277",
+      "set": "ugl",
+      "set_name": "Unglued",
+      "released_at": "1998-08-11",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ugl/61/growth-spurt?utm_source=api"
+    }
+  },
+  {
+    "id": "922663f0-f444-4364-a706-eb6b91ac36ef",
+    "name": "Elvish Impersonators",
+    "mana_cost": "{3}{G}",
+    "cmc": 4.0,
+    "type_line": "Creature — Elves",
+    "oracle_text": "As this creature enters, roll a six-sided die twice. Its base power becomes the first result and its base toughness becomes the second result.",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "power": "*",
+    "toughness": "*",
+    "image": "assets/cards/922663f0-f444-4364-a706-eb6b91ac36ef.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/2/922663f0-f444-4364-a706-eb6b91ac36ef.jpg?1783946424",
+    "uri": "https://scryfall.com/card/ugl/56/elvish-impersonators?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "922663f0-f444-4364-a706-eb6b91ac36ef",
+      "set": "ugl",
+      "set_name": "Unglued",
+      "released_at": "1998-08-11",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ugl/56/elvish-impersonators?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

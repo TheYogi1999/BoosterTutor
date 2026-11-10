@@ -68,6 +68,7 @@ function advanceResolution27(task){
    b.scryContinuation=resume;beginScry(effect.scry,effect.kind==='scry-draw'?effect.draw:0);if(!b.scry){b.scryContinuation=null;continue;}return;
   }
   if(effect.kind==='booster-tutor')return beginBoosterInterruption27('tutor',resume);
+  if(typeof resolveDiceEffect50==='function'&&resolveDiceEffect50(effect,target,{card:p.card,isCopy:task.copy>0},resume))return;
   resolveReviewedEffect(effect,target,{graveCard:task.graveCard,isCopy:task.copy>0,card:p.card});
   if(b.phase==='complete')return finishResolution27(task);
  }
@@ -84,7 +85,15 @@ commitRuleSpell=function(p){
  const spell=isInstant(p.card)||/\bSorcery\b/.test(p.card.type_line);const copies=spell?1+(b.copyNextSpell||0):1;if(spell)b.copyNextSpell=0;
  for(const i of discards)b.graveyard.push(b.hand[i]);const removed=new Set([p.index,...discards]);b.hand=b.hand.filter((card,i)=>!removed.has(i));for(const unit of sacrificed)sacrificeRuleCreature(unit);
  if(clone){
-  const resolve=()=>{const chosen=choiceTargetUnit(target,b);if(chosen){const card={...chosen.card};const unit={id:`player-${state.nextPermanentId++}`,card,originalCard:p.card,owner:'player',...parseStats(card),...creatureKeywords(card),summonedTurn:b.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false};b.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);}else b.graveyard.push(p.card);return finishResolution27({battle:b,p,copies:1});};
+  const resolve=()=>{
+   const chosen=choiceTargetUnit(target,b);
+   if(chosen){
+    const card={...chosen.card};
+    if(typeof enterDiceCreature50==='function'&&enterDiceCreature50(card,b,p.card))return;
+    const unit={id:`player-${state.nextPermanentId++}`,card,originalCard:p.card,owner:'player',...parseStats(card),...creatureKeywords(card),summonedTurn:b.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false};b.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);
+   }else b.graveyard.push(p.card);
+   return finishResolution27({battle:b,p,copies:1});
+  };
   const countered=()=>{b.graveyard.push(p.card);finishResolution27({battle:b,p,copies:1});};
   if(typeof offerEnemyCounter44==='function'&&offerEnemyCounter44(p.card,b,resolve,countered))return true;
   return resolve();
