@@ -30,3 +30,5 @@ html.fixed-game dialog.dice-roll-dialog{width:660px!important;height:520px!impor
 @keyframes dice-glow50{from{opacity:0;transform:scale(.8)}40%{opacity:1}to{opacity:.4;transform:scale(1.2)}}
 @media(prefers-reduced-motion:reduce){.die-cube,.die-shadow,.dice-settled .die-stage:after{animation:none}}
 .dice-roll-dialog:focus{outline:none}
+/* A settled result always owns the pose, even if the compositor started late. */
+.dice-settled .die-cube,.dice-settled .die-shadow{animation:none}
