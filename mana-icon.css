@@ -1,0 +1,3 @@
+/* One shared mana pool, represented by the requested five-color wheel. */
+.game-shell .mana-display .mana-symbol{display:inline-flex;align-items:center;justify-content:center;flex:none;width:24px;height:24px;line-height:1}
+.game-shell .mana-display .mana-symbol img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 4px #dbc88b3b)}

@@ -286,3 +286,7 @@ The original paid spell waits until the player continues. Countering the reactio
 Click a Treasure, Food or Clue token on the battlefield to open its action window. The window shows its effect, full activation costs (including tapping/sacrifice), and an explicit **Sacrifice** action. **Keep token**, Escape, backdrop clicks and controller Back cancel without paying. Token activation moved out of the hover/side inspector. The normal payment and single-use rules still apply; insufficient mana, tapped tokens and unfinished card choices disable activation. Availability refreshes with the battlefield, and a removed token or scene change closes its stale window.
 
 Enemies now show larger, high-contrast colored keyword badges under their portraits, with explanations on hover. Ward keeps its numeric mana cost, Mill stays visible, and ready Counterspell reactions have a gold badge. Spent/next-turn Counterspell status updates as before. The fixed 16:9 battlefield reserves room for the badges above block/spell response controls.
+
+### v0.48 — five-color mana icon
+
+The shared mana display uses the requested five-color wheel instead of the diamond. The image is bundled locally, keeps its transparent background, and is displayed at 24 × 24 without changing mana/payment rules. The floating-mana indicator remains distinct. Matching image source: [MTG Wiki, 5Colors.png](https://static.wikia.nocookie.net/mtgsalvation_gamepedia/images/c/c8/5Colors.png).
