@@ -31,9 +31,18 @@ function d20Markup55(result,label,index){
  const face=D20_GEOMETRY55[result-1];
  return `<div class="rolled-die" style="--die-x:${face.x}deg;--die-y:${face.y}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><div class="die-stage" aria-hidden="true"><div class="die-shadow"></div><div class="die-flight"><div class="die-hop"><div class="die-cube die-d20">${D20_GEOMETRY55.map((f,i)=>`<div class="d20-face" style="transform:matrix3d(${f.matrix})"><svg viewBox="0 0 86 86"><polygon points="${f.points}" fill="${i%2?'#244d69':'#356b84'}"/><text x="43" y="43">${i+1}</text></svg></div>`).join('')}</div></div></div></div><b class="die-result-value" data-die-result="${result}">?</b></div>`;
 }
-function coinMarkup55(result,label,index){
- return `<div class="rolled-die" style="--coin-y:${result?0:180}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><button type="button" class="die-stage coin-pick" data-coin-choice="${index}" aria-label="Keep coin ${index+1}" aria-pressed="false" disabled><span class="die-shadow"></span><span class="die-flight"><span class="die-hop"><span class="coin-body"><span class="coin-face coin-heads"><i>☀</i><small>HEADS</small></span><span class="coin-face coin-tails"><i>☾</i><small>TAILS</small></span></span></span></span></button><b class="die-result-value" data-die-result="${result}">?</b></div>`;
+function coinFaceMarkup57(side) {
+ const heads=side==='heads';
+ const beads=Array.from({length:32},(_,i)=>{const angle=i*Math.PI/16;return `<circle cx="${(48+37*Math.cos(angle)).toFixed(2)}" cy="${(48+37*Math.sin(angle)).toFixed(2)}" r=".7"/>`;}).join('');
+ const sun=`<circle cx="48" cy="43" r="12"/>${Array.from({length:12},(_,i)=>`<path d="M46 25 48 17 50 25Z" transform="rotate(${i*30} 48 43)"/>`).join('')}<circle class="coin-relief-line" cx="48" cy="43" r="8"/>`;
+ const moon='<path d="M56 19a24 24 0 1 0 13 41 26 26 0 0 1-13-41Z"/><path d="m68 26 2 5 5 2-5 2-2 5-2-5-5-2 5-2zM33 20l1.3 3.7L38 25l-3.7 1.3L33 30l-1.3-3.7L28 25l3.7-1.3Z"/>';
+ return `<span class="coin-face coin-${side}" aria-hidden="true"><svg class="coin-engraving" viewBox="0 0 96 96"><g class="coin-beading">${beads}</g><circle class="coin-relief-line" cx="48" cy="48" r="33.5"/><g class="coin-emblem">${heads?sun:moon}</g><text x="48" y="78">${heads?'HEADS':'TAILS'}</text></svg></span>`;
 }
+function coinMarkup55(result,label,index){
+ const edge=Array.from({length:64},(_,i)=>{const angle=i*360/64,light=32+12*Math.cos((angle+35)*Math.PI/180);return `<span class="coin-edge" style="transform:rotateZ(${angle}deg) translateY(-47px) rotateX(90deg);--edge-metal:hsl(20 51% ${light.toFixed(1)}%)"></span>`;}).join('');
+ return `<div class="rolled-die" style="--coin-y:${result?0:180}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><button type="button" class="die-stage coin-pick" data-coin-choice="${index}" aria-label="Keep coin ${index+1}" aria-pressed="false" disabled><span class="die-shadow coin-shadow"><span class="coin-shadow-ink"></span></span><span class="die-flight"><span class="die-hop"><span class="coin-body" aria-hidden="true">${edge}${coinFaceMarkup57('heads')}${coinFaceMarkup57('tails')}</span></span></span></button><b class="die-result-value" data-die-result="${result}">?</b></div>`;
+}
+
 function chooseCoin55(index){
  const job=visibleDiceRoll50;
  if(!job||job.kind!=='coin'||!job.ready||job.closed||state.battle!==job.battle||!Number.isInteger(index)||index<0||index>=job.rawResults.length)return false;

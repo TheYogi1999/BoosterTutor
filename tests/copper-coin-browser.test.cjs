@@ -1,0 +1,40 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{
+  const page=await browser.newPage({viewport:{width:1600,height:900},ignoreHTTPSErrors:true,reducedMotion:'no-preference'}),errors=[];
+  page.on('pageerror',error=>errors.push(error.message));await page.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
+  await page.evaluate(()=>{state.soundOn=false;state.playerHealth=30;state.pool=playableCards(BUNDLED_CARDS);state.landPool=FALLBACK_LANDS;state.campTokens=[];state.deck=Array(40).fill(BUNDLED_CARDS[0]);beginBattle(1);state.battle.hand=[];state.battle.creatures=[];window.coinCalls57=0;window.coinSequence57=[1,0];rollCoinValue55=()=>{coinCalls57++;return coinSequence57.shift()};window.coinResult57=null;state.battle.permanents=[{id:'thumb57',card:BUNDLED_CARDS.find(c=>c.name==="Krark's Thumb"),attachedTo:null}];beginCoinFlip55('Tavern Swindler · copper throw',()=>'',win=>coinResult57=win)});
+  assert.equal(await page.locator('.coin-body').count(),2);assert.equal(await page.locator('.coin-edge').count(),128);assert.equal(await page.locator('.coin-engraving').count(),4);
+  assert.equal(await page.evaluate(()=>settleDiceRoll50()),false);assert.equal(await page.locator('#dice-continue').isDisabled(),true);
+  await page.waitForFunction(()=>document.querySelector('.coin-body').getAnimations().some(a=>a.currentTime>40));
+  const motion=await page.evaluate(()=>{
+   const body=document.querySelector('.coin-body'),flight=document.querySelector('.die-flight'),hop=document.querySelector('.die-hop'),ink=document.querySelector('.coin-shadow-ink');
+   const animations=[...document.querySelectorAll('.coin-body,.die-flight,.die-hop,.coin-shadow,.coin-shadow-ink')].flatMap(el=>el.getAnimations());animations.forEach(a=>a.pause());
+   const matrix=el=>new DOMMatrix(getComputedStyle(el).transform),frames=[];
+   for(let time=0;time<2250;time+=1000/60){animations.forEach(a=>{a.currentTime=time});const transform=matrix(body);frames.push({x:matrix(flight).m41,y:matrix(hop).m42,z:transform.m33,shadow:Number(getComputedStyle(ink).opacity)});}
+   animations.forEach(a=>{a.currentTime=2249.9});const last=[...matrix(body).toFloat64Array()];
+   animations.forEach(a=>{a.currentTime=0;a.play()});
+   return {frames,last,front:getComputedStyle(document.querySelector('.coin-heads')).transform,back:getComputedStyle(document.querySelector('.coin-tails')).transform,headCopper:getComputedStyle(document.querySelector('.coin-heads')).backgroundImage,tailCopper:getComputedStyle(document.querySelector('.coin-tails')).backgroundImage};
+  });
+  const flips=motion.frames.slice(1).filter((frame,i)=>Math.sign(frame.z)!==Math.sign(motion.frames[i].z)).length;
+  assert.ok(flips>=7,`coin visibly flips end over end four times, observed ${flips} face changes`);assert.ok(motion.frames.some(f=>Math.abs(f.z)<.12),'coin turns edge-on');assert.ok(motion.frames.some(f=>f.z<-.8),'reverse face really turns toward the camera');assert.ok(motion.frames.some(f=>f.z>.8),'front face turns toward the camera');
+  assert.ok(motion.frames.some(f=>f.y<-140)&&motion.frames.some(f=>f.y>15),'weighty arc and hard initial contact');assert.ok(Math.min(...motion.frames.map(f=>f.shadow))<.2&&Math.max(...motion.frames.map(f=>f.shadow))>.8,'ground shadow tightens at impact');
+  assert.match(motion.headCopper,/168, 91, 56/);assert.match(motion.tailCopper,/153, 80, 48/);assert.equal(cssDepth(motion.front),6);assert.equal(cssDepth(motion.back),-6);
+  // Capture an edge-on frame using the real animation, then let it finish.
+  await page.evaluate(()=>{const animations=[...document.querySelectorAll('.coin-body,.die-flight,.die-hop,.coin-shadow,.coin-shadow-ink')].flatMap(el=>el.getAnimations());animations.forEach(a=>a.pause());window.savedCoinAnimations57=animations;const body=document.querySelector('.coin-body'),spin=body.getAnimations()[0];let best=0,score=Infinity;for(let t=350;t<1200;t+=3){spin.currentTime=t;const value=Math.abs(new DOMMatrix(getComputedStyle(body).transform).m33);if(value<score){score=value;best=t}}animations.forEach(a=>{a.currentTime=best})});await page.screenshot({path:'work/coin57-edge.png'});await page.evaluate(()=>savedCoinAnimations57.forEach(a=>{a.currentTime=0;a.play()}));
+  await page.waitForFunction(()=>state.battle.diceRoll?.ready);assert.equal(await page.evaluate(()=>coinCalls57),2);assert.equal(await page.evaluate(()=>coinResult57),null);assert.equal(await page.locator('#dice-continue').isDisabled(),true);
+  const landed=await page.locator('.coin-body').first().evaluate(el=>[...new DOMMatrix(getComputedStyle(el).transform).toFloat64Array()]);assert.ok(landed.every((value,i)=>Math.abs(value-motion.last[i])<.002),'final rocking pose reaches rest without snapping');
+  const faceDirections=await page.locator('.coin-body').evaluateAll(bodies=>bodies.map(body=>{const parent=new DOMMatrix(getComputedStyle(body).transform);return [...body.querySelectorAll('.coin-face')].map(face=>({side:face.classList.contains('coin-heads')?'heads':'tails',z:parent.multiply(new DOMMatrix(getComputedStyle(face).transform)).m33})).sort((a,b)=>b.z-a.z)[0].side}));assert.deepEqual(faceDirections,['heads','tails']);
+  for(const viewport of [{width:1600,height:900},{width:1280,height:720},{width:390,height:844},{width:820,height:1180}]){await page.setViewportSize(viewport);await page.waitForFunction(()=>Math.abs(parseFloat(document.documentElement.style.getPropertyValue('--game-scale'))-Math.min(innerWidth/1600,innerHeight/900))<.0001);const boxes=await page.locator('.coin-body,#dice-continue,.dice-table-result').evaluateAll(els=>els.map(el=>el.getBoundingClientRect().toJSON()));for(const r of boxes)assert.ok(r.left>=-1&&r.right<=viewport.width+1&&r.top>=-1&&r.bottom<=viewport.height+1);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1||document.documentElement.scrollHeight>innerHeight+1),false);}
+  await page.setViewportSize({width:1600,height:900});await page.waitForTimeout(100);await page.screenshot({path:'work/coin57-landed.png'});
+  await page.evaluate(()=>{controller.enable();controller.focus(document.querySelector('[data-coin-choice="1"]'));controller.activate()});await page.locator('#dice-continue').click();assert.equal(await page.evaluate(()=>coinResult57),false);assert.equal(await page.locator('.hand-panel').evaluate(el=>el.inert),false);
+  // Reduced motion renders the same solid object and correct outcome immediately.
+  await page.emulateMedia({reducedMotion:'reduce'});await page.evaluate(()=>{state.battle.permanents=[];rollCoinValue55=()=>1;beginCoinFlip55('Reduced motion',()=>'',win=>coinResult57=win)});assert.equal(await page.evaluate(()=>state.battle.diceRoll.ready),true);assert.equal(await page.locator('.coin-body').evaluate(el=>el.getAnimations().length),0);assert.equal(await page.locator('.coin-edge').count(),64);await page.locator('#dice-continue').click();assert.equal(await page.evaluate(()=>coinResult57),true);
+  // Scene changes reject the old throw even when its delayed motion completes.
+  await page.emulateMedia({reducedMotion:'no-preference'});await page.evaluate(()=>beginCoinFlip55('Canceled throw',()=>'',()=>{throw Error('Stale coin applied')}));const stale=await page.evaluate(()=>state.battle.diceRoll.id);await page.evaluate(()=>showScreen('start-screen'));assert.equal(await page.evaluate(id=>finishDiceAnimation50(id),stale),false);assert.equal(await page.evaluate(id=>settleDiceRoll50(id),stale),false);
+  assert.deepEqual(errors,[]);console.log('PASS copper front/back, solid 12px reeded cylinder, four real end-over-end flips and edge-on frames, heavy arc/impact/shadow, rocking without final snap, exact heads/tails, immutable results, Thumb/controller choice, reduced motion, stale cleanup and four fitted layouts.');
+ }finally{await browser.close()}
+})().catch(error=>{console.error(error);process.exit(1)});
+function cssDepth(value){const values=value.slice(value.indexOf('(')+1,-1).split(',').map(Number);return values.length===16?values[14]:0;}

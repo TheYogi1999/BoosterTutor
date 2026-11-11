@@ -57,7 +57,7 @@ function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle,
   $('#dice-tray').getBoundingClientRect();
   const motions=[...$('#dice-tray').querySelectorAll('.die-flight,.die-hop,.die-cube,.coin-body')].flatMap(el=>el.getAnimations?.()||[]);
   if(motions.length)Promise.all(motions.map(animation=>animation.finished.catch(()=>{}))).then(()=>finishDiceAnimation50(job.id));
-  else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),1950+(labels.length-1)*140);
+  else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),(kind==='coin'?2400:1950)+(labels.length-1)*140);
  }
  return true;
 }

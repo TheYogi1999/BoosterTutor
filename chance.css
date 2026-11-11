@@ -6,17 +6,45 @@
 .d20-face text{font:bold 16px Georgia,serif;fill:#fff3cb;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:#123447;stroke-width:.8px}
 .coin-pick{padding:0!important;border:0!important;border-radius:50%;background:none!important;box-shadow:none!important;min-width:0;color:inherit;cursor:pointer;overflow:visible!important}
 .coin-pick:disabled{opacity:1!important;cursor:default}
-.coin-pick:focus-visible{outline:2px solid #ffe2a3;outline-offset:5px}
-.coin-body{position:relative;display:block;width:86px;height:86px;transform-style:preserve-3d;transform:rotateY(var(--coin-y));will-change:transform;animation:coin-tumble55 1.8s cubic-bezier(.18,.62,.3,1) var(--die-delay) both}
-.coin-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px ridge #e9bb67;border-radius:50%;background:radial-gradient(circle at 30% 22%,#ffedb2,#cc9341 65%,#896024);box-shadow:inset 0 0 0 3px #90632c,inset 0 0 0 5px #fce4a2,0 0 0 1px #694820;backface-visibility:hidden;transform:translateZ(3px);color:#62451f;text-shadow:0 1px #fff2bd}
-.coin-tails{transform:rotateY(180deg) translateZ(3px);background:radial-gradient(circle at 30% 22%,#e4eaf0,#9eaebb 65%,#657887);border-color:#cdd9df;box-shadow:inset 0 0 0 3px #6b7c89,inset 0 0 0 5px #e0ebeb,0 0 0 1px #465a66;color:#334d5f;text-shadow:0 1px #f1ffff}
-.coin-face i{font:42px/43px Georgia,serif;font-style:normal}
-.coin-face small{font:700 9px/13px var(--sans);letter-spacing:1.6px}
+.coin-pick:focus-visible{outline:none}
+.coin-pick:focus-visible .coin-body,.coin-pick[aria-pressed="true"] .coin-body{outline:1.5px solid #e7bd99;outline-offset:5px;border-radius:50%}
+/* Solid 12px copper cylinder: two struck faces and 64 reeded wall facets. */
+.coin-body{position:relative;left:-5px;top:-5px;display:block;width:96px;height:96px;transform-origin:48px 48px;transform-style:preserve-3d;transform:rotateX(36deg) rotateY(var(--coin-y)) rotateZ(-14deg);will-change:transform;animation:coin-flip57 2.25s linear var(--die-delay) both}
+.coin-edge{position:absolute;left:45.55px;top:42px;width:4.9px;height:12px;backface-visibility:hidden;background:linear-gradient(90deg,#32170e,var(--edge-metal) 25%,#e0a47c 45%,var(--edge-metal) 70%,#57301e);box-shadow:inset 0 1px #f4c19b88,inset 0 -1px #3f1c10;transform-origin:50% 50%}
+.coin-face{position:absolute;inset:0;display:block;box-sizing:border-box;border:1.5px solid #cd9671;border-radius:50%;background:repeating-linear-gradient(113deg,#ffdab10a 0 1px,#2d100d0a 1px 3px),radial-gradient(ellipse at 25% 18%,#f4c7a0 0%,#cf8a60 22%,#a85b38 48%,#713c27 77%,#c88a5a 100%);box-shadow:inset 0 0 0 3px #6d3526,inset 0 0 0 4.5px #eab38a,inset 0 0 0 7px #86482f,inset 0 0 0 8px #d4966e;backface-visibility:hidden;transform:translateZ(6px);color:#5c2d1b}
+.coin-tails{transform:rotateY(180deg) translateZ(6px);background:repeating-linear-gradient(113deg,#ffdab10a 0 1px,#2d100d0a 1px 3px),radial-gradient(ellipse at 25% 18%,#eab791 0%,#c68057 22%,#995030 50%,#6b3524 77%,#bd8054 100%)}
+.coin-engraving{display:block;width:100%;height:100%;overflow:visible;fill:#64331f;stroke:#efbd9680;stroke-width:.65;paint-order:stroke fill;filter:drop-shadow(0 1px 0 #f5c7a680)}
+.coin-beading{fill:#e9ac7e;stroke:#5e2e1e;stroke-width:.5}
+.coin-relief-line{fill:none;stroke:#61321e;stroke-width:.9}
+.coin-emblem{fill:#734026;stroke:#f5c19a99;stroke-width:.75}
+.coin-engraving text{font:700 9px Georgia,serif;letter-spacing:1.5px;text-anchor:middle;stroke-width:.4;fill:#4b2519}
+.dice-roll-dialog[data-kind="coin"] .die-flight{animation:coin-slide57 2.25s cubic-bezier(.18,.55,.25,1) var(--die-delay) both}
+.dice-roll-dialog[data-kind="coin"] .die-hop{animation:coin-hop57 2.25s linear var(--die-delay) both}
+.dice-roll-dialog[data-kind="coin"] .coin-shadow{left:20px;right:20px;bottom:15px;height:16px;background:none;filter:none;opacity:1;animation:coin-slide57 2.25s cubic-bezier(.18,.55,.25,1) var(--die-delay) both}
+.coin-shadow-ink{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(ellipse,#000c,#0007 40%,transparent 72%);filter:blur(3px);opacity:.75;animation:coin-shadow57 2.25s linear var(--die-delay) both}
 .coin-ignored{opacity:.42;filter:saturate(.4)}
-.coin-pick[aria-pressed="true"]{outline:2px solid #ffe0a0;outline-offset:6px;filter:drop-shadow(0 0 9px #f1c47d88)}
+.coin-pick[aria-pressed="true"]{filter:drop-shadow(0 0 7px #d69a6a66)}
 .dice-roll-dialog[data-kind="coin"] .die-result-value{font-size:16px}
-.dice-settled .coin-body{animation:none;will-change:auto}
-@keyframes coin-tumble55{from{transform:rotateX(35deg) rotateY(calc(var(--coin-y) - 1440deg)) rotateZ(-20deg)}to{transform:rotateX(0deg) rotateY(var(--coin-y)) rotateZ(0deg)}}
+.dice-roll-dialog[data-kind="coin"].dice-settled :is(.die-flight,.die-hop,.die-shadow,.coin-body,.coin-shadow-ink){animation:none;will-change:auto}
+/* The throw rises, falls hard once, then makes two small heavy rebounds. */
+@keyframes coin-slide57{from{transform:translate3d(var(--throw-x),0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes coin-hop57{
+ 0%{transform:translate3d(0,-110px,80px);animation-timing-function:cubic-bezier(0,0,.4,1)}
+ 18%{transform:translate3d(0,-150px,100px);animation-timing-function:cubic-bezier(.6,0,1,1)}
+ 70%{transform:translate3d(0,18px,0);animation-timing-function:cubic-bezier(0,0,.35,1)}
+ 79%{transform:translate3d(0,-8px,0);animation-timing-function:cubic-bezier(.65,0,1,1)}
+ 87%{transform:translate3d(0,4px,0);animation-timing-function:cubic-bezier(0,0,.35,1)}
+ 93%{transform:translate3d(0,-2px,0);animation-timing-function:cubic-bezier(.65,0,1,1)}
+ 100%{transform:translate3d(0,0,0)}
+}
+@keyframes coin-flip57{
+ 0%{transform:rotateX(-1404deg) rotateY(var(--coin-y)) rotateZ(-26deg);animation-timing-function:cubic-bezier(.22,.38,.28,1)}
+ 76%{transform:rotateX(48deg) rotateY(var(--coin-y)) rotateZ(-11deg);animation-timing-function:ease-in-out}
+ 85%{transform:rotateX(28deg) rotateY(var(--coin-y)) rotateZ(-16deg);animation-timing-function:ease-in-out}
+ 93%{transform:rotateX(40deg) rotateY(var(--coin-y)) rotateZ(-12deg);animation-timing-function:ease-in-out}
+ 100%{transform:rotateX(36deg) rotateY(var(--coin-y)) rotateZ(-14deg)}
+}
+@keyframes coin-shadow57{0%{opacity:.18;transform:scale(.55)}18%{opacity:.12;transform:scale(.45)}70%{opacity:.85;transform:scale(1.12)}79%{opacity:.55;transform:scale(.9)}87%{opacity:.8;transform:scale(1.04)}93%{opacity:.68;transform:scale(.98)}100%{opacity:.75;transform:scale(1)}}
 .game-shell .unit-controls.has-coin-ability{grid-template-columns:minmax(0,1fr) 60px 54px}
 .unit-controls [data-activate-coin]{background:linear-gradient(#8b6a38,#574425);color:#ffe1a4}
 #inspector-content [data-activate-coin]{width:100%;font-size:11px!important;padding:8px!important;line-height:1.5!important;margin-top:8px}
@@ -36,7 +64,7 @@ html.fixed-game .chance-choice-dialog{width:950px!important;height:660px!importa
 .chance-choice-dialog[data-cards="false"] #chance-choice-options b{font:500 26px/1.4 Georgia,serif}
 .chance-choice-actions{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid #c8aa7644;padding-top:16px}
 .chance-choice-actions button{font-size:12px!important}
-@media(prefers-reduced-motion:reduce){.coin-body{animation:none}}
+@media(prefers-reduced-motion:reduce){.dice-roll-dialog[data-kind="coin"] :is(.die-flight,.die-hop,.die-shadow,.coin-body,.coin-shadow-ink){animation:none}}
 
 html.fixed-game .chance-choice-dialog[data-cards="false"]{height:440px!important}
 .chance-choice-dialog[data-cards="false"] #chance-choice-options{height:170px}

@@ -1,5 +1,15 @@
 # Booster Tutor — The Aether Expedition
 
+## Solid copper coin flips (v0.57)
+
+The battlefield coin is now a solid copper cylinder with two engraved sun/moon faces, beaded rims and 64 reeded edge facets around a visible 12px wall. Both heads and tails use warm copper with struck highlights and fine surface texture. The resting pose is tilted so the thickness remains visible; focus and selection outlines follow the coin rather than its larger input area.
+
+A separate 2.25-second coin trajectory rises, falls into a firm first impact and makes two small heavy rebounds. Four end-over-end rotations visibly alternate the actual front and reverse faces, then settle with a short rocking motion. A height-sensitive ground shadow changes with the fall and landing. Natural heads/tails results remain immutable, and confirmation waits for the complete flight and rocking animation, including the staggered second coin from Krark’s Thumb. Reduced motion immediately shows the same correct solid coin. D6/D20 motion and all card rules remain unchanged.
+
+```sh
+node tests/copper-coin-browser.test.cjs
+```
+
 ## More expedition backgrounds (v0.56)
 
 Four new original SVG landscapes join the existing fjord, dunes, forest and temple: **volcanic mountains** at Valakut, the Molten Pinnacle; **ocean cliffs** at Halimar Depths; a **crystal cavern** at Crystal Vein; and a **moonlit marsh** at Bojuka Bog. Layered silhouettes, lava streams, water reflections, crystal facets and mist sit behind the existing battlefield shading so cards and text remain legible.
