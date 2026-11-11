@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 700">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#150e20"/><stop offset=".55" stop-color="#4d2532"/><stop offset="1" stop-color="#b95b3c"/></linearGradient>
+ <radialGradient id="eruption"><stop stop-color="#fff0a2" stop-opacity=".8"/><stop offset=".22" stop-color="#f78339" stop-opacity=".6"/><stop offset="1" stop-color="#df4c2a" stop-opacity="0"/></radialGradient>
+ <linearGradient id="rock" x2=".25" y2="1"><stop stop-color="#301f2b"/><stop offset="1" stop-color="#0e1723"/></linearGradient>
+ <linearGradient id="lava" x2="0" y2="1"><stop stop-color="#ffd67c"/><stop offset=".45" stop-color="#f69a47"/><stop offset="1" stop-color="#c44331"/></linearGradient>
+ <linearGradient id="haze" x2="0" y2="1"><stop stop-color="#f9b25f" stop-opacity="0"/><stop offset=".5" stop-color="#fcb66d" stop-opacity=".16"/><stop offset="1" stop-color="#ef683a" stop-opacity="0"/></linearGradient>
+</defs>
+<path fill="url(#sky)" d="M0 0h1700v700H0z"/>
+<ellipse cx="1110" cy="205" rx="530" ry="310" fill="url(#eruption)"/>
+<g fill="#251d2d" opacity=".8"><path d="M0 144Q180 84 380 126T730 91Q933 39 1101 80T1443 55Q1590 25 1700 62V0H0Z"/><path d="M765 135Q851 96 920 119Q968 89 1027 105Q1068 74 1148 94Q1225 60 1300 89L1395 0H851Z" opacity=".65"/></g>
+<path d="M0 370 140 244 225 318 378 143 527 327 665 235 810 355 952 279 1107 334 1309 184 1470 329 1589 246 1700 352V700H0Z" fill="#503240"/>
+<path d="m254 300 124-157 73 136-64-55-36 27-28-16zM1191 316l118-132 83 116-77-46-30 34-30-8z" fill="#85504b" opacity=".65"/>
+<path d="M600 504 833 350 1015 175 1065 164 1100 177 1132 164 1192 190 1390 413 1520 487V700H585Z" fill="url(#rock)"/>
+<path d="m1015 175 50-11 35 13 32-13 60 26-53 18-37-15-41 8z" fill="#f5bb65"/>
+<path d="m1099 196-17 61 32 49-12 49 43 50-13 48 87 75-4 48 62 124h131l-89-141-21-63-73-71 10-57-43-47 4-55-51-56-13-48z" fill="#f16d39" opacity=".22"/>
+<path d="m1099 196-7 65 31 47-10 44 40 48-11 50 86 73-4 47 66 130h54l-83-146-9-42-75-71 9-49-43-48 4-49-37-50z" fill="url(#lava)"/>
+<path d="m1099 196 1 69 34 42-10 45 41 49-12 43 88 79-3 49 78 128" fill="none" stroke="#ffe4a0" stroke-width="5" opacity=".75"/>
+<path d="M0 507 107 396 191 463 332 330 454 466 556 423 693 530 794 485 911 558 1038 497 1173 573 1359 469 1460 523 1590 387 1700 470V700H0Z" fill="#17212a"/>
+<path d="M878 700q49-63 146-81t166-61q-45 43-104 60t-88 82zM1472 700l-30-77 30-39-9-49 18-38-3 51 12 38-23 38 48 76z" fill="url(#lava)" opacity=".8"/>
+<path d="M0 535q300-38 594-3t540-5 566-11v110H0Z" fill="url(#haze)"/>
+<g fill="#ffcb80" opacity=".55"><circle cx="892" cy="188" r="2"/><circle cx="963" cy="242" r="1.5"/><circle cx="1047" cy="117" r="2"/><circle cx="1147" cy="95" r="1.5"/><circle cx="1189" cy="264" r="2"/><circle cx="1272" cy="152" r="1"/><circle cx="1203" cy="129" r="2"/><circle cx="1349" cy="327" r="1.5"/><circle cx="1028" cy="294" r="1"/></g>
+<path d="M0 636q186-77 390-12t329 26 393 23 588-68v95H0Z" fill="#0c1721" opacity=".88"/>
+</svg>

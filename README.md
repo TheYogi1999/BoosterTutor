@@ -1,5 +1,15 @@
 # Booster Tutor — The Aether Expedition
 
+## More expedition backgrounds (v0.56)
+
+Four new original SVG landscapes join the existing fjord, dunes, forest and temple: **volcanic mountains** at Valakut, the Molten Pinnacle; **ocean cliffs** at Halimar Depths; a **crystal cavern** at Crystal Vein; and a **moonlit marsh** at Bojuka Bog. Layered silhouettes, lava streams, water reflections, crystal facets and mist sit behind the existing battlefield shading so cards and text remain legible.
+
+Each new run randomly chooses four distinct landscape types, then an MTG land within each selected type. All eight landscape types have an equal opportunity to be selected; the multiple forest land names no longer bias the scenery. The chosen locations remain stable through turns and encounter waves. Camps and shops inherit their location’s scene and accent. Existing runs retain their current locations. The backgrounds are bundled vector assets and need no external image service.
+
+```sh
+node tests/stages-browser.test.cjs
+```
+
 ## D20s and coin-flip cards (v0.55)
 
 Seven more rules-reviewed cards bring the bundled catalog to **125 cards**, with **122 eligible for ordinary boosters and shops**. Their images use the original English paper printings: AFR Hoarding Ogre / Contact Other Plane, UST Squirrel-Powered Scheme, RTR Tavern Swindler, MH2 Tavern Scoundrel and MRD Krark’s Thumb / Fiery Gambit.

@@ -32,8 +32,21 @@ const LAND_STAGES = [
   { name: 'Shivan Reef', color: '#a78bc9', scene: 'fjord' },
   { name: 'Stomping Ground', color: '#d88a54', scene: 'dunes' },
   { name: 'Misty Rainforest', color: '#80b6a2', scene: 'forest' },
-  { name: 'Overgrown Tomb', color: '#90a276', scene: 'forest' }
+  { name: 'Overgrown Tomb', color: '#90a276', scene: 'forest' },
+  { name: 'Valakut, the Molten Pinnacle', color: '#ed905d', scene: 'volcano' },
+  { name: 'Halimar Depths', color: '#70bed0', scene: 'ocean' },
+  { name: 'Crystal Vein', color: '#b49add', scene: 'crystal' },
+  { name: 'Bojuka Bog', color: '#a4b97b', scene: 'marsh' }
 ];
+// Choose scenery first so the several forest lands cannot crowd out other biomes.
+function chooseRunStages56() {
+  const groups = new Map();
+  for (const stage of LAND_STAGES) {
+    if (!groups.has(stage.scene)) groups.set(stage.scene, []);
+    groups.get(stage.scene).push(stage);
+  }
+  return shuffle([...groups.values()]).slice(0, ENCOUNTERS.length).map(lands => shuffle(lands)[0]);
+}
 const FALLBACK_LANDS = BUNDLED_LANDS.map(card => ({...card, oracle_text: '{T}: Add one mana.'}));
 const ENCOUNTERS = [
   { name: 'Mosswood Ambush', rank: 'SKIRMISH', location: 'THE FORGOTTEN GLADE', foeCount: 2 },
@@ -326,7 +339,7 @@ function startNewRun() {
   state.coins = 0; state.shop = null; syncCoins();
   state.node = 1;
   state.battle = null;
-  state.stageLocations = shuffle(LAND_STAGES).slice(0, ENCOUNTERS.length);
+  state.stageLocations = chooseRunStages56();
   state.selection.clear();
   showScreen('loading-screen');
   ensureCardPool().then(({ cards, lands, fallback, missingCount, sourceCount, warning }) => {
@@ -2152,7 +2165,7 @@ function styleTravelStop(screenId, labelId, kind) {
   const screen = $('#' + screenId);
   screen.dataset.scene = stage.scene;
   screen.style.setProperty('--stage-accent', stage.color);
-  screen.style.setProperty('--stage-scene', `url('assets/stages/${stage.scene}.svg?v=0.32.2')`);
+  screen.style.setProperty('--stage-scene', `url('assets/stages/${stage.scene}.svg?v=0.56')`);
   $('#' + labelId).textContent = `${stage.name} · ${kind}`;
 }
 

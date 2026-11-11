@@ -35,7 +35,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  await page.evaluate(()=>{state.coins=100;showShop()});
  assert.equal(await page.locator('#shop-location').textContent(),'Temple Garden · Trading post');
  assert.equal(await page.locator('#shop-screen').getAttribute('data-scene'),'forest');
- assert.ok(await page.locator('#shop-screen').evaluate(e=>getComputedStyle(e).backgroundImage.includes('forest.svg?v=0.32.2')));
+ assert.ok(await page.locator('#shop-screen').evaluate(e=>getComputedStyle(e).backgroundImage.includes('/stages/forest.svg')));
  assert.deepEqual(errors,[]);console.log('PASS options, credits, deck/library access, shared audio style, mana placement, stable MTG lands and matching scene colours across viewports');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
