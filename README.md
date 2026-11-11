@@ -1,5 +1,24 @@
 # Booster Tutor — The Aether Expedition
 
+## D20s and coin-flip cards (v0.55)
+
+Seven more rules-reviewed cards bring the bundled catalog to **125 cards**, with **122 eligible for ordinary boosters and shops**. Their images use the original English paper printings: AFR Hoarding Ogre / Contact Other Plane, UST Squirrel-Powered Scheme, RTR Tavern Swindler, MH2 Tavern Scoundrel and MRD Krark’s Thumb / Fiery Gambit.
+
+- **Hoarding Ogre:** when it actually attacks, roll a visible twenty-sided die before damage. Results 1–9 create one Treasure; 10–19 create two; exactly 20 creates three. Multiple Ogres resolve their separate rolls before their respective fights and the next combat phase. Queuing an attack does not trigger it.
+- **Contact Other Plane:** roll a D20. 1–9 draw two; 10–19 scry two then draw two; exactly 20 scry three then draw three. Copied spells finish their own roll, scry and draw in order. Empty-library draws retain the existing loss rule.
+- **Squirrel-Powered Scheme:** each copy adds two to every player die, including both Elvish Impersonators rolls. Natural faces and modified totals are shown separately. Enemy checks and coins are unaffected. Unlisted modified results have no table effect: a 7/8 does not produce Mox mana or a Goblin Tutor search, and a 21/22 does not qualify as a D20 table’s exact 20.
+- **Tavern Swindler:** tap and pay three life before flipping. Heads wins and gains six life. Summoning sickness prevents activation; paying the last three life ends the run before flipping.
+- **Tavern Scoundrel:** every won, kept coin result creates two Treasure per Scoundrel. Its activation explicitly chooses another controlled permanent, then pays one generic mana, taps and sacrifices that choice. Creatures, artifacts, enchantments, tokens and mana cards are supported. Cancel is free, stale choices cannot pay, and sacrificed tokens do not become graveyard cards.
+- **Krark’s Thumb:** flip two visible coins, explicitly choose one result and ignore the other before continuing. Ignored flips do not trigger Scoundrel. The legendary-rule adaptation retains the newly cast Thumb and puts the previous one into the graveyard.
+- **Fiery Gambit:** choose a legal creature target and resolve Counterspell/Ward before flipping. After each win, choose to collect or flip again. A loss erases spell rewards, but keeps Scoundrel Treasure already created. Collecting at one or more wins deals three to the target; two or more also deals six to every living monster (the explicit adaptation of “each opponent”); three or more also draws nine and untaps all mana cards. Copies restart at zero wins. Further wins beyond three do not add another spell-reward tier.
+
+D20s use twenty triangular 3D faces. Gold HEADS / silver TAILS coins fly, spin and land on the battlefield with a short metallic cue through the shared mute-aware audio bus. Reduced motion immediately reveals results. Coin decisions, sacrifice choices, battlefield Flip buttons and inspection actions support mouse, keyboard and controller. New rules are visible in collection filters, card previews, boosters and shops. Combat-created Treasure uses the existing click-to-sacrifice window and lasts for the current encounter; it does not add permanent camp inventory or run-deck cards.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs tests/chance.test.cjs
+node tests/chance-browser.test.cjs
+```
+
 ## Smoother dice and direct Mox activation (v0.54)
 
 Dice now use one continuous decelerating horizontal path, independent diminishing bounces and a consistent rotation transform. The floor shadow follows the same forward movement. The final animated pose matches the resting pose, and results wait for the flight, bounce and rotation to finish. Reduced motion remains immediate.

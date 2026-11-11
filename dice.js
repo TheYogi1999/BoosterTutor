@@ -31,17 +31,21 @@ function syncDiceWindow50(){
 }
 function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle,options={}){
  if(!battle||state.battle!==battle||battle.phase==='complete'||battle.diceRoll)return false;
- const results=Object.freeze(labels.map(()=>rollD6Value50()));
- const job={id:`roll-${state.nextPermanentId++}`,source,labels:[...labels],results,battle,apply,resume,summary:summary(results),ready:false,closed:false};
+ const sides=options.sides||6,kind=options.kind||'die';
+ const rawResults=Object.freeze(labels.map(()=>kind==='coin'?rollCoinValue55():sides===20?rollD20Value55():rollD6Value50()));
+ const modifier=kind==='die'&&options.owner!=='enemy'&&typeof diceModifier55==='function'?diceModifier55(battle):0;
+ const results=Object.freeze(rawResults.map(value=>value+modifier));
+ const job={id:`roll-${state.nextPermanentId++}`,source,labels:[...labels],results,rawResults,modifier,sides,kind,selected:kind==='coin'&&labels.length>1?null:0,battle,apply,resume,summarize:summary,summary:summary(results),ready:false,closed:false};
  visibleDiceRoll50=job;battle.diceRoll=job;
  hideCardPreview();
  renderBattle();
  $('#dice-card-name').textContent=source;
- $('#dice-roll-heading').textContent=options.owner==='enemy'?'ENEMY CAST CHECK · D6':'DICE ROLL · D6';
+ $('#dice-roll-heading').textContent=kind==='coin'?'COIN FLIP · HEADS WINS':options.owner==='enemy'?'ENEMY CAST CHECK · D6':`DICE ROLL · D${sides}${modifier?` · +${modifier}`:''}`;
  $('#dice-roll-dialog').dataset.owner=options.owner||'player';
+ $('#dice-roll-dialog').dataset.kind=kind;
  $('#dice-roll-dialog').classList.remove('dice-settled');
- $('#dice-tray').innerHTML=results.map((result,i)=>dieCubeMarkup50(result,labels[i],i)).join('');
- $('#dice-status').textContent=labels.length===1?'Rolling one six-sided die…':'Rolling two six-sided dice…';
+ $('#dice-tray').innerHTML=rawResults.map((result,i)=>kind==='coin'?coinMarkup55(result,labels[i],i):sides===20?d20Markup55(result,labels[i],i):dieCubeMarkup50(result,labels[i],i)).join('');
+ $('#dice-status').textContent=kind==='coin'?'Flipping… Heads wins.':sides===20?'Rolling a twenty-sided die…':labels.length===1?'Rolling one six-sided die…':'Rolling two six-sided dice…';
  $('#dice-outcome').textContent=options.instruction||'The result will be applied when you continue.';
  $('#dice-continue').disabled=true;$('#dice-continue').dataset.rollId=job.id;
  lockDiceBattlefield53(job);
@@ -51,7 +55,7 @@ function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle,
  else {
   // Wait for real motion, including a delayed first paint, before exposing the result.
   $('#dice-tray').getBoundingClientRect();
-  const motions=[...$('#dice-tray').querySelectorAll('.die-flight,.die-hop,.die-cube')].flatMap(el=>el.getAnimations?.()||[]);
+  const motions=[...$('#dice-tray').querySelectorAll('.die-flight,.die-hop,.die-cube,.coin-body')].flatMap(el=>el.getAnimations?.()||[]);
   if(motions.length)Promise.all(motions.map(animation=>animation.finished.catch(()=>{}))).then(()=>finishDiceAnimation50(job.id));
   else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),1950+(labels.length-1)*140);
  }
@@ -62,34 +66,35 @@ function finishDiceAnimation50(id){
  if(!job||job.id!==id||job.closed||job.ready||job.battle!==state.battle||job.battle.phase==='complete')return false;
  job.ready=true;clearTimeout(job.timer);
  $('#dice-roll-dialog').classList.add('dice-settled');
- $('#dice-tray').querySelectorAll('[data-die-result]').forEach(el=>{el.textContent=el.dataset.dieResult;});
- $('#dice-status').textContent=job.labels.map((label,i)=>`${label}: ${job.results[i]}`).join(' · ');
- $('#dice-outcome').textContent=job.summary;
- $('#dice-continue').disabled=false;
- if(!document.querySelector('dialog[open]:not(#dice-roll-dialog)'))$('#dice-continue').focus?.({preventScroll:true});
- playSfx('select');
+ $('#dice-tray').querySelectorAll('[data-die-result]').forEach((el,i)=>{el.textContent=job.kind==='coin'?job.rawResults[i]?'HEADS':'TAILS':job.modifier?`${job.rawResults[i]} + ${job.modifier} = ${job.results[i]}`:String(job.results[i]);});
+ $('#dice-tray').querySelectorAll('[data-coin-choice]').forEach(el=>{el.disabled=false;});
+ $('#dice-status').textContent=job.kind==='coin'?job.selected===null?'Choose one coin. The other result is ignored.':job.rawResults[job.selected]?'HEADS · WIN':'TAILS · LOSE':job.labels.map((label,i)=>`${label}: ${job.results[i]}`).join(' · ');
+ $('#dice-outcome').textContent=job.selected===null?'Krark’s Thumb: keep one result. Ignored flips have no effect.':job.summary;
+ $('#dice-continue').disabled=job.selected===null;
+ if(!document.querySelector('dialog[open]:not(#dice-roll-dialog)'))(job.selected===null?$('#dice-tray').querySelector('[data-coin-choice]'):$('#dice-continue')).focus?.({preventScroll:true});
+ playSfx(job.kind==='coin'?'coin-land':'select');
  return true;
 }
 function settleDiceRoll50(id=visibleDiceRoll50?.id){
  const job=visibleDiceRoll50;
- if(!job||job.id!==id||job.closed||!job.ready||job.battle!==state.battle||job.battle.phase==='complete')return false;
+ if(!job||job.id!==id||job.closed||!job.ready||job.selected===null||job.battle!==state.battle||job.battle.phase==='complete')return false;
  job.closed=true;clearTimeout(job.timer);visibleDiceRoll50=null;job.battle.diceRoll=null;
  closeDiceDisplay53(job);
- (job.battle.diceHistory||=[]).push({source:job.source,labels:[...job.labels],results:[...job.results],summary:job.summary});
- addLog(`${job.source} · ${job.labels.map((label,i)=>`${label} ${job.results[i]}`).join(' · ')}. ${job.summary}`);
- job.apply(job.results);
+ (job.battle.diceHistory||=[]).push({source:job.source,labels:[...job.labels],results:[...job.results],rawResults:[...job.rawResults],modifier:job.modifier,kind:job.kind,sides:job.sides,selected:job.selected,summary:job.summary});
+ addLog(`${job.source} · ${job.labels.map((label,i)=>job.kind==='coin'?`${label}: ${job.rawResults[i]?'HEADS':'TAILS'} (${i===job.selected?'kept':'ignored'})`:`${label} ${job.results[i]}`).join(' · ')}. ${job.summary}`);
+ job.apply(job.kind==='coin'?[job.rawResults[job.selected]]:job.results);
  if(state.battle===job.battle&&job.battle.phase!=='complete')job.resume?.();
  return true;
 }
 $('#dice-continue').addEventListener('click',()=>settleDiceRoll50($('#dice-continue').dataset.rollId));
-$('#dice-tray').addEventListener('click',()=>{if(visibleDiceRoll50?.ready)settleDiceRoll50(visibleDiceRoll50.id);});
+$('#dice-tray').addEventListener('click',event=>{const choice=event.target.closest('[data-coin-choice]');if(choice){chooseCoin55(Number(choice.dataset.coinChoice));return;}if(visibleDiceRoll50?.ready)settleDiceRoll50(visibleDiceRoll50.id);});
 document.addEventListener('keydown',event=>{
  if(event.key!=='Escape'||event.defaultPrevented||!visibleDiceRoll50||document.querySelector('dialog[open]:not(#dice-roll-dialog)'))return;
  event.preventDefault();$('#dice-roll-dialog').dispatchEvent(new Event('cancel',{cancelable:true}));
 });
 $('#dice-roll-dialog').addEventListener('cancel',event=>{
  event.preventDefault();const job=visibleDiceRoll50;
- if(job?.ready)settleDiceRoll50(job.id);else showToast('Let the dice settle, then continue.');
+ if(job?.ready&&job.selected!==null)settleDiceRoll50(job.id);else showToast('Let the dice settle, then continue.');
 });
 $('#dice-roll-dialog').addEventListener('close',()=>{if(!$('#dice-roll-dialog').open&&visibleDiceRoll50)abortDiceRoll50();});
 

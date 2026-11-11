@@ -15,7 +15,7 @@ function abortTutorSearch51(){
 }
 function beginGoblinTutorSearch51(result,resume,battle=state.battle){
  if(state.battle!==battle||battle.phase==='complete')return;
- if(result===1){addLog('Goblin Tutor rolled 1 and has no effect.');return resume();}
+ if(result===1||result>6){addLog(`Goblin Tutor rolled ${result} and has no effect.`);return resume();}
  const eligible=battle.deck.filter(card=>goblinTutorMatches51(card,result));
  const cards=[...new Map(eligible.map(card=>[card.id||card.name,card])).values()].sort((a,b)=>(a.cmc||0)-(b.cmc||0)||a.name.localeCompare(b.name));
  if(!cards.length){battle.deck=shuffle(battle.deck);addLog('Goblin Tutor finds no matching card. Your library is shuffled.');return resume();}
@@ -61,7 +61,7 @@ const baseTutorEffect51=resolveDiceEffect50;
 resolveDiceEffect50=function(effect,target,context,resume){
  if(effect.kind!=='die-tutor')return baseTutorEffect51(effect,target,context,resume);
  let result;
- return beginDiceRoll50(`${context.card.name}${context.isCopy?' · copy':''}`,['Search'],values=>values[0]===1?'No effect.':`Search your library for ${TUTOR_TYPES51[values[0]]}.`,values=>{result=values[0];},()=>beginGoblinTutorSearch51(result,resume));
+ return beginDiceRoll50(`${context.card.name}${context.isCopy?' · copy':''}`,['Search'],values=>values[0]===1||values[0]>6?'No effect.':`Search your library for ${TUTOR_TYPES51[values[0]]}.`,values=>{result=values[0];},()=>beginGoblinTutorSearch51(result,resume));
 };
 
 const baseHostEntry51=enterDiceCreature50;
@@ -97,9 +97,9 @@ activatePermanent=function(id){
  if(!canActivatePermanent(permanent,battle))return false;
  permanent.tapped=true;battle.mulliganAvailable=false;
  const task={battle,p:{card:permanent.card},copies:1};battle.resolutionTask=task;hideCardPreview();
- return beginDiceRoll50(permanent.card.name,['Mana'],values=>values[0]===1?'Sacrifice this Mox and lose 5 life.':'Add 1 floating generic mana. The Mox stays tapped.',values=>{
+ return beginDiceRoll50(permanent.card.name,['Mana'],values=>values[0]===1?'Sacrifice this Mox and lose 5 life.':values[0]<=6?'Add 1 floating generic mana. The Mox stays tapped.':'No listed result. The Mox stays tapped.',values=>{
   if(values[0]===1){battle.permanents=battle.permanents.filter(p=>p!==permanent);battle.graveyard.push(permanent.card);state.playerHealth-=5;playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(5);if(state.playerHealth<=0){battle.resolutionTask=null;endRun(false);}}
-  else {battle.floatingMana=(battle.floatingMana||0)+1;syncMana(battle);}
+  else if(values[0]<=6){battle.floatingMana=(battle.floatingMana||0)+1;syncMana(battle);}
  },()=>finishResolution27(task),battle);
 };
 const baseMoreDiceDescription51=effectDescriptions;

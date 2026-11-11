@@ -1649,21 +1649,34 @@ function attackTarget(battle, creature) {
 function eligibleAttacker(creature, battle) {
   return Boolean(creature) && creatureCanAttack(creature, battle.turn) && !creature.tapped && !creature.attackedThisTurn;
 }
-function resolvePlayerAttacks(onlyIds = null) {
+function resolvePlayerAttacks(onlyIds = null, onComplete = null) {
   const battle = state.battle;
-  if (!battle || battle.phase !== 'attack') return;
+  if (!battle || battle.phase !== 'attack' || battle.diceRoll || battle.attackResolution55) return;
   const attackers = battle.creatures.filter(creature => eligibleAttacker(creature, battle) && creature.willAttack === true && (!onlyIds || onlyIds.includes(creature.id)));
-  for (const creature of attackers) {
-    if (!creatureAlive(creature)) continue;
+  battle.attackResolution55 = true;
+  let index = 0;
+  const next = () => {
+    if (state.battle !== battle || battle.phase !== 'attack') { battle.attackResolution55 = false; return; }
+    const creature = attackers[index++];
+    if (!creature) { battle.attackResolution55 = false; onComplete?.(); return; }
+    if (!battle.creatures.includes(creature) || !creatureAlive(creature)) return next();
     const target = attackTarget(battle, creature);
-    if (!target) { creature.willAttack = false; continue; }
+    if (!target) { creature.willAttack = false; return next(); }
     creature.attackedThisTurn = true;
     creature.willAttack = false;
     creature.tapped = !hasCreatureKeyword(creature, 'vigilance');
     addLog(`${creature.card.name} attacks ${target.card.name}; the monster retaliates.`);
-    resolveCombatDamage([creature], new Map([[creature.id, [target]]]), 'player');
-  }
+    const fight = () => {
+      if (state.battle !== battle || battle.phase !== 'attack') return;
+      if (battle.creatures.includes(creature) && creatureAlive(creature) && battle.enemyCreatures.includes(target) && creatureAlive(target)) resolveCombatDamage([creature], new Map([[creature.id, [target]]]), 'player');
+      next();
+    };
+    if (typeof resolveAttackTrigger55 === 'function' && resolveAttackTrigger55(creature, battle, fight)) return;
+    fight();
+  };
+  next();
 }
+
 function withdrawAttack(creatureId) {
   const battle = state.battle;
   const creature = battle?.creatures.find(item => item.id === creatureId);
@@ -1835,22 +1848,23 @@ function finishTurn() {
   battle.activeAttackIds = battle.creatures.filter(creature => creature.willAttack && eligibleAttacker(creature, battle) && attackTarget(battle,creature)).map(creature => creature.id);
   renderBattle();
   afterCombatBeat(battle, 'attack', () => {
-    resolvePlayerAttacks();
-    battle.activeAttackIds = null;
-    if (!battle.enemyCreatures.length) return winBattle();
-    battle.phase = 'enemy';
-    resolveEnemyIntents();
-    renderBattle();
-    afterCombatBeat(battle, 'enemy', () => {
-      const attackers = battle.enemyCreatures.filter(creature => creatureCanAttack(creature, battle.turn));
-      if (attackers.length && battle.creatures.some(creature => !creature.tapped)) {
-        battle.phase = 'blocks';
-        battle.blockAssignments.clear();
-        battle.selectedEnemyAttackerId = null;
-        renderBattle();
-        return;
-      }
-      beginEnemyDamage();
+    resolvePlayerAttacks(null, () => {
+      battle.activeAttackIds = null;
+      if (!battle.enemyCreatures.length) return winBattle();
+      battle.phase = 'enemy';
+      resolveEnemyIntents();
+      renderBattle();
+      afterCombatBeat(battle, 'enemy', () => {
+        const attackers = battle.enemyCreatures.filter(creature => creatureCanAttack(creature, battle.turn));
+        if (attackers.length && battle.creatures.some(creature => !creature.tapped)) {
+          battle.phase = 'blocks';
+          battle.blockAssignments.clear();
+          battle.selectedEnemyAttackerId = null;
+          renderBattle();
+          return;
+        }
+        beginEnemyDamage();
+      });
     });
   });
 }

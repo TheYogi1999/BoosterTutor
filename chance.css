@@ -1,0 +1,45 @@
+/* Chance objects inherit the continuous table throw and its fitted coordinates. */
+.die-d20{background:none;box-shadow:none}
+.d20-face{position:absolute;inset:0;width:86px;height:86px;overflow:visible;backface-visibility:hidden;transform-origin:43px 43px;transform-style:preserve-3d}
+.d20-face svg{display:block;width:86px;height:86px;overflow:visible}
+.d20-face polygon{stroke:#b6dbed;stroke-width:.8;stroke-linejoin:round}
+.d20-face text{font:bold 16px Georgia,serif;fill:#fff3cb;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:#123447;stroke-width:.8px}
+.coin-pick{padding:0!important;border:0!important;border-radius:50%;background:none!important;box-shadow:none!important;min-width:0;color:inherit;cursor:pointer;overflow:visible!important}
+.coin-pick:disabled{opacity:1!important;cursor:default}
+.coin-pick:focus-visible{outline:2px solid #ffe2a3;outline-offset:5px}
+.coin-body{position:relative;display:block;width:86px;height:86px;transform-style:preserve-3d;transform:rotateY(var(--coin-y));will-change:transform;animation:coin-tumble55 1.8s cubic-bezier(.18,.62,.3,1) var(--die-delay) both}
+.coin-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px ridge #e9bb67;border-radius:50%;background:radial-gradient(circle at 30% 22%,#ffedb2,#cc9341 65%,#896024);box-shadow:inset 0 0 0 3px #90632c,inset 0 0 0 5px #fce4a2,0 0 0 1px #694820;backface-visibility:hidden;transform:translateZ(3px);color:#62451f;text-shadow:0 1px #fff2bd}
+.coin-tails{transform:rotateY(180deg) translateZ(3px);background:radial-gradient(circle at 30% 22%,#e4eaf0,#9eaebb 65%,#657887);border-color:#cdd9df;box-shadow:inset 0 0 0 3px #6b7c89,inset 0 0 0 5px #e0ebeb,0 0 0 1px #465a66;color:#334d5f;text-shadow:0 1px #f1ffff}
+.coin-face i{font:42px/43px Georgia,serif;font-style:normal}
+.coin-face small{font:700 9px/13px var(--sans);letter-spacing:1.6px}
+.coin-ignored{opacity:.42;filter:saturate(.4)}
+.coin-pick[aria-pressed="true"]{outline:2px solid #ffe0a0;outline-offset:6px;filter:drop-shadow(0 0 9px #f1c47d88)}
+.dice-roll-dialog[data-kind="coin"] .die-result-value{font-size:16px}
+.dice-settled .coin-body{animation:none;will-change:auto}
+@keyframes coin-tumble55{from{transform:rotateX(35deg) rotateY(calc(var(--coin-y) - 1440deg)) rotateZ(-20deg)}to{transform:rotateX(0deg) rotateY(var(--coin-y)) rotateZ(0deg)}}
+.game-shell .unit-controls.has-coin-ability{grid-template-columns:minmax(0,1fr) 60px 54px}
+.unit-controls [data-activate-coin]{background:linear-gradient(#8b6a38,#574425);color:#ffe1a4}
+#inspector-content [data-activate-coin]{width:100%;font-size:11px!important;padding:8px!important;line-height:1.5!important;margin-top:8px}
+html.fixed-game .chance-choice-dialog{width:950px!important;height:660px!important;box-sizing:border-box;padding:28px!important;overflow:hidden!important;background:linear-gradient(145deg,#233b48,#101d29);border:1px solid #cbb17c;border-radius:10px;color:#f2e7d3}
+.chance-choice-dialog::backdrop{background:#061019b3;backdrop-filter:blur(3px)}
+.chance-choice-dialog h2{margin:6px 0 12px}
+.chance-choice-dialog>p{font:14px/1.7 var(--sans);color:#d2dfdd;margin:0 0 18px;min-height:48px}
+#chance-choice-options{display:flex;gap:20px;align-items:flex-start;overflow:auto;height:370px;padding:8px 5px 16px;scrollbar-width:thin}
+#chance-choice-options>button{flex:0 0 155px;padding:8px;border:1px solid #b5a37b66;background:#142936;color:#f4e9d5;text-align:left;border-radius:7px;cursor:pointer}
+.chance-card{display:block;aspect-ratio:488/680;width:100%}
+.chance-card img{display:block;width:100%;height:100%;object-fit:contain;border-radius:5px}
+#chance-choice-options b{display:block;font:600 12px/1.6 var(--sans);margin-top:7px}
+#chance-choice-options small{display:block;font:12px/1.7 var(--sans);color:#c4d5da;margin-top:8px}
+#chance-choice-options>button[aria-pressed="true"]{border-color:#ffe3a4;box-shadow:0 0 16px #efc37833}
+.chance-choice-dialog[data-cards="false"] #chance-choice-options{height:370px;align-items:center;justify-content:center}
+.chance-choice-dialog[data-cards="false"] #chance-choice-options>button{flex-basis:330px;padding:32px 24px;min-height:170px;text-align:center}
+.chance-choice-dialog[data-cards="false"] #chance-choice-options b{font:500 26px/1.4 Georgia,serif}
+.chance-choice-actions{display:flex;justify-content:space-between;align-items:center;gap:20px;border-top:1px solid #c8aa7644;padding-top:16px}
+.chance-choice-actions button{font-size:12px!important}
+@media(prefers-reduced-motion:reduce){.coin-body{animation:none}}
+
+html.fixed-game .chance-choice-dialog[data-cards="false"]{height:440px!important}
+.chance-choice-dialog[data-cards="false"] #chance-choice-options{height:170px}
+.chance-choice-dialog[data-cards="false"] #chance-choice-options>button{min-height:126px;padding:20px 24px}
+
+.chance-choice-dialog[data-cards="false"] .chance-choice-actions{display:none}

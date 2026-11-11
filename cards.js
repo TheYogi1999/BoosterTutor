@@ -3269,7 +3269,192 @@ const BUNDLED_CARDS = [
       "rarity": "common",
       "uri": "https://scryfall.com/card/ust/116/mother-kangaroo?utm_source=api"
     }
+  },
+{
+  "id": "df39eaac-b13f-4cb3-960d-8f7a0d590663",
+  "name": "Hoarding Ogre",
+  "mana_cost": "{3}{R}",
+  "cmc": 4.0,
+  "type_line": "Creature — Ogre",
+  "oracle_text": "Whenever this creature attacks, roll a d20.\n1—9 | Create a Treasure token. (It's an artifact with \"{T}, Sacrifice this token: Add one mana of any color.\")\n10—19 | Create two Treasure tokens.\n20 | Create three Treasure tokens.",
+  "color_identity": [
+    "R"
+  ],
+  "keywords": [
+    "Treasure"
+  ],
+  "rarity": "common",
+  "power": "3",
+  "toughness": "3",
+  "image": "assets/cards/df39eaac-b13f-4cb3-960d-8f7a0d590663.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/d/f/df39eaac-b13f-4cb3-960d-8f7a0d590663.jpg?1783926478",
+  "uri": "https://scryfall.com/card/afr/146/hoarding-ogre?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "df39eaac-b13f-4cb3-960d-8f7a0d590663",
+    "set": "afr",
+    "set_name": "Adventures in the Forgotten Realms",
+    "released_at": "2021-07-23",
+    "rarity": "common",
+    "uri": "https://scryfall.com/card/afr/146/hoarding-ogre?utm_source=api"
   }
+},
+{
+  "id": "a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2",
+  "name": "Contact Other Plane",
+  "mana_cost": "{3}{U}",
+  "cmc": 4.0,
+  "type_line": "Instant",
+  "oracle_text": "Roll a d20.\n1—9 | Draw two cards.\n10—19 | Scry 2, then draw two cards.\n20 | Scry 3, then draw three cards.",
+  "color_identity": [
+    "U"
+  ],
+  "keywords": [
+    "Scry"
+  ],
+  "rarity": "common",
+  "image": "assets/cards/a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/a/6/a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2.jpg?1783926518",
+  "uri": "https://scryfall.com/card/afr/52/contact-other-plane?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2",
+    "set": "afr",
+    "set_name": "Adventures in the Forgotten Realms",
+    "released_at": "2021-07-23",
+    "rarity": "common",
+    "uri": "https://scryfall.com/card/afr/52/contact-other-plane?utm_source=api"
+  }
+},
+{
+  "id": "f6f735f1-2528-424d-8454-e94746a2b58f",
+  "name": "Squirrel-Powered Scheme",
+  "mana_cost": "{2}{B}",
+  "cmc": 3.0,
+  "type_line": "Enchantment",
+  "oracle_text": "Increase the result of each die you roll by 2.",
+  "color_identity": [
+    "B"
+  ],
+  "keywords": [],
+  "rarity": "uncommon",
+  "image": "assets/cards/f6f735f1-2528-424d-8454-e94746a2b58f.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/f/6/f6f735f1-2528-424d-8454-e94746a2b58f.jpg?1783935428",
+  "uri": "https://scryfall.com/card/ust/70/squirrel-powered-scheme?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "f6f735f1-2528-424d-8454-e94746a2b58f",
+    "set": "ust",
+    "set_name": "Unstable",
+    "released_at": "2017-12-08",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/ust/70/squirrel-powered-scheme?utm_source=api"
+  }
+},
+{
+  "id": "47240ed3-f256-45fb-ab38-7b07e672d2ed",
+  "name": "Tavern Swindler",
+  "mana_cost": "{1}{B}",
+  "cmc": 2.0,
+  "type_line": "Creature — Human Rogue",
+  "oracle_text": "{T}, Pay 3 life: Flip a coin. If you win the flip, you gain 6 life.",
+  "color_identity": [
+    "B"
+  ],
+  "keywords": [],
+  "rarity": "uncommon",
+  "power": "2",
+  "toughness": "2",
+  "image": "assets/cards/47240ed3-f256-45fb-ab38-7b07e672d2ed.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/4/7/47240ed3-f256-45fb-ab38-7b07e672d2ed.jpg?1783940359",
+  "uri": "https://scryfall.com/card/rtr/79/tavern-swindler?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "47240ed3-f256-45fb-ab38-7b07e672d2ed",
+    "set": "rtr",
+    "set_name": "Return to Ravnica",
+    "released_at": "2012-10-05",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/rtr/79/tavern-swindler?utm_source=api"
+  }
+},
+{
+  "id": "55082c8a-d792-4cd8-94b1-d80c65804463",
+  "name": "Tavern Scoundrel",
+  "mana_cost": "{1}{R}",
+  "cmc": 2.0,
+  "type_line": "Creature — Human Rogue",
+  "oracle_text": "Whenever you win a coin flip, create two Treasure tokens. (They're artifacts with \"{T}, Sacrifice this token: Add one mana of any color.\")\n{1}, {T}, Sacrifice another permanent: Flip a coin.",
+  "color_identity": [
+    "R"
+  ],
+  "keywords": [
+    "Treasure"
+  ],
+  "rarity": "common",
+  "power": "1",
+  "toughness": "3",
+  "image": "assets/cards/55082c8a-d792-4cd8-94b1-d80c65804463.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/5/5/55082c8a-d792-4cd8-94b1-d80c65804463.jpg?1783926839",
+  "uri": "https://scryfall.com/card/mh2/144/tavern-scoundrel?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "55082c8a-d792-4cd8-94b1-d80c65804463",
+    "set": "mh2",
+    "set_name": "Modern Horizons 2",
+    "released_at": "2021-06-18",
+    "rarity": "common",
+    "uri": "https://scryfall.com/card/mh2/144/tavern-scoundrel?utm_source=api"
+  }
+},
+{
+  "id": "78a5d49a-747e-4ec8-a20a-ca917c315774",
+  "name": "Krark's Thumb",
+  "mana_cost": "{2}",
+  "cmc": 2.0,
+  "type_line": "Legendary Artifact",
+  "oracle_text": "If you would flip a coin, instead flip two coins and ignore one.",
+  "color_identity": [],
+  "keywords": [],
+  "rarity": "rare",
+  "image": "assets/cards/78a5d49a-747e-4ec8-a20a-ca917c315774.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/7/8/78a5d49a-747e-4ec8-a20a-ca917c315774.jpg?1783944517",
+  "uri": "https://scryfall.com/card/mrd/190/krarks-thumb?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "78a5d49a-747e-4ec8-a20a-ca917c315774",
+    "set": "mrd",
+    "set_name": "Mirrodin",
+    "released_at": "2003-10-02",
+    "rarity": "rare",
+    "uri": "https://scryfall.com/card/mrd/190/krarks-thumb?utm_source=api"
+  }
+},
+{
+  "id": "a91376ed-5868-4887-8389-5ef5b9471786",
+  "name": "Fiery Gambit",
+  "mana_cost": "{2}{R}",
+  "cmc": 3.0,
+  "type_line": "Sorcery",
+  "oracle_text": "Flip a coin until you lose a flip or choose to stop flipping. If you lose a flip, Fiery Gambit has no effect. If you win one or more flips, Fiery Gambit deals 3 damage to target creature. If you win two or more flips, Fiery Gambit deals 6 damage to each opponent. If you win three or more flips, draw nine cards and untap all lands you control.",
+  "color_identity": [
+    "R"
+  ],
+  "keywords": [],
+  "rarity": "rare",
+  "image": "assets/cards/a91376ed-5868-4887-8389-5ef5b9471786.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/a/9/a91376ed-5868-4887-8389-5ef5b9471786.jpg?1783944541",
+  "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "a91376ed-5868-4887-8389-5ef5b9471786",
+    "set": "mrd",
+    "set_name": "Mirrodin",
+    "released_at": "2003-10-02",
+    "rarity": "rare",
+    "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api"
+  }
+}
 ];
 const CAMP_TOKEN_CARDS = {
   "treasure": {
