@@ -7,13 +7,23 @@ function dieCubeMarkup50(result,label,index){
  const pips={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
  const angles={1:[0,0],2:[-90,0],3:[0,-90],4:[0,90],5:[90,0],6:[0,180]};
  const [x,y]=angles[result];
- return `<div class="rolled-die" style="--die-x:${x}deg;--die-y:${y}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><div class="die-stage" aria-hidden="true"><div class="die-shadow"></div><div class="die-cube">${[1,2,3,4,5,6].map(face=>`<div class="die-face die-face-${face}">${Array.from({length:9},(_,i)=>`<i class="${pips[face].includes(i+1)?'die-pip':'die-pip-empty'}"></i>`).join('')}</div>`).join('')}</div></div><b class="die-result-value" data-die-result="${result}">?</b></div>`;
+ return `<div class="rolled-die" style="--die-x:${x}deg;--die-y:${y}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><div class="die-stage" aria-hidden="true"><div class="die-shadow"></div><div class="die-flight"><div class="die-cube">${[1,2,3,4,5,6].map(face=>`<div class="die-face die-face-${face}">${Array.from({length:9},(_,i)=>`<i class="${pips[face].includes(i+1)?'die-pip':'die-pip-empty'}"></i>`).join('')}</div>`).join('')}</div></div></div><b class="die-result-value" data-die-result="${result}">?</b></div>`;
+}
+function lockDiceBattlefield53(job){
+ job.lockedUI=[...document.querySelectorAll('#combat-screen .arena-side,#combat-screen .combat-topline,#combat-screen .hand-panel,#combat-screen .card-inspector,#combat-screen .table-graveyard')].map(node=>({node,inert:node.inert}));
+ for(const entry of job.lockedUI)entry.node.inert=true;
+ document.querySelector('.arena-table')?.classList.add('has-table-dice');
+}
+function closeDiceDisplay53(job){
+ const dialog=$('#dice-roll-dialog');if(dialog?.open)dialog.close();
+ for(const entry of job?.lockedUI||[])entry.node.inert=entry.inert;
+ document.querySelector('.arena-table')?.classList.remove('has-table-dice');
 }
 function abortDiceRoll50(){
  const job=visibleDiceRoll50;
  visibleDiceRoll50=null;
  if(job){job.closed=true;clearTimeout(job.timer);if(job.battle.diceRoll===job)job.battle.diceRoll=null;}
- const dialog=$('#dice-roll-dialog');if(dialog?.open)dialog.close();
+ closeDiceDisplay53(job);
 }
 function syncDiceWindow50(){
  const job=visibleDiceRoll50;
@@ -34,10 +44,17 @@ function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle,
  $('#dice-status').textContent=labels.length===1?'Rolling one six-sided die…':'Rolling two six-sided dice…';
  $('#dice-outcome').textContent=options.instruction||'The result will be applied when you continue.';
  $('#dice-continue').disabled=true;$('#dice-continue').dataset.rollId=job.id;
- $('#dice-roll-dialog').showModal();
+ lockDiceBattlefield53(job);
+ $('#dice-roll-dialog').show();
  const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
  if(reduced)finishDiceAnimation50(job.id);
- else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),1200+(labels.length-1)*140);
+ else {
+  // Wait for real motion, including a delayed first paint, before exposing the result.
+  $('#dice-tray').getBoundingClientRect();
+  const motions=[...$('#dice-tray').querySelectorAll('.die-flight,.die-cube')].flatMap(el=>el.getAnimations?.()||[]);
+  if(motions.length)Promise.all(motions.map(animation=>animation.finished.catch(()=>{}))).then(()=>finishDiceAnimation50(job.id));
+  else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),1650+(labels.length-1)*140);
+ }
  return true;
 }
 function finishDiceAnimation50(id){
@@ -48,7 +65,8 @@ function finishDiceAnimation50(id){
  $('#dice-tray').querySelectorAll('[data-die-result]').forEach(el=>{el.textContent=el.dataset.dieResult;});
  $('#dice-status').textContent=job.labels.map((label,i)=>`${label}: ${job.results[i]}`).join(' · ');
  $('#dice-outcome').textContent=job.summary;
- $('#dice-continue').disabled=false;$('#dice-continue').focus?.({preventScroll:true});
+ $('#dice-continue').disabled=false;
+ if(!document.querySelector('dialog[open]:not(#dice-roll-dialog)'))$('#dice-continue').focus?.({preventScroll:true});
  playSfx('select');
  return true;
 }
@@ -56,7 +74,7 @@ function settleDiceRoll50(id=visibleDiceRoll50?.id){
  const job=visibleDiceRoll50;
  if(!job||job.id!==id||job.closed||!job.ready||job.battle!==state.battle||job.battle.phase==='complete')return false;
  job.closed=true;clearTimeout(job.timer);visibleDiceRoll50=null;job.battle.diceRoll=null;
- $('#dice-roll-dialog').close();
+ closeDiceDisplay53(job);
  (job.battle.diceHistory||=[]).push({source:job.source,labels:[...job.labels],results:[...job.results],summary:job.summary});
  addLog(`${job.source} · ${job.labels.map((label,i)=>`${label} ${job.results[i]}`).join(' · ')}. ${job.summary}`);
  job.apply(job.results);
@@ -64,6 +82,11 @@ function settleDiceRoll50(id=visibleDiceRoll50?.id){
  return true;
 }
 $('#dice-continue').addEventListener('click',()=>settleDiceRoll50($('#dice-continue').dataset.rollId));
+$('#dice-tray').addEventListener('click',()=>{if(visibleDiceRoll50?.ready)settleDiceRoll50(visibleDiceRoll50.id);});
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Escape'||event.defaultPrevented||!visibleDiceRoll50||document.querySelector('dialog[open]:not(#dice-roll-dialog)'))return;
+ event.preventDefault();$('#dice-roll-dialog').dispatchEvent(new Event('cancel',{cancelable:true}));
+});
 $('#dice-roll-dialog').addEventListener('cancel',event=>{
  event.preventDefault();const job=visibleDiceRoll50;
  if(job?.ready)settleDiceRoll50(job.id);else showToast('Let the dice settle, then continue.');

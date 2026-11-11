@@ -1,5 +1,17 @@
 # Booster Tutor — The Aether Expedition
 
+## Battlefield dice (v0.53)
+
+Dice now fly onto the battlefield instead of opening a separate modal. Player dice enter from the left and enemy dice from the right, tumble, bounce and settle near the center with moving shadows. Two dice arrive with a short stagger. The field stays visible without a dimmed or blurred backdrop.
+
+Each result is still generated exactly once. Results become available after the actual animation completes; click the landed dice or Continue to apply them. Keyboard and controller confirmation remain supported. Battlefield controls stay locked until completion and are restored on continuation, interruption or a new battle. Sequential copied spells retain their separate rolls, and stale animation callbacks cannot apply an old result. Reduced-motion mode shows the result immediately.
+
+Validation: 199 rules tests plus browser checks for on-field positioning, left/right entry, central landing, input restoration, copied spells, enemy checks, controller use, reduced motion and fitted desktop/mobile layouts.
+
+```sh
+node tests/field-dice-browser.test.cjs
+```
+
 ## Library expansion and boosters (v0.27)
 
 The bundled source catalog contains **81 real cards**: 77 eligible for ordinary packs/shops, three banned stack/hand-dependent cards, and Booster Tutor as a start-deck-only card. The online curated list remains audited by the same rules. The collection now shows full in-game rules beside each card, with expandable printed Oracle text; only the outer list scrolls. Type, mana, keyword (including Ward), colour, discovery and ban filters remain available.
