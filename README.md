@@ -1,3 +1,17 @@
+## Foil finishes, player levels and Endless (v0.59)
+
+Cards offered in boosters and the single-card shop have a **12% independent chance** to be foil. A finish is rolled once before its reveal, on a run-specific copy of the card; re-rendering or hovering never rerolls it. The selected finish follows the card through hand, battlefield, attachments, mana, graveyard, exile, searches, scry, deck views and card movement. Both copies of a drafted pick keep the finish shown in that booster. Purchased packs and Booster Tutor use the same rule. Starter mana and the single starter Booster Tutor can also be foil. The catalog/cache is never modified, finishes are not saved between runs, and a fresh run rolls new finishes. A Clone keeps its own physical finish rather than copying its target's finish. Normal and foil copies are grouped separately in run deck/library lists. Foil is cosmetic, with a prism tint and a moving sheen limited to the card image; reduced motion uses a still finish.
+
+The player starts at **level 1** and gains **one level per defeated enemy**, through the existing once-only bounty path (combat, damage spells, destruction and exile). Waves do not reset the level. The current level appears at the top of every run screen and in the final summary. The highest level is saved locally on this browser and displayed beneath the title menu, including after a reload; a lower-level run in another tab cannot overwrite a higher record. Storage failure never blocks playing. Levels do not grant automatic combat bonuses.
+
+Beating the campaign's final wave still shows its victory screen. **Enter Endless** optionally continues the same run: deck, life, coins, camp supplies, level and foil finishes remain. The final boss now supplies a normal reward booster before the next shop and camp. Endless cycles the four encounter templates and their existing one/two-wave structure without ending at subsequent bosses. Every new cycle draws four distinct scenery types. At endless fight `d`, enemy life is multiplied by `1 + 0.16d` (rounded up), attack gains `ceil(d/2)`, and bounty gains `floor(d/2)`. Each victory offers another booster, shop and camp. Death or an empty library ends the expedition, preserving the level record; a new run clears Endless and starts at level 1.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs tests/chance.test.cjs tests/relics.test.cjs tests/progression.test.cjs
+node tests/progression-browser.test.cjs
+node tests/foil-layout-browser.test.cjs
+```
+
 # Booster Tutor — The Aether Expedition
 
 ## Lifelink fixes, shared mana and iconic cards (v0.58)

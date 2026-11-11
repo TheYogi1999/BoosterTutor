@@ -330,6 +330,7 @@ function makeStarterPacks() {
 }
 
 function startNewRun() {
+  if (typeof resetRunProgress59 === 'function') resetRunProgress59();
   if (typeof window.playRunStartAudio === 'function') window.playRunStartAudio();
   if (state.soundOn) soundEngine.unlock().catch(() => {});
   state.deck = [];
@@ -685,15 +686,17 @@ function confirmDraft() {
 
 function beginBattle(node) {
   state.node = node;
-  const enemy = ENCOUNTERS[node - 1];
+  if (state.endless && typeof ensureEndlessStages59 === 'function') ensureEndlessStages59(node);
+  const enemy = ENCOUNTERS[state.endless ? (node - 1) % ENCOUNTERS.length : node - 1];
   const stage = state.stageLocations[node - 1] || LAND_STAGES[(node - 1) % LAND_STAGES.length];
   const waves = typeof createEncounterWaves45 === 'function' ? createEncounterWaves45(enemy) : [createEnemyTeam(enemy)];
+  if (state.endless && typeof scaleEndlessWaves59 === 'function') scaleEndlessWaves59(waves, node);
   const enemyCreatures = waves[0];
   const shuffledDeck = shuffle(state.deck);
   const startingManaCards = shuffledDeck.filter(card => card.runMana).slice(0, STARTING_MANA_IN_PLAY);
   const startingManaIds = new Set(startingManaCards.map(card => card.instanceId));
   state.battle = {
-    enemy,
+    enemy: state.endless ? { ...enemy, rank: `ENDLESS ${node - ENCOUNTERS.length} · ${enemy.rank}` } : enemy,
     stage,
     enemyArt: enemyCreatures[0]?.card.art || '',
     bossName: waves.flat().find(enemy=>enemy.tier==='boss')?.card.name || null,
@@ -952,7 +955,7 @@ function renderBattle() {
   hideCardPreview();
   if (battle.phase === 'main') for (const creature of battle.creatures) { if (creature.attackTargetId && !battle.enemyCreatures.some(enemy => enemy.id === creature.attackTargetId && canAttackEnemy(creature,enemy))) { creature.attackTargetId = null; creature.willAttack = false; } }
   const enemy = battle.enemy;
-  $('#node-counter').textContent = String(state.node).padStart(2, '0');
+  $('#node-counter').textContent = state.endless ? `∞ ${state.node - ENCOUNTERS.length}` : String(state.node).padStart(2, '0');
   const stage = battle.stage || LAND_STAGES[(state.node - 1) % LAND_STAGES.length];
   $('.arena-table').style.setProperty('--stage-accent', stage.color);
   const waveCount=battle.waves?.length||1;
@@ -987,7 +990,7 @@ function renderBattle() {
   syncCoins();
   $('#turn-label').textContent = `TURN ${battle.turn}`;
   $('#turn-display').textContent = `Turn ${battle.turn}`;
-  $('#progress-pips').innerHTML = ENCOUNTERS.map((_, index) => `<i class="${index < state.node ? 'done ' : ''}${index === 3 ? 'boss' : ''}" aria-label="Fight ${index + 1}"></i>`).join('');
+  $('#progress-pips').innerHTML = ENCOUNTERS.map((_, index) => `<i class="${index < (state.endless ? (state.node - 1) % ENCOUNTERS.length + 1 : state.node) ? 'done ' : ''}${index === 3 ? 'boss' : ''}" aria-label="Fight ${index + 1}"></i>`).join('');
   $('#graveyard-count').textContent = String(battle.graveyard.length);
   const remainingCards = libraryCardCount49(battle);
   $('#library-count').textContent = String(remainingCards);
@@ -1295,7 +1298,7 @@ document.addEventListener('pointermove', event => {
     pointerDrag.source.classList.add('is-grabbed');
     const ghost = document.createElement('div');
     ghost.id = 'drag-ghost'; ghost.className = 'drag-card';
-    const image = pointerDrag.face.querySelector('img, .printed-card');
+    const image = pointerDrag.face.querySelector('.foil-card-face') || pointerDrag.face.querySelector('img, .printed-card');
     if (image) ghost.append(image.cloneNode(true));
     ghost.style.setProperty('--drag-width', `${pointerDrag.width}px`);
     ghost.style.setProperty('--drag-height', `${pointerDrag.height}px`);
@@ -1924,8 +1927,13 @@ function winBattle() {
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;
   addLog(`Encounter in ${state.battle.stage?.name || 'the Aether'} cleared.`);
-  if (node >= ENCOUNTERS.length) return endRun(true);
+  if (node >= ENCOUNTERS.length && !state.endless) return endRun(true);
+  offerEncounterReward59();
+}
+
+function offerEncounterReward59() {
   state.node += 1;
+  if (state.endless && typeof ensureEndlessStages59 === 'function') ensureEndlessStages59(state.node);
   state.packs = [chooseRandomCards(state.pool, PACK_SIZE)];
   state.draftKind = 'reward';
   state.activePack = 0;
@@ -1949,6 +1957,7 @@ function endRun(won, reason = null) {
     ? `You defeated ${state.battle?.bossName || 'the final guardian'} and completed the run. Your booster deck came through.`
     : reason === 'empty-library' ? 'You tried to draw from an empty library. Your expedition ends here.' : `You fell in fight ${state.node}. Adjust your draft and try again.`;
   $('#run-summary').innerHTML = `<span>RUN <b>${state.node} / 4</b></span><span>DECK <b>${state.deck.length}</b></span><span>LIFE <b>${Math.max(0, state.playerHealth)}</b></span>`;
+  if (typeof renderRunEnd59 === 'function') renderRunEnd59(won);
   showScreen('end-screen');
   playSfx(won ? 'victory' : 'defeat');
 }
@@ -2190,7 +2199,8 @@ function showJourney() {
   styleTravelStop('journey-screen', 'journey-location', first ? 'Expedition' : 'Camp');
   $('#journey-title').textContent = first ? 'Choose your supplies' : 'A moment by the fire';
   $('#journey-description').textContent = 'Choose one token. It stays with you until spent.';
-  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${index + 1 === state.node ? 'current' : index + 1 < state.node ? 'complete' : ''}"><span>${index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${encounter.rank}</small><b>${escapeHtml((state.stageLocations[index] || LAND_STAGES[index]).name)}</b></div>`).join('');
+  const pathStart = state.endless ? Math.floor((state.node - 1) / ENCOUNTERS.length) * ENCOUNTERS.length : 0;
+  $('#journey-path').innerHTML = ENCOUNTERS.map((encounter, index) => `<div class="path-node ${pathStart + index + 1 === state.node ? 'current' : pathStart + index + 1 < state.node ? 'complete' : ''}"><span>${pathStart + index + 1 < state.node ? '✓' : index === 3 ? '♜' : '⚔'}</span><small>${state.endless ? '∞ · ' : ''}${encounter.rank}</small><b>${escapeHtml((state.stageLocations[pathStart + index] || LAND_STAGES[index]).name)}</b></div>`).join('');
   $('#journey-options').innerHTML = typeof campRewardMarkup === 'function' ? campRewardMarkup() : '';
   $('#journey-life').textContent = `${state.playerHealth} LIFE · ${state.deck.length} CARDS · ${state.coins || 0} COINS`;
   $('#return-shop').hidden = first;
@@ -2420,7 +2430,7 @@ function renderCollection() {
   const cards = kind === 'catalog' ? (state.catalogPool || (state.pool.length ? state.pool : BUNDLED_CARDS)) : kind === 'library' ? state.battle?.deck || [] : kind === 'exile' ? [...(state.battle?.exile || []), ...(state.battle?.enemyExile || [])] : state.deck;
   const groups = new Map();
   for (const card of cards) {
-    const key = card.id || card.name;
+    const key = `${card.id || card.name}:${typeof isFoilCard59 === 'function' && isFoilCard59(card) ? 'foil' : 'regular'}`;
     if (groups.has(key)) groups.get(key).count += 1; else groups.set(key, { ...card, count: 1 });
   }
   const query = $('#collection-search').value.trim().toLowerCase();
@@ -2470,6 +2480,7 @@ function syncCoins() { $('#coin-count').textContent=String(state.coins||0); $('#
 function awardBounty(enemy) {
   if (!enemy || enemy.owner !== 'enemy' || enemy.bountyClaimed) return 0;
   enemy.bountyClaimed=true;
+  if (typeof gainDefeatLevel59 === 'function') gainDefeatLevel59();
   const amount=enemy.bounty ?? 8;
   state.coins=(state.coins||0)+amount;syncCoins();addLog(`${enemy.card.name} defeated · +${amount} coins.`);
   return amount;

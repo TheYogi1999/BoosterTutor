@@ -22,7 +22,7 @@ const controller = {
   initial(items){
     const modal=this.modal();
     if(modal)return items.find(element=>element.matches('[data-rule-pick],[data-tutor-pick],[data-library-pick],[data-scry-index],.collection-card,.graveyard-card'))||items.find(element=>element.id==='quit-cancel')||items[0];
-    const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','journey-screen':'[data-camp-token]','shop-screen':'[data-buy-card]','end-screen':'#restart-button' }[state.screen||'start-screen'];
+    const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','journey-screen':'[data-camp-token]','shop-screen':'[data-buy-card]','end-screen':'#endless-button,#restart-button' }[state.screen||'start-screen'];
     return items.find(element=>preferred&&element.matches(preferred))||items[0];
   },
   focus(element){

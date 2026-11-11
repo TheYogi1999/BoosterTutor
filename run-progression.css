@@ -1,0 +1,38 @@
+/* The finish belongs to the card image; captions and rules remain unlit. */
+.foil-card-face {
+  position:relative;display:block;width:100%;height:100%;aspect-ratio:488/680;
+  overflow:hidden;border-radius:7px;isolation:isolate;pointer-events:none;
+  padding:0;margin:0;gap:0;font:inherit;
+}
+.foil-card-face>img { display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit; }
+.foil-card-face:before,.foil-card-face:after { content:'';position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none; }
+.foil-card-face:before {
+  background:repeating-linear-gradient(126deg,#f8bb6b26 0%,#ffdb971a 10%,#86ecc637 21%,#96bfff44 32%,#dc9bfa33 43%,#ffd4b31a 54%,#f8bb6b26 65%);
+  background-size:260% 260%;mix-blend-mode:color-dodge;opacity:.75;
+  animation:foil-prism59 8s ease-in-out infinite alternate;
+}
+.foil-card-face:after {
+  background:linear-gradient(115deg,transparent 29%,#d2d9ff11 39%,#fff8d85c 48%,#c9fbff30 53%,transparent 64%);
+  background-size:300% 100%;background-position:100% 0;mix-blend-mode:screen;
+  box-shadow:inset 0 0 0 1px #e1d7ff99,inset 0 0 10px #adc8ff33;
+  animation:foil-sheen59 6s ease-in-out infinite;
+}
+.collection-entry .collection-card>.foil-card-face { padding:0;display:block; }
+.graveyard-card>span.foil-card-face { flex:0 0 auto;display:block;gap:0; }
+.collection-entry .collection-card>.foil-card-face,.inspector-card>.foil-card-face { height:auto; }
+@keyframes foil-prism59 { from { background-position:0% 15%; } to { background-position:100% 90%; } }
+@keyframes foil-sheen59 { 0%,10% { background-position:100% 0; } 70%,100% { background-position:0% 0; } }
+/* A small level indicator stays in the existing top edge on every run screen. */
+.game-shell .run-level { color:#ebc98e;white-space:nowrap;display:inline-flex;align-items:center;gap:7px; }
+.game-shell .run-level>span { font:600 9px/1 var(--sans);letter-spacing:1.2px;color:#c3c7b9; }
+.game-shell .run-level>b { font:600 15px/1 var(--sans);font-variant-numeric:tabular-nums; }
+.game-shell .run-level[hidden],.game-shell .endless-invitation[hidden] { display:none; }
+#start-screen .title-record { margin:25px 0 0 23px;color:#b5bbae;font:500 10px/1.5 var(--sans);letter-spacing:2px; }
+#start-screen .title-record b { margin-left:12px;color:#e8ca93;font-size:17px;font-weight:500;letter-spacing:0; }
+.game-shell .endless-invitation { max-width:590px;margin:0 auto 18px;padding:0 15px; }
+.game-shell .endless-invitation p { color:#bdc9c3;font:14px/1.65 var(--sans);margin:0 auto 18px; }
+.game-shell #endless-button { min-width:270px;box-shadow:0 0 35px #d4ab3d14; }
+.game-shell #endless-button span { margin-left:25px;font-size:22px;line-height:1; }
+.game-shell #endless-invitation:not([hidden])~#restart-button { background:transparent;box-shadow:none;color:#bac8c6;border:1px solid #c6b47c33; }
+@media(prefers-reduced-motion:reduce) { .foil-card-face:before,.foil-card-face:after { animation:none; } .foil-card-face:before { background-position:45% 55%; } .foil-card-face:after { background-position:48% 0; } }
+.ambience-paused .foil-card-face:before,.ambience-paused .foil-card-face:after,.screen:not(.active) .foil-card-face:before,.screen:not(.active) .foil-card-face:after { animation-play-state:paused; }
