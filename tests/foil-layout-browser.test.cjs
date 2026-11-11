@@ -9,7 +9,8 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
  };
  const imageBounds=async()=>{const rows=await p.locator('.screen.active .foil-card-face:visible,dialog[open] .foil-card-face:visible').evaluateAll(nodes=>nodes.map(e=>{const r=e.getBoundingClientRect(),i=e.querySelector('img').getBoundingClientRect();return {parent:e.parentElement.className,w:r.width,h:r.height,iw:i.width,ih:i.height}}));for(const r of rows){assert.ok(r.w>0&&r.h>0,JSON.stringify(r));assert.ok(Math.abs(r.w-r.iw)<1&&Math.abs(r.h-r.ih)<1,JSON.stringify(r))}};
  for(const viewport of [{width:1600,height:900},{width:1280,height:720},{width:390,height:844},{width:820,height:1180}]){
-  await p.setViewportSize(viewport);await p.waitForTimeout(100);
+  await p.setViewportSize(viewport);
+  await p.waitForFunction(()=>{const r=document.querySelector('.game-shell').getBoundingClientRect();return r.width<=innerWidth+1&&r.height<=innerHeight+1});
   await fitted('.arena-table,.hand-card,.player-card-frame,.permanent-card-frame,#run-level,.mana-land,.turn-footer button');await imageBounds();
   await p.locator('#graveyard-open').click();await fitted('#graveyard-dialog');await imageBounds();await p.locator('#graveyard-close').click();
   await p.locator('#deck-button').click();await fitted('#collection-dialog');await imageBounds();await p.locator('#collection-close').click();
@@ -19,8 +20,9 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   // Foil survives grabbing and is included in the landing animation clone.
   await p.evaluate(()=>{state.battle.hand=Array.from({length:15},()=>card59('Grizzly Bears'));renderBattle()});
  }
- await p.setViewportSize({width:1600,height:900});await p.emulateMedia({reducedMotion:'no-preference'});
- const start=await p.locator('[data-hand-index="0"]').boundingBox();await p.mouse.move(start.x+start.width/2,start.y+start.height/2);await p.mouse.down();await p.mouse.move(450,430,{steps:8});assert.equal(await p.locator('#drag-ghost .foil-card-face').count(),1);await p.mouse.up();await p.waitForTimeout(350);
+ await p.setViewportSize({width:1600,height:900});await p.waitForFunction(()=>Math.abs(document.querySelector('.game-shell').getBoundingClientRect().width-1600)<1);await p.emulateMedia({reducedMotion:'no-preference'});
+ await p.locator('[data-hand-index="14"]').hover();await p.waitForTimeout(200);
+ const start=await p.locator('[data-hand-index="14"]').boundingBox();await p.mouse.move(start.x+start.width/2,start.y+start.height/2);await p.mouse.down();await p.mouse.move(450,430,{steps:8});assert.equal(await p.locator('#drag-ghost .foil-card-face').count(),1);await p.mouse.up();await p.waitForTimeout(350);
  await p.evaluate(()=>{for(const e of state.battle.enemyCreatures)e.health=e.maxHealth=100;state.battle.hand=[card59('Shock')];renderBattle();hideCardPreview()});
  await p.screenshot({path:'work/progression59-foil-field.png'});
  await p.evaluate(()=>{showScreen('start-screen')});await p.waitForTimeout(3200);await fitted('#highest-level,#start-button,#card-catalog-button');await p.screenshot({path:'work/progression59-title.png'});
