@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
  try{
   const page=await browser.newPage({viewport:{width:1600,height:900},ignoreHTTPSErrors:true,reducedMotion:'reduce'});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
+  await page.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');await require('./enemy-check-fixture.cjs')(page);
   const setup=async(names,mana=8)=>page.evaluate(({names,mana})=>{
    state.soundOn=false;state.pool=playableCards(BUNDLED_CARDS);state.landPool=FALLBACK_LANDS;
    state.deck=Array(40).fill(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'));beginBattle(3);

@@ -12,7 +12,7 @@ function activeEnemySpell38(battle=state.battle) {
  return battle?.enemySpells?.find(spell=>spell.id===battle.activeEnemySpellId)||null;
 }
 function pendingEnemySpells38(battle=state.battle) {
- return battle?.enemySpells?.filter(spell=>spell.status==='pending')||[];
+ return battle?.enemySpells?.filter(spell=>['pending','awaiting-roll'].includes(spell.status))||[];
 }
 const baseSpellTargets38=ruleTargetOptions;
 ruleTargetOptions=function(kind,battle=state.battle) {
@@ -89,10 +89,11 @@ function prepareEnemySpells38(battle) {
   const card=[...BUNDLED_CARDS,...BUNDLED_ENEMY_SPELLS].find(card=>card.name===name);
   const ally=intent==='rune'?battle.creatures.filter(unit=>!hasCreatureKeyword(unit,'hexproof')).sort((a,b)=>b.power-a.power)[0]:null;
   const target=ally?{side:'player',id:ally.id}:{side:'life'};
-  const spell={id:`enemy-spell-${state.nextPermanentId++}`,owner:'enemy',card,sourceId:enemy.id,sourceName:enemy.card.name,target,status:'pending',intent,manaRemaining:enemy.runeMana||1};
+  const spell={id:`enemy-spell-${state.nextPermanentId++}`,owner:'enemy',card,sourceId:enemy.id,sourceName:enemy.card.name,target,status:typeof requestEnemySpellRoll52==='function'?'awaiting-roll':'pending',intent,manaRemaining:enemy.runeMana||1};
   battle.enemySpells.push(spell);
-  addLog(`${enemy.card.name} casts ${name}, targeting ${ally?.card.name||'your life'}.`);
+  addLog(`${enemy.card.name} ${spell.status==='awaiting-roll'?'prepares':'casts'} ${name}, targeting ${ally?.card.name||'your life'}.`);
  }
+ if(typeof requestEnemySpellRoll52==='function')return;
  // No legal response means no user decision is needed. Keep direct rules calls deterministic.
  while(pendingEnemySpells38(battle).length) {
   const spell=pendingEnemySpells38(battle)[0];battle.activeEnemySpellId=spell.id;
@@ -146,6 +147,10 @@ function enemySpellWindow38(battle,continuation) {
   battle.activeEnemySpellId=null;
   if(!battle.enemyCreatures.length)return winBattle();
   return baseEnemyBeat38(battle,'enemy',continuation);
+ }
+ if(spell.status==='awaiting-roll'&&typeof requestEnemySpellRoll52==='function'){
+  battle.activeEnemySpellId=null;
+  return requestEnemySpellRoll52(spell,battle,()=>enemySpellWindow38(battle,continuation));
  }
  battle.activeEnemySpellId=spell.id;
  baseEnemyBeat38(battle,'enemy',()=>{

@@ -81,6 +81,7 @@ commitRuleSpell=function(p){
  if(discards.length!==(p.rule.discard||0)||new Set(discards).size!==discards.length||discards.some(i=>i===p.index||!b.hand[i])||sacrificed.length!==(p.rule.sacrifice||0)||sacrificed.some(unit=>!unit))return false;
  const target=key?parseRuleTarget(key):null;const clone=p.card.name==='Clone'?choiceTargetUnit(target):null;const graveCard=target?.side==='grave'?b.graveyard[target.index]:null;
  if(p.card.name==='Clone'&&(!clone||b.creatures.length>=3))return false;
+ if(typeof confirmWardCasting52==='function'&&confirmWardCasting52(p,b,target))return false;
  if(!payMana(p.card.cmc,b))return false;
  const spell=isInstant(p.card)||/\bSorcery\b/.test(p.card.type_line);const copies=spell?1+(b.copyNextSpell||0):1;if(spell)b.copyNextSpell=0;
  for(const i of discards)b.graveyard.push(b.hand[i]);const removed=new Set([p.index,...discards]);b.hand=b.hand.filter((card,i)=>!removed.has(i));for(const unit of sacrificed)sacrificeRuleCreature(unit);

@@ -19,7 +19,7 @@ function syncDiceWindow50(){
  const job=visibleDiceRoll50;
  if(job&&(job.battle!==state.battle||job.battle.phase==='complete'||state.screen!=='combat-screen'))abortDiceRoll50();
 }
-function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle){
+function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle,options={}){
  if(!battle||state.battle!==battle||battle.phase==='complete'||battle.diceRoll)return false;
  const results=Object.freeze(labels.map(()=>rollD6Value50()));
  const job={id:`roll-${state.nextPermanentId++}`,source,labels:[...labels],results,battle,apply,resume,summary:summary(results),ready:false,closed:false};
@@ -27,10 +27,12 @@ function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle)
  hideCardPreview();
  renderBattle();
  $('#dice-card-name').textContent=source;
+ $('#dice-roll-heading').textContent=options.owner==='enemy'?'ENEMY CAST CHECK · D6':'DICE ROLL · D6';
+ $('#dice-roll-dialog').dataset.owner=options.owner||'player';
  $('#dice-roll-dialog').classList.remove('dice-settled');
  $('#dice-tray').innerHTML=results.map((result,i)=>dieCubeMarkup50(result,labels[i],i)).join('');
  $('#dice-status').textContent=labels.length===1?'Rolling one six-sided die…':'Rolling two six-sided dice…';
- $('#dice-outcome').textContent='The result will be applied when you continue.';
+ $('#dice-outcome').textContent=options.instruction||'The result will be applied when you continue.';
  $('#dice-continue').disabled=true;$('#dice-continue').dataset.rollId=job.id;
  $('#dice-roll-dialog').showModal();
  const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -1826,7 +1826,7 @@ function afterCombatBeat(battle, phase, callback) {
 
 function finishTurn() {
   const battle = state.battle;
-  if (!battle || battle.phase !== 'main' || battle.enemyCounterWindow || battle.diceRoll) return;
+  if (!battle || battle.phase !== 'main' || battle.enemyCounterWindow || battle.diceRoll || battle.wardCastWarning || battle.enemyCastCheck) return;
   battle.mulliganAvailable = false;
   battle.pendingAttachment = null;
   for (const creature of battle.creatures) { if (/attacks each combat if able/i.test(creature.card.oracle_text || '') && eligibleAttacker(creature, battle) && attackTarget(battle,creature)) creature.willAttack = true; }
@@ -1862,7 +1862,7 @@ function beginEnemyDamage() {
   afterCombatBeat(battle, 'damage', resolveEnemyCombat);
 }
 function handleCombatAction() {
-  if (state.battle?.diceRoll) return;
+  if (state.battle?.diceRoll || state.battle?.wardCastWarning || state.battle?.enemyCastCheck) return;
   if (state.battle?.enemyCounterWindow && typeof enemyCounterBusy44 === 'function' && enemyCounterBusy44(state.battle)) return;
   if (state.battle?.priorityCallback) { const callback = state.battle.priorityCallback; state.battle.priorityCallback = null; callback(); return; }
   if (state.battle?.phase === 'blocks') beginEnemyDamage();

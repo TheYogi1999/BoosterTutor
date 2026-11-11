@@ -1,6 +1,6 @@
 const {chromium}=require('playwright');const assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});try{
- const p=await browser.newPage({viewport:{width:1600,height:900},ignoreHTTPSErrors:true,reducedMotion:'no-preference'});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
+ const p=await browser.newPage({viewport:{width:1600,height:900},ignoreHTTPSErrors:true,reducedMotion:'no-preference'});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');await require('./enemy-check-fixture.cjs')(p);
  const setup=async(names,values,enemyCounter=false)=>p.evaluate(({names,values,enemyCounter})=>{
   abortDiceRoll50();state.soundOn=false;state.pool=playableCards(BUNDLED_CARDS);state.landPool=FALLBACK_LANDS;state.campTokens=[];state.deck=Array(40).fill(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'));beginBattle(1);
   const b=state.battle;b.turn=enemyCounter?2:1;b.lands=Array.from({length:10},(_,i)=>({id:'land-'+i,card:FALLBACK_LANDS[i%5],tapped:false}));b.floatingMana=0;

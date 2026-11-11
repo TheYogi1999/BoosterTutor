@@ -11,7 +11,7 @@ function enemyCounterReady44(enemy,battle=state.battle){
 const baseEnemyKeywords44=creatureKeywordLabels;
 creatureKeywordLabels=function(unit){
  const label=baseEnemyKeywords44(unit);if(!unit?.counterspell)return label;
- const extra=enemyCounterReady44(unit)?'Counterspell (2 mana)':state.battle?.enemyCounterUsedTurn===state.battle?.turn?'Counterspell spent':'Counterspell next turn';
+ const extra=enemyCounterReady44(unit)?'Counterspell (2 mana)':state.battle?.enemyCounterFailedTurn===state.battle?.turn?'Counterspell failed':state.battle?.enemyCounterUsedTurn===state.battle?.turn?'Counterspell spent':'Counterspell next turn';
  return [label,extra].filter(Boolean).join(' · ');
 };
 const baseCounterTiming44=canCastNow;
@@ -46,6 +46,10 @@ function offerEnemyCounter44(card,battle,resume,countered){
  if(state.battle!==battle||battle.phase==='complete'||battle.enemyCounterWindow||isLand(card))return false;
  const source=battle.enemyCreatures.find(enemy=>enemyCounterReady44(enemy,battle));
  if(!source)return false;
+ if(typeof requestEnemyCounterRoll52==='function')return requestEnemyCounterRoll52(card,battle,resume,countered,source);
+ return castEnemyCounter44(card,battle,resume,countered,source);
+}
+function castEnemyCounter44(card,battle,resume,countered,source){
  const counterCard=BUNDLED_CARDS.find(card=>card.name==='Counterspell');
  const spell={id:`enemy-spell-${state.nextPermanentId++}`,owner:'enemy',card:counterCard,sourceId:source.id,sourceName:source.card.name,target:{side:'player-spell',card},status:'pending',intent:'counterspell',manaPaid:2,manaRemaining:0};
  const window={battle,spell,card,resume,countered,savedResolution:battle.resolutionTask,savedPriority:battle.priorityCallback,savedActive:battle.activeEnemySpellId,closed:false};
