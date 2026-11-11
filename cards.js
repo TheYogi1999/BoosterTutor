@@ -3454,6 +3454,135 @@ const BUNDLED_CARDS = [
     "rarity": "rare",
     "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api"
   }
+},
+{
+  "id": "b0faa7f2-b547-42c4-a810-839da50dadfe",
+  "name": "Black Lotus",
+  "mana_cost": "{0}",
+  "cmc": 0.0,
+  "type_line": "Artifact",
+  "oracle_text": "{T}, Sacrifice this artifact: Add three mana of any one color.",
+  "color_identity": [],
+  "keywords": [],
+  "rarity": "rare",
+  "image": "assets/cards/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/b/0/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg?1783948669",
+  "uri": "https://scryfall.com/card/lea/232/black-lotus?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "b0faa7f2-b547-42c4-a810-839da50dadfe",
+    "set": "lea",
+    "set_name": "Limited Edition Alpha",
+    "released_at": "1993-08-05",
+    "rarity": "rare",
+    "uri": "https://scryfall.com/card/lea/232/black-lotus?utm_source=api"
+  }
+},
+{
+  "id": "c4300d24-1cae-4dd5-be7e-38cc677cf5bd",
+  "name": "Sol Ring",
+  "mana_cost": "{1}",
+  "cmc": 1.0,
+  "type_line": "Artifact",
+  "oracle_text": "{T}: Add {C}{C}.",
+  "color_identity": [],
+  "keywords": [],
+  "rarity": "uncommon",
+  "image": "assets/cards/c4300d24-1cae-4dd5-be7e-38cc677cf5bd.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/c/4/c4300d24-1cae-4dd5-be7e-38cc677cf5bd.jpg?1783948661",
+  "uri": "https://scryfall.com/card/lea/269/sol-ring?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "c4300d24-1cae-4dd5-be7e-38cc677cf5bd",
+    "set": "lea",
+    "set_name": "Limited Edition Alpha",
+    "released_at": "1993-08-05",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/lea/269/sol-ring?utm_source=api"
+  }
+},
+{
+  "id": "2e7f9919-0713-4ef9-96eb-3e0c444e47f4",
+  "name": "Isamaru, Hound of Konda",
+  "mana_cost": "{W}",
+  "cmc": 1.0,
+  "type_line": "Legendary Creature — Dog",
+  "oracle_text": "",
+  "color_identity": [
+    "W"
+  ],
+  "keywords": [],
+  "rarity": "rare",
+  "power": "2",
+  "toughness": "2",
+  "image": "assets/cards/2e7f9919-0713-4ef9-96eb-3e0c444e47f4.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/2/e/2e7f9919-0713-4ef9-96eb-3e0c444e47f4.jpg?1783944338",
+  "uri": "https://scryfall.com/card/chk/19/isamaru-hound-of-konda?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "2e7f9919-0713-4ef9-96eb-3e0c444e47f4",
+    "set": "chk",
+    "set_name": "Champions of Kamigawa",
+    "released_at": "2004-10-01",
+    "rarity": "rare",
+    "uri": "https://scryfall.com/card/chk/19/isamaru-hound-of-konda?utm_source=api"
+  }
+},
+{
+  "id": "645cfc1b-76f2-4823-9fb0-03cb009f8b32",
+  "name": "Yargle, Glutton of Urborg",
+  "mana_cost": "{4}{B}",
+  "cmc": 5.0,
+  "type_line": "Legendary Creature — Frog Spirit",
+  "oracle_text": "",
+  "color_identity": [
+    "B"
+  ],
+  "keywords": [],
+  "rarity": "uncommon",
+  "power": "9",
+  "toughness": "3",
+  "image": "assets/cards/645cfc1b-76f2-4823-9fb0-03cb009f8b32.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/6/4/645cfc1b-76f2-4823-9fb0-03cb009f8b32.jpg?1783934999",
+  "uri": "https://scryfall.com/card/dom/113/yargle-glutton-of-urborg?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "645cfc1b-76f2-4823-9fb0-03cb009f8b32",
+    "set": "dom",
+    "set_name": "Dominaria",
+    "released_at": "2018-04-27",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/dom/113/yargle-glutton-of-urborg?utm_source=api"
+  }
+},
+{
+  "id": "4cddb2d2-d813-4b83-a592-380ba4edf54f",
+  "name": "Syr Alin, the Lion's Claw",
+  "mana_cost": "{3}{W}{W}",
+  "cmc": 5.0,
+  "type_line": "Legendary Creature — Human Knight",
+  "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)\nWhenever Syr Alin attacks, other creatures you control get +1/+1 until end of turn.",
+  "color_identity": [
+    "W"
+  ],
+  "keywords": [
+    "First strike"
+  ],
+  "rarity": "uncommon",
+  "power": "4",
+  "toughness": "4",
+  "image": "assets/cards/4cddb2d2-d813-4b83-a592-380ba4edf54f.jpg",
+  "art": "https://cards.scryfall.io/art_crop/front/4/c/4cddb2d2-d813-4b83-a592-380ba4edf54f.jpg?1783932665",
+  "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api",
+  "verified": true,
+  "art_print": {
+    "id": "4cddb2d2-d813-4b83-a592-380ba4edf54f",
+    "set": "eld",
+    "set_name": "Throne of Eldraine",
+    "released_at": "2019-10-04",
+    "rarity": "uncommon",
+    "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api"
+  }
 }
 ];
 const CAMP_TOKEN_CARDS = {

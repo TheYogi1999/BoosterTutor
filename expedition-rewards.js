@@ -48,7 +48,7 @@ activatePermanent=function(id){
  if(!p?.card.campToken)return sourceActivate34(id);
  if(!canActivatePermanent(p,b)||!payMana(permanentActivationCost(p.card),b))return false;
  b.permanents=b.permanents.filter(unit=>unit!==p);state.campTokens=(state.campTokens||[]).filter(token=>token.id!==p.campTokenId);b.mulliganAvailable=false;
- if(p.card.tokenKind==='treasure')b.floatingMana++;
+ if(p.card.tokenKind==='treasure')addFloatingMana58(1,b);
  if(p.card.tokenKind==='food')state.playerHealth+=3;
  if(p.card.tokenKind==='clue')drawOneCard();
  syncMana(b);addLog(`${p.card.name}: ${CAMP_REWARDS[p.card.tokenKind].description}`);

@@ -6,11 +6,11 @@ const{chromium}=require('playwright');const assert=require('node:assert/strict')
  await p.click('[data-camp-token="treasure"]');await p.waitForFunction(()=>!document.querySelector('.zone-flight'));
  assert.equal(await p.evaluate(()=>state.battle.hand.length),7);
  await p.click('[data-camp-token-kind="treasure"]');await p.click('#token-action-confirm');
- assert.equal(await p.locator('#floating-mana-count').textContent(),'1');assert.equal(await p.locator('#floating-mana').isVisible(),true);
+ assert.equal(await p.locator('#floating-mana-count').textContent(),'+1');assert.equal(await p.locator('#floating-mana').isVisible(),true);
  assert.equal(await p.evaluate(()=>state.campTokens.length),0);assert.equal(await p.evaluate(()=>state.battle.lands.length),2);
  await p.evaluate(()=>{state.battle.hand=[BUNDLED_CARDS.find(c=>c.name==='Dark Ritual')];renderBattle()});await p.click('[data-hand-index="0"]');
  assert.equal(await p.evaluate(()=>state.battle.floatingMana),3,'Ritual pays with the Treasure mana and adds three');
- assert.equal(await p.locator('#floating-mana-count').textContent(),'3');
+ assert.equal(await p.locator('#floating-mana-count').textContent(),'+3');
  await p.evaluate(()=>{state.node=2;state.coins=200;state.shop=null;showShop()});assert.equal(await p.locator('[data-select-pack]').count(),2);assert.equal(await p.locator('.shop-offer').count(),3);
  const types=await p.locator('[data-pack-type]').evaluateAll(es=>es.map(e=>e.dataset.packType));await p.click('#shop-continue');await p.click('#return-shop');assert.deepEqual(await p.locator('[data-pack-type]').evaluateAll(es=>es.map(e=>e.dataset.packType)),types);
  // Force each advertised type into an existing offer to exercise the entire opening flow.

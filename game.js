@@ -791,6 +791,12 @@ function syncMana(battle = state.battle) {
   battle.maxMana = battle.lands.length;
 }
 
+function addFloatingMana58(amount, battle = state.battle) {
+  if (!battle) return;
+  battle.floatingMana = (battle.floatingMana || 0) + amount;
+  syncMana(battle);
+}
+
 function payMana(amount, battle = state.battle) {
   const cost = Math.max(0, Math.ceil(amount || 0));
   if (!battle) return false;
@@ -919,7 +925,7 @@ function showCardPreview(card, element) {
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
-  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
+  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 && !(typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)) ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
@@ -960,7 +966,11 @@ function renderBattle() {
   const availableMana = battle.lands.filter(land => !land.tapped).length;
   $('#mana-label').textContent = `${availableMana} / ${battle.lands.length}`;
   $('#floating-mana').hidden = !battle.floatingMana;
-  $('#floating-mana-count').textContent = String(battle.floatingMana);
+  $('#floating-mana-count').textContent = `+${battle.floatingMana}`;
+  const manaInfo = `Mana cards: ${availableMana} / ${battle.lands.length} · Floating: ${battle.floatingMana} · Total available: ${battle.mana}`;
+  $('.mana-display').setAttribute('aria-label', manaInfo);
+  $('.mana-display').title = manaInfo;
+  $('#floating-mana').title = `${battle.floatingMana} floating generic mana · Total available: ${battle.mana} · Spent first; expires at turn end.`;
   renderManaLands();
   $('#enemy-art-image').src = battle.enemyArt || '';
   $('#enemy-art-image').hidden = !battle.enemyArt;
@@ -1067,7 +1077,7 @@ function renderCreatures() {
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}" aria-haspopup="dialog" title="Click to use this token"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}" aria-haspopup="dialog" title="Click to use this token"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : ['Black Lotus','Sol Ring'].includes(permanent.card.name) ? permanentActivationLabel51(permanent) : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
@@ -1100,7 +1110,8 @@ $('#player-drop-zone').addEventListener('click', event => {
   const permanent = battle.permanents.find(item => item.id === button.dataset.permanentId);
   if (!permanent) return;
   if (permanent.card.campToken && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
-  if (permanent.card.name === 'Jack-in-the-Mox' && canActivatePermanent(permanent, battle)) { activatePermanent(permanent.id); return; }
+  if (permanent.card.name === 'Black Lotus' && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
+  if (['Jack-in-the-Mox','Sol Ring'].includes(permanent.card.name) && canActivatePermanent(permanent, battle)) { activatePermanent(permanent.id); return; }
   if (!/Equipment/.test(permanent.card.type_line)) { inspectBattlefieldCard(permanent.card, {dataset:{previewId:permanent.id}}); return; }
   if (battle.phase !== 'main') return;
   if (!battle.creatures.length) return showActionError('Play a creature first.');
@@ -1207,7 +1218,7 @@ function dropFeedback(payload, target) {
   const card = battle.hand[payload.index];
   if (!card || !canCastNow(card, battle) || !paymentPlan(card)) return false;
   if (isLand(card)) return Boolean(own);
-  if (isCreature(card)) return Boolean(own) && battle.creatures.length < 3;
+  if (isCreature(card)) return Boolean(own) && (battle.creatures.length < 3 || (typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)));
   if (isAura(card)) return Boolean(own && ally);
   if (/Equipment/.test(card.type_line) && ally) return Boolean(own) && battle.mana >= Math.ceil(card.cmc || 0) + (equipCost(card) ?? Infinity);
   if (isPermanent(card)) return Boolean(own);
@@ -1470,7 +1481,7 @@ function playCard(index, targetSide = 'enemy') {
     playSfx('select');
     return;
   }
-  if (isCreature(card) && battle.creatures.length >= 3) return showActionError('Your creature board is full.');
+  if (isCreature(card) && battle.creatures.length >= 3 && !(typeof replacesLegend58 === 'function' && replacesLegend58(card, battle))) return showActionError('Your creature board is full.');
   if (targetSide === 'enemy' && isCreature(card)) return showActionError('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
   if (!payment) return showActionError('Not enough generic mana for this card.');
@@ -1584,10 +1595,10 @@ function dealsInCombatStep(creature, firstStep) {
 function gainLifelinkLife(creature, controller, amount, battle) {
   if (amount <= 0 || !hasCreatureKeyword(creature, 'lifelink')) return;
   if (controller === 'player') state.playerHealth += amount;
-  else creature.health = (creature.health || 0) + amount;
+  else if (creature.health > 0) creature.health += amount;
 }
 
-function dealCreatureDamage(source, target, controller, battle, amount = Math.max(0, source.power || 0)) {
+function dealCreatureDamage(source, target, controller, battle, amount = Math.max(0, source.power || 0), lifelinkEvents = null) {
   if (amount <= 0) return;
   let dealt = amount;
   if (target.owner === 'enemy') {
@@ -1597,7 +1608,8 @@ function dealCreatureDamage(source, target, controller, battle, amount = Math.ma
     target.damage = (target.damage || 0) + amount;
     if (hasCreatureKeyword(source, 'deathtouch')) target.deathtouchDamage = true;
   }
-  gainLifelinkLife(source, controller, dealt, battle);
+  if (lifelinkEvents) lifelinkEvents.push({ creature: source, controller, damage: dealt });
+  else gainLifelinkLife(source, controller, dealt, battle);
   if (dealt) playSfx(target.owner === 'enemy' ? 'enemy-hit' : 'player-hit');
 }
 function blockerIds(battle, attackerId) {
@@ -1645,7 +1657,11 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
       }
     }
     // Eligibility is captured before applying the step: normal damage is simultaneous.
-    for (const exchange of exchanges) dealCreatureDamage(exchange.source, exchange.target, exchange.controller, battle, exchange.amount);
+    const stepLifelinkEvents = [];
+    for (const exchange of exchanges) dealCreatureDamage(exchange.source, exchange.target, exchange.controller, battle, exchange.amount, stepLifelinkEvents);
+    // Finish all simultaneous damage before enemy self-healing. Lethal damage
+    // cannot be healed away; player lifegain still happens if its source dies.
+    for (const event of stepLifelinkEvents) gainLifelinkLife(event.creature, event.controller, event.damage, battle);
     battle.creatures = removeDeadCreatures(battle.creatures, 'player', false);
     battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
     for (const hit of overflow) {

@@ -20,17 +20,19 @@ function renderTokenAction47(){
  const permanent=battle?.permanents.find(unit=>unit.id===action.id);
  const details=tokenActionDetails47(permanent);
  if(action.battle!==battle||battle.phase==='complete'||!details){closeTokenAction47();return;}
- const reward=CAMP_REWARDS[permanent.card.tokenKind];
- $('#token-action-title').textContent=`${reward.name} token`;
+ const reward=CAMP_REWARDS[permanent.card.tokenKind]||{name:permanent.card.name,symbol:'✦'};
+ $('#token-action-heading').textContent=permanent.card.campToken?'USE TOKEN':'MANA ARTIFACT';
+ $('#token-action-cancel').textContent=permanent.card.campToken?'Keep token':'Keep artifact';
+ $('#token-action-title').textContent=`${reward.name}${permanent.card.campToken?' token':''}`;
  $('#token-action-symbol').textContent=reward.symbol;
- $('#token-action-dialog').dataset.kind=permanent.card.tokenKind;
+ $('#token-action-dialog').dataset.kind=permanent.card.tokenKind||'lotus';
  $('#token-action-effect').textContent=details.effect;
  $('#token-action-cost').textContent=details.cost;
  const available=canActivatePermanent(permanent,battle);
  $('#token-action-confirm').disabled=!available;
  $('#token-action-confirm').textContent=details.action;
  const cost=permanentActivationCost(permanent.card);
- $('#token-action-status').textContent=available?'This token is used up when sacrificed.':permanent.tapped&&['food','treasure'].includes(permanent.card.tokenKind)?'This token is tapped. Untap it before using it.':battle.mana<cost?`Needs ${cost} mana · ${battle.mana} available.`:'Finish the current card choices before using this token.';
+ $('#token-action-status').textContent=available?`This ${permanent.card.campToken?'token':'artifact'} is used up when sacrificed.`:permanent.tapped&&['food','treasure'].includes(permanent.card.tokenKind)?'This token is tapped. Untap it before using it.':battle.mana<cost?`Needs ${cost} mana · ${battle.mana} available.`:'Finish the current card choices before using this token.';
 }
 function openTokenAction47(id){
  const battle=state.battle;
@@ -57,7 +59,7 @@ $('#token-action-dialog').addEventListener('close',()=>{if(!$('#token-action-dia
 
 const ENEMY_KEYWORD_HELP47={
  Flying:'Only creatures with Flying or Reach can attack this enemy or block its flying attacks.',
- Lifelink:'Damage dealt by this enemy also restores that much life to it.',
+ Lifelink:'After each simultaneous damage step, this enemy heals by its combat damage dealt if it survived. Lifelink cannot prevent lethal damage or revive it.',
  'First strike':'Deals combat damage before creatures without first strike.',
  'Double strike':'Deals damage in both the first-strike and normal combat damage steps.',
  Deathtouch:'Any combat damage this enemy deals to a creature is lethal.',

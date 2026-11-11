@@ -1,5 +1,26 @@
 # Booster Tutor — The Aether Expedition
 
+## Lifelink fixes, shared mana and iconic cards (v0.58)
+
+Enemy lifelink healing now waits until every simultaneous damage assignment in that combat damage step has been applied. A lethally damaged or deathtouched monster cannot heal itself back to life. Surviving monsters still heal by their damage dealt, and player creatures still gain life for their controller even when they die in the same exchange. First strike and double strike keep their separate damage steps: healing in an earlier surviving first-strike step may legitimately let a monster survive later damage. The enemy self-healing interpretation remains the existing monster-duel adaptation of lifelink.
+
+Jack-in-the-Mox and Treasure were checked in both activation orders: each adds exactly one floating generic mana, with no duplication. These sources, Black Lotus and Sol Ring share one pool. Floating mana is spent before tapping mana cards and expires at turn end; it does not increase the number of permanent mana cards. The floating badge now explicitly shows **+N**, and the mana tooltip/accessibility label states the land supply, floating pool and total available mana.
+
+Five additions bring the bundled catalog to **130 cards / 127 ordinary-pack eligible cards**, using the oldest English paper images (Alpha Lotus and Ring, CHK Isamaru, DOM Yargle, ELD Syr Alin):
+
+- **Black Lotus:** costs zero; tap and sacrifice to add three floating generic mana. Clicking its physical card opens an explicit artifact confirmation. Cancel pays nothing. The real Lotus card goes to the graveyard, and a stale/repeated activation cannot add more mana.
+- **Sol Ring:** costs one; tap to add two floating generic mana. Can activate on entry, then untaps normally on the next turn. Its activation and the Lotus’s activation are abilities, so they do not invoke enemy Counterspell; casting the artifacts is still counterable.
+- **Isamaru, Hound of Konda:** one generic mana for a legendary 2/2.
+- **Yargle, Glutton of Urborg:** five generic mana for a legendary 9/3.
+- **Syr Alin, the Lion’s Claw:** five generic mana for a legendary 4/4 with first strike. Actual attacks give every other allied creature +1/+1 until end of turn, before combat damage. Entry or queuing an attack gives no bonus. The granted bonuses remain if Syr Alin dies and expire normally.
+
+The creature legendary-rule adaptation keeps a newly entered copy and moves the previous creature with the same name to the graveyard, including when Clone copies a legend. Auras follow their leave rules and Equipment remains unattached. A direct copy of the same legend can replace it on a full three-creature battlefield by click or drag. Krark’s Thumb retains its existing equivalent legendary rule. All additions expose their reviewed rules in the collection, booster facts and card previews; the new artifact actions work with controller input.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs tests/chance.test.cjs tests/relics.test.cjs
+node tests/relics-browser.test.cjs
+```
+
 ## Solid copper coin flips (v0.57)
 
 The battlefield coin is now a solid copper cylinder with two engraved sun/moon faces, beaded rims and 64 reeded edge facets around a visible 12px wall. Both heads and tails use warm copper with struck highlights and fine surface texture. The resting pose is tilted so the thickness remains visible; focus and selection outlines follow the coin rather than its larger input area.
