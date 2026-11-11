@@ -1,5 +1,17 @@
 # Booster Tutor — The Aether Expedition
 
+## Smoother dice and direct Mox activation (v0.54)
+
+Dice now use one continuous decelerating horizontal path, independent diminishing bounces and a consistent rotation transform. The floor shadow follows the same forward movement. The final animated pose matches the resting pose, and results wait for the flight, bounce and rotation to finish. Reduced motion remains immediate.
+
+Clicking an untapped Jack-in-the-Mox on the battlefield now directly taps it and starts its D6 ability, including with controller confirmation. A tapped Mox instead opens its inspection with the activation disabled. The inspector activation remains available. Results still add one floating generic mana on 2–6, or sacrifice the Mox and lose five life on 1. Normal turn untapping is unchanged.
+
+The first combat step is now named **Main phase + declare attackers** in both phase displays. The longer label fits the fixed viewport layout. Validation includes 199 rules tests, existing dice/enemy/controller/layout browser suites and a new browser regression checking actual animation transforms, final-pose continuity and direct Mox interaction.
+
+```sh
+node tests/dice-polish-browser.test.cjs
+```
+
 ## Battlefield dice (v0.53)
 
 Dice now fly onto the battlefield instead of opening a separate modal. Player dice enter from the left and enemy dice from the right, tumble, bounce and settle near the center with moving shadows. Two dice arrive with a short stagger. The field stays visible without a dimmed or blurred backdrop.

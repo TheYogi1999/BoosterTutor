@@ -7,7 +7,7 @@ function dieCubeMarkup50(result,label,index){
  const pips={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
  const angles={1:[0,0],2:[-90,0],3:[0,-90],4:[0,90],5:[90,0],6:[0,180]};
  const [x,y]=angles[result];
- return `<div class="rolled-die" style="--die-x:${x}deg;--die-y:${y}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><div class="die-stage" aria-hidden="true"><div class="die-shadow"></div><div class="die-flight"><div class="die-cube">${[1,2,3,4,5,6].map(face=>`<div class="die-face die-face-${face}">${Array.from({length:9},(_,i)=>`<i class="${pips[face].includes(i+1)?'die-pip':'die-pip-empty'}"></i>`).join('')}</div>`).join('')}</div></div></div><b class="die-result-value" data-die-result="${result}">?</b></div>`;
+ return `<div class="rolled-die" style="--die-x:${x}deg;--die-y:${y}deg;--die-delay:${index*140}ms"><span class="die-roll-label">${escapeHtml(label)}</span><div class="die-stage" aria-hidden="true"><div class="die-shadow"></div><div class="die-flight"><div class="die-hop"><div class="die-cube">${[1,2,3,4,5,6].map(face=>`<div class="die-face die-face-${face}">${Array.from({length:9},(_,i)=>`<i class="${pips[face].includes(i+1)?'die-pip':'die-pip-empty'}"></i>`).join('')}</div>`).join('')}</div></div></div></div><b class="die-result-value" data-die-result="${result}">?</b></div>`;
 }
 function lockDiceBattlefield53(job){
  job.lockedUI=[...document.querySelectorAll('#combat-screen .arena-side,#combat-screen .combat-topline,#combat-screen .hand-panel,#combat-screen .card-inspector,#combat-screen .table-graveyard')].map(node=>({node,inert:node.inert}));
@@ -51,9 +51,9 @@ function beginDiceRoll50(source,labels,summary,apply,resume,battle=state.battle,
  else {
   // Wait for real motion, including a delayed first paint, before exposing the result.
   $('#dice-tray').getBoundingClientRect();
-  const motions=[...$('#dice-tray').querySelectorAll('.die-flight,.die-cube')].flatMap(el=>el.getAnimations?.()||[]);
+  const motions=[...$('#dice-tray').querySelectorAll('.die-flight,.die-hop,.die-cube')].flatMap(el=>el.getAnimations?.()||[]);
   if(motions.length)Promise.all(motions.map(animation=>animation.finished.catch(()=>{}))).then(()=>finishDiceAnimation50(job.id));
-  else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),1650+(labels.length-1)*140);
+  else job.timer=setTimeout(()=>finishDiceAnimation50(job.id),1950+(labels.length-1)*140);
  }
  return true;
 }

@@ -1054,7 +1054,7 @@ function renderCreatures() {
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}" aria-haspopup="dialog" title="Click to use this token"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Tap to roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}" aria-haspopup="dialog" title="Click to use this token"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
@@ -1087,6 +1087,7 @@ $('#player-drop-zone').addEventListener('click', event => {
   const permanent = battle.permanents.find(item => item.id === button.dataset.permanentId);
   if (!permanent) return;
   if (permanent.card.campToken && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
+  if (permanent.card.name === 'Jack-in-the-Mox' && canActivatePermanent(permanent, battle)) { activatePermanent(permanent.id); return; }
   if (!/Equipment/.test(permanent.card.type_line)) { inspectBattlefieldCard(permanent.card, {dataset:{previewId:permanent.id}}); return; }
   if (battle.phase !== 'main') return;
   if (!battle.creatures.length) return showActionError('Play a creature first.');
@@ -2222,7 +2223,7 @@ fitGameCanvas();
 $('#fullscreen-button').addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen?.(); else document.documentElement.requestFullscreen?.().catch(() => showToast('Fullscreen is unavailable in this browser.')); });
 
 const COMBAT_PHASES = [
-  { id: 'main', label: 'Main phase', description: 'Choose targets and queue attackers. Start combat moves to Your attack; no attack damage is dealt in Main phase.' },
+  { id: 'main', label: 'Main phase + declare attackers', description: 'Choose targets and queue attackers. Start combat moves to Your attack; no attack damage is dealt in Main phase.' },
   { id: 'attack', label: 'Your attack', description: 'Your creatures fight their targets. Monsters retaliate.' },
   { id: 'enemy', label: 'Enemy action', description: 'Monsters guard, strengthen, or prepare their attacks.' },
   { id: 'blocks', label: 'Block', description: 'Assign one or more blockers. Selection order is damage order.' },
