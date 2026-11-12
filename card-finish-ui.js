@@ -5,7 +5,7 @@ cardFace=function(card){
  if(!counters.length)return face;
  const label=`${counters.length} run counter${counters.length===1?'':'s'}: ${runCounterLabels60(card).join(', ')}`;
  const stats=runStatCount60(card);
- const marks=`<span class="card-run-counters61" title="${escapeHtml(label)}" aria-label="${escapeHtml(label)}"><span class="counter-medallion61"><span aria-hidden="true">✦</span><b>${counters.length}</b></span>${stats?`<span class="card-stat-counter61">+${stats}/+${stats}</span>`:''}</span>`;
+ const marks=`<span class="card-run-counters61" title="${escapeHtml(label)}" aria-label="${escapeHtml(label)}"><span class="counter-medallion61"><svg class="counter-sigil63" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path class="sigil-wax63" d="M20 2 25 6 32 5 33 12 39 17 35 23 36 30 29 32 24 39 18 35 11 37 8 30 1 25 5 18 3 11 10 8 14 1Z"/><circle class="sigil-ring63" cx="20" cy="20" r="14"/><circle class="sigil-inner63" cx="20" cy="20" r="10.5"/><path class="sigil-star63" d="m20 8 10.4 18H9.6Zm0 24L9.6 14h20.8Z"/><path class="sigil-runes63" d="M20 3v4m0 26v4M3 20h4m26 0h4M8 8l3 3m18 18 3 3M8 32l3-3m18-18 3-3"/></svg><b>${counters.length}</b></span>${stats?`<span class="card-stat-counter61">+${stats}/+${stats}</span>`:''}</span>`;
  return face.replace(/<\/span>$/,`${marks}</span>`);
 };
 const KEYWORD_TONES61={flying:'sky',reach:'green',lifelink:'rose',deathtouch:'violet',toxic:'poison',infect:'poison',trample:'orange',vigilance:'blue',haste:'amber','first strike':'gold','double strike':'gold',defender:'steel',hexproof:'teal',ward:'teal',menace:'red',flash:'gold',scry:'sky',equip:'steel',enchant:'violet'};

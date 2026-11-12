@@ -1,3 +1,9 @@
+## Lotus activation and arcane counter seals (v0.63)
+
+Black Lotus and camp tokens now take the same explicit card-click route into the token action window. Lotus has a visible click-to-use caption and permanent cards announce that they open a dialog. Opening or canceling the Lotus window spends nothing; confirmation taps and sacrifices the real card to add three floating generic mana once. Mouse, native touch and controller actions were checked against the same window.
+
+The modification medallion is now an engraved arcane seal: a dark violet stamped outline, nested gold/blue rings, a six-point sigil, glowing runes and a central total-counter count. Rune light gently pulses with motion enabled and stays still under reduced motion. The existing green stat marker remains a single accumulated total, so two purchased +1/+1 counters show **+2/+2**. The seal and stat marker follow the same physical run card and do not intercept dragging or tapping.
+
 ## Upgrade foil, visible counters and Mystery shop (v0.61)
 
 Random foil finishes are removed. Only a card with active, purchased **run counters** is foil; obsolete random-finish flags are ignored. The same physical copy keeps its foil and visible marks through hand, battlefield, graveyard, exile, searches, Clone's physical-copy rules and later encounters. The card image carries a small gold medallion with its total run-counter count plus a +N/+N marker for stat upgrades. Other copies and the canonical catalog remain unchanged. Starting a new run removes both the finish and its marks. The marks do not intercept clicks or drag/drop.

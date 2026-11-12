@@ -1,9 +1,18 @@
 /* Counters are small physical medallions; ability text stays outside the art. */
 .card-run-counters61{position:absolute;right:3%;bottom:3%;z-index:4;display:flex;align-items:center;justify-content:flex-end;gap:3px;max-width:94%;pointer-events:none;filter:drop-shadow(0 2px 3px #000b)}
-.counter-medallion61{display:flex;align-items:center;justify-content:center;gap:2px;min-width:23px;height:23px;padding:1px 5px;border:1px solid #ffe2a0;border-radius:50%;background:radial-gradient(circle at 35% 25%,#edc67e,#826032 75%);color:#20180e;box-shadow:inset 0 0 0 2px #fff2;font:800 11px/1 var(--sans)}
-.counter-medallion61>span{font-size:9px}.counter-medallion61>b{font:inherit;color:inherit}
+.counter-medallion61{position:relative;display:grid;place-items:center;flex:0 0 31px;width:31px;min-width:31px;height:31px;padding:0;border:0;border-radius:0;background:none;color:#fff0c7;box-shadow:none;filter:drop-shadow(0 0 3px #c98bff99) drop-shadow(0 1px 2px #000);font:700 11px/1 var(--serif)}
+.counter-medallion61>b{position:relative;z-index:1;font:inherit;color:inherit;text-shadow:0 1px 3px #000,0 0 4px #000}
+.counter-sigil63{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.sigil-wax63{fill:#19152df5;stroke:#b99464;stroke-width:.8;stroke-linejoin:round}
+.sigil-ring63{fill:none;stroke:#f4d29b;stroke-width:1.2}
+.sigil-inner63{fill:#171c32;stroke:#acbde8;stroke-width:.65;stroke-dasharray:1.5 2}
+.sigil-star63{fill:none;stroke:#e0b67d;stroke-width:.65;opacity:.8}
+.sigil-runes63{fill:none;stroke:#fff0bd;stroke-width:1;stroke-linecap:square;animation:sigil-ember63 3.6s ease-in-out infinite alternate}
+@keyframes sigil-ember63{from{opacity:.6}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.sigil-runes63{animation:none}}
+.screen:not(.active) .sigil-runes63,.ambience-paused .sigil-runes63{animation-play-state:paused}
 .card-stat-counter61{padding:3px 4px;border:1px solid #e4db9caa;border-radius:4px;background:#213625f2;color:#e7f4bf;font:700 10px/1 var(--sans);white-space:nowrap}
-.hand-card .counter-medallion61,.graveyard-card .counter-medallion61{min-width:19px;height:19px;font-size:10px;padding:1px 4px}
+.hand-card .counter-medallion61,.graveyard-card .counter-medallion61{flex-basis:24px;width:24px;min-width:24px;height:24px;font-size:9px;padding:0}
 .hand-card .card-stat-counter61,.graveyard-card .card-stat-counter61{font-size:8px;padding:3px}
 .keyword-tag61{display:inline-block;vertical-align:baseline;white-space:nowrap;border:1px solid currentColor;border-radius:4px;padding:1px 5px;font:600 10px/1.5 var(--sans);background:color-mix(in srgb,currentColor 12%,#101e29)}
 .keyword-word61{font-weight:650}
