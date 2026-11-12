@@ -13,10 +13,10 @@ function fixture(){
  return run;
 }
 test('starter drafted copies have distinct physical IDs with independent counter arrays',()=>{
- const r=fixture();r(`Math.random=()=>0;state.packs=Array.from({length:6},()=>state.pool.slice(0,7));state.draftKind='starter';state.activePack=5;state.selection=new Map(Array.from({length:6},(_,i)=>[i,0]));state.boosterSealed=false;renderDraft();state.deck=[];confirmDraft()`);assert.equal(r('state.deck.length'),17);assert.equal(r('new Set(state.deck.map(c=>c.runCardId60)).size'),17);assert.equal(r('state.deck.every(isFoilCard59)'),true);r(`state.deck[0].runCounters60.push('stats')`);assert.equal(r('runStatCount60(state.deck[1])'),0);assert.equal(r("'runCounters60' in card('Grizzly Bears')"),false);
+ const r=fixture();r(`Math.random=()=>0;state.packs=Array.from({length:6},()=>state.pool.slice(0,7));state.draftKind='starter';state.activePack=5;state.selection=new Map(Array.from({length:6},(_,i)=>[i,0]));state.boosterSealed=false;renderDraft();state.deck=[];confirmDraft()`);assert.equal(r('state.deck.length'),17);assert.equal(r('new Set(state.deck.map(c=>c.runCardId60)).size'),17);assert.equal(r('state.deck.some(isFoilCard59)'),false);r(`state.deck[0].runCounters60.push('stats')`);assert.equal(r('runStatCount60(state.deck[1])'),0);assert.equal(r("'runCounters60' in card('Grizzly Bears')"),false);
 });
 test('a shop counter is charged once and changes only the selected physical copy',()=>{
- const r=fixture();r(`shop();globalThis.other=state.deck[0];globalThis.selected=state.deck[1];globalThis.money=state.coins;purchase(0,1);confirmCounterShop60()`);assert.equal(r('state.coins'),r('money-18'));assert.equal(r('parseStats(selected).power'),3);assert.equal(r('parseStats(other).power'),2);assert.equal(r('state.shop.counters60[0].sold'),true);assert.equal(r("card('Grizzly Bears').power"),'2');
+ const r=fixture();r(`shop();globalThis.other=state.deck[0];globalThis.selected=state.deck[1];globalThis.money=state.coins;purchase(0,1);confirmCounterShop60()`);assert.equal(r('state.coins'),r('money-15'));assert.equal(r('parseStats(selected).power'),3);assert.equal(r('parseStats(other).power'),2);assert.equal(r('state.shop.counters60[0].sold'),true);assert.equal(r("card('Grizzly Bears').power"),'2');
 });
 test('counter selection cancellation, insufficient coins, removed cards and stale shops never charge',()=>{
  for(const event of ['closeCounterShop60()','state.coins=0','state.deck=[]','state.shop={...state.shop}','state.node=3','resetRunProgress59()']){

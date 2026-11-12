@@ -1,9 +1,9 @@
 /* Shop specialisations and consumable supplies; all costs use generic mana. */
 const SHOP_PACK_TYPES = [
- {id:'mythic',name:'Mythic pack',price:45,symbol:'✦',description:'1 mythic + 6 rare or uncommon cards'},
- {id:'equipment',name:'Equipment pack',price:27,symbol:'⚔',description:'7 Equipment cards'},
- {id:'instant',name:'Instant pack',price:24,symbol:'ϟ',description:'7 Instant cards'},
- {id:'creature',name:'Creature pack',price:24,symbol:'♜',description:'7 Creature cards'}
+ {id:'mythic',name:'Mythic pack',price:38,symbol:'✦',description:'1 mythic + 6 rare or uncommon cards'},
+ {id:'equipment',name:'Equipment pack',price:23,symbol:'⚔',description:'7 Equipment cards'},
+ {id:'instant',name:'Instant pack',price:20,symbol:'ϟ',description:'7 Instant cards'},
+ {id:'creature',name:'Creature pack',price:20,symbol:'♜',description:'7 Creature cards'}
 ];
 const CAMP_REWARDS = {
  treasure:{name:'Treasure',symbol:'◇',cost:0,description:'Sacrifice: add 1 floating generic mana.'},

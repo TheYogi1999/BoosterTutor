@@ -534,11 +534,25 @@ function draftAbilitySummary(card) {
   const summary = lines.join(' ');
   return summary.length > 110 ? `${summary.slice(0, 107).trimEnd()}…` : summary;
 }
+function draftAward61() {
+  const count = state.packs[state.activePack || 0]?.length || PACK_SIZE;
+  const kind = state.boosterInterruption?.kind;
+  return { count, keepAll:kind === 'shop', copies:kind ? 1 : COPIES_PER_DRAFT_PICK, destination:kind === 'tutor' ? 'hand' : 'deck' };
+}
+function draftInstruction61() {
+  const award = draftAward61();
+  if (award.keepAll) return `Keep all ${award.count} cards · 1 copy of each for your deck.`;
+  return `Choose one card · ${award.copies} ${award.copies === 1 ? 'card' : 'copies'} for your ${award.destination}.`;
+}
+function draftChoiceLabel61() {
+  const award = draftAward61();
+  return award.keepAll ? `ALL ${award.count} CARDS` : state.selection.has(state.activePack || 0) ? '1 CARD SELECTED' : `CHOOSE 1 OF ${award.count}`;
+}
 function cardFactsMarkup(card) {
   const keywords = displayKeywords(card).join(', ') || 'None';
   const stats = isCreature(card) ? parseStats(card) : null;
   const ability = draftAbilitySummary(card);
-  return `<span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">${isCreature(card)?combatStats(stats.power,stats.toughness):'—'}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span>`;
+  return `<span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">${isCreature(card)?combatStats(stats.power,stats.toughness):'—'}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${typeof keywordChips61 === 'function' ? keywordChips61(card) : escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${typeof keywordText61 === 'function' ? keywordText61(ability) : escapeHtml(ability)}</span>` : ''}</span>`;
 }
 function cardImageMarkup(card, isNew = false) {
   return `<span class="card-image-wrap">${cardFace(card)}${isNew ? '<span class="new-card-badge" aria-label="New card discovery">NEW</span>' : ''}</span>`;
@@ -580,12 +594,12 @@ function renderDraft() {
   if (!state.boosterSealed && !boosterTravel) recordSeenCards(pack);
   $('#draft-step').textContent = starter ? `PACK ${packIndex + 1} OF ${STARTER_BOOSTER_COUNT}` : 'REWARD';
   $('#draft-title').textContent = state.boosterSealed ? 'Your next booster' : 'Which card joins your journey?';
-  $('#draft-instruction').textContent = state.boosterSealed ? 'Seven cards. One choice.' : `Choose one card · ${COPIES_PER_DRAFT_PICK} copies for your deck.`;
+  $('#draft-instruction').textContent = draftInstruction61();
   $('#pack-number').textContent = `${packIndex + 1} / ${starter ? STARTER_BOOSTER_COUNT : 1}`;
   $('#deck-count').textContent = String(state.deck.length + state.selection.size * COPIES_PER_DRAFT_PICK);
   $('#draft-grid').innerHTML = state.boosterSealed
-    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-pack-type="${packType}" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-shine-window" aria-hidden="true"><span class="pack-foil"></span></span><span class="pack-seal pack-seal-top" aria-hidden="true"></span><span class="pack-seal pack-seal-bottom" aria-hidden="true"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">${state.boosterInterruption?.packName ? escapeHtml(state.boosterInterruption.packName.toUpperCase()) : 'AETHER EXPEDITION'}</span><span class="pack-card-count">7 CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
-    : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${chosen ? '1 CARD SELECTED' : 'CHOOSE 1 OF 7'}</small></header><div class="booster-cards">${pack.map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex, newCards.has(cardDiscoveryKey(card)))).join('')}</div></section>`;
+    ? `<div class="pack-stage"><div class="pack-particles" aria-hidden="true">✦ · ✧ · ✦</div><button class="sealed-pack" data-pack-type="${packType}" data-open-pack="true" aria-label="Booster ${packIndex + 1} open"><span class="pack-shine-window" aria-hidden="true"><span class="pack-foil"></span></span><span class="pack-seal pack-seal-top" aria-hidden="true"></span><span class="pack-seal pack-seal-bottom" aria-hidden="true"></span><span class="pack-logo">BOOSTER<br><b>TUTOR</b></span><span class="pack-emblem">✦</span><span class="pack-caption">${state.boosterInterruption?.packName ? escapeHtml(state.boosterInterruption.packName.toUpperCase()) : 'AETHER EXPEDITION'}</span><span class="pack-card-count">${pack.length} CARDS</span></button><p>Booster ${packIndex + 1} of ${starter ? STARTER_BOOSTER_COUNT : 1} · click to open</p></div>`
+    : `<div class="reveal-sparks" aria-hidden="true">${Array.from({ length: 18 }, (_, index) => `<i style="--spark-angle:${index * 20}deg;--spark-distance:${110 + index % 4 * 60}px"></i>`).join('')}</div><section class="booster-pack"><header><span>BOOSTER ${packIndex + 1}</span><small>${draftChoiceLabel61()}</small></header><div class="booster-cards">${pack.map((card, cardIndex) => makeCardMarkup(card, packIndex, cardIndex, state.selection.get(packIndex) === cardIndex, newCards.has(cardDiscoveryKey(card)))).join('')}</div></section>`;
   $('#selection-status').textContent = state.boosterSealed ? 'One pack at a time.' : chosen ? 'Your card is selected.' : 'Choose a card to continue.';
   $('#pack-reroll').disabled = state.boosterSealed || Boolean(state.rerolledPacks?.has(packIndex));
   $('#pack-reroll').textContent = state.rerolledPacks?.has(packIndex) ? '↻ Reroll used' : '↻ Reroll pack · 1×';
@@ -614,7 +628,7 @@ $('#draft-grid').addEventListener('click', (event) => {
 function syncDraftSelection(){
  const index=state.activePack||0, chosen=state.selection.get(index);
  document.querySelectorAll('.draft-option').forEach(button=>{const picked=Number(button.dataset.packIndex)===index&&Number(button.dataset.cardIndex)===chosen;button.classList.toggle('selected',picked);button.setAttribute('aria-pressed',String(picked));});
- const heading=document.querySelector('.booster-pack header small');if(heading)heading.textContent=state.boosterInterruption?.kind==='shop'?'ALL 7 CARDS':Number.isInteger(chosen)?'1 CARD SELECTED':'CHOOSE 1 OF 7';
+ const heading=document.querySelector('.booster-pack header small');if(heading)heading.textContent=draftChoiceLabel61();
  $('#deck-count').textContent=String(state.boosterInterruption?state.deck.length:state.deck.length+state.selection.size*COPIES_PER_DRAFT_PICK+(state.draftKind==='starter'?STARTING_MANA_CARDS+1:0));
  $('#draft-confirm').disabled=state.boosterSealed||Boolean(boosterTravel)||!Number.isInteger(chosen);
  $('#selection-status').textContent=Number.isInteger(chosen)?'Selected · confirm to continue.':'Choose one card.';
@@ -931,7 +945,7 @@ function showCardPreview(card, element) {
   if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 && !(typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)) ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
-  preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
+  preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${typeof keywordText61 === 'function' ? keywordText61(line) : escapeHtml(line)}</li>`).join('')}</ul>${typeof keywordChips61 === 'function' && displayKeywords(card).length ? `<div class="bubble-keyword-tags61">${keywordChips61(card)}</div>` : ''}${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => typeof keywordText61 === 'function' ? keywordText61(keywordInfo[keyword]) : escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
   if (permanent && !card.campToken && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>${escapeHtml(permanentActivationLabel51(permanent))}</button>`;
   preview.hidden = false;
   positionCardPreview();
@@ -2487,7 +2501,7 @@ function awardBounty(enemy) {
   state.coins=(state.coins||0)+amount;syncCoins();addLog(`${enemy.card.name} defeated · +${amount} coins.`);
   return amount;
 }
-function shopPrice(card) { return 6+Math.ceil(card.cmc||0)*3; }
+function shopPrice(card) { return 5+Math.ceil((card.cmc||0)*2.5); }
 function showShop() {
   if(state.node<=1) return showJourney();
   if(!state.shop || state.shop.node!==state.node){

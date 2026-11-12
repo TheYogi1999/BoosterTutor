@@ -12,50 +12,50 @@ const assert=require('node:assert/strict');
   await p.locator('#start-button').click();await p.locator('.sealed-pack').waitFor();
   assert.equal(await p.locator('#player-level').innerText(),'1');
   assert.equal(await p.locator('#run-level').isVisible(),true);
-  assert.equal(await p.evaluate(()=>state.packs.every(pack=>pack.length===7&&pack.every(isFoilCard59))),true);
+  assert.equal(await p.evaluate(()=>state.packs.every(pack=>pack.length===7&&!pack.some(isFoilCard59))),true);
   assert.equal(await p.evaluate(()=>BUNDLED_CARDS.some(c=>c.foil59)),false);
   // One real starter draft, from the physical pack to the actual run deck.
   for(let i=0;i<6;i++){
-   await p.locator('.sealed-pack').click();assert.equal(await p.locator('.draft-option .foil-card-face').count(),7);
+   await p.locator('.sealed-pack').click();assert.equal(await p.locator('.draft-option .foil-card-face').count(),0);
    await p.evaluate(()=>{window.samePack59=state.packs[state.activePack];renderDraft();renderDraft()});
    assert.equal(await p.evaluate(()=>samePack59===state.packs[state.activePack]),true);
    await p.locator('.draft-option').first().click();await p.locator('#draft-confirm').click();
   }
   assert.equal(await p.evaluate(()=>state.deck.length),17);
-  assert.equal(await p.evaluate(()=>state.deck.every(isFoilCard59)),true);
+  assert.equal(await p.evaluate(()=>state.deck.some(isFoilCard59)),false);
   assert.equal(await p.evaluate(()=>state.pool.some(c=>c.foil59)),false);
   await p.locator('#journey-deck-button').click();
-  assert.equal(await p.locator('.collection-card .foil-card-face').count(),await p.locator('.collection-card').count());
+  assert.equal(await p.locator('.collection-card .foil-card-face').count(),0);
   await p.locator('#collection-close').click();await p.locator('[data-camp-token="treasure"]').click();
-  assert.equal(await p.locator('#hand-row .foil-card-face').count(),7);
-  assert.equal(await p.locator('#mana-land-row .foil-card-face').count(),2);
+  assert.equal(await p.locator('#hand-row .foil-card-face').count(),0);
+  assert.equal(await p.locator('#mana-land-row .foil-card-face').count(),0);
   // Actual casting, sacrificing, moving between zones and inspecting the foil.
   await p.evaluate(()=>{
-   const b=state.battle;window.foilBear59=runCard59(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'));window.foilLotus59=runCard59(BUNDLED_CARDS.find(c=>c.name==='Black Lotus'));b.hand=[foilBear59,foilLotus59];b.floatingMana=20;
+   const b=state.battle;window.foilBear59=runCard59(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'));foilBear59.runCounters60=['stats'];window.foilLotus59=runCard59(BUNDLED_CARDS.find(c=>c.name==='Black Lotus'));b.hand=[foilBear59,foilLotus59];b.floatingMana=20;
    for(const e of b.enemyCreatures){e.counterspell=false;e.ward=0;e.hexproof=false;e.health=e.maxHealth=100}renderBattle();
   });
   await p.locator('[data-hand-index="0"]').click();assert.equal(await p.locator('#creature-row .foil-card-face').count(),1);
   await p.locator('[data-hand-index="0"]').click();
-  assert.equal(await p.locator('[data-permanent-id]:has(img[alt="Black Lotus"]) .foil-card-face').count(),1);
+  assert.equal(await p.locator('[data-permanent-id]:has(img[alt="Black Lotus"]) .foil-card-face').count(),0);
   await p.locator('[data-permanent-id]:has(img[alt="Black Lotus"])').click();await p.locator('#token-action-confirm').click();
   assert.equal(await p.evaluate(()=>state.battle.graveyard.includes(foilLotus59)),true);
-  assert.equal(await p.locator('#graveyard-pile .foil-card-face').count(),1);
-  await p.locator('#graveyard-open').click();assert.equal(await p.locator('#graveyard-dialog .foil-card-face').count(),1);await p.locator('#graveyard-dialog [data-close-dialog],#graveyard-close').first().click();
+  assert.equal(await p.locator('#graveyard-pile .foil-card-face').count(),0);
+  await p.locator('#graveyard-open').click();assert.equal(await p.locator('#graveyard-dialog .foil-card-face').count(),0);await p.locator('#graveyard-dialog [data-close-dialog],#graveyard-close').first().click();
   await p.locator('[data-creature-id] .player-card-frame').hover();assert.equal(await p.locator('#inspector-content .foil-card-face').count(),1);
   await p.screenshot({path:'work/progression59-combat.png'});
   // A normal and a foil copy must be distinguishable in the same deck list.
-  await p.evaluate(()=>{state.deck.push({...foilBear59,foil59:false},foilBear59);openCollection('deck')});
+  await p.evaluate(()=>{state.deck.push({...foilBear59,runCardId60:undefined,runCounters60:[]},foilBear59);openCollection('deck')});
   const mixed=await p.evaluate(()=>state.collectionCards.filter(c=>c.name==='Grizzly Bears').map(c=>({foil:isFoilCard59(c),count:c.count})));assert.equal(mixed.length,2);
   await p.locator('#collection-close').click();
   // Every shop acquisition and purchased pack keeps the finish seen before buying.
   await p.evaluate(()=>{state.node=2;state.coins=1000;showShop();window.shopCard59=state.shop.offers[0].card;Math.random=()=>.99;renderShop()});
-  assert.equal(await p.locator('.shop-offer .foil-card-face').count(),3);
-  await p.locator('[data-buy-card="0"]').click();assert.equal(await p.evaluate(()=>state.deck.includes(shopCard59)&&isFoilCard59(shopCard59)),true);
+  assert.equal(await p.locator('.shop-offer .foil-card-face').count(),0);
+  await p.locator('[data-buy-card="0"]').click();assert.equal(await p.evaluate(()=>state.deck.includes(shopCard59)&&!isFoilCard59(shopCard59)),true);
   await p.locator('[data-select-pack="0"]').click();await p.locator('#shop-pack-confirm').click();
   await p.locator('.sealed-pack').click();assert.equal(await p.locator('.draft-option').count(),7);assert.equal(await p.locator('.draft-option .foil-card-face').count(),0);
   await p.evaluate(()=>{window.purchased59=state.packs[0]});await p.locator('#draft-confirm').click();assert.equal(await p.evaluate(()=>purchased59.every(c=>state.deck.includes(c)&&!isFoilCard59(c))),true);
   // Verify visible normal + foil pack layouts, before/after hover, without moving captions.
-  await p.evaluate(()=>{Math.random=()=>.99;state.packs=[state.pool.slice(0,7).map(runCard59)];state.packs[0][0].foil59=true;state.boosterInterruption=null;state.draftKind='reward';state.activePack=0;state.boosterSealed=false;state.selection=new Map();state.rerolledPacks=new Set();renderDraft();showScreen('draft-screen')});
+  await p.evaluate(()=>{Math.random=()=>.99;state.packs=[state.pool.slice(0,7).map(runCard59)];state.packs[0][0].runCounters60=['stats'];state.boosterInterruption=null;state.draftKind='reward';state.activePack=0;state.boosterSealed=false;state.selection=new Map();state.rerolledPacks=new Set();renderDraft();showScreen('draft-screen')});
   const caption=await p.locator('.draft-option .draft-card-name').first().boundingBox();await p.locator('.draft-option').first().hover();const hovered=await p.locator('.draft-option .draft-card-name').first().boundingBox();assert.ok(Math.abs(caption.y-hovered.y)<1);
   await p.emulateMedia({reducedMotion:'no-preference'});
   assert.equal(await p.locator('.foil-card-face').first().evaluate(e=>getComputedStyle(e,':after').animationName),'foil-sheen59');

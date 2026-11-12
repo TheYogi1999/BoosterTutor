@@ -1,3 +1,20 @@
+## Upgrade foil, visible counters and Mystery shop (v0.61)
+
+Random foil finishes are removed. Only a card with active, purchased **run counters** is foil; obsolete random-finish flags are ignored. The same physical copy keeps its foil and visible marks through hand, battlefield, graveyard, exile, searches, Clone's physical-copy rules and later encounters. The card image carries a small gold medallion with its total run-counter count plus a +N/+N marker for stat upgrades. Other copies and the canonical catalog remain unchanged. Starting a new run removes both the finish and its marks. The marks do not intercept clicks or drag/drop.
+
+The counter pool now includes **Mystery (14 coins)**, still with three distinct offers per shop. Its result is generated only after the selected card, current shop/run and payment have been validated at confirmation. Browsing, selecting, canceling and rerendering never roll or reveal the result. Mystery chooses a legal ordinary counter: existing non-stacking abilities are excluded, while +1/+1 and Toxic can stack. Payment and application happen once, then a reveal window shows the actual counter and upgraded physical card. Closing that window does not reroll or refund the completed purchase.
+
+Shop prices are modestly lower. Single cards cost `5 + ceil(CMC × 2.5)` coins. Mythic/Equipment/Instant/Creature packs cost **38/23/20/20**. Guaranteed +1/+1/Lifelink/Flying/Deathtouch/Toxic/Trample/Vigilance/Haste counters cost **15/20/18/24/18/15/17/15**.
+
+Booster instructions and counts now use the actual pack and acquisition flow: starter/reward drafts give two copies of one chosen card to the deck; Booster Tutor gives one chosen card to the hand; bought packs add one copy of every card. Headers, sealed-pack counts, confirm buttons and interruption messages follow the same contract, including a nonstandard pack size. Colored keyword tags appear in booster and shop summaries and the hand's hover preview; keyword words in ability explanations and counter labels use the same colors. No keyword labels cover printed card rules.
+
+D6 faces are opaque white squares with zero corner radius. Their faces meet at closed cube edges; black pip dots remain round. Flight, bounce, result selection, D20 geometry and coin behavior remain unchanged.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs tests/chance.test.cjs tests/relics.test.cjs tests/progression.test.cjs tests/counters-poison.test.cjs tests/finish-mystery.test.cjs
+node tests/finish-mystery-browser.test.cjs
+```
+
 ## Run counter shop, poison and permanent actions (v0.60)
 
 Foil has a more saturated pink/gold/green/cyan/blue/violet prism and brighter colored highlights. The finish remains run-only and confined to the card image; rules text and captions stay unaffected. Reduced-motion finishes remain still.

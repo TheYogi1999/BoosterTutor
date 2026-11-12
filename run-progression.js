@@ -1,5 +1,4 @@
 /* Run-only finishes, defeat levels and the optional post-campaign expedition. */
-const FOIL_CHANCE59 = .12;
 const BEST_LEVEL_KEY59 = 'booster-tutor-highest-level-v1';
 state.level = 1;
 state.defeatedEnemies59 = 0;
@@ -48,15 +47,15 @@ function gainDefeatLevel59() {
 }
 
 // Always copy the source card. The canonical catalog and its cached data never
-// acquire a finish; a card's finish is decided only once in the current run.
+// acquire a finish. Purchased run counters determine the foil finish.
 function runCard59(card) {
-  return { ...card, finishRun59:state.finishRun59, foil59:Math.random() < FOIL_CHANCE59 };
+  return { ...card, finishRun59:state.finishRun59, foil59:false };
 }
 function currentRunCard59(card) {
   return card.finishRun59 === state.finishRun59 ? card : runCard59(card);
 }
 function isFoilCard59(card) {
-  return Boolean(card?.foil59 && card.finishRun59 === state.finishRun59);
+  return Boolean(card && card.finishRun59 === state.finishRun59 && card.runCounters60?.length);
 }
 function copyPhysicalFinish59(copied, physical) {
   copied.finishRun59 = physical.finishRun59;
@@ -65,7 +64,7 @@ function copyPhysicalFinish59(copied, physical) {
 const baseFoilFace59 = cardFace;
 cardFace = function(card) {
   const face = baseFoilFace59(card);
-  return isFoilCard59(card) ? `<span class="foil-card-face" data-finish="foil" role="img" aria-label="${escapeHtml(card.name)}, foil" title="Foil · this run only">${face}</span>` : face;
+  return isFoilCard59(card) ? `<span class="foil-card-face" data-finish="foil" role="img" aria-label="${escapeHtml(card.name)}, foil" title="Foil · upgraded for this run">${face}</span>` : face;
 };
 const baseFoilDraft59 = renderDraft;
 renderDraft = function() {

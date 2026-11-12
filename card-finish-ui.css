@@ -1,0 +1,23 @@
+/* Counters are small physical medallions; ability text stays outside the art. */
+.card-run-counters61{position:absolute;right:3%;bottom:3%;z-index:4;display:flex;align-items:center;justify-content:flex-end;gap:3px;max-width:94%;pointer-events:none;filter:drop-shadow(0 2px 3px #000b)}
+.counter-medallion61{display:flex;align-items:center;justify-content:center;gap:2px;min-width:23px;height:23px;padding:1px 5px;border:1px solid #ffe2a0;border-radius:50%;background:radial-gradient(circle at 35% 25%,#edc67e,#826032 75%);color:#20180e;box-shadow:inset 0 0 0 2px #fff2;font:800 11px/1 var(--sans)}
+.counter-medallion61>span{font-size:9px}.counter-medallion61>b{font:inherit;color:inherit}
+.card-stat-counter61{padding:3px 4px;border:1px solid #e4db9caa;border-radius:4px;background:#213625f2;color:#e7f4bf;font:700 10px/1 var(--sans);white-space:nowrap}
+.hand-card .counter-medallion61,.graveyard-card .counter-medallion61{min-width:19px;height:19px;font-size:10px;padding:1px 4px}
+.hand-card .card-stat-counter61,.graveyard-card .card-stat-counter61{font-size:8px;padding:3px}
+.keyword-tag61{display:inline-block;vertical-align:baseline;white-space:nowrap;border:1px solid currentColor;border-radius:4px;padding:1px 5px;font:600 10px/1.5 var(--sans);background:color-mix(in srgb,currentColor 12%,#101e29)}
+.keyword-word61{font-weight:650}
+.keyword-sky61{color:#9ddfff}.keyword-green61{color:#b2e6a1}.keyword-rose61{color:#f2b4d0}.keyword-violet61{color:#d5b5ff}.keyword-poison61{color:#d7f49b}.keyword-orange61{color:#ffc391}.keyword-blue61{color:#adcbff}.keyword-amber61{color:#ffd99c}.keyword-gold61{color:#f5dfa4}.keyword-steel61{color:#cbd6df}.keyword-teal61{color:#9de5d6}.keyword-red61{color:#ffb6ad}
+.keyword-none61{color:#a9b7bb}
+.draft-card-keywords{line-height:1.9!important}
+.draft-card-keywords>.keyword-tag61{margin:0 2px 3px 0}
+.bubble-keyword-tags61{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 6px}
+.bubble-keyword-tags61 .keyword-tag61{font-size:11px}
+.bubble-keywords .keyword-word61{font-weight:700}
+html.fixed-game dialog.counter-reveal-dialog{width:540px!important;height:650px!important;padding:28px;background:radial-gradient(ellipse at 50% 40%,#7370512b,transparent 65%),#11242e;color:#eee2c8;border:1px solid #dec38a99;border-radius:10px;box-sizing:border-box;text-align:center;overflow:auto}
+.counter-reveal-dialog::backdrop{background:#020c14c4;backdrop-filter:blur(4px)}
+.counter-reveal-dialog>.eyebrow{font:10px var(--sans);letter-spacing:3px;color:#e0ca96}
+.counter-reveal-dialog h2{margin:15px 0 17px}.counter-reveal-dialog h2 .keyword-tag61{font:600 25px/1.4 var(--sans);padding:3px 13px}
+#counter-reveal-card{width:196px;height:274px;margin:0 auto 20px;box-shadow:0 0 35px #c9b97a33;border-radius:8px}
+#counter-reveal-description{font:14px/1.6 var(--sans);color:#c8d5c9;max-width:420px;margin:0 auto 18px}
+.counter-reveal-dialog .primary-button{font-size:12px;padding:12px 25px}

@@ -1,13 +1,14 @@
 /* A purchased counter belongs to one physical creature card, for this run. */
 const RUN_COUNTERS60 = {
- stats:{name:'+1/+1',price:18,symbol:'↑',description:'Permanently +1 power and +1 toughness this run.'},
- lifelink:{name:'Lifelink',price:24,symbol:'♥',description:'Its damage restores that much life to you.'},
- flying:{name:'Flying',price:22,symbol:'↟',description:'Can attack flying foes; evades ground blockers.'},
- deathtouch:{name:'Deathtouch',price:28,symbol:'◆',description:'Any combat damage it deals to a monster is lethal.'},
- toxic:{name:'Toxic 1',price:22,symbol:'☣',description:'Combat damage also gives the hit monster 1 poison counter.'},
- trample:{name:'Trample',price:18,symbol:'➶',description:'Excess combat damage reaches another legal monster.'},
- vigilance:{name:'Vigilance',price:20,symbol:'◇',description:'Attacking does not tap this creature.'},
- haste:{name:'Haste',price:18,symbol:'ϟ',description:'Can attack and tap for mana on its first turn.'}
+ stats:{name:'+1/+1',price:15,symbol:'↑',description:'Permanently +1 power and +1 toughness this run.'},
+ lifelink:{name:'Lifelink',price:20,symbol:'♥',description:'Its damage restores that much life to you.'},
+ flying:{name:'Flying',price:18,symbol:'↟',description:'Can attack flying foes; evades ground blockers.'},
+ deathtouch:{name:'Deathtouch',price:24,symbol:'◆',description:'Any combat damage it deals to a monster is lethal.'},
+ toxic:{name:'Toxic 1',price:18,symbol:'☣',description:'Combat damage also gives the hit monster 1 poison counter.'},
+ trample:{name:'Trample',price:15,symbol:'➶',description:'Excess combat damage reaches another legal monster.'},
+ vigilance:{name:'Vigilance',price:17,symbol:'◇',description:'Attacking does not tap this creature.'},
+ mystery:{name:'Mystery',price:14,symbol:'?',description:'A random run counter. Revealed only when applied.'},
+ haste:{name:'Haste',price:15,symbol:'ϟ',description:'Can attack and tap for mana on its first turn.'}
 };
 state.nextRunCard60 = 1;
 function activeRunCounters60(card) { return card?.finishRun59===state.finishRun59 ? card.runCounters60||[] : []; }
@@ -24,7 +25,7 @@ function runCounterLabels60(card){
  const counters=activeRunCounters60(card),stats=runStatCount60(card),toxic=counters.filter(kind=>kind==='toxic').length;
  return [...(stats?[`+${stats}/+${stats}`]:[]),...new Set(counters.filter(kind=>!['stats','toxic'].includes(kind)).map(kind=>RUN_COUNTERS60[kind].name)),...(toxic?[`Toxic ${toxic}`]:[])];
 }
-function runCounterMarkup60(card){const labels=runCounterLabels60(card);return labels.length?`<span class="run-counter-tags" title="Counters on this copy until this run ends">${labels.map(label=>`<span>${escapeHtml(label)}</span>`).join('')}</span>`:'';}
+function runCounterMarkup60(card){const labels=runCounterLabels60(card);return labels.length?`<span class="run-counter-tags" title="Counters on this copy until this run ends">${labels.map(label=>`<span>${typeof keywordText61==='function'?keywordText61(label):escapeHtml(label)}</span>`).join('')}</span>`:'';}
 const baseRunStats60=parseStats;
 parseStats=function(card){const stats=baseRunStats60(card),n=runStatCount60(card);return {power:stats.power+n,toughness:stats.toughness+n};};
 const baseRunKeywords60=creatureKeywords;
@@ -72,15 +73,19 @@ function ensurePhysicalDeck60(){
 }
 function canReceiveRunCounter60(card,kind){
  if(!card||!RUN_COUNTERS60[kind]||!isCreature(card))return false;
- return ['stats','toxic'].includes(kind)||!hasCreatureKeyword(creatureKeywords(card),kind);
+ return ['stats','toxic','mystery'].includes(kind)||!hasCreatureKeyword(creatureKeywords(card),kind);
 }
 function counterShopTargets60(kind){return state.deck.filter(card=>canReceiveRunCounter60(card,kind));}
+function resolveMysteryCounter61(card){
+ const choices=Object.keys(RUN_COUNTERS60).filter(kind=>kind!=='mystery'&&canReceiveRunCounter60(card,kind));
+ return choices.length?choices[Math.floor(Math.random()*choices.length)]:null;
+}
 function renderCounterOffers60(){
  const shop=state.shop;if(!shop)return;
  if(!shop.counters60)shop.counters60=shuffle(Object.keys(RUN_COUNTERS60)).slice(0,3).map(kind=>({kind,sold:false}));
  $('#shop-counter-grid').innerHTML=shop.counters60.map((offer,index)=>{
   const type=RUN_COUNTERS60[offer.kind],legal=counterShopTargets60(offer.kind).length>0;
-  return `<article class="counter-offer${offer.sold?' sold':''}"><span class="counter-icon" aria-hidden="true">${type.symbol}</span><div><b>${type.name}</b><small>${type.description}</small></div><button type="button" class="quiet-button" data-buy-counter="${index}" ${offer.sold||!legal||(state.coins||0)<type.price?'disabled':''}>${offer.sold?'SOLD':!legal?'No target':`${type.price} coins`}</button></article>`;
+  return `<article class="counter-offer${offer.sold?' sold':''}"><span class="counter-icon" aria-hidden="true">${type.symbol}</span><div><b>${typeof keywordText61==='function'?keywordText61(type.name):type.name}</b><small>${type.description}</small></div><button type="button" class="quiet-button" data-buy-counter="${index}" ${offer.sold||!legal||(state.coins||0)<type.price?'disabled':''}>${offer.sold?'SOLD':!legal?'No target':`${type.price} coins`}</button></article>`;
  }).join('');
 }
 const baseCounterShop60=renderShop;
@@ -113,8 +118,12 @@ function confirmCounterShop60(){
  if(!validCounterPurchase60()){closeCounterShop60();return false;}
  const p=state.counterPurchase60,type=RUN_COUNTERS60[p.offer.kind],card=state.deck.find(card=>card.runCardId60===p.selected);
  if((state.coins||0)<type.price||!canReceiveRunCounter60(card,p.offer.kind)){renderCounterShop60();return false;}
- p.offer.sold=true;state.coins-=type.price;(card.runCounters60||=[]).push(p.offer.kind);
- closeCounterShop60();renderShop();playSfx('select');showToast(`${type.name} added to one copy of ${card.name} for this run.`);return true;
+ const kind=p.offer.kind==='mystery'?resolveMysteryCounter61(card):p.offer.kind;
+ if(!kind)return false;
+ p.offer.sold=true;p.offer.appliedKind61=kind;state.coins-=type.price;(card.runCounters60||=[]).push(kind);
+ const mystery=p.offer.kind==='mystery';
+ closeCounterShop60();renderShop();playSfx('select');
+ if(mystery)showCounterReveal61(card,kind);else showToast(`${type.name} added to one copy of ${card.name} for this run.`);return true;
 }
 $('#shop-counter-grid').addEventListener('click',event=>{const button=event.target.closest('[data-buy-counter]');if(button)openCounterShop60(Number(button.dataset.buyCounter));});
 $('#counter-shop-grid').addEventListener('click',event=>{const button=event.target.closest('[data-counter-pick]'),p=state.counterPurchase60;if(!button||!validCounterPurchase60())return;const card=state.deck.find(card=>card.runCardId60===button.dataset.counterPick);if(!canReceiveRunCounter60(card,p.offer.kind))return;p.selected=card.runCardId60;renderCounterShop60();});

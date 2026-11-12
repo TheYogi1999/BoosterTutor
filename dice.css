@@ -15,7 +15,7 @@ html.fixed-game .game-shell .arena-table.has-table-dice{overflow:visible!importa
 .die-flight{position:relative;width:86px;height:86px;transform-style:preserve-3d;will-change:transform;animation:dice-slide54 1.8s cubic-bezier(.12,.64,.22,1) var(--die-delay) both}
 .die-hop{position:relative;width:86px;height:86px;transform-style:preserve-3d;will-change:transform;animation:dice-bounce54 1.8s linear var(--die-delay) both}
 .die-cube{--die-half:43px;position:relative;width:86px;height:86px;transform-style:preserve-3d;transform:rotateX(-12deg) rotateY(18deg) rotateX(var(--die-x)) rotateY(var(--die-y)) rotateZ(0deg);will-change:transform;animation:dice-tumble54 1.8s cubic-bezier(.18,.62,.3,1) var(--die-delay) both}
-.die-face{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:7px;padding:13px;border:1px solid #ddc992;border-radius:12px;background:linear-gradient(145deg,#fff5d8,#dec99a);backface-visibility:hidden;box-shadow:inset 0 0 0 3px #fff9,inset 0 -4px 10px #6d492e33}
+.die-face{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:7px;padding:13px;border:1px solid #dedede;border-radius:0;background:#fff;backface-visibility:hidden;box-shadow:inset 0 0 0 2px #fff,inset 0 -3px 8px #00000012}
 .die-face-1{transform:translateZ(var(--die-half))}
 .die-face-6{transform:rotateY(180deg) translateZ(var(--die-half))}
 .die-face-3{transform:rotateY(90deg) translateZ(var(--die-half))}
