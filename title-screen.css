@@ -20,8 +20,7 @@
 #start-screen .title-menu button:hover,#start-screen .title-menu button:focus-visible{color:#fff0ce;translate:6px 0}
 #start-screen .title-menu button:hover:before,#start-screen .title-menu button:focus-visible:before{opacity:1}
 #start-screen .title-menu .title-play{color:#f7d19a;font-size:23px;font-weight:650;letter-spacing:5px;margin-bottom:12px;height:58px;line-height:58px}
-#start-screen .title-menu .title-play:before{top:27px;opacity:1}
-#start-screen .title-play span{font-size:20px;margin-left:25px;color:#e8c38c88}
+#start-screen .title-menu .title-play:before{top:27px}
 #start-screen .hero-card-stack{left:806px;right:auto;top:222px;width:690px;height:440px;z-index:3}
 #start-screen .hero-card{width:242px;left:3px;top:90px;--angle:-17deg;perspective:1200px}
 #start-screen .hero-card:nth-child(2){left:211px;top:8px;--angle:0deg;z-index:2}
