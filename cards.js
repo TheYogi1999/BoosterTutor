@@ -3583,7 +3583,177 @@ const BUNDLED_CARDS = [
     "rarity": "uncommon",
     "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api"
   }
-}
+},
+  {
+    "id": "8b94f4c6-b518-43b3-be52-e889d1f3ea38",
+    "name": "Glistener Elf",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Phyrexian Elf Warrior",
+    "oracle_text": "Infect (This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Infect"
+    ],
+    "image": "assets/cards/8b94f4c6-b518-43b3-be52-e889d1f3ea38.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/b/8b94f4c6-b518-43b3-be52-e889d1f3ea38.jpg?1783941301",
+    "uri": "https://scryfall.com/card/nph/111/glistener-elf?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "8b94f4c6-b518-43b3-be52-e889d1f3ea38",
+      "set": "nph",
+      "set_name": "New Phyrexia",
+      "released_at": "2011-05-13",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/nph/111/glistener-elf?utm_source=api"
+    }
+  },
+  {
+    "id": "aae856bc-f65f-42ba-9344-1a30b356c041",
+    "name": "Plague Stinger",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Creature — Phyrexian Insect Horror",
+    "oracle_text": "Flying\nInfect (This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Flying",
+      "Infect"
+    ],
+    "image": "assets/cards/aae856bc-f65f-42ba-9344-1a30b356c041.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/a/aae856bc-f65f-42ba-9344-1a30b356c041.jpg?1783941730",
+    "uri": "https://scryfall.com/card/som/75/plague-stinger?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "aae856bc-f65f-42ba-9344-1a30b356c041",
+      "set": "som",
+      "set_name": "Scars of Mirrodin",
+      "released_at": "2010-10-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/som/75/plague-stinger?utm_source=api"
+    }
+  },
+  {
+    "id": "8f932690-9a38-4a3f-8805-a192208152a3",
+    "name": "Plague Myr",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact Creature — Phyrexian Myr",
+    "oracle_text": "Infect (This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)\n{T}: Add {C}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [],
+    "keywords": [
+      "Infect"
+    ],
+    "image": "assets/cards/8f932690-9a38-4a3f-8805-a192208152a3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/f/8f932690-9a38-4a3f-8805-a192208152a3.jpg?1783941365",
+    "uri": "https://scryfall.com/card/mbs/125/plague-myr?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "8f932690-9a38-4a3f-8805-a192208152a3",
+      "set": "mbs",
+      "set_name": "Mirrodin Besieged",
+      "released_at": "2011-02-04",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/mbs/125/plague-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "dfb81cb1-ac56-4803-a962-359854a447df",
+    "name": "Bilious Skulldweller",
+    "mana_cost": "{B}",
+    "cmc": 1.0,
+    "type_line": "Creature — Phyrexian Insect",
+    "oracle_text": "Deathtouch\nToxic 1 (Players dealt combat damage by this creature also get a poison counter.)",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Toxic",
+      "Deathtouch"
+    ],
+    "image": "assets/cards/dfb81cb1-ac56-4803-a962-359854a447df.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/f/dfb81cb1-ac56-4803-a962-359854a447df.jpg?1783918051",
+    "uri": "https://scryfall.com/card/one/83/bilious-skulldweller?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "dfb81cb1-ac56-4803-a962-359854a447df",
+      "set": "one",
+      "set_name": "Phyrexia: All Will Be One",
+      "released_at": "2023-02-10",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/one/83/bilious-skulldweller?utm_source=api"
+    }
+  },
+  {
+    "id": "ac625f30-ed91-4b21-ada8-aaa5b2ad79b8",
+    "name": "Prologue to Phyresis",
+    "mana_cost": "{1}{U}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Each opponent gets a poison counter.\nDraw a card.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/ac625f30-ed91-4b21-ada8-aaa5b2ad79b8.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/c/ac625f30-ed91-4b21-ada8-aaa5b2ad79b8.jpg?1783918058",
+    "uri": "https://scryfall.com/card/one/65/prologue-to-phyresis?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "ac625f30-ed91-4b21-ada8-aaa5b2ad79b8",
+      "set": "one",
+      "set_name": "Phyrexia: All Will Be One",
+      "released_at": "2023-02-10",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/one/65/prologue-to-phyresis?utm_source=api"
+    }
+  },
+  {
+    "id": "0a10f284-b043-4307-bdc7-6dad47cc9221",
+    "name": "Infectious Inquiry",
+    "mana_cost": "{2}{B}",
+    "cmc": 3.0,
+    "type_line": "Sorcery",
+    "oracle_text": "You draw two cards and you lose 2 life. Each opponent gets a poison counter.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/0a10f284-b043-4307-bdc7-6dad47cc9221.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/a/0a10f284-b043-4307-bdc7-6dad47cc9221.jpg?1783918045",
+    "uri": "https://scryfall.com/card/one/97/infectious-inquiry?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "0a10f284-b043-4307-bdc7-6dad47cc9221",
+      "set": "one",
+      "set_name": "Phyrexia: All Will Be One",
+      "released_at": "2023-02-10",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/one/97/infectious-inquiry?utm_source=api"
+    }
+  }
 ];
 const CAMP_TOKEN_CARDS = {
   "treasure": {

@@ -536,9 +536,9 @@ function draftAbilitySummary(card) {
 }
 function cardFactsMarkup(card) {
   const keywords = displayKeywords(card).join(', ') || 'None';
-  const stats = isCreature(card) ? `${card.power ?? '—'}/${card.toughness ?? '—'}` : '—';
+  const stats = isCreature(card) ? parseStats(card) : null;
   const ability = draftAbilitySummary(card);
-  return `<span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">${isCreature(card)?combatStats(card.power,card.toughness):'—'}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span>`;
+  return `<span class="draft-card-summary"><span class="draft-card-type">${escapeHtml(card.type_line || 'Unknown type')}</span><span><b>${Math.ceil(card.cmc || 0)} mana</b> · <span aria-label="Power and toughness">${isCreature(card)?combatStats(stats.power,stats.toughness):'—'}</span></span><span class="draft-card-keywords"><b>Keywords:</b> ${escapeHtml(keywords)}</span>${ability ? `<span class="draft-card-ability"><b>In game:</b> ${escapeHtml(ability)}</span>` : ''}</span>`;
 }
 function cardImageMarkup(card, isNew = false) {
   return `<span class="card-image-wrap">${cardFace(card)}${isNew ? '<span class="new-card-badge" aria-label="New card discovery">NEW</span>' : ''}</span>`;
@@ -678,7 +678,7 @@ function confirmDraft() {
     showActionError(starter ? `Choose exactly one card from each of the ${STARTER_BOOSTER_COUNT} boosters.` : 'Choose a card from the booster first.');
     return;
   }
-  for (const card of selected) for (let i = 0; i < COPIES_PER_DRAFT_PICK; i += 1) state.deck.push(card);
+  for (const card of selected) for (let i = 0; i < COPIES_PER_DRAFT_PICK; i += 1) state.deck.push(typeof physicalRunCopy60 === 'function' ? physicalRunCopy60(card) : card);
   if (starter) state.deck.push(...generateStarterManaCards(STARTING_MANA_CARDS));
   state.selection.clear();
   if (starter) showJourney(); else showShop();
@@ -1112,6 +1112,7 @@ $('#player-drop-zone').addEventListener('click', event => {
   if (!button || !battle || Date.now() < (state.suppressClickUntil || 0)) return;
   const permanent = battle.permanents.find(item => item.id === button.dataset.permanentId);
   if (!permanent) return;
+  if (typeof openPermanentAction60 === 'function') { openPermanentAction60(permanent.id); return; }
   if (permanent.card.campToken && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
   if (permanent.card.name === 'Black Lotus' && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
   if (['Jack-in-the-Mox','Sol Ring'].includes(permanent.card.name) && canActivatePermanent(permanent, battle)) { activatePermanent(permanent.id); return; }
@@ -1605,7 +1606,8 @@ function dealCreatureDamage(source, target, controller, battle, amount = Math.ma
   if (amount <= 0) return;
   let dealt = amount;
   if (target.owner === 'enemy') {
-    target.health = Math.max(0, target.health - dealt);
+    const infect = typeof combatPoison60 === 'function' && combatPoison60(source, target, dealt, battle);
+    if (!infect) target.health = Math.max(0, target.health - dealt);
     if (dealt > 0 && hasCreatureKeyword(source, 'deathtouch')) target.health = 0;
   } else {
     target.damage = (target.damage || 0) + amount;
@@ -1648,7 +1650,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
       if (dealsInCombatStep(attacker, firstStep)) {
         let remaining = Math.max(0, attacker.power);
         blockers.forEach((blocker, index) => {
-          const lethal = hasCreatureKeyword(attacker, 'deathtouch') ? 1 : blocker.owner === 'enemy' ? Math.max(0, blocker.health) : Math.max(0, blocker.toughness - (blocker.damage || 0));
+          const lethal = hasCreatureKeyword(attacker, 'deathtouch') ? 1 : blocker.owner === 'enemy' ? (typeof lethalToEnemy60 === 'function' ? lethalToEnemy60(attacker, blocker) : Math.max(0, blocker.health)) : Math.max(0, blocker.toughness - (blocker.damage || 0));
           const amount = index === blockers.length - 1 && !hasCreatureKeyword(attacker, 'trample') ? remaining : Math.min(remaining, lethal);
           if (amount > 0) exchanges.push({ source: attacker, target: blocker, controller: attackingSide, amount });
           remaining -= amount;
@@ -1669,7 +1671,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
     battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
     for (const hit of overflow) {
       if (hit.side === 'enemy') { damageToPlayer += hit.amount; if (hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:hit.amount}); }
-      else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? damageFirstEnemy(hit.amount,next) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
+      else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? (typeof poisonOverflow60 === 'function' && (hit.source.infect || hit.source.toxic) ? poisonOverflow60(hit.source, next, hit.amount, battle) : damageFirstEnemy(hit.amount,next)) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
     }
   }
   return { damageToPlayer, damageToOpponent, enemyLifelinkEvents };
@@ -2430,7 +2432,7 @@ function renderCollection() {
   const cards = kind === 'catalog' ? (state.catalogPool || (state.pool.length ? state.pool : BUNDLED_CARDS)) : kind === 'library' ? state.battle?.deck || [] : kind === 'exile' ? [...(state.battle?.exile || []), ...(state.battle?.enemyExile || [])] : state.deck;
   const groups = new Map();
   for (const card of cards) {
-    const key = `${card.id || card.name}:${typeof isFoilCard59 === 'function' && isFoilCard59(card) ? 'foil' : 'regular'}`;
+    const key = `${card.id || card.name}:${typeof isFoilCard59 === 'function' && isFoilCard59(card) ? 'foil' : 'regular'}:${typeof runCounterKey60 === 'function' ? runCounterKey60(card) : ''}`;
     if (groups.has(key)) groups.get(key).count += 1; else groups.set(key, { ...card, count: 1 });
   }
   const query = $('#collection-search').value.trim().toLowerCase();

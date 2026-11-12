@@ -459,3 +459,11 @@ Goblin Tutor
 Jack-in-the-Mox
 Adorable Kitten
 Mother Kangaroo
+
+# Poison and infect (v0.60)
+Glistener Elf
+Plague Stinger
+Plague Myr
+Bilious Skulldweller
+Prologue to Phyresis
+Infectious Inquiry

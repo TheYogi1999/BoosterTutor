@@ -26,6 +26,7 @@ const assert = require('node:assert/strict');
     const mana = await page.evaluate(() => state.battle.floatingMana);
     const mox = page.locator('.permanent-card');
     await mox.click();
+    await page.locator('#token-action-confirm').click();
     assert.equal(await page.locator('#dice-roll-dialog').evaluate(el => el.open), true);
     assert.equal(await mox.evaluate(el => el.classList.contains('permanent-tapped')), true);
     assert.equal(await page.evaluate(() => state.battle.diceHistory?.length || 0), 0);
@@ -64,7 +65,8 @@ const assert = require('node:assert/strict');
     assert.equal(await page.evaluate(() => state.playerHealth), life);
     await mox.click();
     assert.equal(await page.locator('#dice-roll-dialog').evaluate(el => el.open), false, 'tapped Mox cannot roll twice');
-    assert.equal(await page.locator('#inspector-content [data-activate-permanent]').isDisabled(), true);
+    assert.equal(await page.locator('#token-action-confirm').isDisabled(), true);
+    await page.locator('#token-action-cancel').click();
 
     // The direct card action also works with controller confirmation after untap.
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -73,6 +75,8 @@ const assert = require('node:assert/strict');
       rollD6Value50 = () => 1;
       controller.enable();
       controller.focus(document.querySelector('.permanent-card'));
+      controller.activate();
+      controller.focus(document.querySelector('#token-action-confirm'));
       controller.activate();
     });
     assert.equal(await page.evaluate(() => state.battle.diceRoll?.ready), true);

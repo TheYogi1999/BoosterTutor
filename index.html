@@ -37,10 +37,11 @@
     <link rel="stylesheet" href="dice-cards.css?v=0.51" />
     <link rel="stylesheet" href="reaction-checks.css?v=0.52" />
     <link rel="stylesheet" href="chance.css?v=0.57" />
-    <link rel="stylesheet" href="run-progression.css?v=0.59" />
-    <script src="cards.js?v=0.58" defer></script>
+    <link rel="stylesheet" href="run-progression.css?v=0.60" />
+    <link rel="stylesheet" href="run-counters.css?v=0.60" />
+    <script src="cards.js?v=0.60" defer></script>
     <script src="sounds.js?v=0.43" defer></script>
-    <script src="game.js?v=0.59" defer></script>
+    <script src="game.js?v=0.60" defer></script>
     <script src="rules.js?v=0.43" defer></script>
     <script src="expansion.js?v=0.59" defer></script>
     <script src="expedition-rewards.js?v=0.58" defer></script>
@@ -49,14 +50,17 @@
     <script src="waves.js?v=0.45" defer></script>
     <script src="battle-details.js?v=0.58" defer></script>
     <script src="dice.js?v=0.57" defer></script>
-    <script src="dice-cards.js?v=0.58" defer></script>
+    <script src="dice-cards.js?v=0.60" defer></script>
     <script src="reaction-checks.js?v=0.52" defer></script>
     <script src="chance.js?v=0.57" defer></script>
     <script src="relics.js?v=0.58" defer></script>
     <script src="run-progression.js?v=0.59" defer></script>
-    <script src="effects.js?v=0.58" defer></script>
+    <script src="run-counters.js?v=0.60" defer></script>
+    <script src="poison.js?v=0.60" defer></script>
+    <script src="permanent-actions.js?v=0.60" defer></script>
+    <script src="effects.js?v=0.60" defer></script>
     <script src="zone-effects.js?v=0.33" defer></script>
-    <script src="controller.js?v=0.59" defer></script>
+    <script src="controller.js?v=0.60" defer></script>
     <script src="ambience.js?v=0.41" defer></script>
     <script src="title-screen.js?v=0.41" defer></script>
   </head>
@@ -69,7 +73,7 @@
         <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
       </a>
       <div class="topbar-right"><span class="run-level" id="run-level" hidden title="Gain one level per defeated enemy"><span>LEVEL</span> <b id="player-level" aria-live="polite">1</b></span><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.59 · <span id="global-phase">START</span></span>
+        <span class="pixel-label"><i class="status-dot"></i> v0.60 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Background music settings">♫ Music</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
@@ -209,7 +213,7 @@
         <div class="eyebrow" id="journey-location">THE AETHER EXPEDITION</div><h2 id="journey-title"></h2><p id="journey-description"></p>
         <div class="journey-path" id="journey-path"></div><div class="journey-life" id="journey-life"></div><div class="camp-tools"><button class="quiet-button" id="journey-deck-button">▣ Review your deck</button><button class="quiet-button" id="return-shop" hidden>Return to shop</button></div><div class="journey-options" id="journey-options"></div>
       </section>
-      <section class="screen shop-screen" id="shop-screen" aria-labelledby="shop-title"><div class="shop-heading"><div><span class="eyebrow" id="shop-location">BETWEEN ENCOUNTERS</span><h2 id="shop-title">The trading post</h2><p>Each purchase adds one copy to your deck.</p></div><div class="shop-wallet"><span>YOUR COINS</span><b id="shop-coins">0</b></div></div><div class="shop-grid" id="shop-grid"></div><div class="shop-pack" id="shop-pack"></div><div class="shop-footer"><p></p><button class="primary-button" id="shop-continue">Continue to camp →</button></div></section>
+      <section class="screen shop-screen" id="shop-screen" aria-labelledby="shop-title"><div class="shop-heading"><div><span class="eyebrow" id="shop-location">BETWEEN ENCOUNTERS</span><h2 id="shop-title">The trading post</h2><p>Each purchase adds one copy to your deck.</p></div><div class="shop-wallet"><span>YOUR COINS</span><b id="shop-coins">0</b></div></div><div class="shop-grid" id="shop-grid"></div><div class="shop-pack" id="shop-pack"></div><section class="shop-counters" aria-label="Run counter shop"><header><b>RUN COUNTERS</b><span>One creature card · until this run ends</span></header><div id="shop-counter-grid"></div></section><div class="shop-footer"><p></p><button class="primary-button" id="shop-continue">Continue to camp →</button></div></section>
       <section class="screen end-screen" id="end-screen" aria-labelledby="end-title">
         <div class="end-emblem" id="end-emblem">✦</div>
         <div class="eyebrow" id="end-eyebrow">RUN OVER</div>
@@ -239,7 +243,7 @@
     </dialog>
     <dialog class="collection-dialog" id="collection-dialog" aria-labelledby="collection-title">
       <header><div><span class="eyebrow" id="collection-kind">RUN DECK</span><h2 id="collection-title">Your deck</h2></div><button id="collection-close" class="graveyard-close" aria-label="Close card collection">×</button></header>
-      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><select id="collection-type" aria-label="Filter by card type"><option value="">All types</option><option>Creature</option><option>Instant</option><option>Sorcery</option><option>Enchantment</option><option>Equipment</option><option>Artifact</option></select><select id="collection-mana" aria-label="Filter by mana value"><option value="">Any mana</option><option value="0">Mana 0</option><option value="1">Mana 1</option><option value="2">Mana 2</option><option value="3">Mana 3</option><option value="4">Mana 4</option><option value="5">Mana 5</option><option value="6">Mana 6</option></select><select id="collection-keyword" aria-label="Filter by printed keyword"><option value="">All keywords</option><option value="flying">Flying</option><option value="reach">Reach</option><option value="lifelink">Lifelink</option><option value="deathtouch">Deathtouch</option><option value="first strike">First Strike</option><option value="double strike">Double Strike</option><option value="haste">Haste</option><option value="vigilance">Vigilance</option><option value="trample">Trample</option><option value="menace">Menace</option><option value="defender">Defender</option><option value="hexproof">Hexproof</option><option value="ward">Ward</option><option value="flash">Flash</option><option value="equip">Equip</option><option value="enchant">Enchant</option><option value="scry">Scry</option></select><select id="collection-color" aria-label="Filter by printed color identity"><option value="">All colours</option><option value="W">White</option><option value="U">Blue</option><option value="B">Black</option><option value="R">Red</option><option value="G">Green</option><option value="C">Colourless</option></select><select id="collection-rules" aria-label="Filter by rules support"><option value="">All rules states</option><option value="playable">Playable</option><option value="banned">Ban list</option></select><select id="collection-seen" aria-label="Filter by discovery status" hidden><option value="">All discovery states</option><option value="seen">Seen</option><option value="unseen">Not seen</option></select><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
+      <p id="collection-note"></p><div class="collection-tools"><input id="collection-search" type="search" placeholder="Search card name or type" aria-label="Search this card collection"><select id="collection-type" aria-label="Filter by card type"><option value="">All types</option><option>Creature</option><option>Instant</option><option>Sorcery</option><option>Enchantment</option><option>Equipment</option><option>Artifact</option></select><select id="collection-mana" aria-label="Filter by mana value"><option value="">Any mana</option><option value="0">Mana 0</option><option value="1">Mana 1</option><option value="2">Mana 2</option><option value="3">Mana 3</option><option value="4">Mana 4</option><option value="5">Mana 5</option><option value="6">Mana 6</option></select><select id="collection-keyword" aria-label="Filter by printed keyword"><option value="">All keywords</option><option value="flying">Flying</option><option value="reach">Reach</option><option value="lifelink">Lifelink</option><option value="deathtouch">Deathtouch</option><option value="first strike">First Strike</option><option value="double strike">Double Strike</option><option value="haste">Haste</option><option value="vigilance">Vigilance</option><option value="trample">Trample</option><option value="menace">Menace</option><option value="defender">Defender</option><option value="hexproof">Hexproof</option><option value="ward">Ward</option><option value="infect">Infect</option><option value="toxic">Toxic</option><option value="flash">Flash</option><option value="equip">Equip</option><option value="enchant">Enchant</option><option value="scry">Scry</option></select><select id="collection-color" aria-label="Filter by printed color identity"><option value="">All colours</option><option value="W">White</option><option value="U">Blue</option><option value="B">Black</option><option value="R">Red</option><option value="G">Green</option><option value="C">Colourless</option></select><select id="collection-rules" aria-label="Filter by rules support"><option value="">All rules states</option><option value="playable">Playable</option><option value="banned">Ban list</option></select><select id="collection-seen" aria-label="Filter by discovery status" hidden><option value="">All discovery states</option><option value="seen">Seen</option><option value="unseen">Not seen</option></select><span id="collection-stats"></span></div><div class="collection-grid" id="collection-grid"></div>
     </dialog>
     <dialog class="scry-dialog" id="scry-dialog" aria-labelledby="scry-title"><span class="eyebrow">SCRY</span><h2 id="scry-title">Shape your next draw</h2><p>Click a card to send it to the bottom. Swap the cards to change their order.</p><div id="scry-grid"></div><div class="scry-actions"><button class="quiet-button" id="scry-swap">Swap order</button><button class="primary-button" id="scry-confirm">Confirm scry →</button></div></dialog>
     <dialog id="chance-choice-dialog" class="chance-choice-dialog" aria-labelledby="chance-choice-title" aria-describedby="chance-choice-text">
@@ -252,9 +256,14 @@
       <div id="tutor-search-grid"></div><p id="tutor-search-status"></p><div class="tutor-search-actions"><button id="tutor-search-pass" type="button" class="quiet-button">Fail to find · shuffle</button><button id="tutor-search-confirm" type="button" class="primary-button" disabled>Reveal & put into hand →</button></div>
     </dialog>
 
+    <dialog id="counter-shop-dialog" class="counter-shop-dialog" aria-labelledby="counter-shop-title" aria-describedby="counter-shop-note">
+      <header><div><span class="eyebrow">ONE PHYSICAL CARD · THIS RUN</span><h2 id="counter-shop-title">Choose a creature card</h2></div><button type="button" class="graveyard-close" id="counter-shop-close" aria-label="Close counter selection">×</button></header>
+      <p id="counter-shop-note"></p><div id="counter-shop-grid"></div><p id="counter-shop-status" role="status"></p>
+      <footer><button type="button" class="quiet-button" id="counter-shop-cancel">Cancel</button><button type="button" class="primary-button" id="counter-shop-confirm" disabled>Apply counter</button></footer>
+    </dialog>
     <dialog id="token-action-dialog" class="token-action-dialog" aria-labelledby="token-action-title" aria-describedby="token-action-effect token-action-cost token-action-status">
       <header><span id="token-action-symbol" class="token-action-symbol" aria-hidden="true"></span><div><span class="eyebrow" id="token-action-heading">USE TOKEN</span><h2 id="token-action-title"></h2></div></header>
-      <p id="token-action-effect"></p><p class="token-action-cost-label">ACTIVATION COST</p><p id="token-action-cost"></p><p id="token-action-status"></p>
+      <p id="token-action-effect"></p><div id="permanent-options60" hidden><label for="permanent-equip-target60">Attach to</label><select id="permanent-equip-target60"></select><button type="button" id="permanent-equip60" class="primary-button"></button></div><p class="token-action-cost-label">ACTIVATION COST</p><p id="token-action-cost"></p><p id="token-action-status"></p>
       <div class="token-action-buttons"><button type="button" id="token-action-cancel" class="quiet-button">Keep token</button><button type="button" id="token-action-confirm" class="primary-button">Sacrifice token</button></div>
     </dialog>
     <dialog class="rule-dialog" id="rule-dialog" aria-labelledby="rule-title"><span class="eyebrow">CARD CHOICES</span><h2 id="rule-title"></h2><p id="rule-instruction"></p><div id="rule-options"></div><p id="rule-progress"></p><div class="rule-actions"><button id="rule-cancel" class="quiet-button">Cancel · pay nothing</button><button id="rule-confirm" class="primary-button" disabled>Confirm →</button></div></dialog>
