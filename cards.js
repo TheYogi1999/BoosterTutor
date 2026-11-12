@@ -3753,6 +3753,58 @@ const BUNDLED_CARDS = [
       "rarity": "common",
       "uri": "https://scryfall.com/card/one/97/infectious-inquiry?utm_source=api"
     }
+  },
+  {
+    "id": "daa1ba0c-cb89-4bb2-8a35-6a4a4eecccf7",
+    "name": "Jester's Mask",
+    "mana_cost": "{5}",
+    "cmc": 5.0,
+    "type_line": "Artifact",
+    "oracle_text": "This artifact enters tapped.\n{1}, {T}, Sacrifice this artifact: Target opponent puts the cards from their hand on top of their library. Search that player's library for that many cards. That player puts those cards into their hand, then shuffles.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "image": "assets/cards/daa1ba0c-cb89-4bb2-8a35-6a4a4eecccf7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/a/daa1ba0c-cb89-4bb2-8a35-6a4a4eecccf7.jpg?1783947458",
+    "uri": "https://scryfall.com/card/ice/325/jesters-mask?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "daa1ba0c-cb89-4bb2-8a35-6a4a4eecccf7",
+      "set": "ice",
+      "set_name": "Ice Age",
+      "released_at": "1995-06-03",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/ice/325/jesters-mask?utm_source=api"
+    }
+  },
+  {
+    "id": "0ee0f160-7339-4d98-8a8c-f08889ee52f5",
+    "name": "Gamble",
+    "mana_cost": "{R}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Search your library for a card, put that card into your hand, discard a card at random, then shuffle.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/0ee0f160-7339-4d98-8a8c-f08889ee52f5.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/e/0ee0f160-7339-4d98-8a8c-f08889ee52f5.jpg?1783946331",
+    "uri": "https://scryfall.com/card/usg/188/gamble?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "0ee0f160-7339-4d98-8a8c-f08889ee52f5",
+      "set": "usg",
+      "set_name": "Urza's Saga",
+      "released_at": "1998-10-12",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/usg/188/gamble?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

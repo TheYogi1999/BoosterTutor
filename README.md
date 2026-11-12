@@ -1,3 +1,16 @@
+## Gamble and Jester's Mask: Masquerade (v0.64)
+
+Two reviewed cards bring the catalog to **138 bundled / 135 ordinary-pack eligible cards**, with local images of their original English paper printings: Ice Age Jester's Mask and Urza's Saga Gamble. They can appear in ordinary boosters, matching themed packs, the shop and the searchable collection.
+
+**Gamble** costs one generic mana. Search your remaining library for any one physical card, put it into your hand, discard a hand card uniformly at random, then shuffle. The found card keeps its run upgrades and can itself be discarded. The unrestricted search cannot fail to find when the library is nonempty. An empty library still performs the discard step; searching is not drawing. Countering the spell prevents all effects. Each copied spell performs a complete, separate sequence before play resumes. The library window supports mouse, keyboard and controller and keeps scrolling inside its grid.
+
+**Jester's Mask** intentionally uses a **Masquerade variant**, described explicitly in the collection and in-game rules. Cast for five generic mana; it enters tapped. After untapping normally next turn, click its battlefield card to review and confirm **one generic mana, tap and sacrifice**. Discard the entire hand and conjure the same number of random, reviewed nonland cards for this battle only. At least one replacement costs no more than two and is affordable with the mana left after activation; an empty hand cannot activate. New cards have independent physical IDs, no purchased upgrades and a battle-only provenance note. Discarded originals retain their upgrades in the graveyard and run deck. Conjuring does not draw from the library or modify the persistent run deck. The unpaid window permits canceling without spending anything, and repeated/stale activation cannot charge again.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs tests/chance.test.cjs tests/relics.test.cjs tests/progression.test.cjs tests/counters-poison.test.cjs tests/finish-mystery.test.cjs tests/jesters.test.cjs
+node tests/jesters-browser.test.cjs
+```
+
 ## Lotus activation and arcane counter seals (v0.63)
 
 Black Lotus and camp tokens now take the same explicit card-click route into the token action window. Lotus has a visible click-to-use caption and permanent cards announce that they open a dialog. Opening or canceling the Lotus window spends nothing; confirmation taps and sacrifices the real card to add three floating generic mana once. Mouse, native touch and controller actions were checked against the same window.

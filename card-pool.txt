@@ -467,3 +467,7 @@ Plague Myr
 Bilious Skulldweller
 Prologue to Phyresis
 Infectious Inquiry
+
+# Jester tricks (v0.64)
+Jester's Mask
+Gamble

@@ -288,7 +288,11 @@ async function loadCardPool() {
     if (cached) {
       try {
         const value = JSON.parse(cached);
-        if (value.cards?.length && value.lands?.length) return { cards: value.cards, lands: value.lands, cached: true, missingCount: value.missingCount || 0, sourceCount: value.sourceCount || 0, warning: 'Offline: using the saved Scryfall pool.' };
+        if (value.cards?.length && value.lands?.length) {
+          const merged = new Map(value.cards.map(card => [card.name.toLowerCase(), card]));
+          for (const card of BUNDLED_CARDS) merged.set(card.name.toLowerCase(), card);
+          return { cards: [...merged.values()], lands: value.lands, cached: true, missingCount: value.missingCount || 0, sourceCount: value.sourceCount || 0, warning: 'Offline: using the saved Scryfall pool with bundled updates.' };
+        }
       } catch { /* Fall through to the bundled cards. */ }
     }
     return { cards: BUNDLED_CARDS.filter(card => !isLand(card)).map(card => ({ ...card })), lands: FALLBACK_LANDS, cached: false, fallback: true, missingCount: 0, sourceCount: 0, warning: 'Scryfall is unavailable. The bundled demo card pool is ready offline.' };
@@ -1094,7 +1098,7 @@ function renderCreatures() {
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-haspopup="dialog" title="${permanent.card.campToken ? 'Click to use this token' : 'Open card abilities'}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==='Black Lotus' ? 'Click to use · add 3 mana' : ['Black Lotus','Sol Ring'].includes(permanent.card.name) ? permanentActivationLabel51(permanent) : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-haspopup="dialog" title="${permanent.card.campToken ? 'Click to use this token' : 'Open card abilities'}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==="Jester's Mask" ? 'Click to use · Masquerade' : permanent.card.name==='Black Lotus' ? 'Click to use · add 3 mana' : ['Black Lotus','Sol Ring'].includes(permanent.card.name) ? permanentActivationLabel51(permanent) : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
