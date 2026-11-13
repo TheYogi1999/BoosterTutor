@@ -1,0 +1,7 @@
+/* Gentle emphasis; the entire arrow layer stays transparent to pointer input. */
+.game-shell .combat-arrows .combat-route{transition:opacity .12s,filter .12s}
+.game-shell .combat-arrows.has-arrow-focus70 .combat-route{opacity:.69;transition:opacity .12s,filter .12s}
+.game-shell .combat-arrows.has-arrow-focus70 .combat-route.arrow-focused70{opacity:1;filter:brightness(1.35) saturate(1.12)}
+.game-shell .combat-arrows .arrow-focused70 .route-line{stroke-width:4!important}
+.game-shell .combat-arrows .arrow-focused70 .route-glow{opacity:.55!important;stroke-width:13!important}
+@media(prefers-reduced-motion:reduce){.game-shell .combat-arrows .combat-route{transition:none!important}}

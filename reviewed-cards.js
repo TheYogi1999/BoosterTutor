@@ -176,17 +176,12 @@ hasInstantResponse=function(b){if(baseRescueResponses66(b))return true;const man
 // Blocking Snowman prevents combat damage only; its activated ping is noncombat.
 const baseSnowDamage66=dealCreatureDamage;
 dealCreatureDamage=function(source,target,side,b,amount,events){if(source.snowBlockingTurn66===b.turn||target.snowBlockingTurn66===b.turn)return;return baseSnowDamage66(source,target,side,b,amount,events);};
-function playerDefenders66(unit,target,b){
- if(unit.card.name!=='Taunting Elf')return [target];
- const foes=b.enemyCreatures.filter(e=>creatureAlive(e)&&canAttackEnemy(unit,e)&&canBlockCreature(e,unit)&&e.noRetaliation65!==b.turn&&(e.luredTurn66!==b.turn||e.luredBy66===unit.id));
- for(const e of foes){e.luredTurn66=b.turn;e.luredBy66=unit.id;}return foes.length?foes:[target];
-}
+function playerDefenders66(unit,target,b){return [target];}
 const baseRescueCombat66=resolveCombatDamage;
 resolveCombatDamage=function(attackers,assignments,side='player'){
  const b=state.battle;
- if(side==='enemy')for(const attacker of attackers){const group=assignments.get(attacker.id),units=Array.isArray(group)?group:group?[group]:[];for(const u of units)if(u.card.name==='Goblin Snowman')u.snowBlockingTurn66=b.turn;}
- const muted=side==='player'?b.enemyCreatures.filter(e=>e.luredTurn66===b.turn&&!attackers.some(u=>u.id===e.luredBy66)).map(u=>[u,u.power]):[];for(const [u] of muted)u.power=0;
- try{return baseRescueCombat66(attackers,assignments,side);}finally{for(const [u,power] of muted)u.power=power;}
+ if(side==='enemy'&&!activeLure70(b))for(const attacker of attackers){const group=assignments.get(attacker.id),units=Array.isArray(group)?group:group?[group]:[];for(const u of units)if(u.card.name==='Goblin Snowman')u.snowBlockingTurn66=b.turn;}
+ return baseRescueCombat66(attackers,assignments,side);
 };
 
 // Variable mana is chosen before targets and payment; copies retain the chosen X.
@@ -242,7 +237,7 @@ const REVIEW_DESCRIPTIONS66={
  'Soul Warden':['Whenever another creature enters, gain 1 life. Includes your creatures, tokens, Persist returns, enemy arrivals and new waves; does not trigger for itself.'],
  "Soul's Attendant":['Whenever another creature enters, you may gain 1 life. Choose gain or decline for each entry. Includes enemies, tokens and Persist; not itself.'],
  'Essence Warden':['Whenever another creature enters, gain 1 life. Includes enemies and new waves, your creatures, tokens and Persist returns; not itself.'],
- 'Taunting Elf':['Lure adaptation for individual duels: when its attack resolves, all enemies able to block it join that combat and retaliate. Flying/Reach restrictions still apply.','Each forced defender is occupied by this Elf for the rest of this combat; allies attacking afterward avoid its retaliation. Queuing or withdrawing does not trigger Lure.'],
+ 'Taunting Elf':['Lure adaptation: all attacking enemies attack your first living Lure creature instead of you. Works while tapped or summoning sick, and redirects Flying and Menace attacks too.','Overrides manual blocks. All attacks in that combat choose the same Lure creature; damage is simultaneous. It fights back against the first attacker once per damage step. Trample can reach you. Removing Lure before damage restores normal attacks and blocking.'],
  'Blaze':['Choose X before choosing a target. Pay X + 1 generic mana: deal X damage to any creature or your life. X may be zero.','Cancel before casting pays nothing. Target Ward is additional; spell copies keep the same X and target. Printed mana value outside the stack is 1.'],
  'Index':['Look at up to five top library cards and put them back in any order. Choose every card in the order you want to draw it; first selected is the next draw.','No draw, discard or shuffle occurs. An empty library is safe. Spell copies perform separate orderings.'],
  'Read the Bones':['Scry 2, then draw 2, then lose 2 life. Choose top/bottom and reorder either group with Earlier/Later.','Drawing from an empty library loses the run before later effects. A countered spell does not scry, draw or lose life. Each copy resolves separately.'],
@@ -265,7 +260,7 @@ effectDescriptions=function(card){
  if(!lines)return baseRescueDescriptions66(card);lines=[...lines];const counters=typeof runCounterLabels60==='function'?runCounterLabels60(card):[];if(counters.length)lines.push(`Run counters on this copy: ${counters.join(' · ')}.`);if(card.conjuredByMask64)lines.push('Conjured for this battle by Jester’s Mask; not added to your run deck.');return lines;
 };
 const baseRescueSummary66=draftAbilitySummary;
-draftAbilitySummary=function(card){if(MANA_CREATURES66.has(card.name))return `Tap: add ${manaAmount66(card)} generic mana.`;return {'Soul Warden':'Another creature enters: gain 1 life.',"Soul's Attendant":'Another creature enters: you may gain 1 life.','Essence Warden':'Another creature enters: gain 1 life.','Taunting Elf':'Lure: all eligible foes join its duel.','Blaze':'Pay X + 1: deal X to any target.','Index':'Reorder the top five library cards.','Read the Bones':'Scry 2, draw 2, lose 2 life.','Flight of Fancy':'Aura: Flying. On entry: draw 2.','Goblin Fireslinger':'Tap: 1 damage to an enemy or your life.','Goblin Snowman':'Safe combat blocks. Tap: ping the attacker it blocks.','Murderous Redcap':'On entry: damage equal to power. Persist.','Thunderclap Wyvern':'Flash, Flying. Other friendly flyers get +1/+1.','Shivan Dragon':'Flying. Pay 1: +1/+0 this turn.','Visara the Dreadful':'Flying. Tap: destroy a creature.','Inferno':'6 damage to all creatures and your life.','Hurricane':'X damage to flyers and your life.','Earthquake':'X damage to nonflyers and your life.','Prodigal Pyromancer':'Tap: 1 damage to any target.','Prodigal Sorcerer':'Tap: 1 damage to any target.'}[card.name]||baseRescueSummary66(card);};
+draftAbilitySummary=function(card){if(MANA_CREATURES66.has(card.name))return `Tap: add ${manaAmount66(card)} generic mana.`;return {'Soul Warden':'Another creature enters: gain 1 life.',"Soul's Attendant":'Another creature enters: you may gain 1 life.','Essence Warden':'Another creature enters: gain 1 life.','Taunting Elf':'Lure: enemies attack it instead of you.','Blaze':'Pay X + 1: deal X to any target.','Index':'Reorder the top five library cards.','Read the Bones':'Scry 2, draw 2, lose 2 life.','Flight of Fancy':'Aura: Flying. On entry: draw 2.','Goblin Fireslinger':'Tap: 1 damage to an enemy or your life.','Goblin Snowman':'Safe combat blocks. Tap: ping the attacker it blocks.','Murderous Redcap':'On entry: damage equal to power. Persist.','Thunderclap Wyvern':'Flash, Flying. Other friendly flyers get +1/+1.','Shivan Dragon':'Flying. Pay 1: +1/+0 this turn.','Visara the Dreadful':'Flying. Tap: destroy a creature.','Inferno':'6 damage to all creatures and your life.','Hurricane':'X damage to flyers and your life.','Earthquake':'X damage to nonflyers and your life.','Prodigal Pyromancer':'Tap: 1 damage to any target.','Prodigal Sorcerer':'Tap: 1 damage to any target.'}[card.name]||baseRescueSummary66(card);};
 const baseRescueCatalog66=collectionEntryMarkup;
 collectionEntryMarkup=function(card,index,kind){const html=baseRescueCatalog66(card,index,kind);return kind==='catalog'&&ADAPTED66.has(card.name)?html.replace('Playable · reviewed rules','Playable · duel adaptation'):html;};
 $('#permanent-row').addEventListener('wheel',event=>{const row=event.currentTarget;if(row.scrollWidth<=row.clientWidth||Math.abs(event.deltaX)>=Math.abs(event.deltaY))return;const step=event.deltaMode===1?16:event.deltaMode===2?row.clientWidth:1;row.scrollLeft+=event.deltaY*step;event.preventDefault();},{passive:false});

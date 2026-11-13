@@ -1,3 +1,22 @@
+## Defensive Lure and combat-arrow focus (v0.70)
+
+**Lure is a defensive duel adaptation.** Every attacking enemy attacks the first living friendly creature with Lure instead of the player. Taunting Elf and a Clone copying it have Lure, with an amber keyword chip in hand/booster/shop facts, on the battlefield and in the collection. The collection can filter Lure. This replaces Taunting Elf's previous offensive forced-defender/retaliation suppression adaptation.
+
+Lure works while tapped or summoning sick; Flying, Menace, Hexproof and Ward do not stop this attack redirection. It overrides manual blocks while present. Attackers choose one Lure target together for that combat, and damage remains simultaneous within each strike step. The Lure creature retaliates against the first surviving attacker **once per damage step**, rather than multiplying its power for every attacker. First strike, double strike, Lifelink, Deathtouch, lethal damage and Trample retain their combat behavior. Trample may still reach the player. Removing Lure before damage restores ordinary attacks and saved legal blocks; subsequent combats use the next living Lure creature, if any. Enemy spells keep their own targets.
+
+Incoming arrows, their damage previews and the defence panel use the same forced target as actual combat. Block controls cannot override Lure. Sick enemies and enemies with nonattack intentions do not gain an attack from Lure.
+
+Hovering an arrow brightens its line/glow and gently dims the other routes. Clicking an enemy keeps its outgoing attack routes highlighted. Hovering your own creature temporarily emphasizes its outgoing attack; a creature without a queued attack highlights incoming routes involving it. Leaving the hover restores the selected enemy's emphasis. Guarding enemies without a route do not dim every arrow.
+
+The SVG stays transparent to pointer input. Hover uses proximity to the displayed curve, so card clicks and pointer dragging still work underneath arrows. Clicking empty battlefield background clears enemy selection in all combat phases while preserving queued attacks and block assignments. Mouse hover is not synthesized for touch; tapped enemy selection still works.
+
+Validation: 406 rule tests, real six-attacker Lure combat, tapped/sick and Flying/Menace redirection, instant removal, Trample/first-strike/retaliation limits, arrow hover at three scales, selected-enemy and owned-creature priority, background deselection, click-through drag/drop, collection filtering, controller input and cache upgrades.
+
+```sh
+node --test tests/lure-focus.test.cjs
+node tests/lure-focus-browser.test.cjs
+```
+
 ## Free-flowing enemy attack arrows (v0.69)
 
 Incoming attacks now follow individual, smoothly bowed cubic curves directly to the six invisible player-side targets. The previous shared passage and turns around the HUD are removed. Cards, lands and HUD elements are allowed beneath the arrows; pointer input still passes through the noninteractive arrow layer.
