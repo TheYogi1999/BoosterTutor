@@ -60,7 +60,7 @@ const controller = {
     if(element.closest('.topbar'))return'system';
     if(element.closest('.collection-tools'))return'filters';
     if(element.matches('[data-counter-pick],[data-rule-pick],[data-tutor-pick],[data-library-pick],[data-scry-index],.collection-card,.draft-option,.graveyard-card'))return'cards';
-    if(element.closest('.turn-footer,.rule-actions,.scry-actions,.draft-footer,.shop-footer')||element.closest('dialog'))return'actions';
+    if(element.closest('.turn-footer,.combat-actions-panel,.graveyard-links,.hand-title-group,.rule-actions,.scry-actions,.draft-footer,.shop-footer')||element.closest('dialog'))return'actions';
     return'menu';
   },
   cycleZone(step){

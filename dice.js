@@ -113,7 +113,7 @@ function enterDiceCreature50(card,battle=state.battle,originalCard=null){
  const castCard=originalCard||card;
  const task={battle,p:{card:castCard},copies:1};battle.resolutionTask=task;
  const finish=()=>finishResolution27(task);
- if(battle.creatures.length>=3){battle.graveyard.push(castCard);addLog(`${castCard.name} has no free creature slot.`);finish();return true;}
+ if(battle.creatures.length>=CREATURE_LIMIT){battle.graveyard.push(castCard);addLog(`${castCard.name} has no free creature slot.`);finish();return true;}
  beginDiceRoll50(originalCard?`${originalCard.name} → ${card.name}`:card.name,['Power','Toughness'],values=>`Enters as a ${values[0]}/${values[1]} creature.`,values=>{
   const unit={id:`player-${state.nextPermanentId++}`,owner:'player',card,...(originalCard?{originalCard}:{}),power:values[0],toughness:values[1],rolledBase:{power:values[0],toughness:values[1]},...creatureKeywords(card),summonedTurn:battle.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false,attackTargetId:null};
   battle.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);playSfx('creature');

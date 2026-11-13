@@ -1,3 +1,4 @@
+const CREATURE_LIMIT = 6;
 const HAND_SIZE = 7;
 const PACK_SIZE = 7;
 const STARTER_BOOSTER_COUNT = 6;
@@ -521,7 +522,7 @@ function effectDescriptions(card) {
     if (effect.kind === 'cancel') lines.push('Interrupt the selected monster: it cannot attack during this turn. This is the demo adaptation of a counterspell.');
     if (effect.kind === 'buff') lines.push(`Your selected ally, otherwise your strongest creature, gets ${signed(effect.power)}/${signed(effect.toughness)}${effect.temporary ? ' until end of turn (amber)' : ' for this encounter (green)'}. Requires an allied creature.`);
     if (effect.kind === 'keywords') lines.push(`Your selected ally, otherwise your strongest creature, gains ${effect.keywords.join(', ')} until end of turn.`);
-    if (effect.kind === 'token') lines.push('Create a 2/2 token if one of your three creature slots is free.');
+    if (effect.kind === 'token') lines.push('Create a 2/2 token if one of your six creature slots is free.');
   }
   if (!isCreature(card)) lines.push(`${isInstant(card) ? 'Instant: playable in every combat phase. ' : ''}Goes to your graveyard after casting.`);
   return lines;
@@ -674,7 +675,7 @@ $('#creature-row').addEventListener('click', (event) => {
   if (battle.phase !== 'main') return;
   if (battle.enemyCounterWindow) return showActionError('Finish the spell response before queuing attacks.');
   if (!eligibleAttacker(creature, battle)) return showActionError(hasCreatureKeyword(creature,'defender') ? 'Defender creatures cannot attack.' : creature.tapped ? 'Tapped creatures cannot attack.' : creature.attackedThisTurn ? 'This creature already attacked.' : 'Summoning sickness: this creature cannot attack yet.');
-  if (/attacks each combat if able/i.test(creature.card.oracle_text||'')) return showActionError('This creature must attack if able. Choose its target or use Queue attack.');
+  if (/attacks each combat if able/i.test(creature.card.oracle_text||'')) return queueCreatureAttack(creature.id);
   if (creature.willAttack) withdrawAttack(creature.id);
   else queueCreatureAttack(creature.id);
 });
@@ -946,7 +947,7 @@ function showCardPreview(card, element) {
     : effectDescriptions(card);
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
-  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= 3 && !(typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)) ? 'All three creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
+  if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= CREATURE_LIMIT && !(typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)) ? 'All six creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
   const keywordInfo = { trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${typeof keywordText61 === 'function' ? keywordText61(line) : escapeHtml(line)}</li>`).join('')}</ul>${typeof keywordChips61 === 'function' && displayKeywords(card).length ? `<div class="bubble-keyword-tags61">${keywordChips61(card)}</div>` : ''}${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => typeof keywordText61 === 'function' ? keywordText61(keywordInfo[keyword]) : escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
@@ -1020,7 +1021,7 @@ function renderBattle() {
   $('#hand-count').textContent = `${battle.hand.length} CARDS`;
   $('#mulligan-button').disabled = !battle.mulliganAvailable || battle.phase !== 'main';
   $('#mulligan-button').innerHTML = battle.mulliganAvailable ? 'FREE MULLIGAN <span>↻</span>' : 'MULLIGAN USED';
-  $('#creature-count').textContent = `${battle.creatures.length} / 3`;
+  $('#creature-count').textContent = `${battle.creatures.length} / ${CREATURE_LIMIT}`;
   $('#battle-log').innerHTML = battle.log.slice(0, 3).map((line) => `<p>${escapeHtml(line)}</p>`).join('');
   renderEnemyBoard();
   renderHand();
@@ -1091,8 +1092,8 @@ function renderCreatures() {
     const canWithdraw = !mustAttack && creature.willAttack && (battle.phase === 'main' || (battle.phase === 'attack' && battle.activeAttackIds?.includes(creature.id)));
     const status = hasCreatureKeyword(creature, 'defender') ? 'Defender · cannot attack' : battle.pendingAttachment ? 'Choose as attachment target' : creature.tapped ? 'Tapped' : blocking ? attacker ? `Blocking ${attacker.card.name}` : legal ? 'Click to add as blocker' : 'Cannot block this attacker' : sick ? 'Summoning sickness · may block' : creature.attackedThisTurn ? hasCreatureKeyword(creature, 'vigilance') ? 'Attacked · vigilance · may block' : 'Already attacked' : creature.willAttack ? `${battle.phase === 'attack' ? 'Attacking' : 'Queued'} → ${target?.card.name || 'choose target'}` : !target ? 'Flying enemies require Flying or Reach' : mustAttack ? 'Must attack if able' : 'Ready · click to queue attack';
     const attachments = battle.permanents.filter(permanent => permanent.attachedTo === creature.id);
-    return `<div class="creature-group${sick ? ' is-summoning-sick' : ''}${creature.tapped ? ' is-tapped' : ''}" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="Cards attached to ${escapeHtml(creature.card.name)}">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${assignment ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${creature.willAttack ? ' attack-queued' : ''}${battle.pendingAttachment ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(assignment) : Boolean(creature.willAttack)}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${(blocking && !creature.tapped) || (battle.phase === 'main' && canAttack)}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b>${combatStats(creature.power,creature.toughness)}${creature.damage?`<span class="damage-mark">${creature.damage} damage</span>`:''}<span class="keyword-strip" title="${escapeHtml(creatureKeywordLabels(creature))}">${escapeHtml(creatureKeywordLabels(creature))}</span>${bonusMarkup(creature)}<small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} attached cards">↔ ${attachments.length}</span>` : ''}<div class="unit-controls${/\{T\}: Add/i.test(creature.card.oracle_text||'')?' has-mana-ability':''}"><select data-unit-target="${creature.id}" aria-label="Attack target for ${escapeHtml(creature.card.name)}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''}>${battle.enemyCreatures.map(enemy => `<option value="${enemy.id}" ${target?.id === enemy.id ? 'selected' : ''} ${canAttackEnemy(creature,enemy)?'':'disabled'}>${escapeHtml(enemy.card.name)}${canAttackEnemy(creature,enemy)?'':' · needs Flying or Reach'}</option>`).join('')}</select>${canWithdraw ? `<button data-unit-withdraw="${escapeHtml(creature.id)}" aria-label="Withdraw ${escapeHtml(creature.card.name)} from this attack">Withdraw</button>` : `<button data-unit-attack="${creature.id}" ${battle.phase !== 'main' || !canAttack ? 'disabled' : ''} aria-label="Queue an attack with ${escapeHtml(creature.card.name)}">Queue attack</button>`}${/\{T\}: Add/i.test(creature.card.oracle_text||'')?`<button data-unit-mana="${creature.id}" ${canTapForMana(creature,battle)?'':'disabled'} aria-label="Tap ${escapeHtml(creature.card.name)} for one generic mana">+1 mana</button>`:''}</div></div>`;
-  }).join('') : '<div class="empty-board">Play a creature from your hand.<br>You have three creature slots.</div>';
+    return `<div class="creature-group${sick ? ' is-summoning-sick' : ''}${creature.tapped ? ' is-tapped' : ''}" data-host-id="${escapeHtml(creature.id)}"><div class="unit-attachments" aria-label="Cards attached to ${escapeHtml(creature.card.name)}">${attachments.map(permanent => permanentMarkup(permanent, true)).join('')}</div><button type="button" class="creature-token${legal ? ' can-block' : ''}${assignment ? ' assigned-blocker' : ''}${creature.tapped ? ' tapped' : ''}${creature.willAttack ? ' attack-queued' : ''}${battle.pendingAttachment ? ' attachment-target' : ''}" data-creature-id="${escapeHtml(creature.id)}" data-preview-owner="player" data-preview-id="${escapeHtml(creature.id)}" aria-pressed="${blocking ? Boolean(assignment) : Boolean(creature.willAttack)}" aria-label="${escapeHtml(creature.card.name)}, ${escapeHtml(status)}" draggable="${(blocking && !creature.tapped) || (battle.phase === 'main' && canAttack)}"><span class="player-card-frame">${cardFace(creature.card)}</span><span class="field-caption"><b>${escapeHtml(creature.card.name)}</b>${combatStats(creature.power,creature.toughness)}${creature.damage?`<span class="damage-mark">${creature.damage} damage</span>`:''}<span class="keyword-strip" title="${escapeHtml(creatureKeywordLabels(creature))}">${escapeHtml(creatureKeywordLabels(creature))}</span>${bonusMarkup(creature)}<small>${escapeHtml(status)}</small></span></button>${attachments.length ? `<span class="attachment-link" aria-label="${attachments.length} attached cards">↔ ${attachments.length}</span>` : ''}<div class="unit-controls${/\{T\}: Add/i.test(creature.card.oracle_text||'')?' has-mana-ability':''}">${/\{T\}: Add/i.test(creature.card.oracle_text||'')?`<button data-unit-mana="${creature.id}" ${canTapForMana(creature,battle)?'':'disabled'} aria-label="Tap ${escapeHtml(creature.card.name)} for one generic mana">+1 mana</button>`:''}</div></div>`;
+  }).join('') : '<div class="empty-board">Play a creature from your hand.<br>You have six creature slots.</div>';
 }
 
 function permanentMarkup(permanent, attached = false) {
@@ -1239,7 +1240,7 @@ function dropFeedback(payload, target) {
   const card = battle.hand[payload.index];
   if (!card || !canCastNow(card, battle) || !paymentPlan(card)) return false;
   if (isLand(card)) return Boolean(own);
-  if (isCreature(card)) return Boolean(own) && (battle.creatures.length < 3 || (typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)));
+  if (isCreature(card)) return Boolean(own) && (battle.creatures.length < CREATURE_LIMIT || (typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)));
   if (isAura(card)) return Boolean(own && ally);
   if (/Equipment/.test(card.type_line) && ally) return Boolean(own) && battle.mana >= Math.ceil(card.cmc || 0) + (equipCost(card) ?? Infinity);
   if (isPermanent(card)) return Boolean(own);
@@ -1399,7 +1400,7 @@ function applyOracle(card, creature = false) {
         }
       }
     }
-    if (effect.kind === 'token' && battle.creatures.length < 3) {
+    if (effect.kind === 'token' && battle.creatures.length < CREATURE_LIMIT) {
       battle.creatures.push({ id: `player-${state.nextPermanentId++}`, owner: 'player', card: { id: 'token', name: 'Aether Token', cmc: 0, type_line: 'Creature — Token', power: '2', toughness: '2', oracle_text: '', image: '' }, power: 2, toughness: 2, summonedTurn: battle.turn, summoningSick: true, isToken: true, willAttack: false, tapped: false });
       refreshPermanentEffects(); onCreatureEntered(battle.creatures[battle.creatures.length-1]);
     }
@@ -1502,7 +1503,7 @@ function playCard(index, targetSide = 'enemy') {
     playSfx('select');
     return;
   }
-  if (isCreature(card) && battle.creatures.length >= 3 && !(typeof replacesLegend58 === 'function' && replacesLegend58(card, battle))) return showActionError('Your creature board is full.');
+  if (isCreature(card) && battle.creatures.length >= CREATURE_LIMIT && !(typeof replacesLegend58 === 'function' && replacesLegend58(card, battle))) return showActionError('Your creature board is full.');
   if (targetSide === 'enemy' && isCreature(card)) return showActionError('Creatures enter your battlefield. Drag one to the left side.');
   const payment = paymentPlan(card);
   if (!payment) return showActionError('Not enough generic mana for this card.');

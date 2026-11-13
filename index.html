@@ -42,16 +42,16 @@
     <link rel="stylesheet" href="card-finish-ui.css?v=0.63" />
     <script src="cards.js?v=0.66" defer></script>
     <script src="sounds.js?v=0.43" defer></script>
-    <script src="game.js?v=0.66" defer></script>
-    <script src="rules.js?v=0.43" defer></script>
-    <script src="expansion.js?v=0.65" defer></script>
+    <script src="game.js?v=0.67" defer></script>
+    <script src="rules.js?v=0.67" defer></script>
+    <script src="expansion.js?v=0.67" defer></script>
     <script src="expedition-rewards.js?v=0.61" defer></script>
     <script src="enemy-spells.js?v=0.52" defer></script>
     <script src="enemy-counters.js?v=0.52" defer></script>
-    <script src="waves.js?v=0.45" defer></script>
+    <script src="waves.js?v=0.67" defer></script>
     <script src="battle-details.js?v=0.58" defer></script>
-    <script src="dice.js?v=0.57" defer></script>
-    <script src="dice-cards.js?v=0.65" defer></script>
+    <script src="dice.js?v=0.67" defer></script>
+    <script src="dice-cards.js?v=0.67" defer></script>
     <script src="reaction-checks.js?v=0.52" defer></script>
     <script src="chance.js?v=0.57" defer></script>
     <script src="relics.js?v=0.58" defer></script>
@@ -64,11 +64,13 @@
     <link rel="stylesheet" href="jesters.css?v=0.64" />
     <script src="jester-family.js?v=0.65" defer></script>
     <link rel="stylesheet" href="jester-family.css?v=0.65" />
-    <script src="reviewed-cards.js?v=0.66" defer></script>
+    <script src="reviewed-cards.js?v=0.67" defer></script>
     <link rel="stylesheet" href="reviewed-cards.css?v=0.66" />
+    <script src="compact-battle.js?v=0.67" defer></script>
+    <link rel="stylesheet" href="compact-battle.css?v=0.67" />
     <script src="effects.js?v=0.60" defer></script>
     <script src="zone-effects.js?v=0.33" defer></script>
-    <script src="controller.js?v=0.60" defer></script>
+    <script src="controller.js?v=0.67" defer></script>
     <script src="ambience.js?v=0.41" defer></script>
     <script src="title-screen.js?v=0.41" defer></script>
   </head>
@@ -78,10 +80,10 @@
     <header class="topbar">
       <a class="brand" href="#start" aria-label="Booster Tutor home">
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span>
+        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.67</span>
       </a>
-      <div class="topbar-right"><span class="run-level" id="run-level" hidden title="Gain one level per defeated enemy"><span>LEVEL</span> <b id="player-level" aria-live="polite">1</b></span><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label"><i class="status-dot"></i> v0.66 · <span id="global-phase">START</span></span>
+      <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
+        <span class="pixel-label" hidden><i class="status-dot"></i> v0.67 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Background music settings">♫ Music</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
@@ -158,7 +160,7 @@
           <svg class="combat-arrows" id="combat-arrows" aria-label="Planned attacks and blocks" role="img"></svg>
           <section class="player-panel arena-side drop-zone" id="player-drop-zone" data-side="player" aria-label="Your battlefield on the left. Drop creatures, auras and equipment here.">
             <div class="side-header player-side-header">
-              <div class="player-avatar" id="player-avatar" data-avatar="mage" aria-hidden="true"><span data-avatar-symbol>✦</span></div>
+              <div class="player-avatar-block"><div class="player-avatar" id="player-avatar" data-avatar="mage" aria-hidden="true"><span data-avatar-symbol>✦</span></div><span class="run-level" id="run-level" hidden title="Gain one level per defeated enemy"><span>LEVEL</span> <b id="player-level" aria-live="polite">1</b></span></div>
               <div class="side-identity" id="player-target">
                 <span class="player-rank">PLANESWALKER</span>
                 <div class="health-label"><span>LIFE</span><b id="player-health-label">20</b></div>
@@ -167,7 +169,7 @@
               <div class="mana-display" aria-label="Available and total mana"><small>MANA</small><span class="mana-symbol" aria-hidden="true"><img src="assets/all-colors-mana.png" alt="" width="24" height="24" /></span><b id="mana-label">0 / 0</b><span id="floating-mana" class="floating-mana" title="Floating generic mana · spent first · expires at turn end" hidden><span aria-hidden="true">✦</span><b id="floating-mana-count">0</b></span></div>
               <div class="mana-land-row" id="mana-land-row" aria-label="Mana cards in play"></div>
             </div>
-            <div class="arena-zone-header creatures-zone-header"><span>YOUR CREATURES</span><small id="creature-count">0 / 3</small></div>
+            <div class="arena-zone-header creatures-zone-header"><span>YOUR CREATURES</span><small id="creature-count">0 / 6</small></div>
             <div class="creature-row drop-zone" id="creature-row" data-zone="creatures" aria-label="Creature zone. Drop creatures here. Click a creature to hold it back for blocking."><div class="empty-board">Drop creatures here or play one from your hand.</div></div>
             <div class="drop-hint">Click a creature to queue an attack or keep it back.</div>
             <div class="arena-zone-header"><span>UNATTACHED PERMANENTS</span><small id="permanent-count">0</small></div>
@@ -197,21 +199,17 @@
         </div>
 
         <aside class="card-inspector" aria-label="Large card inspector"><div class="inspector-heading">CARD INSPECTOR</div><div id="inspector-content"><div class="inspector-empty">◈<p>Hover a battlefield card for a larger view and live stats.</p></div></div></aside>
-        <section class="table-graveyard" aria-label="Your graveyard"><div><span class="eyebrow">GRAVEYARD</span><h3>Fallen cards <b id="graveyard-zone-count">0</b></h3><p>Used and destroyed cards.<br>An empty library ends the run.</p><button class="quiet-button" id="graveyard-open">View graveyard</button></div><div id="graveyard-pile" class="graveyard-pile"></div></section>
+        <aside class="battle-utility-stack"><section class="table-graveyard" aria-label="Graveyard and exile"><div class="graveyard-pile-area"><div id="graveyard-pile" class="graveyard-pile"></div><span hidden id="graveyard-zone-count">0</span></div><div class="graveyard-links"><div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div><button class="quiet-button" id="graveyard-open">View graveyard</button></div></section><section class="combat-actions-panel" aria-label="Combat actions"><span class="eyebrow">COMBAT ACTION</span><button class="end-turn-button" id="end-turn-button">START COMBAT <span>→</span></button></section></aside>
         <div class="battle-log-panel">
           <div class="log-header"><span>BATTLE LOG</span><span id="turn-label">TURN 1</span></div>
           <div class="battle-log" id="battle-log" aria-live="polite"></div>
         </div>
 
         <div class="hand-panel"><span id="copy-spell-status" hidden></span><p id="phase-status" class="phase-status" aria-live="polite"></p>
-          <div class="hand-heading"><div><span>YOUR HAND</span><small id="hand-count">0 CARDS</small></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
+          <div class="hand-heading"><div class="hand-title-group"><div><span>YOUR HAND</span><small id="hand-count">0 CARDS</small></div><button class="mulligan-button" id="mulligan-button" type="button">FREE MULLIGAN <span>↻</span></button></div><div class="hand-help" id="combat-action-hint">Cards in your deck · drag to a zone or click to play</div></div>
           <div class="hand-row" id="hand-row"></div>
           <div class="library-zone"><div class="library-zone-heading"><span class="library-label">LIBRARY</span><button class="quiet-button" id="deck-button" disabled aria-label="Inspect your run deck">▣ Deck</button></div><button class="library-pile" id="library-button" aria-label="Inspect library contents without revealing draw order"><span class="library-stack"><img src="assets/mtg-card-back.jpg" alt="Magic: The Gathering card back — face-down library" draggable="false"></span><span class="library-caption"><b id="library-count">0</b><span class="library-count-divider"> / </span><b id="library-total">0</b><small>left / total cards</small></span></button></div>
-          <div class="turn-footer">
-            <div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div>
-            <button class="mulligan-button" id="mulligan-button" type="button">FREE MULLIGAN <span>↻</span></button>
-            <button class="end-turn-button" id="end-turn-button">START COMBAT <span>→</span></button>
-          </div>
+
         </div>
         <div class="source-note combat-source-note">Fan prototype · Adapted rules · Card data from Scryfall</div>
       </section>
@@ -286,7 +284,7 @@
     </dialog>
     <dialog class="ward-dialog" id="ward-dialog" aria-labelledby="ward-title"><span class="eyebrow">TARGETED SPELL</span><h2 id="ward-title"></h2><p id="ward-description"></p><p id="ward-progress"></p><div class="ward-actions"><button id="ward-decline" class="quiet-button">Let it be countered</button><button id="ward-pay" class="primary-button">Pay Ward →</button></div></dialog>
     <dialog class="library-order-dialog" id="library-order-dialog" aria-labelledby="library-order-title"><span class="eyebrow">BRAINSTORM · TOP OF LIBRARY</span><h2 id="library-order-title">Choose which cards return</h2><p id="library-order-status"></p><div id="library-order-grid"></div><button class="primary-button" id="library-order-confirm" disabled>Return selected cards & continue →</button></dialog>
-    <dialog class="controller-dialog" id="controller-dialog" aria-labelledby="controller-title"><header><div><span class="eyebrow">GAMEPAD SUPPORT</span><h2 id="controller-title">Play with your controller</h2></div><button id="controller-close" class="graveyard-close" aria-label="Close controller help">×</button></header><p>Connect an Xbox, PlayStation or other controller with standard browser mapping. Press any button, release it, then navigate.</p><div class="controller-bindings"><div><kbd>✚ / Left stick</kbd><span>Move the gold selection</span></div><div><kbd>A / ✕</kbd><span>Select, play a card, or edit a filter / attack target</span></div><div><kbd>B / ○</kbd><span>Back, close a window, cancel unpaid card choices</span></div><div><kbd>X / □</kbd><span>Inspect the highlighted card or opponent</span></div><div><kbd>Y / △</kbd><span>Continue combat, confirm a booster pick, or leave the shop</span></div><div><kbd>LB / RB · L1 / R1</kbd><span>Switch between hand, battlefield, opponents and actions</span></div><div><kbd>View / Share</kbd><span>Open your run deck</span></div><div><kbd>Menu / Options</kbd><span>Open this help</span></div><div><kbd>Right stick</kbd><span>Scroll card lists and longer windows</span></div></div><p class="controller-tip">To block: select an attacker on the right, then select your blockers. To equip: select equipment, then its allied host. In a filter or target selector, directions change the option; A or B finishes editing. A held confirm button never repeats.</p><p class="controller-browser-note">Your browser may ask for an initial mouse click to enable sound or fullscreen.</p></dialog>
+    <dialog class="controller-dialog" id="controller-dialog" aria-labelledby="controller-title"><header><div><span class="eyebrow">GAMEPAD SUPPORT</span><h2 id="controller-title">Play with your controller</h2></div><button id="controller-close" class="graveyard-close" aria-label="Close controller help">×</button></header><p>Connect an Xbox, PlayStation or other controller with standard browser mapping. Press any button, release it, then navigate.</p><div class="controller-bindings"><div><kbd>✚ / Left stick</kbd><span>Move the gold selection</span></div><div><kbd>A / ✕</kbd><span>Select, play a card, or edit a filter</span></div><div><kbd>B / ○</kbd><span>Back, close a window, cancel unpaid card choices</span></div><div><kbd>X / □</kbd><span>Inspect the highlighted card or opponent</span></div><div><kbd>Y / △</kbd><span>Continue combat, confirm a booster pick, or leave the shop</span></div><div><kbd>LB / RB · L1 / R1</kbd><span>Switch between hand, battlefield, opponents and actions</span></div><div><kbd>View / Share</kbd><span>Open your run deck</span></div><div><kbd>Menu / Options</kbd><span>Open this help</span></div><div><kbd>Right stick</kbd><span>Scroll card lists and longer windows</span></div></div><p class="controller-tip">To attack: select an enemy, then your creature. Select the creature again to withdraw. To block: select an attacker on the right, then select your blockers. To equip: select equipment, then its allied host. In a filter, directions change the option; A or B finishes editing. A held confirm button never repeats.</p><p class="controller-browser-note">Your browser may ask for an initial mouse click to enable sound or fullscreen.</p></dialog>
     <dialog id="title-options-dialog" class="title-options-dialog" aria-labelledby="title-options-heading">
       <header><div><span class="eyebrow">YOUR EXPEDITION</span><h2 id="title-options-heading">Options</h2></div><button id="title-options-close" class="graveyard-close" aria-label="Close options">×</button></header>
       <div class="avatar-picker" role="group" aria-label="Choose your planeswalker avatar"><span>CHOOSE YOUR AVATAR</span><div id="avatar-choices"></div></div>

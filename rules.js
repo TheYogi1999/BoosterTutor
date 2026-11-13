@@ -63,7 +63,7 @@ canCastNow=function(card,battle=state.battle){
  if(rule?.discard&&battle.hand.length-1<rule.discard)return false;
  if(rule?.sacrifice&&!battle.creatures.length)return false;
  if(rule?.target&&!ruleTargetOptions(rule.target,battle).length)return false;
- if(card.name==='Clone'&&(!battle.creatures.length||battle.creatures.length>=3))return false;
+ if(card.name==='Clone'&&(!battle.creatures.length||battle.creatures.length>=CREATURE_LIMIT))return false;
  return true;
 };
 function ruleTargetOptions(kind,battle=state.battle){
@@ -131,7 +131,7 @@ function commitRuleSpell(p){
  const removed=new Set([p.index,...discards]);for(const index of discards)battle.graveyard.push(battle.hand[index]);battle.hand=battle.hand.filter((card,index)=>!removed.has(index));
  for(const unit of sacrifices)sacrificeRuleCreature(unit);
  if(isCreature(p.card)){
-  const copied=copiedCreature?.card;if(!copied||battle.creatures.length>=3)return false;
+  const copied=copiedCreature?.card;if(!copied||battle.creatures.length>=CREATURE_LIMIT)return false;
   const stats=parseStats(copied);const unit={id:`player-${state.nextPermanentId++}`,card:{...copied},originalCard:p.card,owner:'player',...stats,...creatureKeywords(copied),summonedTurn:battle.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false};battle.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);
  }else if(isAura(p.card)){
   battle.permanents.push({id:`permanent-${state.nextPermanentId++}`,card:p.card,attachedTo:target.id});

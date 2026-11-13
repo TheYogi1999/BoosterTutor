@@ -4,7 +4,7 @@ function createEncounterWaves45(encounter){
  if(node<3)return [createEnemyTeam(encounter)];
  const vanguard=createEnemyTeam(ENCOUNTERS[0]);
  const finalTeam=createEnemyTeam(encounter);
- return [vanguard,node===3?finalTeam.filter(enemy=>enemy.tier==='elite'):finalTeam];
+ return [vanguard,node===3?finalTeam.filter(enemy=>enemy.tier==='elite'||enemy.tier==='minion'):finalTeam];
 }
 const baseWaveIntent45=enemyIntent;
 enemyIntent=function(enemy,turn=state.battle?.turn||1){

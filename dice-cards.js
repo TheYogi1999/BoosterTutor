@@ -70,7 +70,7 @@ enterDiceCreature50=function(card,battle=state.battle,originalCard=null){
  if(!battle||state.battle!==battle||battle.phase==='complete')return true;
  const castCard=originalCard||card;const task={battle,p:{card:castCard},copies:1};battle.resolutionTask=task;
  const finish=()=>finishResolution27(task);
- if(battle.creatures.length>=3){battle.graveyard.push(castCard);addLog(`${castCard.name} has no free creature slot.`);finish();return true;}
+ if(battle.creatures.length>=CREATURE_LIMIT){battle.graveyard.push(castCard);addLog(`${castCard.name} has no free creature slot.`);finish();return true;}
  const unit={id:`player-${state.nextPermanentId++}`,owner:'player',card,...(originalCard?{originalCard}:{}),...parseStats(card),...creatureKeywords(card),summonedTurn:battle.turn,summoningSick:true,tapped:false,willAttack:false,attackedThisTurn:false,attackTargetId:null};
  battle.creatures.push(unit);refreshPermanentEffects();onCreatureEntered(unit);playSfx('creature');
  const kitten=card.name==='Adorable Kitten';
