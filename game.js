@@ -881,7 +881,7 @@ function renderEnemyBoard() {
     const keywords = creatureKeywordLabels(enemy);
     const keywordMarkup = typeof enemyKeywordBadges47 === 'function' ? enemyKeywordBadges47(enemy) : escapeHtml(keywords || 'No keywords');
     const healthPercent = Math.max(0, Math.min(100, enemy.health / enemy.maxHealth * 100));
-    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}, ${escapeHtml(keywords || 'No keywords')}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure">${walkerPortrait(enemy.kind || 'sprout')}</span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life">♥ <b>${enemy.health}</b><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords">${keywordMarkup}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
+    return `<button type="button" class="monster monster-${enemy.kind || 'sprout'}${selected ? ' selected' : ''}${legalBlockers(battle,enemy).length ? ' is-blocked' : ''}" data-enemy-attacker="${escapeHtml(enemy.id)}" aria-pressed="${selected}" aria-label="${escapeHtml(enemy.card.name)}, ${enemy.power} power, ${enemy.health} of ${enemy.maxHealth} life, ${escapeHtml(intent.label)}, ${escapeHtml(keywords || 'No keywords')}"><span class="monster-intent intent-${intent.kind}"><b>${intent.icon}</b> ${escapeHtml(intent.label)}</span><span class="monster-figure">${walkerPortrait(enemy.kind || 'sprout')}</span><strong>${escapeHtml(enemy.card.name)}</strong><span class="monster-life" aria-label="${enemy.health} of ${enemy.maxHealth} life"><span class="enemy-combat-stats">${statBadge('power',enemy.power)}${statBadge('life',enemy.health)}</span><span class="monster-bounty" title="Bounty on defeat">◈ ${enemy.bounty ?? 8}</span></span><span class="monster-health-track" role="meter" aria-label="${escapeHtml(enemy.card.name)} life" aria-valuemin="0" aria-valuemax="${enemy.maxHealth}" aria-valuenow="${enemy.health}"><i style="width:${healthPercent}%"></i></span><span class="monster-keywords">${keywordMarkup}</span><small>${blocker ? (legalBlockers(battle,enemy).length ? 'Blocked by ' : 'Needs two blockers · ') + escapeHtml(blocker) : selected ? 'Selected target' : recovering ? 'Summoning sick' : ''}</small></button>`;
   }).join('')}</div>`;
 }
 
@@ -2239,7 +2239,6 @@ window.addEventListener('resize', hideCardPreview);
 document.addEventListener('scroll', event => { if (!event.target.closest?.('#card-preview')) hideCardPreview(); }, true);
 document.addEventListener('pointermove', positionCardPreview);
 
-$('#graveyard-open').addEventListener('click', () => { hideCardPreview(); $('#graveyard-dialog').showModal(); });
 
 $('#card-preview').addEventListener('pointerleave', event => { if (event.pointerType !== 'touch' && !previewAnchor?.contains(event.relatedTarget)) hideCardPreview(); });
 
@@ -2339,14 +2338,27 @@ function combatRoutes(battle) {
   return routes;
 }
 
+// Stable, separate visual endpoints for incoming attacks. They never change targets or damage.
+function playerAttackAnchor68(enemyId, battle = state.battle) {
+  const slots = battle.playerAttackAnchors68 ||= new Map();
+  const alive = new Set(battle.enemyCreatures.map(enemy => enemy.id));
+  for (const id of slots.keys()) if (!alive.has(id)) slots.delete(id);
+  for (const enemy of battle.enemyCreatures) {
+    if (slots.has(enemy.id)) continue;
+    const occupied = new Set(slots.values());
+    const slot = Array.from({length: CREATURE_LIMIT}, (_, index) => index).find(index => !occupied.has(index));
+    if (slot !== undefined) slots.set(enemy.id, slot);
+  }
+  return document.querySelector(`[data-player-attack-anchor="${slots.get(enemyId)}"]`) || $('#player-health-label');
+}
+
 function drawCombatArrows() {
-  const arena = $('.arena-table');
   const svg = $('#combat-arrows');
   const battle = state.battle;
   if (!battle || !$('#combat-screen').classList.contains('active')) { svg.innerHTML = ''; return; }
-  const rect = arena.getBoundingClientRect();
-  const width = arena.clientWidth;
-  const height = arena.clientHeight;
+  const rect = svg.getBoundingClientRect();
+  const width = svg.clientWidth;
+  const height = svg.clientHeight;
   if (!width || !height || !rect.width || !rect.height) return;
   const sx = width / rect.width;
   const sy = height / rect.height;
@@ -2367,21 +2379,28 @@ function drawCombatArrows() {
   for (const route of combatRoutes(battle)) {
     const key = `${route.kind}:${route.from}:${route.to}`;
     const fromElement = route.kind === 'ally' ? document.querySelector(`[data-creature-id="${route.from}"] .player-card-frame`) : document.querySelector(`[data-enemy-attacker="${route.from}"] .monster-figure`);
-    const toElement = route.to === 'player' ? $('#player-health-label') : route.kind === 'ally' ? document.querySelector(`[data-enemy-attacker="${route.to}"] .monster-figure`) : document.querySelector(`[data-creature-id="${route.to}"] .player-card-frame`);
+    const toElement = route.to === 'player' ? playerAttackAnchor68(route.from, battle) : route.kind === 'ally' ? document.querySelector(`[data-enemy-attacker="${route.to}"] .monster-figure`) : document.querySelector(`[data-creature-id="${route.to}"] .player-card-frame`);
     const from = center(fromElement, 'top');
-    const to = center(toElement, route.to === 'player' ? 'bottom' : 'top');
+    const to = center(toElement, route.to === 'player' ? 'center' : 'top');
     if (!from || !to) continue;
     // A route keeps its curve when another route is added or removed.
     const lane = [...key].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3;
     const lift = 38 + lane * 16;
     const c1 = { x: from.x + (route.kind === 'ally' ? 72 : -86), y: Math.max(30, from.y - lift) };
     const c2 = route.to === 'player' ? { x: to.x + 72, y: to.y + 18 } : { x: to.x + (route.kind === 'ally' ? -88 : 96), y: Math.max(30, to.y - lift) };
-    const label = { x: (from.x + 3 * c1.x + 3 * c2.x + to.x) / 8, y: (from.y + 3 * c1.y + 3 * c2.y + to.y) / 8 };
+    const label = route.to === 'player' ? {x: to.x, y: to.y - 15} : { x: (from.x + 3 * c1.x + 3 * c2.x + to.x) / 8, y: (from.y + 3 * c1.y + 3 * c2.y + to.y) / 8 };
     const units = [...battle.creatures, ...battle.enemyCreatures];
     const fromName = units.find(unit => unit.id === route.from)?.card.name || '';
     const toName = route.to === 'player' ? 'Your life' : units.find(unit => unit.id === route.to)?.card.name || '';
     const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'blocked attack' : 'attack'}`;
-    const curve = `M ${round(from.x)} ${round(from.y)} C ${round(c1.x)} ${round(c1.y)}, ${round(c2.x)} ${round(c2.y)}, ${round(to.x)} ${round(to.y)}`;
+    let curve = `M ${round(from.x)} ${round(from.y)} C ${round(c1.x)} ${round(c1.y)}, ${round(c2.x)} ${round(c2.y)}, ${round(to.x)} ${round(to.y)}`;
+    if (route.to === 'player' && $('.player-attack-anchors68')) {
+      // Travel around the lands and HUD, then enter the otherwise empty target area.
+      const gutter = ($('.player-panel').getBoundingClientRect().right - rect.left) * sx - 6;
+      const top = 6 + (battle.playerAttackAnchors68.get(route.from) || 0);
+      const approach = Math.max(top + 24, from.y - 43);
+      curve = `M ${round(from.x)} ${round(from.y)} C ${round(from.x)} ${round(approach)}, ${round(gutter + 42)} ${round(approach)}, ${round(gutter + 18)} ${round(approach)} Q ${round(gutter)} ${round(approach)}, ${round(gutter)} ${round(approach - 18)} L ${round(gutter)} ${top + 18} Q ${round(gutter)} ${top}, ${round(gutter - 18)} ${top} L ${round(to.x + 18)} ${top} Q ${round(to.x)} ${top}, ${round(to.x)} ${top + 18} L ${round(to.x)} ${round(to.y)}`;
+    }
     let group = existing.get(key);
     if (!group) {
       group = document.createElementNS('http://www.w3.org/2000/svg', 'g');

@@ -12,7 +12,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   await p.setViewportSize(viewport);
   await p.waitForFunction(()=>{const r=document.querySelector('.game-shell').getBoundingClientRect();return r.width<=innerWidth+1&&r.height<=innerHeight+1});
   await fitted('.arena-table,.hand-card,.player-card-frame,.permanent-card-frame,#run-level,.mana-land,.turn-footer button');await imageBounds();
-  await p.locator('#graveyard-open').click();await fitted('#graveyard-dialog');await imageBounds();await p.locator('#graveyard-close').click();
+  await p.locator('#graveyard-button').click();await fitted('#graveyard-dialog');await imageBounds();await p.locator('#graveyard-close').click();
   await p.locator('#deck-button').click();await fitted('#collection-dialog');await imageBounds();await p.locator('#collection-close').click();
   await p.evaluate(()=>{beginScry(2)});await fitted('#scry-dialog');await imageBounds();await p.locator('#scry-confirm').click();
   await p.evaluate(()=>{beginLibraryOrder27(2,()=>{})});await fitted('#library-order-dialog');await imageBounds();await p.locator('[data-library-pick="0"]').click();await p.locator('[data-library-pick="1"]').click();await p.locator('#library-order-confirm').click();

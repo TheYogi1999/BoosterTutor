@@ -23,3 +23,52 @@ html.fixed-game .game-shell .enemy-panel{grid-template-rows:70px 18px 270px minm
 .game-shell .blocking-pairs{grid-auto-rows:36px}.game-shell .block-pair{height:36px!important;display:flex;flex-direction:column;align-items:stretch;gap:1px;overflow:hidden}.game-shell .block-pair>b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 10px}.game-shell .block-pair>span{display:block;min-height:10px;max-height:20px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;font-size:8px;line-height:10px}
 .game-shell #creature-row .attachment-link{top:100px;left:-7px;padding:1px 3px}
 .game-shell #creature-row .unit-attachments{left:-7px!important;width:30px!important;padding:1px!important;align-items:center;z-index:4;overscroll-behavior:contain}.game-shell #creature-row .unit-attachments .permanent-card{width:25px!important;min-width:25px!important;transform:none!important}.game-shell #creature-row .attachment-link{z-index:5}
+/* v0.68: a square player portrait, a quiet attack area and ordered physical lands. */
+.game-shell .player-side-header{grid-template-columns:76px 172px 132px minmax(0,1fr)!important;grid-template-rows:44px 38px!important}
+.game-shell .player-avatar-block #player-avatar{width:72px!important;height:72px!important;min-width:72px!important;max-height:72px!important;flex:0 0 72px!important;aspect-ratio:1}
+.game-shell .player-avatar-block #run-level{width:76px!important}
+.game-shell .player-avatar-block #player-avatar .walker-portrait{aspect-ratio:1;display:block;width:100%!important;height:100%!important}
+.player-attack-anchors68{grid-column:3;grid-row:1 / span 2;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);place-items:center;width:132px;height:76px;opacity:0;pointer-events:none;user-select:none}
+.player-attack-anchors68>span{display:block;width:1px;height:1px;padding:0;margin:0;border:0}
+.game-shell .player-side-header .mana-land-row{grid-column:4!important;grid-row:1 / span 2!important;display:grid!important;grid-auto-flow:column;grid-template-rows:repeat(2,35px);grid-auto-columns:30px;gap:4px 6px!important;align-content:center;justify-content:start;justify-items:center;align-items:center!important;height:80px!important;max-height:80px!important;padding:2px 5px!important;box-sizing:border-box;min-width:0;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior:contain;touch-action:pan-x}
+.game-shell .player-side-header .mana-land-row .mana-land{width:25px!important;height:35px!important;min-width:25px!important;max-width:25px!important;margin:0!important;flex:none!important}
+.game-shell .mana-display{font-size:13px!important}.game-shell .mana-display .mana-symbol,.game-shell .mana-display .mana-symbol img{width:22px;height:22px}.game-shell .floating-mana{font-size:11px}
+.game-shell .graveyard-links .discard-info{gap:8px}
+/* Equal 4:5 illustrations for every enemy, including small enemy archetypes. */
+.game-shell #enemy-board .monster .monster-figure .walker-portrait{width:80px!important;height:100px!important;min-width:80px!important;max-width:80px!important;max-height:100px!important;aspect-ratio:4/5;flex:0 0 80px!important;align-self:center!important}
+.game-shell #enemy-board .monster-figure{align-items:center!important;justify-content:center!important}
+.game-shell #enemy-board .monster{grid-template-rows:30px 106px 24px 24px 32px 34px!important}
+.game-shell #enemy-board .monster-life{display:flex!important;flex-direction:column;gap:1px!important;line-height:10px!important;height:32px;justify-content:center}
+.game-shell .enemy-combat-stats{display:flex!important;flex-direction:row;align-items:center;justify-content:center;gap:4px;margin:0!important}
+.game-shell #enemy-board .monster-life .stat-badge{font:650 12px/17px var(--sans)!important;gap:2px;margin:0!important;padding:0 2px!important;min-width:0}
+.game-shell #enemy-board .monster-life .stat-badge svg{width:12px;height:12px}
+.game-shell #enemy-board .monster-life .monster-bounty{font:500 8px/9px var(--sans)!important;margin:0!important;color:#c3ad7b}
+
+:is(.monster-figure,.collection-monster) .walker-portrait[class*="portrait-"]{background-image:url("assets/portraits/enemies-v68.webp")!important;background-size:500% 400%!important;background-position:var(--enemy-x,0%) var(--enemy-y,0%)!important;background-repeat:no-repeat!important}
+.portrait-sprout{--enemy-x:0%;--enemy-y:0.0%}
+.portrait-wisp{--enemy-x:25%;--enemy-y:0.0%}
+.portrait-duelist{--enemy-x:50%;--enemy-y:0.0%}
+.portrait-boar{--enemy-x:75%;--enemy-y:0.0%}
+.portrait-sprite{--enemy-x:100%;--enemy-y:0.0%}
+.portrait-raider{--enemy-x:0%;--enemy-y:33.333333333333336%}
+.portrait-wolf{--enemy-x:25%;--enemy-y:33.333333333333336%}
+.portrait-stalker{--enemy-x:50%;--enemy-y:33.333333333333336%}
+.portrait-bulwark{--enemy-x:75%;--enemy-y:33.333333333333336%}
+.portrait-archivist{--enemy-x:100%;--enemy-y:33.333333333333336%}
+.portrait-vampire{--enemy-x:0%;--enemy-y:66.66666666666667%}
+.portrait-dragon{--enemy-x:25%;--enemy-y:66.66666666666667%}
+.portrait-tyrant{--enemy-x:50%;--enemy-y:66.66666666666667%}
+.portrait-sphinx{--enemy-x:75%;--enemy-y:66.66666666666667%}
+.portrait-goblin{--enemy-x:100%;--enemy-y:66.66666666666667%}
+.portrait-goblinArsonist{--enemy-x:0%;--enemy-y:100.0%}
+.portrait-goblinSneak{--enemy-x:25%;--enemy-y:100.0%}
+.portrait-rat{--enemy-x:50%;--enemy-y:100.0%}
+.portrait-saproling{--enemy-x:75%;--enemy-y:100.0%}
+.portrait-myr{--enemy-x:100%;--enemy-y:100.0%}
+
+.game-shell #enemy-board .monster-keywords{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;justify-content:center;align-items:flex-start;align-content:flex-start;gap:2px!important;margin:0!important;padding:0!important;max-height:34px!important;line-height:12px!important}.game-shell #enemy-board .monster-keywords .enemy-keyword-badge{margin:0!important;flex:0 1 auto;line-height:11px!important}
+.game-shell .player-attack-anchors68{width:132px}.game-shell .player-side-header .mana-display{max-width:172px!important;min-width:0;gap:4px!important}
+.game-shell .player-side-header .mana-land-row{height:76px!important;max-height:76px!important;grid-template-rows:repeat(2,34px);align-self:end}.game-shell .player-side-header .mana-land-row .mana-land{width:24px!important;min-width:24px!important;max-width:24px!important;height:34px!important}
+.collection-monster .walker-portrait{width:160px!important;height:200px!important;aspect-ratio:4/5}.title-options-dialog .avatar-choice .walker-portrait{width:54px!important;height:54px!important;aspect-ratio:1}
+/* Six incoming paths can share the upper passage without building a solid glow bar. */
+.game-shell .route-enemy .route-glow{opacity:.13;stroke-width:9}.game-shell .route-enemy .route-track{opacity:.15}.game-shell .route-enemy .route-line{stroke-width:2.6}

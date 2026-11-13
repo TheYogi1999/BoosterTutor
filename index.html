@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="card-finish-ui.css?v=0.63" />
     <script src="cards.js?v=0.66" defer></script>
     <script src="sounds.js?v=0.43" defer></script>
-    <script src="game.js?v=0.67" defer></script>
+    <script src="game.js?v=0.68" defer></script>
     <script src="rules.js?v=0.67" defer></script>
     <script src="expansion.js?v=0.67" defer></script>
     <script src="expedition-rewards.js?v=0.61" defer></script>
@@ -64,10 +64,10 @@
     <link rel="stylesheet" href="jesters.css?v=0.64" />
     <script src="jester-family.js?v=0.65" defer></script>
     <link rel="stylesheet" href="jester-family.css?v=0.65" />
-    <script src="reviewed-cards.js?v=0.67" defer></script>
+    <script src="reviewed-cards.js?v=0.68" defer></script>
     <link rel="stylesheet" href="reviewed-cards.css?v=0.66" />
     <script src="compact-battle.js?v=0.67" defer></script>
-    <link rel="stylesheet" href="compact-battle.css?v=0.67" />
+    <link rel="stylesheet" href="compact-battle.css?v=0.68" />
     <script src="effects.js?v=0.60" defer></script>
     <script src="zone-effects.js?v=0.33" defer></script>
     <script src="controller.js?v=0.67" defer></script>
@@ -80,10 +80,10 @@
     <header class="topbar">
       <a class="brand" href="#start" aria-label="Booster Tutor home">
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.67</span>
+        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.68</span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label" hidden><i class="status-dot"></i> v0.67 · <span id="global-phase">START</span></span>
+        <span class="pixel-label" hidden><i class="status-dot"></i> v0.68 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Background music settings">♫ Music</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
@@ -167,6 +167,7 @@
                 <div class="combat-coins"><span>Coins</span><b id="battle-coin-count">0</b><span aria-hidden="true">◈</span></div>
               </div>
               <div class="mana-display" aria-label="Available and total mana"><small>MANA</small><span class="mana-symbol" aria-hidden="true"><img src="assets/all-colors-mana.png" alt="" width="24" height="24" /></span><b id="mana-label">0 / 0</b><span id="floating-mana" class="floating-mana" title="Floating generic mana · spent first · expires at turn end" hidden><span aria-hidden="true">✦</span><b id="floating-mana-count">0</b></span></div>
+              <div class="player-attack-anchors68" aria-hidden="true"><span data-player-attack-anchor="0"></span><span data-player-attack-anchor="1"></span><span data-player-attack-anchor="2"></span><span data-player-attack-anchor="3"></span><span data-player-attack-anchor="4"></span><span data-player-attack-anchor="5"></span></div>
               <div class="mana-land-row" id="mana-land-row" aria-label="Mana cards in play"></div>
             </div>
             <div class="arena-zone-header creatures-zone-header"><span>YOUR CREATURES</span><small id="creature-count">0 / 6</small></div>
@@ -199,7 +200,7 @@
         </div>
 
         <aside class="card-inspector" aria-label="Large card inspector"><div class="inspector-heading">CARD INSPECTOR</div><div id="inspector-content"><div class="inspector-empty">◈<p>Hover a battlefield card for a larger view and live stats.</p></div></div></aside>
-        <aside class="battle-utility-stack"><section class="table-graveyard" aria-label="Graveyard and exile"><div class="graveyard-pile-area"><div id="graveyard-pile" class="graveyard-pile"></div><span hidden id="graveyard-zone-count">0</span></div><div class="graveyard-links"><div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div><button class="quiet-button" id="graveyard-open">View graveyard</button></div></section><section class="combat-actions-panel" aria-label="Combat actions"><span class="eyebrow">COMBAT ACTION</span><button class="end-turn-button" id="end-turn-button">START COMBAT <span>→</span></button></section></aside>
+        <aside class="battle-utility-stack"><section class="table-graveyard" aria-label="Graveyard and exile"><div class="graveyard-pile-area"><div id="graveyard-pile" class="graveyard-pile"></div><span hidden id="graveyard-zone-count">0</span></div><div class="graveyard-links"><div class="discard-info"><button class="graveyard-button" id="graveyard-button" type="button"><span>⬇</span> Graveyard <b id="graveyard-count">0</b></button><button class="quiet-button" id="exile-button">Exile <b id="exile-count">0</b></button></div></div></section><section class="combat-actions-panel" aria-label="Combat actions"><span class="eyebrow">COMBAT ACTION</span><button class="end-turn-button" id="end-turn-button">START COMBAT <span>→</span></button></section></aside>
         <div class="battle-log-panel">
           <div class="log-header"><span>BATTLE LOG</span><span id="turn-label">TURN 1</span></div>
           <div class="battle-log" id="battle-log" aria-live="polite"></div>

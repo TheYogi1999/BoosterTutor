@@ -11,7 +11,7 @@ const assert=require('node:assert/strict');
   await p.evaluate(()=>{state.soundOn=false;state.pool=playableCards(BUNDLED_CARDS);state.landPool=FALLBACK_LANDS;window.originalRandom59=Math.random;Math.random=()=>.01});
   await p.locator('#start-button').click();await p.locator('.sealed-pack').waitFor();
   assert.equal(await p.locator('#player-level').innerText(),'1');
-  assert.equal(await p.locator('#run-level').isVisible(),true);
+  assert.equal(await p.locator('#run-level').isVisible(),false); // The level lives under the combat avatar.
   assert.equal(await p.evaluate(()=>state.packs.every(pack=>pack.length===7&&!pack.some(isFoilCard59))),true);
   assert.equal(await p.evaluate(()=>BUNDLED_CARDS.some(c=>c.foil59)),false);
   // One real starter draft, from the physical pack to the actual run deck.
@@ -40,7 +40,7 @@ const assert=require('node:assert/strict');
   await p.locator('[data-permanent-id]:has(img[alt="Black Lotus"])').click();await p.locator('#token-action-confirm').click();
   assert.equal(await p.evaluate(()=>state.battle.graveyard.includes(foilLotus59)),true);
   assert.equal(await p.locator('#graveyard-pile .foil-card-face').count(),0);
-  await p.locator('#graveyard-open').click();assert.equal(await p.locator('#graveyard-dialog .foil-card-face').count(),0);await p.locator('#graveyard-dialog [data-close-dialog],#graveyard-close').first().click();
+  await p.locator('#graveyard-button').click();assert.equal(await p.locator('#graveyard-dialog .foil-card-face').count(),0);await p.locator('#graveyard-dialog [data-close-dialog],#graveyard-close').first().click();
   await p.locator('[data-creature-id] .player-card-frame').hover();assert.equal(await p.locator('#inspector-content .foil-card-face').count(),1);
   await p.screenshot({path:'work/progression59-combat.png'});
   // A normal and a foil copy must be distinguishable in the same deck list.
@@ -65,10 +65,10 @@ const assert=require('node:assert/strict');
   assert.equal(await p.locator('.foil-card-face').first().evaluate(e=>getComputedStyle(e,':after').animationName),'none');
   // Win both real boss waves. Kills award levels once through the bounty path.
   await p.evaluate(()=>{
-   state.endless=false;state.deck=[foilBear59,...Array.from({length:60},()=>runCard59(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'))),...generateStarterManaCards(4)];state.playerHealth=37;state.coins=240;state.shop=null;beginBattle(4);window.beforeLevel59=state.level;
+   state.endless=false;state.deck=[foilBear59,...Array.from({length:60},()=>runCard59(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'))),...generateStarterManaCards(4)];state.playerHealth=37;state.coins=240;state.shop=null;beginBattle(4);window.beforeLevel59=state.level;window.waveKills59=state.battle.enemyCreatures.length;
    const b=state.battle;for(const e of [...b.enemyCreatures]){damageFirstEnemy(10000,e);awardBounty(e)}winBattle();
   });
-  assert.equal(await p.evaluate(()=>state.battle.waveIndex),1);assert.equal(await p.evaluate(()=>state.level-beforeLevel59),2);
+  assert.equal(await p.evaluate(()=>state.battle.waveIndex),1);assert.equal(await p.evaluate(()=>state.level-beforeLevel59),await p.evaluate(()=>waveKills59));
   await p.evaluate(()=>{for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle();window.beforeEndless59={deck:state.deck,life:state.playerHealth,coins:state.coins,level:state.level,run:state.finishRun59}});
   assert.equal(await p.locator('#endless-button').isVisible(),true);assert.match(await p.locator('#run-summary').innerText(),/LEVEL/);
   assert.equal(await p.evaluate(()=>{controller.enable();return controller.focused?.id}),'endless-button');await p.evaluate(()=>controller.release());

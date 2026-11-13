@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
   p.on('pageerror',e=>errors.push(e.message));
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
   await p.waitForFunction(()=>typeof MINION_TYPES67!=='undefined');
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.67');
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.68');
   const setup=async()=>p.evaluate(()=>{
    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
    closeX66();closeCreatureAbility66();closeJesterChoice65();closeTokenAction47();abortTutorSearch51();abortDiceRoll50();abortReactionChecks52();
@@ -56,9 +56,9 @@ const assert=require('node:assert/strict');
    for(const [key,value] of Object.entries(geometry))assert.equal(value,key==='rowColumns'||key==='foes'?6:true,`${viewport.width} ${key}`);
   }
   await p.setViewportSize({width:1600,height:900});await fits();
-  // New art is local, decodes correctly, and minion portraits are visibly smaller.
+  // New art is local, decodes correctly, and all enemy portraits share the same dimensions.
   assert.equal(await p.evaluate(async()=>{for(const kind of Object.keys(MINION_TYPES67)){const img=new Image();img.src=`assets/portraits/${kind}.jpg`;await img.decode();if(img.naturalWidth<100)return false}return true}),true);
-  assert.equal(await p.evaluate(()=>document.querySelector('.small-enemy67 .walker-portrait').getBoundingClientRect().height<document.querySelector('.monster:not(.small-enemy67) .walker-portrait').getBoundingClientRect().height*.8),true);
+  assert.equal(await p.evaluate(()=>Math.abs(document.querySelector('.small-enemy67 .walker-portrait').getBoundingClientRect().height-document.querySelector('.monster:not(.small-enemy67) .walker-portrait').getBoundingClientRect().height)<.1),true);
   // Enemy selection + creature click queues, another click withdraws, and retargeting uses the new selection.
   await p.locator('.monster').nth(2).click();await p.locator('[data-creature-id="unit1"]').click();
   assert.equal(await p.evaluate(()=>state.battle.creatures[1].attackTargetId===state.battle.enemyCreatures[2].id&&state.battle.creatures[1].willAttack),true);
@@ -102,6 +102,6 @@ const assert=require('node:assert/strict');
   await p.evaluate(()=>{controller.enable();controller.focus(document.getElementById('end-turn-button'))});assert.equal(await p.evaluate(()=>controller.zone(controller.focused)),'actions');
   await setup();await p.screenshot({path:'work/compact67-final.png'});
   assert.deepEqual(errors,[]);
-  console.log('PASS v0.67 brand; compact zone/level/Mulligan placement; six whole cards and six enemy/type rows; five viewport sizes without page scrolling; six local minion images; direct targeting/withdrawal, real pointer attack and hand casting; sixth slot; mana/ability controls; attack response; six-way multiblocking; graveyard/exile; relocated controller actions.');
+  console.log('PASS v0.68 brand; compact zone/level/Mulligan placement; six whole cards and six enemy/type rows; five viewport sizes without page scrolling; six local minion images; direct targeting/withdrawal, real pointer attack and hand casting; sixth slot; mana/ability controls; attack response; six-way multiblocking; graveyard/exile; relocated controller actions.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

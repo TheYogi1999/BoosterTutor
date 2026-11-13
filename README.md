@@ -1,3 +1,20 @@
+## Portraits and incoming-attack layout (v0.68)
+
+All twenty enemy archetypes now use a cohesive, original generated portrait atlas. Every battlefield portrait is the same **80×100 (4:5)** size, including Goblins, rats, Saprolings and Myr; the smaller archetypes keep their ordinary stats and abilities. The atlas is bundled as a 566 KiB WebP at its original resolution. [Portrait provenance and tile order](assets/portraits/ENEMIES-v68.md) accompany the asset. Enemy **Power (sword)** and **Life (heart)** appear side by side, with the coin bounty below, and update with live combat stats.
+
+The player's existing square illustration now displays in a **72×72** frame without stretching. A two-row, three-column grid of invisible visual anchors sits to the right, leaving space for life, coins and mana. Each enemy's incoming life-damage arrow has its own endpoint; survivors keep their points when another foe dies, and later waves reuse free points. Arrow routing and damage labels avoid the player HUD and physical lands. Endpoints are calculated in the SVG's own coordinates, including at scaled viewport sizes. These anchors are purely visual: life damage, blockers and Trample use the existing combat rules.
+
+Mana lands use two physical rows, preserve full card faces and tapped rotation, and scroll locally when more cards are present. Mouse, touch and controller scrolling stay inside the land area. The duplicate **View graveyard** link is removed; the physical pile and **Graveyard** button still open the graveyard.
+
+Thunderclap Wyvern's reviewed rules are unchanged: it has Flash/Flying and gives **other creatures you control that already have Flying +1/+1**. It does **not** grant Flying. Its explanation now says this explicitly. Regression checks cover a ground Grizzly Bears, a natural flyer, and a ground creature gaining/losing Flying through a separate Aura.
+
+Validation: 395 rule tests; a dedicated real-browser test for six exact endpoints, HUD clearance, portrait sizes for all twenty kinds, land scrolling/controller access, actual Wyvern casts and the remaining graveyard control across five viewport sizes; compact combat, controller, reviewed-card and cache-upgrade regressions.
+
+```sh
+node tests/portrait-hud-browser.test.cjs
+node tests/compact-battle-browser.test.cjs
+```
+
 ## Compact six-slot battlefield (v0.67)
 
 The current game version now appears directly beside **BOOSTER TUTOR** in the header. The duplicate header phase label is hidden; the five-step combat strip remains. Level sits below the player avatar, Mulligan below **Your Hand**, and Graveyard/Exile beside the physical graveyard on the right. A separate panel underneath contains **Start Combat**, **Continue** or **Confirm Blocks** as appropriate.
