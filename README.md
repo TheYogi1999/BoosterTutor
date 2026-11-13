@@ -1,3 +1,30 @@
+## All Jesters, self-targeted Cap and Vault 21 (v0.65)
+
+The nine additions use their oldest regular English paper images, bundled locally: **Jester's Cap (Ice Age)**, **Jester's Scepter**, **Jester's Sombrero**, **Demon's Jester**, **Goblin Battle Jester**, **Havoc Jester**, **Spike Jester**, **The Madcap Jester**, and **Vault 21: House Gambit**. Together with the existing Jester's Mask, this covers every card returned by Scryfall's Jester name search. The bundled catalog is now **147 cards / 144 ordinary-pack eligible cards**. Every addition has full English in-game rules; explicit roguelike variants are labelled in the collection.
+
+**Jester's Cap targets YOU.** Cast for four generic mana; click its battlefield card, choose three physical cards from the remaining library (all if fewer), then confirm **two mana, tap and sacrifice**. The chosen copies are exiled and permanently removed from the run deck, including later encounters and Endless. Other copies and their upgrades stay. Cancel, incomplete selection, stale sources and repeated confirmations cannot spend mana. The library shuffles after removal. Temporary library cards can be exiled but were never part of the run deck.
+
+**Jester's Scepter** also targets your own library, following its printed player-target option. On entry, exile the top five physical library cards (all if fewer), preserving their upgrades. This is not drawing and does not change the persistent run deck. Its action window lists the exiled cards. During an enemy spell response, pay two generic mana, tap and put one linked exiled card into your graveyard to counter a spell with that exact name. This can counter an enemy Counterspell even with no counterspell in hand. Each Scepter has its own linked cards and untaps normally; countering its cast prevents entry and exile.
+
+**Jester's Sombrero — House Reserve variant:** opponents have no sideboard. Pay two mana, tap and sacrifice to seal three enemy spell names (all remaining if fewer) for the rest of the run. Choose from Shock, Lava Spike, Sovereign's Bite and Counterspell before paying. Seals prevent future enemy casts and permission rolls, including in later waves and Endless; spells already cast are unaffected. A new run clears all seals.
+
+**Vault 21: House Gambit** is a two-mana Saga. Chapter I triggers on entry; chapters II and III trigger after the normal draw on the next two turns. I/II require choosing a discard, then draw one; an empty hand still draws and an empty library loses normally. III reveals up to five nonland cards, creates one Treasure for each revealed card with a mana-value partner, then sacrifices the Saga. Pairs make two Treasure, triples three, and unmatched values make none. Revealed cards remain in hand. Each Saga tracks its own chapters; already-triggered chapters still resolve if their source leaves.
+
+The five creatures implement these rules:
+
+- **Demon's Jester:** Flying and continuous Hellbent (+2/+1 while the hand is empty), including lethal marked damage when the toughness bonus is lost.
+- **Spike Jester:** a 3/1 with real Haste for two generic mana.
+- **Goblin Battle Jester — Retaliation variant:** casting a printed red spell lets you choose an enemy that cannot retaliate against your attacks this turn. Generic payment does not change spell color. The trigger survives a countered spell; Hexproof and Ward apply. The enemy still attacks normally on its own turn.
+- **Havoc Jester:** each sacrificed permanent triggers one targeted point of damage per Jester, including tokens, Lotus, Mask, Cap, Sombrero, the Saga, failed Mox rolls and sacrificed creatures (including Havoc itself). Death, exile, discard and legend replacement are not sacrifices. Targets, Ward, Hexproof, source Deathtouch and Lifelink are respected. Life loss and simultaneous Lifelink are applied before checking for defeat.
+- **The Madcap Jester — House Theft variant:** an actual attack steals a random unsealed enemy-repertoire spell into hand, usable through the next turn for its normal generic cost. Queueing/withdrawing does not steal. Uncast cards expire into exile; returning a stolen card to another zone does not extend its permission. Stolen cards never enter the run deck. Enemy-only Lava Spike and Sovereign's Bite have reviewed monster-targeted casting rules when stolen and stay excluded from ordinary packs.
+
+Triggered choices queue behind current rolls, spell resolutions and card windows, hold combat progression, and cannot apply across scenes or battles. The new card-choice window uses an internally scrolling grid, explicit unpaid cancellation where appropriate, stable physical-copy selection for controller input, and the existing fixed 16:9 canvas.
+
+```sh
+node --test tests/game.test.cjs tests/rules.test.cjs tests/chance.test.cjs tests/relics.test.cjs tests/progression.test.cjs tests/counters-poison.test.cjs tests/finish-mystery.test.cjs tests/jesters.test.cjs tests/jester-family.test.cjs
+node tests/jester-family-browser.test.cjs
+```
+
 ## Gamble and Jester's Mask: Masquerade (v0.64)
 
 Two reviewed cards bring the catalog to **138 bundled / 135 ordinary-pack eligible cards**, with local images of their original English paper printings: Ice Age Jester's Mask and Urza's Saga Gamble. They can appear in ordinary boosters, matching themed packs, the shop and the searchable collection.

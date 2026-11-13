@@ -3805,6 +3805,253 @@ const BUNDLED_CARDS = [
       "rarity": "rare",
       "uri": "https://scryfall.com/card/usg/188/gamble?utm_source=api"
     }
+  },
+  {
+    "id": "90a3f694-0cf3-4d25-8ab0-36a3f637ff9a",
+    "name": "Demon's Jester",
+    "mana_cost": "{3}{B}",
+    "cmc": 4.0,
+    "type_line": "Creature — Imp",
+    "oracle_text": "Flying\nHellbent — This creature gets +2/+1 as long as you have no cards in hand.",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Flying",
+      "Hellbent"
+    ],
+    "image": "assets/cards/90a3f694-0cf3-4d25-8ab0-36a3f637ff9a.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/0/90a3f694-0cf3-4d25-8ab0-36a3f637ff9a.jpg?1783943431",
+    "uri": "https://scryfall.com/card/dis/42/demons-jester?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "90a3f694-0cf3-4d25-8ab0-36a3f637ff9a",
+      "set": "dis",
+      "set_name": "Dissension",
+      "released_at": "2006-05-05",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/dis/42/demons-jester?utm_source=api"
+    }
+  },
+  {
+    "id": "c13e56b0-becc-4bc2-9ba3-23b3ca8bfe58",
+    "name": "Goblin Battle Jester",
+    "mana_cost": "{3}{R}",
+    "cmc": 4.0,
+    "type_line": "Creature — Goblin",
+    "oracle_text": "Whenever you cast a red spell, target creature can't block this turn.",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/c13e56b0-becc-4bc2-9ba3-23b3ca8bfe58.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/1/c13e56b0-becc-4bc2-9ba3-23b3ca8bfe58.jpg?1783940483",
+    "uri": "https://scryfall.com/card/m13/135/goblin-battle-jester?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "c13e56b0-becc-4bc2-9ba3-23b3ca8bfe58",
+      "set": "m13",
+      "set_name": "Magic 2013",
+      "released_at": "2012-07-13",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m13/135/goblin-battle-jester?utm_source=api"
+    }
+  },
+  {
+    "id": "386e5cb2-39c8-453d-a642-c5d9f8495601",
+    "name": "Havoc Jester",
+    "mana_cost": "{4}{R}",
+    "cmc": 5.0,
+    "type_line": "Creature — Devil",
+    "oracle_text": "Whenever you sacrifice a permanent, this creature deals 1 damage to any target.",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/386e5cb2-39c8-453d-a642-c5d9f8495601.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/8/386e5cb2-39c8-453d-a642-c5d9f8495601.jpg?1783930689",
+    "uri": "https://scryfall.com/card/m21/149/havoc-jester?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "386e5cb2-39c8-453d-a642-c5d9f8495601",
+      "set": "m21",
+      "set_name": "Core Set 2021",
+      "released_at": "2020-07-03",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/m21/149/havoc-jester?utm_source=api"
+    }
+  },
+  {
+    "id": "47ac44d0-8090-4e7b-ac47-c567294f185e",
+    "name": "Jester's Cap",
+    "mana_cost": "{4}",
+    "cmc": 4.0,
+    "type_line": "Artifact",
+    "oracle_text": "{2}, {T}, Sacrifice this artifact: Search target player's library for three cards and exile them. Then that player shuffles.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "image": "assets/cards/47ac44d0-8090-4e7b-ac47-c567294f185e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/7/47ac44d0-8090-4e7b-ac47-c567294f185e.jpg?1783947458",
+    "uri": "https://scryfall.com/card/ice/324/jesters-cap?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "47ac44d0-8090-4e7b-ac47-c567294f185e",
+      "set": "ice",
+      "set_name": "Ice Age",
+      "released_at": "1995-06-03",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/ice/324/jesters-cap?utm_source=api"
+    }
+  },
+  {
+    "id": "7118c2e0-04d6-4a71-8ffd-b9365b154050",
+    "name": "Jester's Scepter",
+    "mana_cost": "{3}",
+    "cmc": 3.0,
+    "type_line": "Artifact",
+    "oracle_text": "When this artifact enters, exile the top five cards of target player's library face down. You may look at those cards for as long as they remain exiled.\n{2}, {T}, Put a card exiled with this artifact into its owner's graveyard: Counter target spell if it has the same name as that card.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "image": "assets/cards/7118c2e0-04d6-4a71-8ffd-b9365b154050.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/1/7118c2e0-04d6-4a71-8ffd-b9365b154050.jpg?1783943319",
+    "uri": "https://scryfall.com/card/csp/137/jesters-scepter?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "7118c2e0-04d6-4a71-8ffd-b9365b154050",
+      "set": "csp",
+      "set_name": "Coldsnap",
+      "released_at": "2006-07-21",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/csp/137/jesters-scepter?utm_source=api"
+    }
+  },
+  {
+    "id": "6e68f012-307f-4ffb-909e-1284fb39e64f",
+    "name": "Jester's Sombrero",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact",
+    "oracle_text": "{2}, {T}, Sacrifice this artifact: Look at target player's sideboard, choose three cards from it, and remove those cards from the match.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [],
+    "keywords": [],
+    "image": "assets/cards/6e68f012-307f-4ffb-909e-1284fb39e64f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/e/6e68f012-307f-4ffb-909e-1284fb39e64f.jpg?1783946419",
+    "uri": "https://scryfall.com/card/ugl/76/jesters-sombrero?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "6e68f012-307f-4ffb-909e-1284fb39e64f",
+      "set": "ugl",
+      "set_name": "Unglued",
+      "released_at": "1998-08-11",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/ugl/76/jesters-sombrero?utm_source=api"
+    }
+  },
+  {
+    "id": "cec50499-70d4-4dc1-9cae-abbecfc8e87d",
+    "name": "Spike Jester",
+    "mana_cost": "{B}{R}",
+    "cmc": 2.0,
+    "type_line": "Creature — Goblin Warrior",
+    "oracle_text": "Haste",
+    "power": "3",
+    "toughness": "1",
+    "color_identity": [
+      "B",
+      "R"
+    ],
+    "keywords": [
+      "Haste"
+    ],
+    "image": "assets/cards/cec50499-70d4-4dc1-9cae-abbecfc8e87d.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/e/cec50499-70d4-4dc1-9cae-abbecfc8e87d.jpg?1783940021",
+    "uri": "https://scryfall.com/card/dgm/106/spike-jester?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "cec50499-70d4-4dc1-9cae-abbecfc8e87d",
+      "set": "dgm",
+      "set_name": "Dragon's Maze",
+      "released_at": "2013-05-03",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/dgm/106/spike-jester?utm_source=api"
+    }
+  },
+  {
+    "id": "fa3a7a06-bec1-47d6-9b62-7a343a2d3d22",
+    "name": "The Madcap Jester",
+    "mana_cost": "{1}{U}{B}{R}",
+    "cmc": 4.0,
+    "type_line": "Legendary Creature — Clown Wizard",
+    "oracle_text": "Whenever The Madcap Jester attacks, each opponent exiles the top card of their library.\nWhenever a spell or ability you control causes one or more cards to be exiled from an opponent's library, you may play those cards until the end of your next turn. Mana of any type can be spent to cast spells this way.",
+    "power": "3",
+    "toughness": "2",
+    "color_identity": [
+      "B",
+      "R",
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/fa3a7a06-bec1-47d6-9b62-7a343a2d3d22.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/a/fa3a7a06-bec1-47d6-9b62-7a343a2d3d22.jpg?1792741710",
+    "uri": "https://scryfall.com/card/mbc/44/the-madcap-jester?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "fa3a7a06-bec1-47d6-9b62-7a343a2d3d22",
+      "set": "mbc",
+      "set_name": "Mystery Booster Commander Edition",
+      "released_at": "2026-10-19",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/mbc/44/the-madcap-jester?utm_source=api"
+    }
+  },
+  {
+    "id": "40972644-a284-4c7c-a451-d70eff7488ab",
+    "name": "Vault 21: House Gambit",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Enchantment — Saga",
+    "oracle_text": "(As this Saga enters and after your draw step, add a lore counter. Sacrifice after III.)\nI, II — Discard a card, then draw a card.\nIII — Reveal up to five nonland cards from your hand. For each of those cards that has the same mana value as another card revealed this way, create a Treasure token.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "Treasure"
+    ],
+    "image": "assets/cards/40972644-a284-4c7c-a451-d70eff7488ab.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/0/40972644-a284-4c7c-a451-d70eff7488ab.jpg?1783912400",
+    "uri": "https://scryfall.com/card/pip/69/vault-21:-house-gambit?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "40972644-a284-4c7c-a451-d70eff7488ab",
+      "set": "pip",
+      "set_name": "Fallout",
+      "released_at": "2024-03-08",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/pip/69/vault-21:-house-gambit?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

@@ -98,7 +98,7 @@ activatePermanent=function(id){
  permanent.tapped=true;battle.mulliganAvailable=false;
  const task={battle,p:{card:permanent.card},copies:1};battle.resolutionTask=task;hideCardPreview();
  return beginDiceRoll50(permanent.card.name,['Mana'],values=>values[0]===1?'Sacrifice this Mox and lose 5 life.':values[0]<=6?'Add 1 floating generic mana. The Mox stays tapped.':'No listed result. The Mox stays tapped.',values=>{
-  if(values[0]===1){battle.permanents=battle.permanents.filter(p=>p!==permanent);battle.graveyard.push(permanent.card);state.playerHealth-=5;playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(5);if(state.playerHealth<=0){battle.resolutionTask=null;endRun(false);}}
+  if(values[0]===1){battle.permanents=battle.permanents.filter(p=>p!==permanent);battle.graveyard.push(permanent.card);if(typeof notifySacrifice65==='function')notifySacrifice65(battle);state.playerHealth-=5;playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(5);if(state.playerHealth<=0){battle.resolutionTask=null;endRun(false);}}
   else if(values[0]<=6){addFloatingMana58(1,battle);}
  },()=>finishResolution27(task),battle);
 };

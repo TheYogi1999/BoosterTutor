@@ -471,3 +471,14 @@ Infectious Inquiry
 # Jester tricks (v0.64)
 Jester's Mask
 Gamble
+
+# Jester family and Vault 21 (v0.65)
+Demon's Jester
+Goblin Battle Jester
+Havoc Jester
+Jester's Cap
+Jester's Scepter
+Jester's Sombrero
+Spike Jester
+The Madcap Jester
+Vault 21: House Gambit

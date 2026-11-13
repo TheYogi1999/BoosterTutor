@@ -1517,6 +1517,7 @@ function playCard(index, targetSide = 'enemy') {
   battle.mulliganAvailable = false;
   if (!payMana(card.cmc, battle)) return showActionError('Not enough generic mana for this card.');
   battle.hand.splice(index, 1);
+  if (typeof onPlayerSpellCast65 === 'function') onPlayerSpellCast65(card, battle);
   const resolve=()=>resolvePaidCard44(card,battle);
   const countered=()=>{battle.graveyard.push(card);if(!battle.enemyCreatures.length)return winBattle();renderBattle();};
   if(typeof offerEnemyCounter44==='function'&&offerEnemyCounter44(card,battle,resolve,countered))return;

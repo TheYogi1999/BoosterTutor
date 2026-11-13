@@ -1,0 +1,6 @@
+#jester-choice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:16px;align-content:start;flex:1;min-height:0;overflow:auto;padding:8px}
+#jester-choice-grid .tutor-search-card:not(:has(.card-image-wrap)){padding:18px!important;border:1px solid #b7986655!important;border-radius:6px;background:#192b35!important}
+#jester-choice-grid .tutor-search-card:not(:has(.card-image-wrap)).selected{outline:2px solid #f4d18b}
+#jester-choice-cancel[hidden]{display:none!important}
+.jester-choice-dialog .tutor-search-actions{justify-content:flex-end}
+.jester-choice-dialog p{font-size:14px;line-height:21px}

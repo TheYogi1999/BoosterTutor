@@ -85,6 +85,7 @@ commitRuleSpell=function(p){
  if(!payMana(p.card.cmc,b))return false;
  const spell=isInstant(p.card)||/\bSorcery\b/.test(p.card.type_line);const copies=spell?1+(b.copyNextSpell||0):1;if(spell)b.copyNextSpell=0;
  for(const i of discards)b.graveyard.push(b.hand[i]);const removed=new Set([p.index,...discards]);b.hand=b.hand.filter((card,i)=>!removed.has(i));for(const unit of sacrificed)sacrificeRuleCreature(unit);
+ if(typeof onPlayerSpellCast65==='function')onPlayerSpellCast65(p.card,b);
  if(clone){
   const resolve=()=>{
    const chosen=choiceTargetUnit(target,b);
