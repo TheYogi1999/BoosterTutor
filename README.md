@@ -1,3 +1,16 @@
+## Free-flowing enemy attack arrows (v0.69)
+
+Incoming attacks now follow individual, smoothly bowed cubic curves directly to the six invisible player-side targets. The previous shared passage and turns around the HUD are removed. Cards, lands and HUD elements are allowed beneath the arrows; pointer input still passes through the noninteractive arrow layer.
+
+Each enemy gets a preferred bow. A small deterministic search spreads nearby curves and discourages long shared sections, while allowing occasional crossings when necessary. Upper and lower target rows favor different bends. Repeated rendering at the same geometry keeps the same paths, and surviving enemies keep their assigned target points. Attack targets, displayed damage, blocking, Trample and combat rules are unchanged. The glow and moving dashes follow the new curves.
+
+Verified in a real browser at five viewport sizes, with one through six enemies: smooth cubic-only paths, six distinct exact endpoints, no long shared routes in the full formation, deterministic rerendering, and working card/controller interactions.
+
+```sh
+node tests/portrait-hud-browser.test.cjs
+node tests/compact-battle-browser.test.cjs
+```
+
 ## Portraits and incoming-attack layout (v0.68)
 
 All twenty enemy archetypes now use a cohesive, original generated portrait atlas. Every battlefield portrait is the same **80×100 (4:5)** size, including Goblins, rats, Saprolings and Myr; the smaller archetypes keep their ordinary stats and abilities. The atlas is bundled as a 566 KiB WebP at its original resolution. [Portrait provenance and tile order](assets/portraits/ENEMIES-v68.md) accompany the asset. Enemy **Power (sword)** and **Life (heart)** appear side by side, with the coin bounty below, and update with live combat stats.

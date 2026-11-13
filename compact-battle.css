@@ -70,5 +70,5 @@ html.fixed-game .game-shell .enemy-panel{grid-template-rows:70px 18px 270px minm
 .game-shell .player-attack-anchors68{width:132px}.game-shell .player-side-header .mana-display{max-width:172px!important;min-width:0;gap:4px!important}
 .game-shell .player-side-header .mana-land-row{height:76px!important;max-height:76px!important;grid-template-rows:repeat(2,34px);align-self:end}.game-shell .player-side-header .mana-land-row .mana-land{width:24px!important;min-width:24px!important;max-width:24px!important;height:34px!important}
 .collection-monster .walker-portrait{width:160px!important;height:200px!important;aspect-ratio:4/5}.title-options-dialog .avatar-choice .walker-portrait{width:54px!important;height:54px!important;aspect-ratio:1}
-/* Six incoming paths can share the upper passage without building a solid glow bar. */
-.game-shell .route-enemy .route-glow{opacity:.13;stroke-width:9}.game-shell .route-enemy .route-track{opacity:.15}.game-shell .route-enemy .route-line{stroke-width:2.6}
+/* Free-flowing enemy bows retain a soft glow and visible moving dashes. */
+.game-shell .route-enemy .route-glow{opacity:.3;stroke-width:10}.game-shell .route-enemy .route-track{opacity:.2}.game-shell .route-enemy .route-line{stroke-width:2.8}

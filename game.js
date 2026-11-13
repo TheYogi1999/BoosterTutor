@@ -2352,6 +2352,34 @@ function playerAttackAnchor68(enemyId, battle = state.battle) {
   return document.querySelector(`[data-player-attack-anchor="${slots.get(enemyId)}"]`) || $('#player-health-label');
 }
 
+function flowingEnemyCurve69(from, to, slot, earlier, height) {
+  const dx = from.x - to.x;
+  const preferred = slot < 3 ? -40 - slot * 18 : 38 + (slot - 3) * 24;
+  const clamp = y => Math.max(12, Math.min(height - 18, y));
+  let best = null;
+  // Prefer an individual bow. Penalize sustained overlaps, while allowing crossings.
+  // Cards, land and HUD elements are deliberately not routing obstacles.
+  for (const offset of [0, -24, 24, -48, 48, -72, 72, -104, 104]) {
+    const bend = preferred + offset;
+    const c1 = {x: from.x - dx * .32, y: clamp(from.y + bend)};
+    const c2 = {x: to.x + dx * .36, y: clamp(to.y + bend)};
+    const samples = Array.from({length: 25}, (_, index) => {
+      const t = .12 + index * .76 / 24, u = 1 - t;
+      return {x: u*u*u*from.x + 3*u*u*t*c1.x + 3*u*t*t*c2.x + t*t*t*to.x,
+        y: u*u*u*from.y + 3*u*u*t*c1.y + 3*u*t*t*c2.y + t*t*t*to.y};
+    });
+    let score = Math.abs(offset) / 120;
+    for (const other of earlier) for (const point of samples) {
+      let distance = Infinity;
+      for (const neighbor of other.samples) distance = Math.min(distance, (point.x-neighbor.x)**2 + (point.y-neighbor.y)**2);
+      score += Math.max(0, 324 - distance) / 324;
+    }
+    if (!best || score < best.score) best = {c1, c2, samples, score};
+  }
+  earlier.push(best);
+  return best;
+}
+
 function drawCombatArrows() {
   const svg = $('#combat-arrows');
   const battle = state.battle;
@@ -2371,6 +2399,7 @@ function drawCombatArrows() {
   if (!svg.querySelector('defs')) svg.innerHTML = combatArrowDefinitions();
   const existing = new Map([...svg.querySelectorAll('.combat-route')].map(group => [group.dataset.routeKey, group]));
   const retained = new Set();
+  const incomingCurves = [];
   const round = value => Math.round(value * 100) / 100;
   const set = (element, name, value) => {
     const next = String(value);
@@ -2383,7 +2412,7 @@ function drawCombatArrows() {
     const from = center(fromElement, 'top');
     const to = center(toElement, route.to === 'player' ? 'center' : 'top');
     if (!from || !to) continue;
-    // A route keeps its curve when another route is added or removed.
+    // Allied and blocking routes retain their existing smooth curves.
     const lane = [...key].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 3;
     const lift = 38 + lane * 16;
     const c1 = { x: from.x + (route.kind === 'ally' ? 72 : -86), y: Math.max(30, from.y - lift) };
@@ -2395,11 +2424,8 @@ function drawCombatArrows() {
     const title = `${fromName} → ${toName}: ${route.damage} ${route.kind === 'block' ? 'blocked attack' : 'attack'}`;
     let curve = `M ${round(from.x)} ${round(from.y)} C ${round(c1.x)} ${round(c1.y)}, ${round(c2.x)} ${round(c2.y)}, ${round(to.x)} ${round(to.y)}`;
     if (route.to === 'player' && $('.player-attack-anchors68')) {
-      // Travel around the lands and HUD, then enter the otherwise empty target area.
-      const gutter = ($('.player-panel').getBoundingClientRect().right - rect.left) * sx - 6;
-      const top = 6 + (battle.playerAttackAnchors68.get(route.from) || 0);
-      const approach = Math.max(top + 24, from.y - 43);
-      curve = `M ${round(from.x)} ${round(from.y)} C ${round(from.x)} ${round(approach)}, ${round(gutter + 42)} ${round(approach)}, ${round(gutter + 18)} ${round(approach)} Q ${round(gutter)} ${round(approach)}, ${round(gutter)} ${round(approach - 18)} L ${round(gutter)} ${top + 18} Q ${round(gutter)} ${top}, ${round(gutter - 18)} ${top} L ${round(to.x + 18)} ${top} Q ${round(to.x)} ${top}, ${round(to.x)} ${top + 18} L ${round(to.x)} ${round(to.y)}`;
+      const flow = flowingEnemyCurve69(from, to, battle.playerAttackAnchors68.get(route.from) || 0, incomingCurves, height);
+      curve = `M ${round(from.x)} ${round(from.y)} C ${round(flow.c1.x)} ${round(flow.c1.y)}, ${round(flow.c2.x)} ${round(flow.c2.y)}, ${round(to.x)} ${round(to.y)}`;
     }
     let group = existing.get(key);
     if (!group) {
