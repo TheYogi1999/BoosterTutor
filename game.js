@@ -1720,7 +1720,7 @@ function resolvePlayerAttacks(onlyIds = null, onComplete = null) {
     addLog(`${creature.card.name} attacks ${target.card.name}; the monster retaliates.`);
     const fight = () => {
       if (state.battle !== battle || battle.phase !== 'attack') return;
-      if (battle.creatures.includes(creature) && creatureAlive(creature) && battle.enemyCreatures.includes(target) && creatureAlive(target)) resolveCombatDamage([creature], new Map([[creature.id, [target]]]), 'player');
+      if (battle.creatures.includes(creature) && creatureAlive(creature) && battle.enemyCreatures.includes(target) && creatureAlive(target)) resolveCombatDamage([creature], new Map([[creature.id, typeof playerDefenders66 === 'function' ? playerDefenders66(creature,target,battle) : [target]]]), 'player');
       next();
     };
     if (typeof resolveAttackTrigger55 === 'function' && resolveAttackTrigger55(creature, battle, fight)) return;

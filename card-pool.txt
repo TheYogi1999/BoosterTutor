@@ -482,3 +482,34 @@ Jester's Sombrero
 Spike Jester
 The Madcap Jester
 Vault 21: House Gambit
+
+# Reviewed rescue expansion (v0.66)
+Soul Warden
+Taunting Elf
+Blaze
+Avacyn's Pilgrim
+Birds of Paradise
+Goblin Fireslinger
+Index
+Gold Myr
+Iron Myr
+Read the Bones
+Flight of Fancy
+Goblin Snowman
+Murderous Redcap
+Thunderclap Wyvern
+Shivan Dragon
+Visara the Dreadful
+Inferno
+Soul's Attendant
+Essence Warden
+Elvish Mystic
+Fyndhorn Elves
+Silver Myr
+Leaden Myr
+Copper Myr
+Palladium Myr
+Prodigal Pyromancer
+Prodigal Sorcerer
+Hurricane
+Earthquake

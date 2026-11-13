@@ -4052,6 +4052,805 @@ const BUNDLED_CARDS = [
       "rarity": "rare",
       "uri": "https://scryfall.com/card/pip/69/vault-21:-house-gambit?utm_source=api"
     }
+  },
+  {
+    "id": "d5ee24ee-4d28-4634-bd43-90eff15c16dd",
+    "name": "Soul Warden",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Human Cleric",
+    "oracle_text": "Whenever another creature enters, you gain 1 life.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/d5ee24ee-4d28-4634-bd43-90eff15c16dd.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/5/d5ee24ee-4d28-4634-bd43-90eff15c16dd.jpg?1783946528",
+    "uri": "https://scryfall.com/card/exo/21/soul-warden?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "d5ee24ee-4d28-4634-bd43-90eff15c16dd",
+      "set": "exo",
+      "set_name": "Exodus",
+      "released_at": "1998-06-15",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/exo/21/soul-warden?utm_source=api"
+    }
+  },
+  {
+    "id": "85bfa6b9-c898-4bb6-a444-6cf336bfb260",
+    "name": "Taunting Elf",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Elf",
+    "oracle_text": "All creatures able to block this creature do so.",
+    "power": "0",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/85bfa6b9-c898-4bb6-a444-6cf336bfb260.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/5/85bfa6b9-c898-4bb6-a444-6cf336bfb260.jpg?1783946059",
+    "uri": "https://scryfall.com/card/uds/122/taunting-elf?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "85bfa6b9-c898-4bb6-a444-6cf336bfb260",
+      "set": "uds",
+      "set_name": "Urza's Destiny",
+      "released_at": "1999-06-07",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/uds/122/taunting-elf?utm_source=api"
+    }
+  },
+  {
+    "id": "f175c959-3b5d-46a3-9194-fad2359bbff9",
+    "name": "Blaze",
+    "mana_cost": "{X}{R}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Blaze deals X damage to any target.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/f175c959-3b5d-46a3-9194-fad2359bbff9.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/1/f175c959-3b5d-46a3-9194-fad2359bbff9.jpg?1783946820",
+    "uri": "https://scryfall.com/card/por/118/blaze?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "f175c959-3b5d-46a3-9194-fad2359bbff9",
+      "set": "por",
+      "set_name": "Portal",
+      "released_at": "1997-05-01",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/por/118/blaze?utm_source=api"
+    }
+  },
+  {
+    "id": "7eb39e97-53c2-4df0-9fb3-a3d6a24ec41f",
+    "name": "Avacyn's Pilgrim",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Human Monk",
+    "oracle_text": "{T}: Add {W}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "G",
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/7eb39e97-53c2-4df0-9fb3-a3d6a24ec41f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/e/7eb39e97-53c2-4df0-9fb3-a3d6a24ec41f.jpg?1783940925",
+    "uri": "https://scryfall.com/card/isd/170/avacyns-pilgrim?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "7eb39e97-53c2-4df0-9fb3-a3d6a24ec41f",
+      "set": "isd",
+      "set_name": "Innistrad",
+      "released_at": "2011-09-30",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/isd/170/avacyns-pilgrim?utm_source=api"
+    }
+  },
+  {
+    "id": "55fe6449-1f23-43dc-adee-d144cd505b5c",
+    "name": "Birds of Paradise",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Bird",
+    "oracle_text": "Flying\n{T}: Add one mana of any color.",
+    "power": "0",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "image": "assets/cards/55fe6449-1f23-43dc-adee-d144cd505b5c.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/5/55fe6449-1f23-43dc-adee-d144cd505b5c.jpg?1783948679",
+    "uri": "https://scryfall.com/card/lea/186/birds-of-paradise?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "55fe6449-1f23-43dc-adee-d144cd505b5c",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/lea/186/birds-of-paradise?utm_source=api"
+    }
+  },
+  {
+    "id": "3c11db78-f506-4af2-a7be-c7ac2c0ffcf3",
+    "name": "Goblin Fireslinger",
+    "mana_cost": "{R}",
+    "cmc": 1.0,
+    "type_line": "Creature — Goblin Warrior",
+    "oracle_text": "{T}: This creature deals 1 damage to target player or planeswalker.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/3c11db78-f506-4af2-a7be-c7ac2c0ffcf3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/c/3c11db78-f506-4af2-a7be-c7ac2c0ffcf3.jpg?1783941070",
+    "uri": "https://scryfall.com/card/m12/139/goblin-fireslinger?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "3c11db78-f506-4af2-a7be-c7ac2c0ffcf3",
+      "set": "m12",
+      "set_name": "Magic 2012",
+      "released_at": "2011-07-15",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m12/139/goblin-fireslinger?utm_source=api"
+    }
+  },
+  {
+    "id": "637ebd57-ba92-48ff-9ad4-d40dad2ff418",
+    "name": "Index",
+    "mana_cost": "{U}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Look at the top five cards of your library, then put them back in any order.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/637ebd57-ba92-48ff-9ad4-d40dad2ff418.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/3/637ebd57-ba92-48ff-9ad4-d40dad2ff418.jpg?1783945353",
+    "uri": "https://scryfall.com/card/apc/25/index?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "637ebd57-ba92-48ff-9ad4-d40dad2ff418",
+      "set": "apc",
+      "set_name": "Apocalypse",
+      "released_at": "2001-06-04",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/apc/25/index?utm_source=api"
+    }
+  },
+  {
+    "id": "fa9b4040-ab49-476b-b101-5ef2b1824e10",
+    "name": "Gold Myr",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact Creature — Myr",
+    "oracle_text": "{T}: Add {W}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/fa9b4040-ab49-476b-b101-5ef2b1824e10.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/a/fa9b4040-ab49-476b-b101-5ef2b1824e10.jpg?1783944519",
+    "uri": "https://scryfall.com/card/mrd/180/gold-myr?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "fa9b4040-ab49-476b-b101-5ef2b1824e10",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mrd/180/gold-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "08e17883-0767-40b5-ac44-a52a1ea54993",
+    "name": "Iron Myr",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact Creature — Myr",
+    "oracle_text": "{T}: Add {R}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/08e17883-0767-40b5-ac44-a52a1ea54993.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/8/08e17883-0767-40b5-ac44-a52a1ea54993.jpg?1783944518",
+    "uri": "https://scryfall.com/card/mrd/187/iron-myr?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "08e17883-0767-40b5-ac44-a52a1ea54993",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mrd/187/iron-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "dbbdbf1a-2d15-4291-aa19-614f854d8cb3",
+    "name": "Read the Bones",
+    "mana_cost": "{2}{B}",
+    "cmc": 3.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Scry 2, then draw two cards. You lose 2 life. (To scry 2, look at the top two cards of your library, then put any number of them on the bottom and the rest on top in any order.)",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Scry"
+    ],
+    "image": "assets/cards/dbbdbf1a-2d15-4291-aa19-614f854d8cb3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/b/dbbdbf1a-2d15-4291-aa19-614f854d8cb3.jpg?1783939772",
+    "uri": "https://scryfall.com/card/ths/101/read-the-bones?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "dbbdbf1a-2d15-4291-aa19-614f854d8cb3",
+      "set": "ths",
+      "set_name": "Theros",
+      "released_at": "2013-09-27",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ths/101/read-the-bones?utm_source=api"
+    }
+  },
+  {
+    "id": "7c8ad201-ce70-45bf-9ac3-51f5ccfa8df9",
+    "name": "Flight of Fancy",
+    "mana_cost": "{3}{U}",
+    "cmc": 4.0,
+    "type_line": "Enchantment — Aura",
+    "oracle_text": "Enchant creature\nWhen this Aura enters, draw two cards.\nEnchanted creature has flying.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Enchant"
+    ],
+    "image": "assets/cards/7c8ad201-ce70-45bf-9ac3-51f5ccfa8df9.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/c/7c8ad201-ce70-45bf-9ac3-51f5ccfa8df9.jpg?1783943686",
+    "uri": "https://scryfall.com/card/rav/49/flight-of-fancy?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "7c8ad201-ce70-45bf-9ac3-51f5ccfa8df9",
+      "set": "rav",
+      "set_name": "Ravnica: City of Guilds",
+      "released_at": "2005-10-07",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/rav/49/flight-of-fancy?utm_source=api"
+    }
+  },
+  {
+    "id": "5bbb260a-6763-4d1c-a009-4e34cd572519",
+    "name": "Goblin Snowman",
+    "mana_cost": "{3}{R}",
+    "cmc": 4.0,
+    "type_line": "Creature — Goblin",
+    "oracle_text": "Whenever this creature blocks, prevent all combat damage that would be dealt to and dealt by it this turn.\n{T}: This creature deals 1 damage to target creature it's blocking.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/5bbb260a-6763-4d1c-a009-4e34cd572519.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/b/5bbb260a-6763-4d1c-a009-4e34cd572519.jpg?1783947488",
+    "uri": "https://scryfall.com/card/ice/191/goblin-snowman?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "5bbb260a-6763-4d1c-a009-4e34cd572519",
+      "set": "ice",
+      "set_name": "Ice Age",
+      "released_at": "1995-06-03",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/ice/191/goblin-snowman?utm_source=api"
+    }
+  },
+  {
+    "id": "5f7171f0-7d42-47c9-ab46-93c2bb42c914",
+    "name": "Murderous Redcap",
+    "mana_cost": "{2}{B/R}{B/R}",
+    "cmc": 4.0,
+    "type_line": "Creature — Goblin Assassin",
+    "oracle_text": "When this creature enters, it deals damage equal to its power to any target.\nPersist (When this creature dies, if it had no -1/-1 counters on it, return it to the battlefield under its owner's control with a -1/-1 counter on it.)",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [
+      "B",
+      "R"
+    ],
+    "keywords": [
+      "Persist"
+    ],
+    "image": "assets/cards/5f7171f0-7d42-47c9-ab46-93c2bb42c914.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/f/5f7171f0-7d42-47c9-ab46-93c2bb42c914.jpg?1783942725",
+    "uri": "https://scryfall.com/card/shm/192/murderous-redcap?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "5f7171f0-7d42-47c9-ab46-93c2bb42c914",
+      "set": "shm",
+      "set_name": "Shadowmoor",
+      "released_at": "2008-05-02",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/shm/192/murderous-redcap?utm_source=api"
+    }
+  },
+  {
+    "id": "dd20971a-11aa-452b-8507-0f48229062a0",
+    "name": "Thunderclap Wyvern",
+    "mana_cost": "{2}{W}{U}",
+    "cmc": 4.0,
+    "type_line": "Creature — Drake",
+    "oracle_text": "Flash (You may cast this spell any time you could cast an instant.)\nFlying\nOther creatures you control with flying get +1/+1.",
+    "power": "2",
+    "toughness": "3",
+    "color_identity": [
+      "U",
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Flash"
+    ],
+    "image": "assets/cards/dd20971a-11aa-452b-8507-0f48229062a0.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/d/dd20971a-11aa-452b-8507-0f48229062a0.jpg?1783938312",
+    "uri": "https://scryfall.com/card/ori/218/thunderclap-wyvern?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "dd20971a-11aa-452b-8507-0f48229062a0",
+      "set": "ori",
+      "set_name": "Magic Origins",
+      "released_at": "2015-07-17",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/ori/218/thunderclap-wyvern?utm_source=api"
+    }
+  },
+  {
+    "id": "fefbf149-f988-4f8b-9f53-56f5878116a6",
+    "name": "Shivan Dragon",
+    "mana_cost": "{4}{R}{R}",
+    "cmc": 6.0,
+    "type_line": "Creature — Dragon",
+    "oracle_text": "Flying\n{R}: This creature gets +1/+0 until end of turn.",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "image": "assets/cards/fefbf149-f988-4f8b-9f53-56f5878116a6.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/e/fefbf149-f988-4f8b-9f53-56f5878116a6.jpg?1783948681",
+    "uri": "https://scryfall.com/card/lea/174/shivan-dragon?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "fefbf149-f988-4f8b-9f53-56f5878116a6",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/lea/174/shivan-dragon?utm_source=api"
+    }
+  },
+  {
+    "id": "ce6adcfe-b0f7-4a96-bab2-f76c84ef5ca6",
+    "name": "Visara the Dreadful",
+    "mana_cost": "{3}{B}{B}{B}",
+    "cmc": 6.0,
+    "type_line": "Legendary Creature — Gorgon",
+    "oracle_text": "Flying\n{T}: Destroy target creature. It can't be regenerated.",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "image": "assets/cards/ce6adcfe-b0f7-4a96-bab2-f76c84ef5ca6.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/e/ce6adcfe-b0f7-4a96-bab2-f76c84ef5ca6.jpg?1783945061",
+    "uri": "https://scryfall.com/card/ons/179/visara-the-dreadful?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "ce6adcfe-b0f7-4a96-bab2-f76c84ef5ca6",
+      "set": "ons",
+      "set_name": "Onslaught",
+      "released_at": "2002-10-07",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/ons/179/visara-the-dreadful?utm_source=api"
+    }
+  },
+  {
+    "id": "a6b61512-5b24-424c-966f-36b595781e14",
+    "name": "Inferno",
+    "mana_cost": "{5}{R}{R}",
+    "cmc": 7.0,
+    "type_line": "Instant",
+    "oracle_text": "Inferno deals 6 damage to each creature and each player.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/a6b61512-5b24-424c-966f-36b595781e14.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/6/a6b61512-5b24-424c-966f-36b595781e14.jpg?1783947933",
+    "uri": "https://scryfall.com/card/drk/71/inferno?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "a6b61512-5b24-424c-966f-36b595781e14",
+      "set": "drk",
+      "set_name": "The Dark",
+      "released_at": "1994-08-01",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/drk/71/inferno?utm_source=api"
+    }
+  },
+  {
+    "id": "3223c0ac-cc22-4886-8919-11273b477cc7",
+    "name": "Soul's Attendant",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Human Cleric",
+    "oracle_text": "Whenever another creature enters, you may gain 1 life.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "image": "assets/cards/3223c0ac-cc22-4886-8919-11273b477cc7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/2/3223c0ac-cc22-4886-8919-11273b477cc7.jpg?1783942003",
+    "uri": "https://scryfall.com/card/roe/44/souls-attendant?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "3223c0ac-cc22-4886-8919-11273b477cc7",
+      "set": "roe",
+      "set_name": "Rise of the Eldrazi",
+      "released_at": "2010-04-23",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/roe/44/souls-attendant?utm_source=api"
+    }
+  },
+  {
+    "id": "da2a65d6-0887-4fe8-a6e6-909208fddd90",
+    "name": "Essence Warden",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Elf Shaman",
+    "oracle_text": "Whenever another creature enters, you gain 1 life.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/da2a65d6-0887-4fe8-a6e6-909208fddd90.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/a/da2a65d6-0887-4fe8-a6e6-909208fddd90.jpg?1783943137",
+    "uri": "https://scryfall.com/card/plc/145/essence-warden?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "da2a65d6-0887-4fe8-a6e6-909208fddd90",
+      "set": "plc",
+      "set_name": "Planar Chaos",
+      "released_at": "2007-02-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/plc/145/essence-warden?utm_source=api"
+    }
+  },
+  {
+    "id": "60d0e6a6-629a-45a7-bfcb-25ba7156788b",
+    "name": "Elvish Mystic",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Elf Druid",
+    "oracle_text": "{T}: Add {G}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/60d0e6a6-629a-45a7-bfcb-25ba7156788b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/0/60d0e6a6-629a-45a7-bfcb-25ba7156788b.jpg?1783939906",
+    "uri": "https://scryfall.com/card/m14/169/elvish-mystic?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "60d0e6a6-629a-45a7-bfcb-25ba7156788b",
+      "set": "m14",
+      "set_name": "Magic 2014",
+      "released_at": "2013-07-19",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m14/169/elvish-mystic?utm_source=api"
+    }
+  },
+  {
+    "id": "3ba95ffa-990a-4013-98b7-5d8c0b34e9c4",
+    "name": "Fyndhorn Elves",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Elf Druid",
+    "oracle_text": "{T}: Add {G}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/3ba95ffa-990a-4013-98b7-5d8c0b34e9c4.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/b/3ba95ffa-990a-4013-98b7-5d8c0b34e9c4.jpg?1783947476",
+    "uri": "https://scryfall.com/card/ice/244/fyndhorn-elves?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "3ba95ffa-990a-4013-98b7-5d8c0b34e9c4",
+      "set": "ice",
+      "set_name": "Ice Age",
+      "released_at": "1995-06-03",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ice/244/fyndhorn-elves?utm_source=api"
+    }
+  },
+  {
+    "id": "b83a73a2-fedb-40bd-8e29-82a7abd6f211",
+    "name": "Silver Myr",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact Creature — Myr",
+    "oracle_text": "{T}: Add {U}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/b83a73a2-fedb-40bd-8e29-82a7abd6f211.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/8/b83a73a2-fedb-40bd-8e29-82a7abd6f211.jpg?1783944504",
+    "uri": "https://scryfall.com/card/mrd/241/silver-myr?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "b83a73a2-fedb-40bd-8e29-82a7abd6f211",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mrd/241/silver-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "555efe5f-848f-44da-92b5-69c8e852f179",
+    "name": "Leaden Myr",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact Creature — Myr",
+    "oracle_text": "{T}: Add {B}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "image": "assets/cards/555efe5f-848f-44da-92b5-69c8e852f179.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/5/555efe5f-848f-44da-92b5-69c8e852f179.jpg?1783944517",
+    "uri": "https://scryfall.com/card/mrd/191/leaden-myr?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "555efe5f-848f-44da-92b5-69c8e852f179",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mrd/191/leaden-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "a52b2dc4-4fb3-4ddf-bdb6-c63e8c8efc09",
+    "name": "Copper Myr",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Artifact Creature — Myr",
+    "oracle_text": "{T}: Add {G}.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/a52b2dc4-4fb3-4ddf-bdb6-c63e8c8efc09.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/5/a52b2dc4-4fb3-4ddf-bdb6-c63e8c8efc09.jpg?1783944525",
+    "uri": "https://scryfall.com/card/mrd/158/copper-myr?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "a52b2dc4-4fb3-4ddf-bdb6-c63e8c8efc09",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mrd/158/copper-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "18c016ad-bb82-4944-8c06-ab180b808041",
+    "name": "Palladium Myr",
+    "mana_cost": "{3}",
+    "cmc": 3.0,
+    "type_line": "Artifact Creature — Myr",
+    "oracle_text": "{T}: Add {C}{C}.",
+    "power": "2",
+    "toughness": "2",
+    "color_identity": [],
+    "keywords": [],
+    "image": "assets/cards/18c016ad-bb82-4944-8c06-ab180b808041.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/8/18c016ad-bb82-4944-8c06-ab180b808041.jpg?1783941700",
+    "uri": "https://scryfall.com/card/som/190/palladium-myr?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "18c016ad-bb82-4944-8c06-ab180b808041",
+      "set": "som",
+      "set_name": "Scars of Mirrodin",
+      "released_at": "2010-10-01",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/som/190/palladium-myr?utm_source=api"
+    }
+  },
+  {
+    "id": "97787109-408e-42d3-acc5-300f5f5bf2ff",
+    "name": "Prodigal Pyromancer",
+    "mana_cost": "{2}{R}",
+    "cmc": 3.0,
+    "type_line": "Creature — Human Wizard",
+    "oracle_text": "{T}: This creature deals 1 damage to any target.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/97787109-408e-42d3-acc5-300f5f5bf2ff.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/7/97787109-408e-42d3-acc5-300f5f5bf2ff.jpg?1783943143",
+    "uri": "https://scryfall.com/card/plc/118/prodigal-pyromancer?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "97787109-408e-42d3-acc5-300f5f5bf2ff",
+      "set": "plc",
+      "set_name": "Planar Chaos",
+      "released_at": "2007-02-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/plc/118/prodigal-pyromancer?utm_source=api"
+    }
+  },
+  {
+    "id": "e4dc1103-7bf1-47f6-9006-d3ed9ccd7a6a",
+    "name": "Prodigal Sorcerer",
+    "mana_cost": "{2}{U}",
+    "cmc": 3.0,
+    "type_line": "Creature — Human Wizard Sorcerer",
+    "oracle_text": "{T}: This creature deals 1 damage to any target.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
+    "image": "assets/cards/e4dc1103-7bf1-47f6-9006-d3ed9ccd7a6a.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/4/e4dc1103-7bf1-47f6-9006-d3ed9ccd7a6a.jpg?1783948702",
+    "uri": "https://scryfall.com/card/lea/73/prodigal-sorcerer?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "e4dc1103-7bf1-47f6-9006-d3ed9ccd7a6a",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/lea/73/prodigal-sorcerer?utm_source=api"
+    }
+  },
+  {
+    "id": "52f5a19f-16e4-4d35-89e1-969ac8202f88",
+    "name": "Hurricane",
+    "mana_cost": "{X}{G}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Hurricane deals X damage to each creature with flying and each player.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "image": "assets/cards/52f5a19f-16e4-4d35-89e1-969ac8202f88.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/2/52f5a19f-16e4-4d35-89e1-969ac8202f88.jpg?1783948676",
+    "uri": "https://scryfall.com/card/lea/200/hurricane?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "52f5a19f-16e4-4d35-89e1-969ac8202f88",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/200/hurricane?utm_source=api"
+    }
+  },
+  {
+    "id": "e68ac362-6cdc-48a6-bdd3-4f8ea32add64",
+    "name": "Earthquake",
+    "mana_cost": "{X}{R}",
+    "cmc": 1.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Earthquake deals X damage to each creature without flying and each player.",
+    "power": "",
+    "toughness": "",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/e68ac362-6cdc-48a6-bdd3-4f8ea32add64.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/6/e68ac362-6cdc-48a6-bdd3-4f8ea32add64.jpg?1783948687",
+    "uri": "https://scryfall.com/card/lea/146/earthquake?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "e68ac362-6cdc-48a6-bdd3-4f8ea32add64",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/lea/146/earthquake?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {
