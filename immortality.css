@@ -1,0 +1,12 @@
+.precon-workspace71[hidden],.immortal-workspace76[hidden]{display:none!important}
+.precon-mode-tabs71 button[aria-selected="false"]{color:#a3b6b8;border-bottom-color:transparent}
+.precon-mode-tabs71 button:focus-visible{outline:1px solid #dfba80;outline-offset:-2px}
+.immortal-workspace76{display:grid;grid-template-columns:340px minmax(0,1fr);gap:48px;align-items:center;min-height:0;padding:6px 40px 16px;background:radial-gradient(ellipse at 20% 50%,#69848a16,transparent 60%)}
+#immortal-card76{display:block;width:258px;padding:0;border:0;background:none;justify-self:center;cursor:pointer;filter:drop-shadow(0 10px 24px #0009)}
+#immortal-card76 img{display:block;width:100%;height:auto;aspect-ratio:488/680;border-radius:12px}
+#immortal-card76:hover,#immortal-card76:focus-visible{outline:2px solid #dab572;outline-offset:6px;border-radius:12px}
+.immortal-copy76{max-width:690px;color:#c1d0ca;font:15px/24px var(--sans)}
+.immortal-copy76 h3{font:500 42px/48px Georgia,serif;color:#f3dfb5;margin:8px 0 22px}
+.immortal-copy76>.eyebrow{font-size:10px;letter-spacing:2px}
+.immortal-copy76 p{margin:0 0 18px}.immortal-copy76 ul{margin:0 0 18px;padding-left:20px}.immortal-copy76 li{margin-bottom:9px}.immortal-copy76 strong{color:#e8d2a4;font-weight:600}
+.immortal-copy76 small{font:12px/19px var(--sans);color:#a4b9bb;display:block}

@@ -119,7 +119,7 @@ activatePermanent=function(id){
   const spell=activeEnemySpell38(b),card=p.imprints65.find(c=>b.exile.includes(c)&&c.name===spell.card.name);if(!card||!payMana(2,b))return false;
   p.tapped=true;p.imprints65=p.imprints65.filter(c=>c!==card);b.exile=b.exile.filter(c=>c!==card);b.graveyard.push(card);finishEnemySpell38(spell,'countered',b);b.mulliganAvailable=false;addLog(`Jester's Scepter spends its ${card.name} imprint and counters ${spell.sourceName}'s ${spell.card.name}.`);renderBattle();return true;
  }
- const sources=havocSources65(b),result=baseFamilyActivate65(id);if(result&&p.card.name!=='Sol Ring'&&p.card.name!=='Jack-in-the-Mox'&&!b.permanents.includes(p))notifySacrifice65(b,sources);return result;
+ const sources=havocSources65(b),result=baseFamilyActivate65(id);if(result&&!['Sol Ring','Jack-in-the-Mox','Elixir of Immortality'].includes(p.card.name)&&!b.permanents.includes(p))notifySacrifice65(b,sources);return result;
 };
 const baseFamilyLabel65=permanentActivationLabel51;
 permanentActivationLabel51=function(p){return ["Jester's Cap","Jester's Sombrero"].includes(p.card.name)?'Pay 2 · tap · sacrifice':p.card.name==="Jester's Scepter"?'Pay 2 · tap · spend matching imprint':baseFamilyLabel65(p);};
@@ -188,9 +188,9 @@ function onPlayerSpellCast65(card,b){
  for(const source of b.creatures.filter(u=>u.card.name==='Goblin Battle Jester'))queueJester65(b,done=>{const options=jesterTargetOptions65(b,true);if(!options.length)return done();openJesterChoice65({battle:b,title:'Goblin Battle Jester · red spell',instruction:'Roguelike variant: choose an enemy that cannot retaliate against your attacks this turn. Hexproof and Ward apply. Triggers when you cast a red spell, even if that spell is countered.',options,accept:selected=>withJesterWard65(b,selected[0].target,source.card.name,unit=>{unit.noRetaliation65=b.turn;addLog(`${unit.card.name} cannot retaliate against your attacks this turn.`);},done)});});
 }
 const baseFamilyCombat65=resolveCombatDamage;
-resolveCombatDamage=function(attackers,assignments,side='player'){
+resolveCombatDamage=function(attackers,assignments,side='player',onDamageStep=null){
  const b=state.battle,muted=side==='player'?b.enemyCreatures.filter(u=>u.noRetaliation65===b.turn).map(u=>({u,power:u.power})):[];for(const {u} of muted)u.power=0;
- try{return baseFamilyCombat65(attackers,assignments,side);}finally{for(const {u,power} of muted)u.power=power;}
+ try{return baseFamilyCombat65(attackers,assignments,side,onDamageStep);}finally{for(const {u,power} of muted)u.power=power;}
 };
 const baseFamilyAttack65=resolveAttackTrigger55;
 resolveAttackTrigger55=function(unit,b,resume){

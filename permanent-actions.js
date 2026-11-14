@@ -5,6 +5,7 @@ tokenActionDetails47=function(permanent){
  const existing=basePermanentDetails60(permanent);if(existing)return existing;
  if(!permanent)return null;
  const card=permanent.card,cost=permanentActivationCost(card),equipment=/Equipment/.test(card.type_line);
+ if(card.name==='Elixir of Immortality')return{effect:'Gain 5 life. Shuffle this Elixir and your graveyard into your Library. Exiled cards stay exiled.',cost:'2 generic mana · tap · shuffle (not sacrifice)',action:'Pay 2 → Gain 5 life & shuffle'};
  const costs=card.name==='Sol Ring'?'Tap · no mana cost':card.name==='Jack-in-the-Mox'?'Tap · roll a D6 · no mana cost':cost!==null?`${cost} generic mana · sacrifice`:equipment?`Equip: ${equipCost(card)} generic mana`:'Passive ability · no activation cost';
  return {effect:effectDescriptions(card).join(' '),cost:costs,action:cost!==null?permanentActivationLabel51(permanent):'No activated ability'};
 };

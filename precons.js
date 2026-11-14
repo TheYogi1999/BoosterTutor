@@ -73,7 +73,7 @@ function onPreconTitle71(){return (!state.screen||state.screen==='start-screen')
 function openGameModes71(){
  if(!onPreconTitle71()||document.querySelector('dialog[open]'))return false;
  $('#precon-grid').innerHTML=PRECONS71.map(deck=>`<button type="button" class="precon-choice71${selectedPrecon71===deck.id?' selected':''}" data-precon-deck="${deck.id}" aria-pressed="${selectedPrecon71===deck.id}" style="--deck-a:${PRECON_COLORS71[deck.colors[0]].hex};--deck-b:${PRECON_COLORS71[deck.colors[1]].hex}" aria-label="${escapeHtml(deck.name)}, ${escapeHtml(deck.theme)}, ${deck.colors.map(c=>PRECON_COLORS71[c].name).join(' and ')}, 24 cards, led by ${escapeHtml(deck.hero)}"><span class="precon-box71" aria-hidden="true"><span class="precon-lid71"></span><span class="precon-spine71"></span><span class="precon-front71"><img src="assets/precons/${deck.id==='ember-echo'?'ember-echo-niv':deck.id}.jpg" alt="" draggable="false"><span class="precon-box-colors71">${preconColors71(deck)}</span></span></span><span class="precon-choice-label71"><b>${escapeHtml(deck.name)}</b><small>${escapeHtml(deck.theme)} <span>24 cards</span></small></span></button>`).join('');
- renderPreconDetails71();$('#game-modes-dialog').showModal();return true;
+ renderPreconDetails71();if(typeof selectGameMode76==='function')selectGameMode76('precons');$('#game-modes-dialog').showModal();return true;
 }
 function inspectPreconCard71(name){
  const deck=preconDefinition71(selectedPrecon71),entry=deck&&preconContents71(deck.id).find(e=>e.card.name===name);if(!entry)return;
@@ -94,7 +94,7 @@ function startPrecon71(id,restart=false){
 }
 $('#title-game-modes').addEventListener('click',openGameModes71);
 $('#game-modes-close').addEventListener('click',()=>$('#game-modes-dialog').close());
-$('#precon-begin').addEventListener('click',()=>startPrecon71(selectedPrecon71));
+$('#precon-begin').addEventListener('click',()=>{if(typeof selectedGameMode76!=='undefined'&&selectedGameMode76==='immortal')startImmortalRun76();else startPrecon71(selectedPrecon71);});
 $('#precon-grid').addEventListener('click',event=>{const button=event.target.closest('[data-precon-deck]');if(button)selectPrecon71(button.dataset.preconDeck);});
 $('#precon-details').addEventListener('click',event=>{const button=event.target.closest('[data-precon-card]');if(button)inspectPreconCard71(button.dataset.preconCard);});
 $('#precon-card-close').addEventListener('click',()=>$('#precon-card-dialog').close());

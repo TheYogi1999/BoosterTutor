@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
   const p=await browser.newPage({viewport:{width:1600,height:900},reducedMotion:'reduce',ignoreHTTPSErrors:true}),errors=[],missing=[];
   p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.status()===404)missing.push(r.url())});await p.route('https://api.scryfall.com/**',r=>r.abort());
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');await p.waitForFunction(()=>typeof activePrecon72==='function');await p.evaluate(()=>state.soundOn=false);
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.75');await p.locator('#title-game-modes').click();
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.76');await p.locator('#title-game-modes').click();
   await p.locator('[data-precon-deck="ember-echo"]').click();assert.match(await p.locator('#precon-details').innerText(),/Niv-Mizzet, the Firemind/);
   assert.match(await p.locator('[data-precon-deck="ember-echo"] .precon-front71>img').getAttribute('src'),/ember-echo-niv/);
   assert.equal(await p.locator('.precon-box-colors71 .mana-symbol72').count(),12);
@@ -28,7 +28,7 @@ const assert=require('node:assert/strict');
   assert.match(await p.locator('#creature-ability-cost').innerText(),/draw one card/);assert.equal(await p.locator('#creature-ability-confirm').innerText(),'TAP & DRAW →');await p.locator('#creature-ability-confirm').click();await p.waitForFunction(()=>document.querySelector('#jester-choice-dialog').open);assert.equal(await p.evaluate(()=>niv72.tapped&&state.battle.hand.length===hand72+1),true);assert.match(await p.locator('#jester-choice-title').innerText(),/Niv-Mizzet/);await p.locator('[data-jester-pick65="0"]').click();await p.locator('#jester-choice-confirm').click();assert.equal(await p.evaluate(()=>state.battle.enemyCreatures[0].health),await p.evaluate(()=>life72-1));
   // Standard PLAY restores unrestricted card/land choices and the normal wrapper.
   await p.evaluate(()=>{endRun(false);showScreen('start-screen')});await p.locator('#start-button').click();await p.waitForFunction(()=>state.screen==='draft-screen');
-  assert.equal(await p.evaluate(()=>state.runMode71),'draft');assert.equal(await p.evaluate(()=>state.pool.length),174);assert.equal(await p.evaluate(()=>state.landPool.length),5);assert.equal(await p.locator('.sealed-pack').getAttribute('data-precon-colors'),null);assert.equal(await p.evaluate(()=>chooseRandomCards([BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears')],1)[0].name),'Grizzly Bears');assert.equal(await p.evaluate(()=>state.packs.length),6);
+  assert.equal(await p.evaluate(()=>state.runMode71),'draft');assert.equal(await p.evaluate(()=>state.pool.length),182);assert.equal(await p.evaluate(()=>state.landPool.length),5);assert.equal(await p.locator('.sealed-pack').getAttribute('data-precon-colors'),null);assert.equal(await p.evaluate(()=>chooseRandomCards([BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears')],1)[0].name),'Grizzly Bears');assert.equal(await p.evaluate(()=>state.packs.length),6);
   assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);console.log('PASS coherent box corners; Niv Scryfall cover; 12 real MagicEditor mana glyphs; all six precons: seven on-color Tutor/reward/reroll/shop cards, two purchasable pack types, themed covers, resume/purchase; Niv tap/draw/damage UI; standard PLAY restores all colors with no stale pack theme; no page errors or missing assets.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

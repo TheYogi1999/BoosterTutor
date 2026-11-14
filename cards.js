@@ -4881,6 +4881,232 @@ const BUNDLED_CARDS = [
       "rarity": "rare",
       "uri": "https://scryfall.com/card/gpt/123/niv-mizzet-the-firemind?utm_source=api"
     }
+  },
+  {
+    "id": "99bd4740-9b1f-40a6-a14d-2c0d642b848b",
+    "name": "Elixir of Immortality",
+    "mana_cost": "{1}",
+    "cmc": 1.0,
+    "type_line": "Artifact",
+    "oracle_text": "{2}, {T}: You gain 5 life. Shuffle this artifact and your graveyard into their owner's library.",
+    "color_identity": [],
+    "keywords": [],
+    "rarity": "uncommon",
+    "image": "assets/cards/99bd4740-9b1f-40a6-a14d-2c0d642b848b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/9/99bd4740-9b1f-40a6-a14d-2c0d642b848b.jpg?1783941791",
+    "uri": "https://scryfall.com/card/m11/206/elixir-of-immortality?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "99bd4740-9b1f-40a6-a14d-2c0d642b848b",
+      "set": "m11",
+      "set_name": "Magic 2011",
+      "released_at": "2010-07-16",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/m11/206/elixir-of-immortality?utm_source=api"
+    }
+  },
+  {
+    "id": "8f649cb5-e19c-453f-b062-4fd452d92257",
+    "name": "Tundra Wolves",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Wolf",
+    "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/8f649cb5-e19c-453f-b062-4fd452d92257.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/f/8f649cb5-e19c-453f-b062-4fd452d92257.jpg?1783948079",
+    "uri": "https://scryfall.com/card/leg/40/tundra-wolves?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "8f649cb5-e19c-453f-b062-4fd452d92257",
+      "set": "leg",
+      "set_name": "Legends",
+      "released_at": "1994-06-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/leg/40/tundra-wolves?utm_source=api"
+    }
+  },
+  {
+    "id": "102e48e0-8a5f-499d-ac62-005d3c075ef3",
+    "name": "Warclamp Mastiff",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Dog",
+    "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/102e48e0-8a5f-499d-ac62-005d3c075ef3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/0/102e48e0-8a5f-499d-ac62-005d3c075ef3.jpg?1783940510",
+    "uri": "https://scryfall.com/card/m13/40/warclamp-mastiff?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "102e48e0-8a5f-499d-ac62-005d3c075ef3",
+      "set": "m13",
+      "set_name": "Magic 2013",
+      "released_at": "2012-07-13",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m13/40/warclamp-mastiff?utm_source=api"
+    }
+  },
+  {
+    "id": "f7654d8a-7013-4311-b29e-b55aaa1bf502",
+    "name": "Goblin Striker",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Creature — Goblin Berserker",
+    "oracle_text": "First strike, haste",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "First strike",
+      "Haste"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/f7654d8a-7013-4311-b29e-b55aaa1bf502.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/7/f7654d8a-7013-4311-b29e-b55aaa1bf502.jpg?1783944540",
+    "uri": "https://scryfall.com/card/mrd/94/goblin-striker?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "f7654d8a-7013-4311-b29e-b55aaa1bf502",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mrd/94/goblin-striker?utm_source=api"
+    }
+  },
+  {
+    "id": "b69dfc05-51ba-4798-ac00-1e9b8bbbf280",
+    "name": "Halberdier",
+    "mana_cost": "{3}{R}",
+    "cmc": 4.0,
+    "type_line": "Creature — Human Barbarian",
+    "oracle_text": "First strike",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "rarity": "common",
+    "power": "3",
+    "toughness": "1",
+    "image": "assets/cards/b69dfc05-51ba-4798-ac00-1e9b8bbbf280.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/6/b69dfc05-51ba-4798-ac00-1e9b8bbbf280.jpg?1783945229",
+    "uri": "https://scryfall.com/card/ody/196/halberdier?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "b69dfc05-51ba-4798-ac00-1e9b8bbbf280",
+      "set": "ody",
+      "set_name": "Odyssey",
+      "released_at": "2001-10-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ody/196/halberdier?utm_source=api"
+    }
+  },
+  {
+    "id": "819e2046-9b78-4fd0-92f8-798bfac51195",
+    "name": "Razorfoot Griffin",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Griffin",
+    "oracle_text": "Flying (This creature can't be blocked except by creatures with flying or reach.)\nFirst strike (This creature deals combat damage before creatures without first strike.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "First strike"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/819e2046-9b78-4fd0-92f8-798bfac51195.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/1/819e2046-9b78-4fd0-92f8-798bfac51195.jpg?1783945714",
+    "uri": "https://scryfall.com/card/inv/29/razorfoot-griffin?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "819e2046-9b78-4fd0-92f8-798bfac51195",
+      "set": "inv",
+      "set_name": "Invasion",
+      "released_at": "2000-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/inv/29/razorfoot-griffin?utm_source=api"
+    }
+  },
+  {
+    "id": "6914c5a8-2114-41c5-a471-ca97524d622f",
+    "name": "Sabretooth Tiger",
+    "mana_cost": "{2}{R}",
+    "cmc": 3.0,
+    "type_line": "Creature — Cat",
+    "oracle_text": "First strike",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "1",
+    "image": "assets/cards/6914c5a8-2114-41c5-a471-ca97524d622f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/9/6914c5a8-2114-41c5-a471-ca97524d622f.jpg?1783947483",
+    "uri": "https://scryfall.com/card/ice/215/sabretooth-tiger?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "6914c5a8-2114-41c5-a471-ca97524d622f",
+      "set": "ice",
+      "set_name": "Ice Age",
+      "released_at": "1995-06-03",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ice/215/sabretooth-tiger?utm_source=api"
+    }
+  },
+  {
+    "id": "ddb633f5-cc4d-4157-8217-def90cb15e24",
+    "name": "Lance",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Enchantment — Aura",
+    "oracle_text": "Enchant creature\nEnchanted creature has first strike.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Enchant"
+    ],
+    "rarity": "uncommon",
+    "image": "assets/cards/ddb633f5-cc4d-4157-8217-def90cb15e24.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/d/ddb633f5-cc4d-4157-8217-def90cb15e24.jpg?1783948712",
+    "uri": "https://scryfall.com/card/lea/27/lance?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "ddb633f5-cc4d-4157-8217-def90cb15e24",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/27/lance?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

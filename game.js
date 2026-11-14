@@ -356,11 +356,14 @@ function prepareNewRun71(mode = 'draft') {
   state.draftKind = 'starter';
   state.runMode71 = mode;
   state.preconId71 = null;
+  state.immortal76 = null;
+  if (mode === 'immortal' && typeof seedImmortalRun76 === 'function') seedImmortalRun76();
 }
 
 function startNewRun(event) {
   if (event?.currentTarget?.id === 'restart-button' && state.runMode71 === 'precon' && typeof startPrecon71 === 'function') return startPrecon71(state.preconId71, true);
-  prepareNewRun71();
+  const immortal = event?.runMode76 === 'immortal' || (event?.currentTarget?.id === 'restart-button' && state.runMode71 === 'immortal');
+  prepareNewRun71(immortal ? 'immortal' : 'draft');
   showScreen('loading-screen');
   ensureCardPool().then(({ cards, lands, fallback, missingCount, sourceCount, warning }) => {
     state.pool = cards;
@@ -770,8 +773,10 @@ function beginBattle(node) {
     turnEffects: [],
     log: []
   };
+  if (typeof prepareImmortalOpening76 === 'function') prepareImmortalOpening76(state.battle);
   if (typeof deployCampTokens === 'function') deployCampTokens(state.battle);
   drawToHand(state.battle.openingHandSize);
+  if (typeof finishImmortalOpening76 === 'function') finishImmortalOpening76(state.battle);
   if (state.battle.phase === 'complete') return;
   syncMana(state.battle);
   addLog(`An encounter in ${stage.name}: ${enemyCreatures.length} creatures${waves.length>1?` · Wave 1 / ${waves.length}`:''}. You begin with ${STARTING_MANA_IN_PLAY} mana in play.`);
@@ -1126,7 +1131,7 @@ function renderCreatures() {
 function permanentMarkup(permanent, attached = false) {
   const battle = state.battle;
   const target = battle.creatures.find(item => item.id === permanent.attachedTo);
-  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-haspopup="dialog" title="${permanent.card.campToken ? 'Click to use this token' : 'Open card abilities'}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==="Jester's Mask" ? 'Click to use · Masquerade' : permanent.card.name==='Black Lotus' ? 'Click to use · add 3 mana' : ['Black Lotus','Sol Ring'].includes(permanent.card.name) ? permanentActivationLabel51(permanent) : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : 'Active enchantment / artifact'}</small></span></button>`;
+  return `<button type="button" class="permanent-card${permanent.tapped ? ' permanent-tapped' : ''}${attached ? ' attached-permanent' : ''}${battle.pendingAttachment?.permanentId === permanent.id ? ' targeting-card' : ''}" draggable="${/Equipment/.test(permanent.card.type_line) && battle.phase === 'main'}" data-permanent-id="${escapeHtml(permanent.id)}" data-preview-owner="permanent" data-preview-id="${escapeHtml(permanent.id)}" aria-haspopup="dialog" title="${permanent.card.campToken ? 'Click to use this token' : 'Open card abilities'}" ${permanent.card.campToken ? `data-camp-token-kind="${permanent.card.tokenKind}"` : ''} aria-label="${escapeHtml(permanent.card.name)}${target ? ', attached to ' + escapeHtml(target.card.name) : ''}"><span class="permanent-card-frame">${cardFace(permanent.card)}</span><span class="field-caption"><b>${escapeHtml(permanent.card.name)}</b><small>${target ? '↔ ' + escapeHtml(target.card.name) : permanent.card.campToken ? 'Click to use' : permanent.card.name==="Jester's Mask" ? 'Click to use · Masquerade' : permanent.card.name==='Black Lotus' ? 'Click to use · add 3 mana' : ['Black Lotus','Sol Ring'].includes(permanent.card.name) ? permanentActivationLabel51(permanent) : permanent.card.name==='Jack-in-the-Mox' ? permanent.tapped?'Tapped · untap next turn':'Click · tap · roll a D6' : isAttachment(permanent.card) ? `Equip ${equipCost(permanent.card)} mana` : permanentActivationCost(permanent.card)!==null ? 'Click to open abilities' : 'Passive enchantment / artifact'}</small></span></button>`;
 }
 function renderPermanents() {
   const battle = state.battle;
@@ -1676,7 +1681,7 @@ function enemyDefenders70(battle, attacker) {
   const lure = activeLure70(battle);
   return lure ? [lure] : legalBlockers(battle, attacker);
 }
-function resolveCombatDamage(attackers, assignments, attackingSide) {
+function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep = null) {
   const battle = state.battle;
   const lure = attackingSide === 'enemy' ? activeLure70(battle) : null;
   if (lure) assignments = new Map(attackers.map(attacker => [attacker.id, [lure]]));
@@ -1684,6 +1689,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
   let damageToOpponent = 0;
   const enemyLifelinkEvents = [];
   for (const firstStep of [true, false]) {
+    const previousPlayerDamage = damageToPlayer, previousEnemyEvents = enemyLifelinkEvents.length;
     const lureRetaliated = new Set();
     const exchanges = [];
     const overflow = [];
@@ -1723,6 +1729,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
     }
     // Eligibility is captured before applying the step: normal damage is simultaneous.
     const stepLifelinkEvents = [];
+    if (firstStep && (exchanges.length || damageToPlayer > previousPlayerDamage)) addLog('First strike damage resolves before normal combat damage.');
     for (const exchange of exchanges) dealCreatureDamage(exchange.source, exchange.target, exchange.controller, battle, exchange.amount, stepLifelinkEvents);
     // Finish all simultaneous damage before enemy self-healing. Lethal damage
     // cannot be healed away; player lifegain still happens if its source dies.
@@ -1733,6 +1740,8 @@ function resolveCombatDamage(attackers, assignments, attackingSide) {
       if (hit.side === 'enemy') { damageToPlayer += hit.amount; if (hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:hit.amount}); }
       else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? (typeof poisonOverflow60 === 'function' && (hit.source.infect || hit.source.toxic) ? poisonOverflow60(hit.source, next, hit.amount, battle) : damageFirstEnemy(hit.amount,next)) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
     }
+    onDamageStep?.({firstStep,damageToPlayer:damageToPlayer-previousPlayerDamage,enemyLifelinkEvents:enemyLifelinkEvents.slice(previousEnemyEvents)});
+    if (battle.phase === 'complete') break;
   }
   return { damageToPlayer, damageToOpponent, enemyLifelinkEvents };
 }
@@ -1873,15 +1882,18 @@ function resolveEnemyCombat() {
     const blockers = enemyDefenders70(battle, attacker);
     if (blockers.length) assignments.set(attacker.id, blockers);
   }
-  const { damageToPlayer, enemyLifelinkEvents } = resolveCombatDamage(attackers, assignments, 'enemy');
-  for (const event of enemyLifelinkEvents) gainLifelinkLife(event.creature, 'enemy', event.damage, battle);
-  const incoming = damageToPlayer;
-  if (incoming) {
-    state.playerHealth -= incoming;
-    playSfx('player-hit');
-    if (typeof animatePlayerDamage === 'function') animatePlayerDamage(incoming);
-    addLog(`${incoming} damage gets through to you.`);
-  } else if (attackers.length) {
+  const { damageToPlayer } = resolveCombatDamage(attackers, assignments, 'enemy', step => {
+    for (const event of step.enemyLifelinkEvents) gainLifelinkLife(event.creature, 'enemy', event.damage, battle);
+    if (step.damageToPlayer) {
+      state.playerHealth -= step.damageToPlayer;
+      playSfx('player-hit');
+      if (typeof animatePlayerDamage === 'function') animatePlayerDamage(step.damageToPlayer);
+      addLog(`${step.firstStep?'First strike: ':''}${step.damageToPlayer} damage gets through to you.`);
+    }
+    if (state.playerHealth <= 0) endRun(false);
+  });
+  if (battle.phase === 'complete') return;
+  if (!damageToPlayer && attackers.length) {
     addLog('All enemy attacks were blocked.');
   }
   if (state.playerHealth <= 0) return endRun(false);
@@ -1986,6 +1998,7 @@ function winBattle() {
   if (state.battle.enemyCounterWindow) { renderBattle(); return; }
   if (typeof pendingEnemySpells38 === 'function' && pendingEnemySpells38(state.battle).length) { renderBattle(); return; }
   if(battle.resolutionTask||battle.choice||battle.scry||battle.libraryOrder||battle.interruption){renderBattle();return;}
+  if (state.runMode71 === 'immortal' && typeof finishImmortalWave76 === 'function') return finishImmortalWave76(battle);
   if(typeof advanceEncounterWave45==='function'&&advanceEncounterWave45(battle))return;
   state.battle.phase = 'complete'; state.battle.priorityCallback = null; state.battle.phaseTicket = (state.battle.phaseTicket || 0) + 1;
   const node = state.node;

@@ -20,9 +20,11 @@ function grantCampToken(kind){
  (state.campTokens||=[]).push({id:`supply-${state.nextPermanentId++}`,kind});return true;
 }
 function deployCampTokens(battle){
- battle.campTokenIds=new Set();
+ battle.campTokenIds||=new Set();
+ const deployed=new Set(battle.permanents.filter(p=>p.campTokenId).map(p=>p.campTokenId));
  for(const token of state.campTokens||[]){
   battle.campTokenIds.add(token.id);
+  if(deployed.has(token.id))continue;
   battle.permanents.push({id:`camp-${token.id}`,card:{...CAMP_TOKEN_CARDS[token.kind],campToken:true,tokenKind:token.kind},campTokenId:token.id,isToken:true,attachedTo:null});
  }
 }

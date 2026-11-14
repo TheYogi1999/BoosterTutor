@@ -1,3 +1,22 @@
+## Immortal Expedition, Elixir and First Strike (v0.76)
+
+**GAME MODES → IMMORTAL EXPEDITION** starts with the ordinary six-booster draft, generic mana, seven-card opening hand and camp supplies. It adds two independent bonus copies of **Elixir of Immortality**: one is placed directly on the opening battlefield; the other is reserved in the Library until after the opening hand is drawn. A normal completed draft therefore starts with **19 run cards**, two mana cards in play and nine cards left in the Library. Further drafted Elixirs are ordinary additional copies.
+
+Defeating each wave opens the usual reward booster, shop and camp. The **same battlefield, hand, Library, graveyard and exile** continue into the next wave. Creatures, run counters, tokens, lands and attached equipment/auras retain their physical identities. After camp, a new turn untaps your cards, cleans up temporary effects and damage, and draws **one** card. Newly earned/purchased run cards are shuffled into the remaining Library once, while new camp supplies join the existing tokens once. Purchased counters also update creatures already on the persistent battlefield. Enemies and stages continue beyond the fourth wave and use increasing Endless scaling. Death or an empty-Library draw ends the run; Restart repeats this mode with fresh cards. Normal PLAY, precons and the existing post-campaign Endless option keep their own behavior.
+
+Elixir is a real reviewed card: **pay 2 generic mana and tap, gain 5 life, then shuffle that Elixir and your graveyard into your Library**. This is not a sacrifice and does not trigger Havoc Jester. Hand, other battlefield cards and exile stay in place. Casting an Elixir costs 1 mana and does not immediately gain life. Activation uses the same unpaid battlefield action window as other artifacts. It is also eligible for ordinary packs and shops.
+
+**First Strike fix:** player damage and unblocked enemy lifelink now settle after each damage step. A lethal first-strike hit ends the run before a normal-step lifelink creature can incorrectly rescue the player. Same-step lifelink remains simultaneous with damage. A combat-log message identifies the first-strike step. First strike prevents normal retaliation only when that early damage actually kills the other creature.
+
+New real cards, with their oldest regular English paper images: **Tundra Wolves, Warclamp Mastiff, Goblin Striker, Halberdier, Razorfoot Griffin, Sabretooth Tiger, Lance** and **Elixir of Immortality**. Lance grants First strike without an invented +1/+1 bonus. The catalog contains **185 bundled / 182 ordinary-pack eligible cards**.
+
+Validation: **443 rule tests**, including the reproduced lethal-first-strike bug, 2,592 independent first/double-strike duel cases, real Elixir costs/shuffle/no-sacrifice behavior, exact bonus zones, persistent wave progression/upgrades and exhaustion. Browser tests cover the actual six-pack draft, four fitted mode windows, controller/card inspection, rewards/shop/pack/camp, persistent attachments and supplies, Elixir activation, eight waves beyond campaign completion, restart and standard PLAY. Existing precon and relic/combat browser suites pass.
+
+```sh
+node --test tests/immortal-first-strike.test.cjs
+node tests/immortal-mode-browser.test.cjs
+```
+
 ## Independent music and sound-effect controls (v0.75)
 
 **Audio settings** now contains separate **Music** and **Sound effects** sections. Each has its own mute toggle, 0–100% slider and ±5% buttons. All four preferences persist independently across reloads. Muting retains the selected volume. The compact top-bar **SFX ON/OFF** button affects effects only; the Audio button and Options → Audio settings open the same window.

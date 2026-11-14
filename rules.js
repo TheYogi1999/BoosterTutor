@@ -1,6 +1,24 @@
 /* Reviewed card rules. Unsupported cards stay visible in the catalog but never enter a run. */
-const REVIEWED_PERMANENTS = new Set(['Holy Strength','Unholy Strength','Rancor','Bonesplitter','Short Sword','Leonin Scimitar','Trusty Machete','Glorious Anthem','Fountain of Renewal','Omen of the Sea','Angelic Chorus','Bone Saw','Greatsword','Vulshok Morningstar']);
+const REVIEWED_PERMANENTS = new Set(['Holy Strength','Unholy Strength','Rancor','Bonesplitter','Short Sword','Leonin Scimitar','Trusty Machete','Glorious Anthem','Fountain of Renewal','Omen of the Sea','Angelic Chorus','Bone Saw','Greatsword','Vulshok Morningstar','Elixir of Immortality','Lance']);
 const SPECIAL_CREATURES = new Set(['Juggernaut','Llanowar Elves','Clone']);
+const baseLanceEffect76=permanentEffect;
+permanentEffect=function(card){return card.name==='Lance'?{power:0,toughness:0,keywords:['first strike']}:baseLanceEffect76(card);};
+const baseElixirCost76=permanentActivationCost;
+permanentActivationCost=function(card){return card.name==='Elixir of Immortality'?2:baseElixirCost76(card);};
+const baseElixirLabel76=permanentActivationLabel51;
+permanentActivationLabel51=function(p){return p.card.name==='Elixir of Immortality'?p.tapped?'Tapped · untaps next turn':'Pay 2 · tap · gain 5 life · shuffle':baseElixirLabel76(p);};
+const baseElixirReady76=canActivatePermanent;
+canActivatePermanent=function(p,b=state.battle){if(p?.card.name!=='Elixir of Immortality')return baseElixirReady76(p,b);return Boolean(b&&b===state.battle&&b.permanents.includes(p)&&!p.tapped&&!b.resolutionTask&&!b.choice&&!b.scry&&!b.libraryOrder&&!b.interruption&&!b.diceRoll&&['main','attack','enemy','blocks','damage'].includes(b.phase)&&b.mana>=2);};
+const baseElixirActivate76=activatePermanent;
+activatePermanent=function(id){
+ const b=state.battle,p=b?.permanents.find(p=>p.id===id);if(p?.card.name!=='Elixir of Immortality')return baseElixirActivate76(id);
+ if(!canActivatePermanent(p,b)||!payMana(2,b))return false;
+ p.tapped=true;b.mulliganAvailable=false;state.playerHealth+=5;
+ b.permanents=b.permanents.filter(unit=>unit!==p);
+ const returned=[p.originalCard||p.card,...b.graveyard.filter(card=>!card.campToken)];b.graveyard=[];b.deck=shuffle([...b.deck,...returned]);
+ addLog(`Elixir of Immortality: gain 5 life; shuffle itself and ${returned.length-1} graveyard cards into your library.`);
+ refreshPermanentEffects();renderBattle();playSfx('heal');return true;
+};
 const SPELL_RULES = {
  'Dark Ritual':{effects:[{kind:'mana',amount:3}]},
  'Pyretic Ritual':{effects:[{kind:'mana',amount:3}]},
@@ -55,7 +73,7 @@ makeStarterPacks=function(){state.pool=playableCards(state.pool);return original
 const originalShowShop=showShop;
 showShop=function(){state.pool=playableCards(state.pool);if(state.shop?.offers.some(offer=>!rulesAudit(offer.card).playable))state.shop=null;return originalShowShop();};
 const originalCardEffects=cardEffects;
-cardEffects=function(card,creature=isCreature(card)){if(SPELL_RULES[card.name])return SPELL_RULES[card.name].effects;return rulesAudit(card).playable?originalCardEffects(card,creature):[];};
+cardEffects=function(card,creature=isCreature(card)){if(['Elixir of Immortality','Lance'].includes(card.name))return[];if(SPELL_RULES[card.name])return SPELL_RULES[card.name].effects;return rulesAudit(card).playable?originalCardEffects(card,creature):[];};
 const originalCanCastNow=canCastNow;
 canCastNow=function(card,battle=state.battle){
  if(!card||!originalCanCastNow(card,battle)||!rulesAudit(card).playable||battle.choice)return false;
@@ -185,7 +203,7 @@ removeSpellTarget=function(kind){const battle=state.battle;const target=battle.r
 const originalExpireTurnEffects=expireTurnEffects;
 expireTurnEffects=function(battle){const enemyEffects=battle.turnEffects.filter(effect=>effect.owner==='enemy');battle.turnEffects=battle.turnEffects.filter(effect=>effect.owner!=='enemy');originalExpireTurnEffects(battle);for(const effect of enemyEffects){const enemy=battle.enemyCreatures.find(unit=>unit.id===effect.creatureId);if(!enemy)continue;if(effect.power!==undefined)enemy.power-=effect.power;if(effect.toughness!==undefined){enemy.maxHealth-=effect.toughness;enemy.health-=effect.toughness;}if(effect.keyword)enemy.temporaryKeywords=enemy.temporaryKeywords.filter(keyword=>keyword!==effect.keyword);}battle.copyNextSpell=0;battle.creatureDiedThisTurn=false;};
 const originalEffectDescriptions=effectDescriptions;
-effectDescriptions=function(card){
+effectDescriptions=function(card){if(card.name==='Elixir of Immortality')return['Pay 2 generic mana and tap: gain 5 life, then shuffle this Elixir and every card in your graveyard into your Library.','This is not a sacrifice. Other battlefield cards, your hand and exile stay where they are. It can be activated outside Main phase; opening or canceling its window pays nothing.'];if(card.name==='Lance')return['Enchant a creature. That creature has First strike while Lance remains attached. First strike deals damage before normal combat damage; a creature killed in that step cannot retaliate later.'];
  const audit=rulesAudit(card);if(!audit.playable)return['BANNED — excluded from boosters, shop and new decks.',audit.reason];
  const rule=SPELL_RULES[card.name];if(!rule){if(card.name==='Clone')return['Choose a creature you control and enter as a copy of its printed characteristics, including abilities.','Does not copy counters, equipment, auras, damage or tapped status. Clone itself goes to the graveyard when the copy dies.'];return originalEffectDescriptions(card);}
  const lines=[];

@@ -206,10 +206,10 @@ const baseSnowDamage66=dealCreatureDamage;
 dealCreatureDamage=function(source,target,side,b,amount,events){if(source.snowBlockingTurn66===b.turn||target.snowBlockingTurn66===b.turn)return;return baseSnowDamage66(source,target,side,b,amount,events);};
 function playerDefenders66(unit,target,b){return [target];}
 const baseRescueCombat66=resolveCombatDamage;
-resolveCombatDamage=function(attackers,assignments,side='player'){
+resolveCombatDamage=function(attackers,assignments,side='player',onDamageStep=null){
  const b=state.battle;
  if(side==='enemy'&&!activeLure70(b))for(const attacker of attackers){const group=assignments.get(attacker.id),units=Array.isArray(group)?group:group?[group]:[];for(const u of units)if(u.card.name==='Goblin Snowman')u.snowBlockingTurn66=b.turn;}
- return baseRescueCombat66(attackers,assignments,side);
+ return baseRescueCombat66(attackers,assignments,side,onDamageStep);
 };
 
 // Variable mana is chosen before targets and payment; copies retain the chosen X.

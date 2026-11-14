@@ -34,3 +34,14 @@ v0.34 adds 10 vanilla creatures, 3 simple Equipment and 6 spells. Four existing 
 - **Clue** (common): https://scryfall.com/card/ttrk/21/clue?utm_source=api — `306c8271-ddfc-45a4-bd23-bf31212f813d.jpg`
 
 - `5994d98a-090b-4203-b44f-b6517b6a83ea.jpg`: Niv-Mizzet, the Firemind — Todd Lockwood. Guildpact 123 (2006), oldest regular English paper print. https://scryfall.com/card/gpt/123/niv-mizzet-the-firemind
+
+## First strike and Elixir additions (v0.76)
+
+- `99bd4740-9b1f-40a6-a14d-2c0d642b848b.jpg`: Elixir of Immortality — Zoltan Boros & Gabor Szikszai; Magic 2011 (2010-07-16), oldest regular English paper print. https://scryfall.com/card/m11/206/elixir-of-immortality?utm_source=api
+- `8f649cb5-e19c-453f-b062-4fd452d92257.jpg`: Tundra Wolves — Quinton Hoover; Legends (1994-06-01), oldest regular English paper print. https://scryfall.com/card/leg/40/tundra-wolves?utm_source=api
+- `102e48e0-8a5f-499d-ac62-005d3c075ef3.jpg`: Warclamp Mastiff — David Palumbo; Magic 2013 (2012-07-13), oldest regular English paper print. https://scryfall.com/card/m13/40/warclamp-mastiff?utm_source=api
+- `f7654d8a-7013-4311-b29e-b55aaa1bf502.jpg`: Goblin Striker — Kevin Dobler; Mirrodin (2003-10-02), oldest regular English paper print. https://scryfall.com/card/mrd/94/goblin-striker?utm_source=api
+- `b69dfc05-51ba-4798-ac00-1e9b8bbbf280.jpg`: Halberdier — Ben Thompson; Odyssey (2001-10-01), oldest regular English paper print. https://scryfall.com/card/ody/196/halberdier?utm_source=api
+- `819e2046-9b78-4fd0-92f8-798bfac51195.jpg`: Razorfoot Griffin — Ben Thompson; Invasion (2000-10-02), oldest regular English paper print. https://scryfall.com/card/inv/29/razorfoot-griffin?utm_source=api
+- `6914c5a8-2114-41c5-a471-ca97524d622f.jpg`: Sabretooth Tiger — Melissa A. Benson; Ice Age (1995-06-03), oldest regular English paper print. https://scryfall.com/card/ice/215/sabretooth-tiger?utm_source=api
+- `ddb633f5-cc4d-4157-8217-def90cb15e24.jpg`: Lance — Rob Alexander; Limited Edition Alpha (1993-08-05), oldest regular English paper print. https://scryfall.com/card/lea/27/lance?utm_source=api
