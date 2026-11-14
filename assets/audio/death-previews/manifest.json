@@ -1,0 +1,92 @@
+[
+  {
+    "code": "S1",
+    "group": "S",
+    "size": "Small",
+    "family": 1,
+    "title": "Quick Fall",
+    "description": "A small, dry body fall with a light equipment rattle.",
+    "seconds": 0.56,
+    "file": "s1-quick-fall.mp3"
+  },
+  {
+    "code": "S2",
+    "group": "S",
+    "size": "Small",
+    "family": 2,
+    "title": "Fading Spark",
+    "description": "A soft magical puff with falling crystal overtones.",
+    "seconds": 0.68,
+    "file": "s2-fading-spark.mp3"
+  },
+  {
+    "code": "S3",
+    "group": "S",
+    "size": "Small",
+    "family": 3,
+    "title": "Retro Drop",
+    "description": "A short, rounded descending pulse with a physical landing.",
+    "seconds": 0.52,
+    "file": "s3-retro-drop.mp3"
+  },
+  {
+    "code": "M1",
+    "group": "M",
+    "size": "Medium",
+    "family": 1,
+    "title": "Armor Collapse",
+    "description": "A weightier body impact with a restrained armor rattle.",
+    "seconds": 0.98,
+    "file": "m1-armor-collapse.mp3"
+  },
+  {
+    "code": "M2",
+    "group": "M",
+    "size": "Medium",
+    "family": 2,
+    "title": "Soul Dissolve",
+    "description": "A soft impact dissolving into a low magical resonance.",
+    "seconds": 1.12,
+    "file": "m2-soul-dissolve.mp3"
+  },
+  {
+    "code": "M3",
+    "group": "M",
+    "size": "Medium",
+    "family": 3,
+    "title": "Retro Defeat",
+    "description": "A warm descending electronic hit and a short settling tail.",
+    "seconds": 0.86,
+    "file": "m3-retro-defeat.mp3"
+  },
+  {
+    "code": "L1",
+    "group": "L",
+    "size": "Large",
+    "family": 1,
+    "title": "Heavy Collapse",
+    "description": "A heavy landing, a second settling impact and low rumble.",
+    "seconds": 1.58,
+    "file": "l1-heavy-collapse.mp3"
+  },
+  {
+    "code": "L2",
+    "group": "L",
+    "size": "Large",
+    "family": 2,
+    "title": "Aether Implosion",
+    "description": "A deep magical collapse with a fading, airy crystal tail.",
+    "seconds": 1.82,
+    "file": "l2-aether-implosion.mp3"
+  },
+  {
+    "code": "L3",
+    "group": "L",
+    "size": "Large",
+    "family": 3,
+    "title": "Retro Colossus",
+    "description": "A bass-heavy descending defeat cue with audible upper harmonics.",
+    "seconds": 1.44,
+    "file": "l3-retro-colossus.mp3"
+  }
+]

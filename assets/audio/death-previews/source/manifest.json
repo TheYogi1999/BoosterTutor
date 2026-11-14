@@ -1,0 +1,34 @@
+[
+  {
+    "file": "impactGlass_light_001.ogg",
+    "sha256": "05e513fbd42829060eb37855f8c3866722ec5c39a8937c9bfde518cc609effa2"
+  },
+  {
+    "file": "impactMetal_medium_000.ogg",
+    "sha256": "a96f879fec0864a8938e0c745b6996a6c5679c16a234ce31a01cc995e8401003"
+  },
+  {
+    "file": "impactPunch_heavy_000.ogg",
+    "sha256": "b33a8f14068aec24ec69ba85e5e87fdc41228975f6a1a3e44a6e7d6fc3d9f8d8"
+  },
+  {
+    "file": "impactPunch_medium_001.ogg",
+    "sha256": "e71d23abcc3f10d9d6bc9615b2a431fff70b12333a5fcdd9964457564ace4349"
+  },
+  {
+    "file": "impactSoft_heavy_001.ogg",
+    "sha256": "4d0096364ba9e46119d2ff6df493fdc101bd2e1efae061da5e5f77a53b3fdcb6"
+  },
+  {
+    "file": "impactSoft_medium_000.ogg",
+    "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3"
+  },
+  {
+    "file": "impactWood_heavy_000.ogg",
+    "sha256": "15ff82332f342c30e469215539e1cc57e11b221aa2cf7e11e811d313a9927f3d"
+  },
+  {
+    "file": "impactWood_light_001.ogg",
+    "sha256": "4b76bf3ccc8e60d19188f3165b778a7817786faa6887c55d9049bcbeef3b425f"
+  }
+]
