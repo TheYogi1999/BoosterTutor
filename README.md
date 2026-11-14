@@ -1,3 +1,16 @@
+## Enemy portraits in Card Choices (v0.74)
+
+Enemy target options in **Card Choices**, activated abilities and queued draw/sacrifice triggers now use the same generated portrait as the battlefield. Each option shows the opponent's name, intention, current creature types, power, current/maximum life and colored keyword badges, including Ward costs. This replaces the synthetic enemy card/token face. The shared renderer also supports enemy entries in the generic choice window.
+
+Targets remain bound to the individual enemy ID, so identical Goblins can be selected independently. Enemy values come from the current battlefield. Player cards retain their real card faces, pending enemy spells retain their printed spell images, and Ward-payment prompts remain text choices. No casting, targeting or payment rules change.
+
+Validation: **430 rule tests** and browser coverage of all enemy portrait cells, separate identical enemies, current stats and Hexproof, spell/ability/Niv draw-trigger selection, Ward follow-up choices, mouse/touch/controller selection, and four viewport sizes with internal choice-list scrolling.
+
+```sh
+node tests/choice-targets-browser.test.cjs
+node tests/reviewed-cards-browser.test.cjs
+```
+
 ## Battlefield ability windows and centered close buttons (v0.73)
 
 Tap **Black Lotus, Sol Ring or any other permanent card on the battlefield** to open its own unpaid ability window, just like Treasure/Food/Clue tokens. The shared route also covers Jack-in-the-Mox, the Jester artifacts, activated enchantments and equipment. The inspector and hover details now explain cards without direct activation buttons. Opening, canceling or closing a window never pays a cost; confirmation rechecks the current source and costs.

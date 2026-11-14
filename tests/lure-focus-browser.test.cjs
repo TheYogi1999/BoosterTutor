@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
   p.on('pageerror',e=>errors.push(e.message));
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
   await p.waitForFunction(()=>typeof MINION_TYPES67!=='undefined');
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.73');
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.74');
   const setup=async()=>p.evaluate(()=>{
    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
    closeX66();closeCreatureAbility66();closeJesterChoice65();closeTokenAction47();abortTutorSearch51();abortDiceRoll50();abortReactionChecks52();

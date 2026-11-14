@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
   const p=await browser.newPage({viewport:{width:1600,height:900},reducedMotion:'reduce',ignoreHTTPSErrors:true}),errors=[],missing=[];
   p.on('pageerror',e=>errors.push(e.message));p.on('response',r=>{if(r.status()===404)missing.push(r.url())});await p.route('https://api.scryfall.com/**',r=>r.abort());
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');await p.waitForFunction(()=>typeof activePrecon72==='function');await p.evaluate(()=>state.soundOn=false);
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.73');await p.locator('#title-game-modes').click();
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.74');await p.locator('#title-game-modes').click();
   await p.locator('[data-precon-deck="ember-echo"]').click();assert.match(await p.locator('#precon-details').innerText(),/Niv-Mizzet, the Firemind/);
   assert.match(await p.locator('[data-precon-deck="ember-echo"] .precon-front71>img').getAttribute('src'),/ember-echo-niv/);
   assert.equal(await p.locator('.precon-box-colors71 .mana-symbol72').count(),12);

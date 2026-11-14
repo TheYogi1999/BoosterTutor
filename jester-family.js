@@ -31,7 +31,7 @@ function openJesterChoice65(config){
 function renderJesterChoice65(){
  const q=visibleJesterChoice65;if(!q)return;
  $('#jester-choice-title').textContent=q.title;$('#jester-choice-instruction').textContent=q.instruction;
- $('#jester-choice-grid').innerHTML=q.options.map((o,i)=>`<button type="button" id="${q.id}-pick-${i}" class="tutor-search-card${q.selected.has(i)?' selected':''}" data-jester-pick65="${i}" aria-pressed="${q.selected.has(i)}">${o.card?`<span class="card-image-wrap">${cardFace(o.card)}</span>`:''}<b>${escapeHtml(o.label||o.card?.name||'Continue')}</b><small>${escapeHtml(o.note||'')}</small></button>`).join('');
+ $('#jester-choice-grid').innerHTML=q.options.map((o,i)=>{const enemy=choiceEnemy74(o,q.battle);return `<button type="button" id="${q.id}-pick-${i}" class="tutor-search-card${q.selected.has(i)?' selected':''}${enemy?' enemy-choice-option74':''}" data-jester-pick65="${i}" aria-pressed="${q.selected.has(i)}">${enemy?enemyChoiceMarkup74(enemy):`${o.card?`<span class="card-image-wrap">${cardFace(o.card)}</span>`:''}<b>${escapeHtml(o.label||o.card?.name||'Continue')}</b><small>${escapeHtml(o.note||'')}</small>`}</button>`;}).join('');
  $('#jester-choice-status').textContent=`${q.selected.size} selected · ${q.min===q.max?`choose ${q.max}`:`choose up to ${q.max}`}${q.cancel?' · cancel pays nothing':''}`;
  $('#jester-choice-confirm').textContent=q.confirm||'Confirm →';$('#jester-choice-confirm').disabled=q.selected.size<q.min||q.selected.size>q.max;$('#jester-choice-confirm').dataset.choiceId=q.id;
  $('#jester-choice-cancel').hidden=!q.cancel;$('#jester-choice-cancel').textContent='Cancel · pay nothing';

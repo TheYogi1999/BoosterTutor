@@ -586,6 +586,16 @@ function statBadge(kind, value) {
   return `<span class="stat-badge stat-${kind}" title="${label}" aria-label="${label}: ${escapeHtml(value)}"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">${icons[kind]}</svg><b>${escapeHtml(value)}</b></span>`;
 }
 function combatStats(power, toughness) { return `<span class="combat-stats">${statBadge('power',power)}${statBadge('toughness',toughness)}</span>`; }
+function choiceEnemy74(option, battle = state.battle) {
+  const id = option.unit?.owner === 'enemy' ? option.unit.id : option.target?.side === 'enemy' ? option.target.id : typeof option.key === 'string' && option.key.startsWith('enemy:') ? option.key.slice(6) : null;
+  return id ? battle?.enemyCreatures.find(enemy => enemy.id === id) || null : null;
+}
+function enemyChoiceMarkup74(enemy) {
+  const kind = Object.prototype.hasOwnProperty.call(FOE_TYPES, enemy.kind) ? enemy.kind : 'sprout';
+  const keywords = typeof enemyKeywordBadges47 === 'function' ? enemyKeywordBadges47(enemy) : escapeHtml(creatureKeywordLabels(enemy));
+  const intent = enemyIntent(enemy);
+  return `<span class="enemy-choice74" data-choice-enemy-id="${escapeHtml(enemy.id)}"><span class="enemy-choice-intent74">${escapeHtml(intent.icon)} ${escapeHtml(intent.label)}</span><span class="enemy-choice-art74 monster-figure">${walkerPortrait(kind)}</span><span class="enemy-choice-name74">${escapeHtml(enemy.card.name)}</span><span class="enemy-choice-type74">${escapeHtml(enemy.card.type_line || 'Creature — Monster')}</span><span class="enemy-choice-stats74">${statBadge('power',enemy.power)}${statBadge('life',`${enemy.health}/${enemy.maxHealth}`)}</span><span class="enemy-choice-keywords74">${keywords}</span></span>`;
+}
 function makeCardMarkup(card, packIndex, cardIndex, selected, isNew = false) {
   return `<button type="button" class="draft-option${selected ? ' selected' : ''}" data-pack-index="${packIndex}" data-card-index="${cardIndex}" data-preview-owner="draft" style="--card-index:${cardIndex}" aria-pressed="${selected}">${cardImageMarkup(card, isNew)}<span class="draft-card-name">${escapeHtml(card.name)}</span>${cardFactsMarkup(card)}</button>`;
 }

@@ -75,7 +75,7 @@ function openChanceChoice55(title,text,options,accept,cancel,battle=state.battle
  const marker={chanceChoice:true};const choice={id:`choice-${state.nextPermanentId++}`,battle,phase:battle.phase,options,accept,cancel,marker,savedTask:battle.resolutionTask,selected:null,closed:false};
  visibleChanceChoice55=choice;battle.chanceChoice=choice;battle.resolutionTask=marker;
  $('#chance-choice-title').textContent=title;$('#chance-choice-text').textContent=text;
- $('#chance-choice-options').innerHTML=options.map((option,i)=>`<button type="button" data-chance-choice="${i}" aria-pressed="false">${option.card?`<span class="chance-card">${cardFace(option.card)}</span>`:''}<b>${escapeHtml(option.label||option.card.name)}</b>${option.detail?`<small>${escapeHtml(option.detail)}</small>`:''}</button>`).join('');
+ $('#chance-choice-options').innerHTML=options.map((option,i)=>{const enemy=choiceEnemy74(option,battle);return `<button type="button" data-chance-choice="${i}" class="${enemy?'enemy-choice-option74':''}" aria-pressed="false">${enemy?enemyChoiceMarkup74(enemy):`${option.card?`<span class="chance-card">${cardFace(option.card)}</span>`:''}<b>${escapeHtml(option.label||option.card?.name||'Continue')}</b>${option.detail?`<small>${escapeHtml(option.detail)}</small>`:''}`}</button>`;}).join('');
  $('#chance-choice-dialog').dataset.cards=String(options.some(o=>o.card));$('#chance-choice-confirm').hidden=!options.some(o=>o.card);$('#chance-choice-confirm').disabled=true;
  $('#chance-choice-cancel').textContent=cancel?'Cancel':'Stop & collect';hideCardPreview();renderBattle();$('#chance-choice-dialog').showModal();return true;
 }
