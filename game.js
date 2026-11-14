@@ -70,7 +70,7 @@ const state = {
   battle: null,
   stageLocations: [],
   selectedAvatar: 'mage',
-  soundOn: true,
+  soundOn: typeof effectsPreferences75 === 'undefined' ? true : effectsPreferences75.enabled,
   toastTimer: null,
   openingTimer: null,
   nextPermanentId: 1
@@ -2039,30 +2039,31 @@ function showToast(message) {
 }
 
 function primeBoosterOpeningSound() {
-  if (!state.soundOn) return;
+  if (!effectsAudible75()) return;
   // Start the media element silently in the tap gesture. Safari can then keep
   // playing it when the visible tear happens after the travel animation.
   const audio = $('#booster-audio');
-  const context = soundEngine.context ||= new (window.AudioContext || window.webkitAudioContext)();
-  context.resume().catch(() => {});
+  soundEngine.resume().catch(() => {});
+  const context = soundEngine.context;
   if (!soundEngine.packGain) {
     soundEngine.packSource = context.createMediaElementSource(audio);
     soundEngine.packGain = context.createGain();
     soundEngine.packSource.connect(soundEngine.packGain);
-    soundEngine.packGain.connect(context.destination);
+    soundEngine.packGain.connect(soundEngine.effectsGain);
   }
   soundEngine.packGain.gain.value = 0;
   audio.currentTime = 0;
-  audio.volume = 0.72;
+  applyEffectsVolume75();
   audio.play().catch(() => {});
 }
 
 function playBoosterOpeningSound() {
-  if (!state.soundOn) return;
+  if (!effectsAudible75()) return;
+  if (!soundEngine.packGain) primeBoosterOpeningSound();
   const audio = $('#booster-audio');
   if (soundEngine.packGain) soundEngine.packGain.gain.value = 1;
   audio.currentTime = 0;
-  audio.volume = 0.72;
+  applyEffectsVolume75();
   audio.play().catch(() => showToast('Click SOUND once to enable audio.'));
 }
 
@@ -2222,12 +2223,8 @@ updateDiscoveryProgress();
 $('#end-turn-button').addEventListener('click', handleCombatAction);
 $('#mulligan-button').addEventListener('click', freeMulligan);
 $('#sound-toggle').addEventListener('click', () => {
-  state.soundOn = !state.soundOn;
-  if (!state.soundOn) soundEngine.stop();
-  $('#sound-toggle span').textContent = state.soundOn ? 'SOUND ON' : 'SOUND OFF';
-  $('#sound-toggle').setAttribute('aria-label', state.soundOn ? 'Turn sound off' : 'Turn sound on');
-  $('#sound-toggle').title = state.soundOn ? 'Turn sound off' : 'Turn sound on';
-  if (state.soundOn) {
+  setEffectsPreferences75(!state.soundOn);
+  if (effectsAudible75()) {
     soundEngine.unlock().catch(() => {});
     playSfx('select');
   }
@@ -2710,3 +2707,5 @@ function suggestBlocks(battle){
  }
  return assignments;
 }
+
+if(typeof initializeEffectsControls75==='function')initializeEffectsControls75();

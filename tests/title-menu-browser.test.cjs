@@ -26,7 +26,7 @@ const assert=require('node:assert/strict');
  await page.click('#music-close');assert.equal(await page.locator('#title-options-dialog').evaluate(e=>e.open),true);
  await page.click('#controller-help-button');assert.equal(await page.locator('#controller-dialog').evaluate(e=>e.open),true);
  await page.click('#controller-close');await page.click('#title-options-close');
- await page.click('#title-quit');assert.equal(await page.evaluate(()=>state.soundOn),false);
+ await page.click('#title-quit');assert.equal(await page.evaluate(()=>state.soundOn),true);
  assert.equal(await page.locator('#background-music').evaluate(a=>a.paused),true);
  await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>state.soundOn),true);
  await page.click('#sound-toggle');

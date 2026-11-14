@@ -22,3 +22,15 @@ html.fixed-game .music-dialog{width:680px!important;height:410px!important}
 .game-shell .pack-shine-window:after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at var(--pack-light-x,45%) var(--pack-light-y,35%),#fff4cc77,transparent 55%),linear-gradient(115deg,transparent 35%,#fff7d577 49%,transparent 63%);background-size:100% 100%,350% 100%;background-repeat:no-repeat;mix-blend-mode:screen;opacity:.55;animation:title-glint 9s ease-in-out -3s infinite}
 .ambience-paused .game-shell .pack-shine-window .pack-foil,.ambience-paused .pack-shine-window:after{animation-play-state:paused!important}
 @media(prefers-reduced-motion:reduce){.game-shell .sealed-pack:not(.pack-opening-flight){transform:rotate(-4deg);transition:none}.game-shell .pack-shine-window .pack-foil,.game-shell .pack-shine-window:after{animation:none!important}}
+
+/* Both channels share one compact settings window and retain their own controls. */
+html.fixed-game .music-dialog{height:548px!important;padding:28px 34px!important;overflow:hidden!important}
+.music-dialog>header{margin-bottom:16px}.music-dialog>header h2{margin:4px 0 0}
+.music-dialog .audio-channel75{padding:14px 0;border-top:1px solid #cdb58333}
+.music-dialog .audio-channel75>header{align-items:center;gap:16px;margin:0}
+.music-dialog .audio-channel75 h3{font:500 21px/28px Georgia,serif;color:#eee0c3;margin:0}
+.music-dialog .audio-channel75>header button{font-size:11px;min-height:32px;padding:4px 8px}
+.music-dialog .audio-channel75 .music-volume{gap:12px;margin:12px 0 8px}
+.music-dialog .audio-channel75 .music-volume button{height:32px;width:32px;padding:0!important}
+.music-dialog .audio-channel75 p{font:12px/18px var(--sans);min-height:18px;margin:0!important}
+.music-dialog .music-credit{font:10px/16px var(--sans);margin:14px 0 0}

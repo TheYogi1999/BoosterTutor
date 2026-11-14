@@ -1,3 +1,21 @@
+## Independent music and sound-effect controls (v0.75)
+
+**Audio settings** now contains separate **Music** and **Sound effects** sections. Each has its own mute toggle, 0–100% slider and ±5% buttons. All four preferences persist independently across reloads. Muting retains the selected volume. The compact top-bar **SFX ON/OFF** button affects effects only; the Audio button and Options → Audio settings open the same window.
+
+The music channel controls the looping Bard’s Tale score. Card/booster/combat/dice/coin sounds and the short title/Play cues use the effects channel. Web Audio effects share an output gain, including the booster media source; intro/Play media levels follow the same effect percentage. Zero effect volume cancels pending effects. Music volume changes apply immediately without restarting the track. Muting effects while the intro is playing skips that cue and allows enabled music to begin; restoring effects does not replay an old intro.
+
+Effect stopping no longer pauses music. Hidden tabs and Quit still pause all output, while preserving both saved channel preferences; returning resumes the enabled score. Gameplay and the default C → music / early Play B → music sequencing remain available when either channel is muted.
+
+Validation: **430 rule tests**, independent-channel browser tests for mute/volume/zero-volume, actual effect gain and booster playback, both preferences after reload, no intro replay, Quit/visibility, controller/keyboard input, Options and four fitted viewports. Existing intro-sequence, selected-effect, ambience and title-menu suites also pass.
+
+```sh
+node tests/audio-channels-browser.test.cjs
+node tests/intro-sequence-browser.test.cjs
+node tests/selected-sounds-browser.test.cjs
+node tests/ambience-browser.test.cjs
+node tests/title-menu-browser.test.cjs
+```
+
 ## Enemy portraits in Card Choices (v0.74)
 
 Enemy target options in **Card Choices**, activated abilities and queued draw/sacrifice triggers now use the same generated portrait as the battlefield. Each option shows the opponent's name, intention, current creature types, power, current/maximum life and colored keyword badges, including Ward costs. This replaces the synthetic enemy card/token face. The shared renderer also supports enemy entries in the generic choice window.

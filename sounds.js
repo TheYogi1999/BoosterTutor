@@ -1,16 +1,49 @@
+// Music and effects keep independent, persistent preferences.
+function readEffectsPreference75(key,fallback){try{return localStorage.getItem(key)??fallback;}catch{return fallback;}}
+const effectsPreferences75={enabled:readEffectsPreference75('bt-sfx-enabled','true')!=='false',volume:100};
+{const value=Number(readEffectsPreference75('bt-sfx-volume','100'));if(Number.isFinite(value))effectsPreferences75.volume=Math.max(0,Math.min(100,value));}
+function effectsAudible75(){return state.soundOn&&effectsPreferences75.volume>0;}
+function applyEffectsVolume75(){
+ const level=state.soundOn?effectsPreferences75.volume/100:0;
+ if(soundEngine.effectsGain)soundEngine.effectsGain.gain.value=level;
+ for(const [id,base] of [['booster-audio',.72],['title-intro-audio',.65],['play-start-audio',.65]]){const audio=document.querySelector('#'+id);if(audio){audio.volume=base*(id==='booster-audio'?1:effectsPreferences75.volume/100);audio.muted=!state.soundOn||!effectsPreferences75.volume;}}
+}
+function renderEffectsControls75(){
+ document.querySelector('#sound-toggle span').textContent=state.soundOn?'SFX ON':'SFX OFF';
+ for(const selector of ['#sound-toggle','#sfx-toggle']){const button=document.querySelector(selector);button.setAttribute('aria-pressed',String(state.soundOn));button.setAttribute('aria-label',state.soundOn?'Mute sound effects':'Unmute sound effects');button.title=`Sound effects: ${state.soundOn?'on':'off'} · ${effectsPreferences75.volume}%`;}
+ document.querySelector('#sfx-toggle').textContent=state.soundOn?'Sound effects on':'Sound effects off';
+ document.querySelector('#sfx-volume').value=effectsPreferences75.volume;
+ document.querySelector('#sfx-volume-value').value=effectsPreferences75.volume+'%';
+ document.querySelector('#sfx-status').textContent=!state.soundOn?'Sound effects are muted.':!effectsPreferences75.volume?'Sound effects are silent at 0%.':'Cards, boosters, combat and intro sounds.';
+}
+function setEffectsPreferences75(enabled=state.soundOn,volume=effectsPreferences75.volume){
+ if(!Number.isFinite(volume))return;
+ state.soundOn=Boolean(enabled);effectsPreferences75.enabled=state.soundOn;effectsPreferences75.volume=Math.max(0,Math.min(100,Math.round(volume)));
+ try{localStorage.setItem('bt-sfx-enabled',String(state.soundOn));localStorage.setItem('bt-sfx-volume',String(effectsPreferences75.volume));}catch{}
+ if(!effectsAudible75())soundEngine.stop();applyEffectsVolume75();renderEffectsControls75();
+ document.dispatchEvent(new Event('booster:effects-settings'));
+}
+function initializeEffectsControls75(){
+ renderEffectsControls75();
+ document.querySelector('#sfx-toggle').addEventListener('click',()=>setEffectsPreferences75(!state.soundOn));
+ document.querySelector('#sfx-volume').addEventListener('input',event=>setEffectsPreferences75(state.soundOn,Number(event.target.value)));
+ document.querySelector('#sfx-quieter').addEventListener('click',()=>setEffectsPreferences75(state.soundOn,effectsPreferences75.volume-5));
+ document.querySelector('#sfx-louder').addEventListener('click',()=>setEffectsPreferences75(state.soundOn,effectsPreferences75.volume+5));
+}
 // Original, consistently mastered sound cues. No third-party samples.
 const SFX_CUES = {"select": {"start": 0, "duration": 0.085, "file": "assets/audio/select.wav"}, "grab": {"start": 0.26, "duration": 0.14}, "cancel": {"start": 0.5, "duration": 0.2}, "shuffle": {"start": 0.8, "duration": 0.62}, "creature": {"start": 1.52, "duration": 0.62}, "cast": {"start": 2.24, "duration": 0.55}, "attach": {"start": 2.89, "duration": 0.4}, "hit": {"start": 3.39, "duration": 0.34}, "heal": {"start": 3.83, "duration": 0.65}, "block": {"start": 4.58, "duration": 0.4}, "turn": {"start": 5.08, "duration": 0.38}, "victory": {"start": 5.56, "duration": 1.1}, "defeat": {"start": 6.76, "duration": 0.85}};
 const soundEngine = {
-  context: null, bus: null, buffer: null, loading: null, selectBuffer: null, selectLoading: null, packSource: null, packGain: null, voices: new Set(),
+  context: null, bus: null, effectsGain: null, buffer: null, loading: null, selectBuffer: null, selectLoading: null, packSource: null, packGain: null, voices: new Set(),
   async resume() {
     this.context ||= new (window.AudioContext || window.webkitAudioContext)();
-    await this.context.resume();
     if (!this.bus) {
       this.bus = this.context.createDynamicsCompressor();
       this.bus.threshold.value = -12; this.bus.knee.value = 12; this.bus.ratio.value = 4;
       this.bus.attack.value = 0.003; this.bus.release.value = 0.12;
-      this.bus.connect(this.context.destination);
+      this.effectsGain=this.context.createGain();this.bus.connect(this.effectsGain);this.effectsGain.connect(this.context.destination);
     }
+    applyEffectsVolume75();
+    await this.context.resume();
   },
   async unlock() {
     await this.resume();
@@ -36,9 +69,10 @@ const soundEngine = {
   }
 };
 function playSfx(name) {
-  if (!state.soundOn || !SFX_CUES[name]) return;
+  if (!effectsAudible75() || !SFX_CUES[name]) return;
+  const epoch=soundEngine.epoch||0;
   (name === 'select' ? soundEngine.selection() : soundEngine.unlock()).then(buffer => {
-    if (!state.soundOn) return;
+    if (!effectsAudible75() || (soundEngine.epoch||0)!==epoch) return;
     while (soundEngine.voices.size >= 8) {
       const oldest = soundEngine.voices.values().next().value;
       oldest.voiceGain?.gain.linearRampToValueAtTime(0, soundEngine.context.currentTime + 0.015);
@@ -91,7 +125,7 @@ function startRecordedVoice(name,buffer,when=null,scale=1){
  return source;
 }
 playSfx=function(name){
- if(!state.soundOn||document.hidden)return;
+ if(!effectsAudible75()||document.hidden)return;
  const entry=RECORDED_SFX[name];if(!entry)return originalPlaySfx(name);
  const now=Date.now();
  if(cueCooldowns[name]){if(now-(lastActionCue.get(name)||0)<cueCooldowns[name])return;lastActionCue.set(name,now);}
@@ -99,7 +133,7 @@ playSfx=function(name){
  const epoch=soundEngine.epoch||0;
  soundEngine.resume().then(async()=>{
   const buffer=await recordedSoundBuffer(entry[0]);
-  if(!state.soundOn||document.hidden||(soundEngine.epoch||0)!==epoch||Date.now()-now>1200)return;
+  if(!effectsAudible75()||document.hidden||(soundEngine.epoch||0)!==epoch||Date.now()-now>1200)return;
   startRecordedVoice(name,buffer);
  }).catch(()=>{});
 };
@@ -108,7 +142,7 @@ playSfx=function(name){
 let drawSoundTimer=0,drawSoundGeneration=0,drawSoundTail=new WeakMap();
 const pendingDrawSounds=new Map();
 function queueDrawSound(battle){
- if(!state.soundOn||document.hidden||state.battle!==battle||battle.phase==='complete')return;
+ if(!effectsAudible75()||document.hidden||state.battle!==battle||battle.phase==='complete')return;
  pendingDrawSounds.set(battle,Math.min(24,(pendingDrawSounds.get(battle)||0)+1));
  if(!drawSoundTimer)drawSoundTimer=setTimeout(flushDrawSounds,0);
 }
@@ -118,7 +152,7 @@ function flushDrawSounds(){
  const generation=drawSoundGeneration,epoch=soundEngine.epoch||0;
  soundEngine.resume().then(async()=>{
   const buffer=await recordedSoundBuffer(RECORDED_SFX.draw[0]);
-  if(!state.soundOn||document.hidden||generation!==drawSoundGeneration||(soundEngine.epoch||0)!==epoch)return;
+  if(!effectsAudible75()||document.hidden||generation!==drawSoundGeneration||(soundEngine.epoch||0)!==epoch)return;
   for(const [battle,count] of batches){
    if(state.battle!==battle||state.screen!=='combat-screen'||battle.phase==='complete')continue;
    const now=soundEngine.context.currentTime;
@@ -138,7 +172,7 @@ const originalStopSounds=soundEngine.stop.bind(soundEngine);
 soundEngine.stop=function(){this.epoch=(this.epoch||0)+1;cancelDrawSounds();lastActionCue.clear();originalStopSounds();};
 let actionsWarmed=false;
 function warmActionSounds(event){
- if(!event.isTrusted||!state.soundOn||document.hidden||actionsWarmed)return;
+ if(!event.isTrusted||!effectsAudible75()||document.hidden||actionsWarmed)return;
  actionsWarmed=true;
  soundEngine.resume().then(()=>Promise.allSettled(selectedActionCues.map(name=>recordedSoundBuffer(RECORDED_SFX[name][0])))).catch(()=>{actionsWarmed=false;});
 }

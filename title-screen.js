@@ -11,16 +11,13 @@
     document.getElementById(button).addEventListener('click', () => document.getElementById(target).click());
   }
   const exit = document.getElementById('title-exit-dialog');
-  let restoreSound = false;
   document.getElementById('title-quit').addEventListener('click', () => {
-    restoreSound = state.soundOn;
-    if (state.soundOn) document.getElementById('sound-toggle').click();
-    soundEngine.stop();
+    window.pauseGameAudio75();
     exit.showModal();
   });
   function returnToTitle() {
     exit.close();
-    if (restoreSound && !state.soundOn) document.getElementById('sound-toggle').click();
+    window.resumeGameAudio75();
   }
   document.getElementById('title-return').addEventListener('click', returnToTitle);
   exit.addEventListener('cancel', event => { event.preventDefault(); returnToTitle(); });

@@ -202,7 +202,7 @@ draftAbilitySummary=function(card){return {'Hoarding Ogre':'Attack: roll D20, cr
 const baseChanceSfx55=playSfx;
 playSfx=function(name){
  if(name!=='coin-land')return baseChanceSfx55(name);
- if(!state.soundOn||document.hidden)return;
+ if(!effectsAudible75()||document.hidden)return;
  const epoch=soundEngine.epoch||0;
- soundEngine.resume().then(()=>{if(!state.soundOn||document.hidden||(soundEngine.epoch||0)!==epoch)return;const ctx=soundEngine.context,t=ctx.currentTime;for(const [frequency,volume] of [[1320,.018],[2180,.009],[3490,.004]]){const oscillator=ctx.createOscillator(),gain=ctx.createGain();oscillator.frequency.value=frequency;gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(volume,t+.003);gain.gain.exponentialRampToValueAtTime(.00001,t+.16);oscillator.connect(gain);gain.connect(soundEngine.bus);soundEngine.voices.add(oscillator);oscillator.onended=()=>soundEngine.voices.delete(oscillator);oscillator.start(t);oscillator.stop(t+.18);}}).catch(()=>{});
+ soundEngine.resume().then(()=>{if(!effectsAudible75()||document.hidden||(soundEngine.epoch||0)!==epoch)return;const ctx=soundEngine.context,t=ctx.currentTime;for(const [frequency,volume] of [[1320,.018],[2180,.009],[3490,.004]]){const oscillator=ctx.createOscillator(),gain=ctx.createGain();oscillator.frequency.value=frequency;gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(volume,t+.003);gain.gain.exponentialRampToValueAtTime(.00001,t+.16);oscillator.connect(gain);gain.connect(soundEngine.bus);soundEngine.voices.add(oscillator);oscillator.onended=()=>soundEngine.voices.delete(oscillator);oscillator.start(t);oscillator.stop(t+.18);}}).catch(()=>{});
 };
