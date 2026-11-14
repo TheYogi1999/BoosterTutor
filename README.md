@@ -1,3 +1,20 @@
+## Battlefield ability windows and centered close buttons (v0.73)
+
+Tap **Black Lotus, Sol Ring or any other permanent card on the battlefield** to open its own unpaid ability window, just like Treasure/Food/Clue tokens. The shared route also covers Jack-in-the-Mox, the Jester artifacts, activated enchantments and equipment. The inspector and hover details now explain cards without direct activation buttons. Opening, canceling or closing a window never pays a cost; confirmation rechecks the current source and costs.
+
+**Mana creatures and Tavern coin abilities** now use the creature ability window too. Their battlefield `+mana` / `Ability` controls open the window; confirmation performs the tap/mana action or starts the separate sacrifice chooser. Summoning sickness, tapped sources, unavailable resources, cancellation and stale sources remain protected. Ordinary creature-card clicks still declare attacks or blocks.
+
+Both ability windows have a close button. Every circular **×** close mark is drawn at its geometric center with CSS rather than relying on a font baseline. Accessible button labels and native dialog/keyboard/controller cancellation are retained.
+
+Validation: **430 rule tests**; mouse and real touch tests for Lotus, Ring, Mox, Jester artifacts, enchantments, equipment, mana creatures and coin abilities; unpaid cancellation, exact one-time payment, stale/sick sources, no inspector activation controls, centered close marks and three fitted viewports. Existing relic/mana/combat, reviewed-card and coin/controller browser suites also pass.
+
+```sh
+node tests/battlefield-actions-browser.test.cjs
+node tests/relics-browser.test.cjs
+node tests/reviewed-cards-browser.test.cjs
+node tests/chance-browser.test.cjs
+```
+
 ## Deck boxes, deck-color boosters and Niv-Mizzet (v0.72)
 
 Precon boxes now have a single aligned front/top/right silhouette, large creature art, real mana symbols and a dark gold-bordered name plaque. The symbols use the **same Mana font glyphs, palette and canvas renderer as [MagicEditor](https://github.com/TheYogi1999/MagicEditor)**. The renderer, pinned font, pre-rendered local symbols and font license are bundled; see [credits](assets/mana/SOURCES.md). No runtime CDN is needed.

@@ -27,7 +27,9 @@ html.fixed-game dialog{background:linear-gradient(135deg,#182c30f7,#0d1c24fc),ur
 html.fixed-game dialog::backdrop{background:#030a10b8;backdrop-filter:blur(6px)}
 html.fixed-game dialog h2{font-family:Georgia,serif;font-size:31px;font-weight:500;letter-spacing:-.35px;line-height:1.2;color:var(--ui-cream)}
 html.fixed-game dialog>p{color:var(--ui-muted)}
-html.fixed-game dialog .graveyard-close{background:transparent;border:1px solid #cdb58333;border-radius:50%;color:#d6ccae;box-shadow:none}
+html.fixed-game dialog .graveyard-close{position:relative;display:inline-grid;place-items:center;box-sizing:border-box;width:34px;height:34px;min-width:34px;min-height:34px;flex-shrink:0;padding:0!important;background:transparent;border:1px solid #cdb58333;border-radius:50%;color:#d6ccae;box-shadow:none;font-size:0!important;line-height:1;letter-spacing:0}
+html.fixed-game dialog .graveyard-close::before,html.fixed-game dialog .graveyard-close::after{content:'';position:absolute;left:50%;top:50%;width:13px;height:1.5px;border-radius:1px;background:currentColor;transform:translate(-50%,-50%) rotate(45deg);pointer-events:none}
+html.fixed-game dialog .graveyard-close::after{transform:translate(-50%,-50%) rotate(-45deg)}
 html.fixed-game dialog .graveyard-close:hover{border-color:#e2bf80;color:#fff0cd}
 html.fixed-game dialog :is(input:not([type="range"]),select){background:#0b1b23;border:1px solid var(--ui-line);border-radius:3px;color:#e0dfcc;box-shadow:none}
 html.fixed-game dialog :is(input,select):focus-visible{outline:1px solid #ddbd84;outline-offset:2px}
@@ -84,3 +86,5 @@ html.fixed-game .title-options-dialog{height:480px!important}
 .game-shell .journey-screen .path-node{background:#0d1e27c4}
 .game-shell .journey-screen .path-node.current{border-color:color-mix(in srgb,var(--stage-accent,#d5b578) 50%,#d5b578);box-shadow:0 0 26px color-mix(in srgb,var(--stage-accent,#d5b578) 14%,transparent)}
 .game-shell .shop-screen .shop-pack{background:#0d1e27d9;border-color:color-mix(in srgb,var(--stage-accent,#c6ad79) 30%,#65716c44)}
+
+html.fixed-game dialog .action-close73{position:absolute;right:14px;top:14px;z-index:2}html.fixed-game dialog:has(.action-close73) h2{padding-right:32px}.battlefield-action-hint73{color:#d5ba85!important;font-size:11px!important;line-height:1.5}

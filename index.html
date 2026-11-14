@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="expansion.css?v=0.27" />
     <link rel="stylesheet" href="ambience.css?v=0.29.3" />
     <link rel="stylesheet" href="title-screen.css?v=0.62" />
-    <link rel="stylesheet" href="interface.css?v=0.32.2" />
+    <link rel="stylesheet" href="interface.css?v=0.73" />
     <link rel="stylesheet" href="zone-effects.css?v=0.33" />
     <link rel="stylesheet" href="expedition-rewards.css?v=0.35" />
     <link rel="stylesheet" href="foes.css?v=0.36" />
@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="card-finish-ui.css?v=0.63" />
     <script src="cards.js?v=0.72" defer></script>
     <script src="sounds.js?v=0.43" defer></script>
-    <script src="game.js?v=0.72" defer></script>
+    <script src="game.js?v=0.73" defer></script>
     <script src="rules.js?v=0.67" defer></script>
     <script src="expansion.js?v=0.71" defer></script>
     <script src="expedition-rewards.js?v=0.61" defer></script>
@@ -53,18 +53,18 @@
     <script src="dice.js?v=0.67" defer></script>
     <script src="dice-cards.js?v=0.67" defer></script>
     <script src="reaction-checks.js?v=0.52" defer></script>
-    <script src="chance.js?v=0.57" defer></script>
+    <script src="chance.js?v=0.73" defer></script>
     <script src="relics.js?v=0.58" defer></script>
     <script src="run-progression.js?v=0.61" defer></script>
     <script src="run-counters.js?v=0.61" defer></script>
     <script src="poison.js?v=0.60" defer></script>
-    <script src="permanent-actions.js?v=0.60" defer></script>
+    <script src="permanent-actions.js?v=0.73" defer></script>
     <script src="card-finish-ui.js?v=0.70" defer></script>
     <script src="jesters.js?v=0.64" defer></script>
     <link rel="stylesheet" href="jesters.css?v=0.64" />
     <script src="jester-family.js?v=0.65" defer></script>
     <link rel="stylesheet" href="jester-family.css?v=0.65" />
-    <script src="reviewed-cards.js?v=0.72" defer></script>
+    <script src="reviewed-cards.js?v=0.73" defer></script>
     <link rel="stylesheet" href="reviewed-cards.css?v=0.66" />
     <script src="compact-battle.js?v=0.67" defer></script>
     <link rel="stylesheet" href="compact-battle.css?v=0.69" />
@@ -85,10 +85,10 @@
     <header class="topbar">
       <a class="brand" href="#start" aria-label="Booster Tutor home">
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.72</span>
+        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.73</span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label" hidden><i class="status-dot"></i> v0.72 · <span id="global-phase">START</span></span>
+        <span class="pixel-label" hidden><i class="status-dot"></i> v0.73 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Background music settings">♫ Music</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Turn sound off" title="Turn sound off">♪ <span>SOUND ON</span></button>
       </div>
@@ -277,9 +277,9 @@
       <footer><button type="button" class="quiet-button" id="counter-shop-cancel">Cancel</button><button type="button" class="primary-button" id="counter-shop-confirm" disabled>Apply counter</button></footer>
     </dialog>
     <dialog id="x-cost-dialog" class="token-action-dialog" aria-labelledby="x-cost-title"><span class="eyebrow">VARIABLE MANA · BEFORE CASTING</span><h2 id="x-cost-title"></h2><p>Choose X. Targets and any Ward payment follow; nothing is paid until casting is confirmed.</p><div class="x-cost-controls66"><button type="button" id="x-cost-less" class="quiet-button" aria-label="Reduce X">−</button><label>X <input id="x-cost-value" type="number" min="0" step="1" value="0" /></label><button type="button" id="x-cost-more" class="quiet-button" aria-label="Increase X">+</button></div><p id="x-cost-status" aria-live="polite"></p><div class="token-action-buttons"><button type="button" id="x-cost-cancel" class="quiet-button">Cancel · pay nothing</button><button type="button" id="x-cost-confirm" class="primary-button">Choose target / cast →</button></div></dialog>
-    <dialog id="creature-ability-dialog" class="token-action-dialog" aria-labelledby="creature-ability-title"><span class="eyebrow">CREATURE ABILITIES</span><h2 id="creature-ability-title"></h2><p id="creature-ability-rules"></p><p class="token-action-cost-label">ACTIVATION COST</p><p id="creature-ability-cost"></p><p id="creature-ability-status"></p><div class="token-action-buttons"><button type="button" id="creature-ability-cancel" class="quiet-button">Cancel · pay nothing</button><button type="button" id="creature-ability-confirm" class="primary-button">Choose target →</button></div></dialog>
+    <dialog id="creature-ability-dialog" class="token-action-dialog" aria-labelledby="creature-ability-title"><button type="button" class="graveyard-close action-close73" id="creature-ability-close73" aria-label="Close card abilities">×</button><span class="eyebrow">CREATURE ABILITIES</span><h2 id="creature-ability-title"></h2><p id="creature-ability-rules"></p><p class="token-action-cost-label">ACTIVATION COST</p><p id="creature-ability-cost"></p><p id="creature-ability-status"></p><div class="token-action-buttons"><button type="button" id="creature-ability-cancel" class="quiet-button">Cancel · pay nothing</button><button type="button" id="creature-ability-confirm" class="primary-button">Choose target →</button></div></dialog>
     <dialog id="jester-choice-dialog" class="tutor-search-dialog jester-choice-dialog" aria-labelledby="jester-choice-title" aria-describedby="jester-choice-instruction jester-choice-status"><span class="eyebrow">JESTER’S TABLE</span><h2 id="jester-choice-title"></h2><p id="jester-choice-instruction"></p><div id="jester-choice-grid"></div><p id="jester-choice-status" aria-live="polite"></p><div class="tutor-search-actions"><button type="button" id="jester-choice-cancel" class="quiet-button">Cancel · pay nothing</button><button type="button" id="jester-choice-confirm" class="primary-button">Confirm →</button></div></dialog>
-    <dialog id="token-action-dialog" class="token-action-dialog" aria-labelledby="token-action-title" aria-describedby="token-action-effect token-action-cost token-action-status">
+    <dialog id="token-action-dialog" class="token-action-dialog" aria-labelledby="token-action-title" aria-describedby="token-action-effect token-action-cost token-action-status"><button type="button" class="graveyard-close action-close73" id="token-action-close73" aria-label="Close card abilities">×</button>
       <header><span id="token-action-symbol" class="token-action-symbol" aria-hidden="true"></span><div><span class="eyebrow" id="token-action-heading">USE TOKEN</span><h2 id="token-action-title"></h2></div></header>
       <p id="token-action-effect"></p><div id="permanent-options60" hidden><label for="permanent-equip-target60">Attach to</label><select id="permanent-equip-target60"></select><button type="button" id="permanent-equip60" class="primary-button"></button></div><p class="token-action-cost-label">ACTIVATION COST</p><p id="token-action-cost"></p><p id="token-action-status"></p>
       <div class="token-action-buttons"><button type="button" id="token-action-cancel" class="quiet-button">Keep token</button><button type="button" id="token-action-confirm" class="primary-button">Sacrifice token</button></div>

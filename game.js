@@ -967,7 +967,7 @@ function showCardPreview(card, element) {
   const keywordInfo = { lure:'Lure: attacking enemies attack your first living Lure creature instead of you, even if it is tapped. Trample may overflow to you.', trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${typeof keywordText61 === 'function' ? keywordText61(line) : escapeHtml(line)}</li>`).join('')}</ul>${typeof keywordChips61 === 'function' && displayKeywords(card).length ? `<div class="bubble-keyword-tags61">${keywordChips61(card)}</div>` : ''}${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => typeof keywordText61 === 'function' ? keywordText61(keywordInfo[keyword]) : escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
-  if (permanent && !card.campToken && permanentActivationCost(card) !== null) preview.innerHTML += `<button class="quiet-button" data-activate-permanent="${escapeHtml(permanent.id)}" ${canActivatePermanent(permanent, battle) ? '' : 'disabled'}>${escapeHtml(permanentActivationLabel51(permanent))}</button>`;
+  if (permanent) preview.innerHTML += '<p class="battlefield-action-hint73">Tap this card on the battlefield to open its abilities.</p>';
   preview.hidden = false;
   positionCardPreview();
   requestAnimationFrame(positionCardPreview);
@@ -1151,9 +1151,8 @@ $('#player-drop-zone').addEventListener('click', event => {
   if (!button || !battle || Date.now() < (state.suppressClickUntil || 0)) return;
   const permanent = battle.permanents.find(item => item.id === button.dataset.permanentId);
   if (!permanent) return;
-  if ((permanent.card.campToken || permanent.card.name === 'Black Lotus') && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
   if (typeof openPermanentAction60 === 'function') { openPermanentAction60(permanent.id); return; }
-  if (['Jack-in-the-Mox','Sol Ring'].includes(permanent.card.name) && canActivatePermanent(permanent, battle)) { activatePermanent(permanent.id); return; }
+  if ((permanent.card.campToken || permanent.card.name === 'Black Lotus') && typeof openTokenAction47 === 'function') { openTokenAction47(permanent.id); return; }
   if (!/Equipment/.test(permanent.card.type_line)) { inspectBattlefieldCard(permanent.card, {dataset:{previewId:permanent.id}}); return; }
   if (battle.phase !== 'main') return;
   if (!battle.creatures.length) return showActionError('Play a creature first.');
@@ -2302,7 +2301,7 @@ function inspectBattlefieldCard(card, element) {
   const creature = battle?.creatures.find(item => item.id === element.dataset.previewId);
   const permanent = battle?.permanents.find(item => item.id === element.dataset.previewId);
   const attached = battle?.creatures.find(item => item.id === permanent?.attachedTo);
-  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${card.campToken ? '<p>Click this token on the battlefield to use it.</p>' : ''}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent && !card.campToken && permanentActivationCost(permanent.card)!==null ? `<button class="quiet-button" data-activate-permanent="${permanent.id}" ${canActivatePermanent(permanent,battle)?'':'disabled'}>${escapeHtml(permanentActivationLabel51(permanent))}</button>`:''}</div>`;
+  $('#inspector-content').innerHTML = `<div class="inspector-card">${cardFace(card)}</div><h3>${escapeHtml(card.name)}</h3><p class="inspector-cost">${Math.ceil(card.cmc || 0)} generic mana${creature ? ` · Current ${creature.power}/${creature.toughness}` : ''}</p><div class="inspector-rules">${effectDescriptions(card).map(line => `<p>${escapeHtml(line)}</p>`).join('')}${card.campToken ? '<p>Click this token on the battlefield to use it.</p>' : ''}${attached ? `<p>Attached to ${escapeHtml(attached.card.name)}.</p>` : ''}${permanent?'<p class="battlefield-action-hint73">Tap this card on the battlefield to open its abilities.</p>':''}</div>`;
 }
 function fitGameCanvas() {
   const root = document.documentElement;
@@ -2654,9 +2653,9 @@ function finishScry(){
 $('#scry-grid').addEventListener('click',event=>{const button=event.target.closest('[data-scry-index]');if(!button||!state.battle?.scry)return;const entry=state.battle.scry.cards[Number(button.dataset.scryIndex)];entry.bottom=!entry.bottom;renderScry();});
 $('#scry-confirm').addEventListener('click',finishScry);
 $('#scry-dialog').addEventListener('cancel',event=>{event.preventDefault();finishScry();});
-$('#creature-row').addEventListener('click',event=>{const button=event.target.closest('[data-unit-mana]');if(button)tapForMana(button.dataset.unitMana);});
-$('#inspector-content').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button)activatePermanent(button.dataset.activatePermanent);});
-$('#card-preview').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button){hideCardPreview();activatePermanent(button.dataset.activatePermanent);}});
+$('#creature-row').addEventListener('click',event=>{const button=event.target.closest('[data-unit-mana]');if(button){if(typeof openCreatureAbility66==='function')openCreatureAbility66(button.dataset.unitMana);else tapForMana(button.dataset.unitMana)};});
+$('#inspector-content').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button&&typeof openPermanentAction60==='function')openPermanentAction60(button.dataset.activatePermanent);});
+$('#card-preview').addEventListener('click',event=>{const button=event.target.closest('[data-activate-permanent]');if(button){hideCardPreview();if(typeof openPermanentAction60==='function')openPermanentAction60(button.dataset.activatePermanent);}});
 
 function printedKeywords(card){const labels=(card.keywords || [...COMBAT_KEYWORDS.filter(keyword=>hasKeywordLine(card.oracle_text||'',keyword)),...(hasFlash(card)?['flash']:[])]).map(keyword=>keyword.toLowerCase());return card.name==='Taunting Elf'&&!labels.includes('lure')?[...labels,'lure']:labels;}
 function wardCostText(value){

@@ -144,9 +144,14 @@ tapForMana=function(id){
 const baseLockedBlockers66=legalBlockers;
 legalBlockers=function(b,attacker){const units=blockerIds(b,attacker.id).map(id=>b.creatures.find(u=>u.id===id)).filter(u=>u&&(!u.tapped||u.blockLockedTurn66===b.turn)&&canBlockCreature(u,attacker));return hasCreatureKeyword(attacker,'menace')&&units.length<2?[]:units;};
 
+function manaCreatureAction73(u){return Boolean(u&&/\{T\}: Add/i.test(u.card.oracle_text||''));}
+function coinCreatureAction73(u){return Boolean(u&&['Tavern Swindler','Tavern Scoundrel'].includes(u.card.name));}
+function hasCreatureAction73(u){return Boolean(u&&(ACTIVATED66.has(u.card.name)||manaCreatureAction73(u)||coinCreatureAction73(u)));}
 function creatureAbilityReady66(u,b=state.battle,ownChoice=false){
- if(!u||!b||b!==state.battle||!b.creatures.includes(u)||!creatureAlive(u)||!ACTIVATED66.has(u.card.name)||b.phase==='complete')return false;
+ if(!u||!b||b!==state.battle||!b.creatures.includes(u)||!creatureAlive(u)||!hasCreatureAction73(u)||b.phase==='complete')return false;
  if(!ownChoice&&(jesterPending65(b)||permanentActionBusy60(b)||b.librarySearch))return false;
+ if(manaCreatureAction73(u))return canTapForMana(u,b);
+ if(coinCreatureAction73(u))return canActivateCoin55(u,b);
  if(u.card.name==='Shivan Dragon')return b.mana>=1;
  if(u.tapped||isSummoningSick(u,b.turn))return false;
  if(u.card.name==='Niv-Mizzet, the Firemind')return true;
@@ -160,7 +165,7 @@ function abilityTargets66(u,b=state.battle){
  return all;
 }
 function closeCreatureAbility66(){state.creatureAbility66=null;if($('#creature-ability-dialog').open)$('#creature-ability-dialog').close();}
-function openCreatureAbility66(id){const b=state.battle,u=b?.creatures.find(x=>x.id===id);if(!u||!ACTIVATED66.has(u.card.name)||document.querySelector('dialog[open]')||jesterPending65(b))return false;state.creatureAbility66={battle:b,id};renderCreatureAbility66();$('#creature-ability-dialog').showModal();return true;}
+function openCreatureAbility66(id){const b=state.battle,u=b?.creatures.find(x=>x.id===id);if(!u||b.phase==='complete'||!hasCreatureAction73(u)||state.screen!=='combat-screen'||document.querySelector('dialog[open]')||jesterPending65(b))return false;hideCardPreview();state.creatureAbility66={battle:b,id};renderCreatureAbility66();$('#creature-ability-dialog').showModal();return true;}
 function renderCreatureAbility66(){
  const a=state.creatureAbility66,b=state.battle,u=b?.creatures.find(x=>x.id===a?.id);if(!a)return;if(a.battle!==b||!u||b.phase==='complete')return closeCreatureAbility66();
  $('#creature-ability-title').textContent=u.card.name;$('#creature-ability-rules').textContent=effectDescriptions(u.card).join(' ');
@@ -172,9 +177,17 @@ function renderCreatureAbility66(){
   $('#creature-ability-confirm').textContent='Tap & draw →';
   if(creatureAbilityReady66(u,b))$('#creature-ability-status').textContent='Draw one card, then choose a target for its separate damage trigger. An empty library loses the run.';
  }
+ if(manaCreatureAction73(u)||coinCreatureAction73(u)){
+  const mana=manaCreatureAction73(u),ready=creatureAbilityReady66(u,b);
+  $('#creature-ability-cost').textContent=mana?'Tap · no mana cost':coinAbilityLabel55(u);
+  $('#creature-ability-confirm').textContent=mana?`Tap → Add ${manaAmount66(u.card)} mana`:u.card.name==='Tavern Swindler'?'Pay 3 life & flip →':'Choose sacrifice →';
+  $('#creature-ability-status').textContent=ready?mana?'Add floating generic mana. Nothing is paid until you confirm.':u.card.name==='Tavern Swindler'?'Confirm to tap and pay 3 life, then flip. Winning gains 6 life.':'Choose another permanent next. Mana, tapping and sacrifice are paid only after that choice.':u.tapped?'Tapped · untaps next turn.':isSummoningSick(u,b.turn)?'Summoning sickness · needs Haste or your next turn.':permanentActionBusy60(b)?'Finish the pending card choices before activating.':u.card.name==='Tavern Swindler'?'Needs at least 3 life.':'Needs 1 available mana and another permanent to sacrifice.';
+ }
 }
 function confirmCreatureAbility66(){
  const a=state.creatureAbility66,b=state.battle,u=b?.creatures.find(x=>x.id===a?.id);if(!a||a.battle!==b||!creatureAbilityReady66(u,b))return false;closeCreatureAbility66();
+ if(manaCreatureAction73(u))return tapForMana(u.id);
+ if(coinCreatureAction73(u))return activateCoin55(u.id);
  if(u.card.name==='Shivan Dragon'){if(!payMana(1,b))return false;resolveReviewedEffect({kind:'buff',power:1,toughness:0},{side:'player',id:u.id},{card:u.card});b.mulliganAvailable=false;renderBattle();return true;}
  if(u.card.name==='Niv-Mizzet, the Firemind'){u.tapped=true;b.mulliganAvailable=false;drawOneCard();if(b.phase!=='complete'){renderBattle();pumpJesters65(b);}return true;}
  return openJesterChoice65({battle:b,title:`${u.card.name} · activated ability`,instruction:'Choose a legal target. Confirming taps the source. Ward may then require mana; an ability countered by Ward leaves the source tapped.',options:abilityTargets66(u,b),cancel:()=>renderBattle(),validate:chosen=>creatureAbilityReady66(u,b,true)&&abilityTargets66(u,b).some(o=>o.target.side===chosen[0].target.side&&o.target.id===chosen[0].target.id),accept:chosen=>{
@@ -186,7 +199,7 @@ function confirmCreatureAbility66(){
 $('#creature-ability-confirm').addEventListener('click',confirmCreatureAbility66);$('#creature-ability-cancel').addEventListener('click',closeCreatureAbility66);$('#creature-ability-dialog').addEventListener('cancel',e=>{e.preventDefault();closeCreatureAbility66();});
 $('#creature-row').addEventListener('click',e=>{const button=e.target.closest('[data-creature-ability66]');if(button)openCreatureAbility66(button.dataset.creatureAbility66);});
 const baseRescueResponses66=hasInstantResponse;
-hasInstantResponse=function(b){if(baseRescueResponses66(b))return true;const mana=b.mana+b.creatures.filter(u=>canTapForMana(u,b)).reduce((n,u)=>n+manaAmount66(u.card),0);return b.creatures.some(u=>creatureAbilityReady66(u,b)||(u.card.name==='Shivan Dragon'&&creatureAlive(u)&&mana>=1&&!permanentActionBusy60(b)&&!jesterPending65(b)))||b.hand.some(c=>(isInstant(c)||hasFlash(c))&&canCastNow(c,b)&&mana>=Math.ceil(c.cmc||0));};
+hasInstantResponse=function(b){if(baseRescueResponses66(b))return true;const mana=b.mana+b.creatures.filter(u=>canTapForMana(u,b)).reduce((n,u)=>n+manaAmount66(u.card),0);return b.creatures.some(u=>ACTIVATED66.has(u.card.name)&&creatureAbilityReady66(u,b)||(u.card.name==='Shivan Dragon'&&creatureAlive(u)&&mana>=1&&!permanentActionBusy60(b)&&!jesterPending65(b)))||b.hand.some(c=>(isInstant(c)||hasFlash(c))&&canCastNow(c,b)&&mana>=Math.ceil(c.cmc||0));};
 
 // Blocking Snowman prevents combat damage only; its activated ping is noncombat.
 const baseSnowDamage66=dealCreatureDamage;
@@ -237,7 +250,7 @@ renderScry=function(){baseRescueScry66();const scry=state.battle?.scry;if(!scry)
 $('#scry-grid').addEventListener('click',e=>{const button=e.target.closest('[data-scry-move66]'),s=state.battle?.scry;if(!button||!s)return;const i=Number(button.dataset.scryMove66),indices=s.cards.map((entry,n)=>({entry,n})).filter(o=>o.entry.bottom===s.cards[i].bottom).map(o=>o.n),j=indices[indices.indexOf(i)+Number(button.dataset.step)];if(j===undefined)return;[s.cards[i],s.cards[j]]=[s.cards[j],s.cards[i]];renderScry();});
 
 const baseRescueCreatures66=renderCreatures;
-renderCreatures=function(){baseRescueCreatures66();const b=state.battle;for(const u of b.creatures){const host=document.querySelector(`[data-host-id="${u.id}"]`),controls=host?.querySelector('.unit-controls');if(!controls)continue;if(ACTIVATED66.has(u.card.name)){controls.classList.add('has-reviewed-ability66');controls.insertAdjacentHTML('beforeend',`<button type="button" data-creature-ability66="${u.id}" aria-haspopup="dialog" aria-label="${escapeHtml(u.card.name)} abilities">Ability</button>`);}if(MANA_CREATURES66.has(u.card.name)){const button=controls.querySelector('[data-unit-mana]');if(button)button.textContent=`+${manaAmount66(u.card)}`;}}};
+renderCreatures=function(){baseRescueCreatures66();const b=state.battle;for(const u of b.creatures){const host=document.querySelector(`[data-host-id="${u.id}"]`),controls=host?.querySelector('.unit-controls');if(!controls)continue;if(ACTIVATED66.has(u.card.name)){controls.classList.add('has-reviewed-ability66');controls.insertAdjacentHTML('beforeend',`<button type="button" data-creature-ability66="${u.id}" aria-haspopup="dialog" aria-label="${escapeHtml(u.card.name)} abilities">Ability</button>`);}if(manaCreatureAction73(u)){const button=controls.querySelector('[data-unit-mana]');if(button){button.textContent=`+${manaAmount66(u.card)}`;button.disabled=false;button.setAttribute('aria-haspopup','dialog');button.setAttribute('aria-label',`${u.card.name} mana ability`);}}}};
 const baseTypedBoard66=renderEnemyBoard;
 renderEnemyBoard=function(){baseTypedBoard66();for(const enemy of state.battle.enemyCreatures){const figure=document.querySelector(`[data-enemy-attacker="${enemy.id}"] .monster-figure`);figure?.insertAdjacentHTML('beforeend',`<span class="enemy-type66" title="${escapeHtml(enemy.card.type_line)}">${escapeHtml(enemy.card.type_line)}</span>`);}};
 const baseRescueBonus66=bonusMarkup;
@@ -280,3 +293,5 @@ draftAbilitySummary=function(card){if(MANA_CREATURES66.has(card.name))return `Ta
 const baseRescueCatalog66=collectionEntryMarkup;
 collectionEntryMarkup=function(card,index,kind){const html=baseRescueCatalog66(card,index,kind);return kind==='catalog'&&ADAPTED66.has(card.name)?html.replace('Playable · reviewed rules','Playable · duel adaptation'):html;};
 $('#permanent-row').addEventListener('wheel',event=>{const row=event.currentTarget;if(row.scrollWidth<=row.clientWidth||Math.abs(event.deltaX)>=Math.abs(event.deltaY))return;const step=event.deltaMode===1?16:event.deltaMode===2?row.clientWidth:1;row.scrollLeft+=event.deltaY*step;event.preventDefault();},{passive:false});
+
+$('#creature-ability-close73').addEventListener('click',closeCreatureAbility66);

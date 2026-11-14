@@ -40,3 +40,5 @@ function equipFromPermanentAction60(){
  closeTokenAction47();b.pendingAttachment={permanentId:p.id};selectAttachmentTarget(target);
 }
 $('#permanent-equip60').addEventListener('click',equipFromPermanentAction60);
+
+$('#token-action-close73').addEventListener('click',closeTokenAction47);
