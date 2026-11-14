@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
  const page=await browser.newPage({viewport:{width:1600,height:900}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000');
- assert.deepEqual(await page.locator('.title-menu button').allTextContents(),['PLAY ›','OPTIONS','QUIT','COLLECTIONS']);
+ assert.deepEqual(await page.locator('.title-menu button').allTextContents(),['PLAY','GAME MODES','OPTIONS','QUIT','COLLECTIONS']);
  assert.equal(await page.locator('#fullscreen-button').isVisible(),false);
  assert.equal(await page.locator('#music-settings').isVisible(),true);
  await page.waitForFunction(()=>document.querySelectorAll('.hero-card.is-revealed').length===3);

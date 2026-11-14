@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
   p.on('pageerror',e=>errors.push(e.message));
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
   await p.waitForFunction(()=>typeof MINION_TYPES67!=='undefined');
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.70');
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.71');
   const setup=async()=>p.evaluate(()=>{
    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
    closeX66();closeCreatureAbility66();closeJesterChoice65();closeTokenAction47();abortTutorSearch51();abortDiceRoll50();abortReactionChecks52();
@@ -102,6 +102,6 @@ const assert=require('node:assert/strict');
   await p.evaluate(()=>{controller.enable();controller.focus(document.getElementById('end-turn-button'))});assert.equal(await p.evaluate(()=>controller.zone(controller.focused)),'actions');
   await setup();await p.screenshot({path:'work/compact67-final.png'});
   assert.deepEqual(errors,[]);
-  console.log('PASS v0.70 brand; compact zone/level/Mulligan placement; six whole cards and six enemy/type rows; five viewport sizes without page scrolling; six local minion images; direct targeting/withdrawal, real pointer attack and hand casting; sixth slot; mana/ability controls; attack response; six-way multiblocking; graveyard/exile; relocated controller actions.');
+  console.log('PASS v0.71 brand; compact zone/level/Mulligan placement; six whole cards and six enemy/type rows; five viewport sizes without page scrolling; six local minion images; direct targeting/withdrawal, real pointer attack and hand casting; sixth slot; mana/ability controls; attack response; six-way multiblocking; graveyard/exile; relocated controller actions.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

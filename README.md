@@ -1,3 +1,29 @@
+## Prepared starter decks and Game Modes (v0.71)
+
+**GAME MODES** sits directly below **PLAY** on the title menu. Its initial tab, **PRECONSTRUCTED DECKS**, offers six physical deck-box designs with the lead creature's Scryfall art crop and a two-color finish. Choose a box to inspect its entire list, open any card's full image and in-game explanation, then explicitly choose **Begin Run**. Browsing, changing the selection, inspecting cards, Escape and controller Back cannot change a run or spend resources.
+
+| Starter | Theme | Colors | Cover creature |
+| --- | --- | --- | --- |
+| Ember & Echo | Spellslinger | Blue / Red | Prodigal Pyromancer |
+| Relic & Bloom | Equipment & Auras | White / Green | Fencing Ace |
+| Twilight Vigil | Lifegain & Recovery | White / Black | Vampire Nighthawk |
+| Venom & Thorns | Poison & Deathtouch | Black / Green | Thornweald Archer |
+| Wildfire Stampede | Creatures & Combat Tricks | Red / Green | Garruk's Companion |
+| Skyward Watch | Flying & Vigilance | White / Blue | Thunderclap Wyvern |
+
+Each prepared starter has **exactly 24 physical cards: sixteen themed cards, seven mana cards and one Booster Tutor**. It uses existing reviewed cards, mostly commons/uncommons, no Lotus/Ring/Mox, no more than two copies of any themed card, and a modest curve capped at five mana. Colors describe the theme and the selected basic-land artwork; all costs remain generic. The shared Booster Tutor is the usual exception to the deck's color identity. Cover illustrations use the pool's oldest regular English paper printings, bundled locally with [artist and Scryfall credits](assets/precons/SOURCES.md).
+
+Beginning a prepared run resets life to 20, coins to zero, level to one and the run's purchased upgrades, supplies and seals, while preserving the highest-level record. It **skips the initial booster draft and camp** and enters encounter one directly with two of its seven mana cards in play, seven cards in hand and fifteen in the library. Physical IDs and run upgrades remain independent for every copy. The deck is not given extra free relics or camp tokens.
+
+Booster Tutor still interrupts a fight to open a booster, and normal victory rewards, shop offers, camp supplies and Endless remain available. **Restart** repeats the selected prepared starter with fresh cards; returning to the title and selecting **PLAY** starts the ordinary six-pack draft. The standard draft and prepared runs share the same reset and audio path. Enter on a non-button inside a modal cannot accidentally start the default draft.
+
+Validation: **414 rule tests**, real starts and restarts for all six recipes, exact deck/hand/library/mana counts, Tutor interruption/resumption, reward → shop → camp progression, original PLAY, title animation/menu, controller selection/card review/Back/start, and five fixed-canvas viewport sizes without page scrolling. Both new windows keep card text and long deck lists in their own scroll areas.
+
+```sh
+node --test tests/precons.test.cjs
+node tests/precons-browser.test.cjs
+```
+
 ## Defensive Lure and combat-arrow focus (v0.70)
 
 **Lure is a defensive duel adaptation.** Every attacking enemy attacks the first living friendly creature with Lure instead of the player. Taunting Elf and a Clone copying it have Lure, with an amber keyword chip in hand/booster/shop facts, on the battlefield and in the collection. The collection can filter Lure. This replaces Taunting Elf's previous offensive forced-defender/retaliation suppression adaptation.

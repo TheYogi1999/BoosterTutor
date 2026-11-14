@@ -335,7 +335,7 @@ function makeStarterPacks() {
   return Array.from({ length: STARTER_BOOSTER_COUNT }, (_, index) => cards.slice(index * PACK_SIZE, (index + 1) * PACK_SIZE));
 }
 
-function startNewRun() {
+function prepareNewRun71(mode = 'draft') {
   if (typeof resetRunProgress59 === 'function') resetRunProgress59();
   if (typeof window.playRunStartAudio === 'function') window.playRunStartAudio();
   if (state.soundOn) soundEngine.unlock().catch(() => {});
@@ -348,6 +348,19 @@ function startNewRun() {
   state.battle = null;
   state.stageLocations = chooseRunStages56();
   state.selection.clear();
+  state.packs = [];
+  state.boosterInterruption = null;
+  state.activePack = 0;
+  state.rerolledPacks = new Set();
+  state.boosterSealed = false;
+  state.draftKind = 'starter';
+  state.runMode71 = mode;
+  state.preconId71 = null;
+}
+
+function startNewRun(event) {
+  if (event?.currentTarget?.id === 'restart-button' && state.runMode71 === 'precon' && typeof startPrecon71 === 'function') return startPrecon71(state.preconId71, true);
+  prepareNewRun71();
   showScreen('loading-screen');
   ensureCardPool().then(({ cards, lands, fallback, missingCount, sourceCount, warning }) => {
     state.pool = cards;
@@ -2221,7 +2234,7 @@ $('#back-link').addEventListener('click', (event) => {
 });
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') { if (pointerDrag) { finishDrag(); playSfx('cancel'); } hideCardPreview(); if (state.battle?.pendingAttachment) { state.battle.pendingAttachment = null; renderBattle(); } }
-  if (event.key === 'Enter' && $('#start-screen').classList.contains('active') && !event.target.closest('button, a, input, select, textarea')) startNewRun();
+  if (event.key === 'Enter' && !document.querySelector('dialog[open]') && $('#start-screen').classList.contains('active') && !event.target.closest('button, a, input, select, textarea')) startNewRun();
 });
 
 function styleTravelStop(screenId, labelId, kind) {

@@ -191,5 +191,5 @@ enemyIntent=function(enemy,turn=state.battle?.turn||1){if(enemy.pattern?.[(turn-
 const sourceIntents27=resolveEnemyIntents;
 resolveEnemyIntents=function(){const b=state.battle;if(b.intentsResolvedTurn===b.turn)return;sourceIntents27();prepareEnemySpells38(b);};
 const baseStartRun27=startNewRun;
-startNewRun=function(){state.boosterInterruption=null;const b=state.battle;if(b){b.resolutionTask=null;b.wardTask=null;b.libraryOrder=null;b.interruption=false;b.deferredBeat=null;b.scryContinuation=null;}for(const id of ['ward-dialog','library-order-dialog']){const dialog=$('#'+id);if(dialog.open)dialog.close();}return baseStartRun27();};
+startNewRun=function(event){state.boosterInterruption=null;const b=state.battle;if(b){b.resolutionTask=null;b.wardTask=null;b.libraryOrder=null;b.interruption=false;b.deferredBeat=null;b.scryContinuation=null;}for(const id of ['ward-dialog','library-order-dialog']){const dialog=$('#'+id);if(dialog.open)dialog.close();}return baseStartRun27(event);};
 for(const id of ['start-button','restart-button']){$('#'+id).removeEventListener('click',baseStartRun27);$('#'+id).addEventListener('click',startNewRun);}
