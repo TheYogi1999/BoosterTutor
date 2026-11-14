@@ -1,7 +1,7 @@
 /* Complete reviewed rules for the rescued catalog, shared by mouse and controller. */
 const MANA_CREATURES66=new Map([["Avacyn's Pilgrim",1],['Birds of Paradise',1],['Gold Myr',1],['Iron Myr',1],['Silver Myr',1],['Leaden Myr',1],['Copper Myr',1],['Palladium Myr',2],['Elvish Mystic',1],['Fyndhorn Elves',1]]);
 const WARDENS66=new Set(['Soul Warden',"Soul's Attendant",'Essence Warden']);
-const ACTIVATED66=new Set(['Goblin Fireslinger','Goblin Snowman','Prodigal Pyromancer','Prodigal Sorcerer','Shivan Dragon','Visara the Dreadful']);
+const ACTIVATED66=new Set(['Goblin Fireslinger','Goblin Snowman','Prodigal Pyromancer','Prodigal Sorcerer','Shivan Dragon','Visara the Dreadful','Niv-Mizzet, the Firemind']);
 const X_SPELLS66=new Set(['Blaze','Hurricane','Earthquake']);
 const REVIEWED66=new Set([...MANA_CREATURES66.keys(),...WARDENS66,...ACTIVATED66,...X_SPELLS66,'Taunting Elf','Index','Read the Bones','Flight of Fancy','Murderous Redcap','Thunderclap Wyvern','Inferno']);
 const ADAPTED66=new Set(['Taunting Elf','Goblin Fireslinger','Hurricane','Earthquake','Inferno']);
@@ -41,6 +41,14 @@ function settleReviewed66(b=state.battle){
  if(!b||b!==state.battle)return;
  for(let i=0;i<4;i++){const n=b.creatures.length+b.enemyCreatures.length;refreshPermanentEffects();b.creatures=removeDeadCreatures(b.creatures,'player');b.enemyCreatures=removeDeadCreatures(b.enemyCreatures,'enemy');if(n===b.creatures.length+b.enemyCreatures.length)break;}
  if(state.playerHealth<=0&&b.phase!=='complete')endRun(false);
+}
+
+// Called only by real draws, never searches, conjures or returns to hand.
+function onCardDrawn72(b,card){
+ for(const source of b.creatures.filter(u=>u.card.name==='Niv-Mizzet, the Firemind'&&creatureAlive(u))){
+  const snapshot=snapshotSource66(source);
+  queueJester65(b,done=>openJesterChoice65({battle:b,title:'Niv-Mizzet · draw trigger',instruction:`You drew ${card.name}. Choose any target for 1 damage. Hexproof and Ward apply. This trigger resolves after the current spell or ability.`,options:jesterTargetOptions65(b),accept:chosen=>withJesterWard65(b,chosen[0].target,source.card.name,()=>{dealAbility66(b.creatures.includes(source)?source:snapshot,chosen[0].target,1,b);settleReviewed66(b);},done)}));
+ }
 }
 function announceEntry66(unit,b=state.battle){
  if(!b||b!==state.battle)return;b.entriesSeen66||=new Set();if(b.entriesSeen66.has(unit.id))return;b.entriesSeen66.add(unit.id);
@@ -141,6 +149,7 @@ function creatureAbilityReady66(u,b=state.battle,ownChoice=false){
  if(!ownChoice&&(jesterPending65(b)||permanentActionBusy60(b)||b.librarySearch))return false;
  if(u.card.name==='Shivan Dragon')return b.mana>=1;
  if(u.tapped||isSummoningSick(u,b.turn))return false;
+ if(u.card.name==='Niv-Mizzet, the Firemind')return true;
  return abilityTargets66(u,b).length>0;
 }
 function abilityTargets66(u,b=state.battle){
@@ -158,10 +167,16 @@ function renderCreatureAbility66(){
  $('#creature-ability-cost').textContent=u.card.name==='Shivan Dragon'?'1 generic mana · no tap cost':'Tap · no mana cost (target Ward is paid separately)';
  $('#creature-ability-status').textContent=creatureAbilityReady66(u,b)?'Choose targets before paying. Cancel spends nothing.':u.card.name==='Shivan Dragon'?'Needs 1 available mana.':u.tapped?'Tapped · untaps next turn':isSummoningSick(u,b.turn)?'Summoning sickness · needs Haste or your next turn.':'No legal target in this phase.';
  $('#creature-ability-confirm').disabled=!creatureAbilityReady66(u,b);$('#creature-ability-confirm').textContent=u.card.name==='Shivan Dragon'?'+1/+0 until end of turn':'Choose target →';
+ if(u.card.name==='Niv-Mizzet, the Firemind'){
+  $('#creature-ability-cost').textContent='Tap · draw one card · no mana cost';
+  $('#creature-ability-confirm').textContent='Tap & draw →';
+  if(creatureAbilityReady66(u,b))$('#creature-ability-status').textContent='Draw one card, then choose a target for its separate damage trigger. An empty library loses the run.';
+ }
 }
 function confirmCreatureAbility66(){
  const a=state.creatureAbility66,b=state.battle,u=b?.creatures.find(x=>x.id===a?.id);if(!a||a.battle!==b||!creatureAbilityReady66(u,b))return false;closeCreatureAbility66();
  if(u.card.name==='Shivan Dragon'){if(!payMana(1,b))return false;resolveReviewedEffect({kind:'buff',power:1,toughness:0},{side:'player',id:u.id},{card:u.card});b.mulliganAvailable=false;renderBattle();return true;}
+ if(u.card.name==='Niv-Mizzet, the Firemind'){u.tapped=true;b.mulliganAvailable=false;drawOneCard();if(b.phase!=='complete'){renderBattle();pumpJesters65(b);}return true;}
  return openJesterChoice65({battle:b,title:`${u.card.name} · activated ability`,instruction:'Choose a legal target. Confirming taps the source. Ward may then require mana; an ability countered by Ward leaves the source tapped.',options:abilityTargets66(u,b),cancel:()=>renderBattle(),validate:chosen=>creatureAbilityReady66(u,b,true)&&abilityTargets66(u,b).some(o=>o.target.side===chosen[0].target.side&&o.target.id===chosen[0].target.id),accept:chosen=>{
   u.tapped=true;b.mulliganAvailable=false;const target=chosen[0].target,source=snapshotSource66(u);
   if(u.card.name==='Goblin Snowman'){u.blockLockedTurn66=b.turn;u.snowBlockingTurn66=b.turn;}
@@ -234,6 +249,7 @@ showScreen=function(id){if(id!=='combat-screen'){closeX66();closeCreatureAbility
 const baseRescueChoiceRender66=renderJesterChoice65;
 renderJesterChoice65=function(){baseRescueChoiceRender66();const q=visibleJesterChoice65;if(!q)return;const eyebrow=$('#jester-choice-dialog .eyebrow');if(eyebrow)eyebrow.textContent=/Jester|Masquerade|Vault 21/.test(q.title)?'JESTER’S TABLE':'CARD RULES';if(q.title==='Index · order the top five')$('#jester-choice-status').textContent=`Next draws: ${[...q.selected].map(i=>q.options[i].card.name).join(' → ')||'choose the next card first'}`;};
 const REVIEW_DESCRIPTIONS66={
+ 'Niv-Mizzet, the Firemind':['Flying. Whenever you draw a card, deal 1 damage to any creature or your life. Choose a separate target for each drawn card after the current spell or ability finishes. Enemy Hexproof and Ward apply.','Tap: draw one card. Summoning sickness requires Haste or a later turn. Searches, Booster Tutor, returns to hand and conjured cards do not count as draws. Legendary rule applies. All casting costs are generic.'],
  'Soul Warden':['Whenever another creature enters, gain 1 life. Includes your creatures, tokens, Persist returns, enemy arrivals and new waves; does not trigger for itself.'],
  "Soul's Attendant":['Whenever another creature enters, you may gain 1 life. Choose gain or decline for each entry. Includes enemies, tokens and Persist; not itself.'],
  'Essence Warden':['Whenever another creature enters, gain 1 life. Includes enemies and new waves, your creatures, tokens and Persist returns; not itself.'],
@@ -260,7 +276,7 @@ effectDescriptions=function(card){
  if(!lines)return baseRescueDescriptions66(card);lines=[...lines];const counters=typeof runCounterLabels60==='function'?runCounterLabels60(card):[];if(counters.length)lines.push(`Run counters on this copy: ${counters.join(' · ')}.`);if(card.conjuredByMask64)lines.push('Conjured for this battle by Jester’s Mask; not added to your run deck.');return lines;
 };
 const baseRescueSummary66=draftAbilitySummary;
-draftAbilitySummary=function(card){if(MANA_CREATURES66.has(card.name))return `Tap: add ${manaAmount66(card)} generic mana.`;return {'Soul Warden':'Another creature enters: gain 1 life.',"Soul's Attendant":'Another creature enters: you may gain 1 life.','Essence Warden':'Another creature enters: gain 1 life.','Taunting Elf':'Lure: enemies attack it instead of you.','Blaze':'Pay X + 1: deal X to any target.','Index':'Reorder the top five library cards.','Read the Bones':'Scry 2, draw 2, lose 2 life.','Flight of Fancy':'Aura: Flying. On entry: draw 2.','Goblin Fireslinger':'Tap: 1 damage to an enemy or your life.','Goblin Snowman':'Safe combat blocks. Tap: ping the attacker it blocks.','Murderous Redcap':'On entry: damage equal to power. Persist.','Thunderclap Wyvern':'Flash, Flying. Other friendly flyers get +1/+1.','Shivan Dragon':'Flying. Pay 1: +1/+0 this turn.','Visara the Dreadful':'Flying. Tap: destroy a creature.','Inferno':'6 damage to all creatures and your life.','Hurricane':'X damage to flyers and your life.','Earthquake':'X damage to nonflyers and your life.','Prodigal Pyromancer':'Tap: 1 damage to any target.','Prodigal Sorcerer':'Tap: 1 damage to any target.'}[card.name]||baseRescueSummary66(card);};
+draftAbilitySummary=function(card){if(MANA_CREATURES66.has(card.name))return `Tap: add ${manaAmount66(card)} generic mana.`;return {'Niv-Mizzet, the Firemind':'Flying. Each card drawn: 1 damage to any target. Tap: draw 1.','Soul Warden':'Another creature enters: gain 1 life.',"Soul's Attendant":'Another creature enters: you may gain 1 life.','Essence Warden':'Another creature enters: gain 1 life.','Taunting Elf':'Lure: enemies attack it instead of you.','Blaze':'Pay X + 1: deal X to any target.','Index':'Reorder the top five library cards.','Read the Bones':'Scry 2, draw 2, lose 2 life.','Flight of Fancy':'Aura: Flying. On entry: draw 2.','Goblin Fireslinger':'Tap: 1 damage to an enemy or your life.','Goblin Snowman':'Safe combat blocks. Tap: ping the attacker it blocks.','Murderous Redcap':'On entry: damage equal to power. Persist.','Thunderclap Wyvern':'Flash, Flying. Other friendly flyers get +1/+1.','Shivan Dragon':'Flying. Pay 1: +1/+0 this turn.','Visara the Dreadful':'Flying. Tap: destroy a creature.','Inferno':'6 damage to all creatures and your life.','Hurricane':'X damage to flyers and your life.','Earthquake':'X damage to nonflyers and your life.','Prodigal Pyromancer':'Tap: 1 damage to any target.','Prodigal Sorcerer':'Tap: 1 damage to any target.'}[card.name]||baseRescueSummary66(card);};
 const baseRescueCatalog66=collectionEntryMarkup;
 collectionEntryMarkup=function(card,index,kind){const html=baseRescueCatalog66(card,index,kind);return kind==='catalog'&&ADAPTED66.has(card.name)?html.replace('Playable · reviewed rules','Playable · duel adaptation'):html;};
 $('#permanent-row').addEventListener('wheel',event=>{const row=event.currentTarget;if(row.scrollWidth<=row.clientWidth||Math.abs(event.deltaX)>=Math.abs(event.deltaY))return;const step=event.deltaMode===1?16:event.deltaMode===2?row.clientWidth:1;row.scrollLeft+=event.deltaY*step;event.preventDefault();},{passive:false});

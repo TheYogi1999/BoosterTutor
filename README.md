@@ -1,17 +1,33 @@
+## Deck boxes, deck-color boosters and Niv-Mizzet (v0.72)
+
+Precon boxes now have a single aligned front/top/right silhouette, large creature art, real mana symbols and a dark gold-bordered name plaque. The symbols use the **same Mana font glyphs, palette and canvas renderer as [MagicEditor](https://github.com/TheYogi1999/MagicEditor)**. The renderer, pinned font, pre-rendered local symbols and font license are bundled; see [credits](assets/mana/SOURCES.md). No runtime CDN is needed.
+
+During a prepared run, **victory boosters, their rerolls, Booster Tutor and every specialised shop pack** contain only reviewed cards whose entire color identity fits the chosen deck, plus colorless cards. All packs still contain seven cards. Generated basic mana cards also match. Shop packs retain their creature/instant/equipment/mythic selection rules and show both deck colors. The underlying catalog and ordinary PLAY stay unrestricted; changing modes clears the pack theme.
+
+**Ember & Echo** now includes one **Niv-Mizzet, the Firemind**, replacing one Pyromancer. Its Guildpact art is the cover and the oldest regular English card image. Flying, the legendary rule, tap-to-draw and one separately targeted damage trigger per actual card draw are implemented. Triggers wait for the current spell to finish, including Brainstorm's two returned cards. Searches, Booster Tutor, conjures and graveyard returns are not draws. Hexproof, Ward, summoning sickness, Haste, lifelink/deathtouch upgrades and empty-library loss apply. This six-mana champion is the only exception to the starter curve cap; the list remains 24 cards with no fast-mana relics.
+
+Validation for v0.72: **426 rule tests** plus full browser flows for all six colored starters, all booster sources/rerolls, shop purchases, exact deck counts, Niv's tap/draw/target UI and return to unrestricted PLAY. The existing precon browser test also covers five viewport sizes, controllers, all six starts/restarts and progression.
+
+```sh
+node --test tests/precons.test.cjs
+node tests/precon-colors-browser.test.cjs
+node tests/precons-browser.test.cjs
+```
+
 ## Prepared starter decks and Game Modes (v0.71)
 
 **GAME MODES** sits directly below **PLAY** on the title menu. Its initial tab, **PRECONSTRUCTED DECKS**, offers six physical deck-box designs with the lead creature's Scryfall art crop and a two-color finish. Choose a box to inspect its entire list, open any card's full image and in-game explanation, then explicitly choose **Begin Run**. Browsing, changing the selection, inspecting cards, Escape and controller Back cannot change a run or spend resources.
 
 | Starter | Theme | Colors | Cover creature |
 | --- | --- | --- | --- |
-| Ember & Echo | Spellslinger | Blue / Red | Prodigal Pyromancer |
+| Ember & Echo | Spellslinger | Blue / Red | Niv-Mizzet, the Firemind |
 | Relic & Bloom | Equipment & Auras | White / Green | Fencing Ace |
 | Twilight Vigil | Lifegain & Recovery | White / Black | Vampire Nighthawk |
 | Venom & Thorns | Poison & Deathtouch | Black / Green | Thornweald Archer |
 | Wildfire Stampede | Creatures & Combat Tricks | Red / Green | Garruk's Companion |
 | Skyward Watch | Flying & Vigilance | White / Blue | Thunderclap Wyvern |
 
-Each prepared starter has **exactly 24 physical cards: sixteen themed cards, seven mana cards and one Booster Tutor**. It uses existing reviewed cards, mostly commons/uncommons, no Lotus/Ring/Mox, no more than two copies of any themed card, and a modest curve capped at five mana. Colors describe the theme and the selected basic-land artwork; all costs remain generic. The shared Booster Tutor is the usual exception to the deck's color identity. Cover illustrations use the pool's oldest regular English paper printings, bundled locally with [artist and Scryfall credits](assets/precons/SOURCES.md).
+Each prepared starter has **exactly 24 physical cards: sixteen themed cards, seven mana cards and one Booster Tutor**. It uses existing reviewed cards, mostly commons/uncommons, no Lotus/Ring/Mox, no more than two copies of any themed card, and a modest curve capped at five mana, apart from the single six-mana Niv-Mizzet. Colors describe the theme and the selected basic-land artwork; all costs remain generic. The shared Booster Tutor is the usual exception to the deck's color identity. Cover illustrations use the pool's oldest regular English paper printings, bundled locally with [artist and Scryfall credits](assets/precons/SOURCES.md).
 
 Beginning a prepared run resets life to 20, coins to zero, level to one and the run's purchased upgrades, supplies and seals, while preserving the highest-level record. It **skips the initial booster draft and camp** and enters encounter one directly with two of its seven mana cards in play, seven cards in hand and fifteen in the library. Physical IDs and run upgrades remain independent for every copy. The deck is not given extra free relics or camp tokens.
 
@@ -95,7 +111,7 @@ node tests/controller-browser.test.cjs
 
 ## Reviewed-card rescue, scrolling permanents and enemy types (v0.66)
 
-**29 more original Magic cards** are reviewed and bundled with their oldest regular English paper images. The catalog now has **176 bundled / 173 ordinary-pack eligible cards**. Unsupported cards remain banned; admission uses explicit rules rather than fallback damage or keyword guessing.
+**29 more original Magic cards** are reviewed and bundled with their oldest regular English paper images. The catalog now has **177 bundled / 174 ordinary-pack eligible cards**. Unsupported cards remain banned; admission uses explicit rules rather than fallback damage or keyword guessing.
 
 The requested additions are Soul Warden, Taunting Elf, Blaze, Avacyn's Pilgrim, Birds of Paradise, Goblin Fireslinger, Index, Gold Myr, Iron Myr, Read the Bones, Flight of Fancy, Goblin Snowman, Murderous Redcap, Thunderclap Wyvern, Shivan Dragon, Visara the Dreadful and Inferno. Shared mechanics also admit Soul's Attendant, Essence Warden, Elvish Mystic, Fyndhorn Elves, Silver Myr, Leaden Myr, Copper Myr, Palladium Myr, Prodigal Pyromancer, Prodigal Sorcerer, Hurricane and Earthquake. Full English in-game explanations and explicit duel adaptations appear in the collection, booster facts and card previews.
 

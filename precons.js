@@ -1,7 +1,7 @@
 /* Prepared starter decks; opening this menu never changes the active run. */
 const PRECON_COLORS71={W:{name:'White',hex:'#e7dbb4'},U:{name:'Blue',hex:'#69bdec'},B:{name:'Black',hex:'#b398c9'},R:{name:'Red',hex:'#ee8b65'},G:{name:'Green',hex:'#8ac89a'}};
 const PRECONS71=[
- {id:'ember-echo',name:'Ember & Echo',theme:'Spellslinger',colors:['U','R'],hero:'Prodigal Pyromancer',description:'Small spellcasters, careful card draw and copied burn. Keep mana open and answer at the right moment.',lands:[['Island',4],['Mountain',3]],cards:[['Prodigal Pyromancer',2],['Wind Drake',2],['Goblin Fireslinger',2],['Prodigal Sorcerer',1],['Shock',2],['Lightning Strike',1],['Doublecast',1],['Brainstorm',1],['Opt',1],['Divination',1],['Negate',1],['Thrill of Possibility',1]]},
+ {id:'ember-echo',name:'Ember & Echo',theme:'Spellslinger',colors:['U','R'],hero:'Niv-Mizzet, the Firemind',description:'Small spellcasters and copied burn build toward Niv-Mizzet. Every card you draw with the Firemind in play sparks another point of damage.',lands:[['Island',4],['Mountain',3]],cards:[['Niv-Mizzet, the Firemind',1],['Prodigal Pyromancer',1],['Wind Drake',2],['Goblin Fireslinger',2],['Prodigal Sorcerer',1],['Shock',2],['Lightning Strike',1],['Doublecast',1],['Brainstorm',1],['Opt',1],['Divination',1],['Negate',1],['Thrill of Possibility',1]]},
  {id:'relic-bloom',name:'Relic & Bloom',theme:'Equipment & Auras',colors:['W','G'],hero:'Fencing Ace',description:'Build a modest creature into your champion. Mix equipment, auras and protection; keep an eye on equip costs.',lands:[['Plains',4],['Forest',3]],cards:[['Fencing Ace',1],['Youthful Knight',2],['Savannah Lions',2],["Healer's Hawk",1],['Canopy Spider',1],['Abbey Griffin',1],['Short Sword',1],['Leonin Scimitar',1],['Vulshok Morningstar',1],['Holy Strength',1],['Rancor',1],['Snakeskin Veil',1],['Disenchant',1],['Revitalize',1]]},
  {id:'twilight-vigil',name:'Twilight Vigil',theme:'Lifegain & Recovery',colors:['W','B'],hero:'Vampire Nighthawk',description:'Trade patiently, recover life and bring a fallen ally back. One Nighthawk leads a humble supporting cast.',lands:[['Plains',4],['Swamp',3]],cards:[['Vampire Nighthawk',1],["Healer's Hawk",2],['Walking Corpse',2],['Soul Warden',1],['Youthful Knight',1],['Dune Beetle',1],['Revitalize',1],['Fountain of Renewal',1],['Murder',1],['Raise Dead',1],['Read the Bones',1],['Unholy Strength',1],['Disenchant',1],["Altar's Reap",1]]},
  {id:'venom-thorns',name:'Venom & Thorns',theme:'Poison & Deathtouch',colors:['B','G'],hero:'Thornweald Archer',description:'Reach, careful trades and a small poison package. Protect your fragile specialists rather than rushing every attack.',lands:[['Forest',4],['Swamp',3]],cards:[['Thornweald Archer',1],['Deadly Recluse',1],['Canopy Spider',1],['Plague Stinger',1],['Grizzly Bears',2],['Walking Corpse',1],['Dune Beetle',1],['Battlegrowth',1],['Giant Growth',1],['Hunger of the Howlpack',1],['Raise Dead',1],['Village Rites',1],['Infectious Inquiry',1],['Naturalize',1],['Murder',1]]},
@@ -11,6 +11,38 @@ const PRECONS71=[
 let selectedPrecon71=null;
 let startingPrecon71=false;
 function preconDefinition71(id){return PRECONS71.find(deck=>deck.id===id)||null;}
+function activePrecon72(){return state.runMode71==='precon'?preconDefinition71(state.preconId71):null;}
+function preconAllows72(card){
+ const deck=activePrecon72();if(!deck)return true;
+ // Color identity includes colored activated costs and all hybrid halves.
+ const colors=card.color_identity??[...new Set((card.mana_cost||'').match(/[WUBRG]/g)||[])];
+ return colors.every(color=>deck.colors.includes(color));
+}
+function preconPackPool72(source){return playableCards(source).filter(preconAllows72);}
+const basePreconRandom72=chooseRandomCards;
+chooseRandomCards=function(source,count){
+ if(!activePrecon72())return basePreconRandom72(source,count);
+ let pool=preconPackPool72(source);if(!pool.length)pool=preconPackPool72(BUNDLED_CARDS);
+ if(!pool.length)throw Error('No reviewed cards match this starter.');
+ const cards=shuffle(pool);while(cards.length<count)cards.push(...shuffle(pool));return cards.slice(0,count);
+};
+const basePreconCandidates72=packCandidates;
+packCandidates=function(type,source=state.pool.length?state.pool:BUNDLED_CARDS){return basePreconCandidates72(type,source).filter(preconAllows72);};
+function themePreconPacks72(root){
+ const deck=activePrecon72();if(!root)return;
+ const hosts=[root,...root.querySelectorAll('.sealed-pack,.shop-booster-offer')];
+ for(const host of hosts){
+  if(!deck){delete host.dataset.preconColors;for(const key of ['--deck-a','--deck-b','--pack-color','--pack-mid','--pack-dark'])host.style.removeProperty(key);continue;}
+  host.dataset.preconColors=deck.colors.join('');
+  host.style.setProperty('--deck-a',PRECON_COLORS71[deck.colors[0]].hex);host.style.setProperty('--deck-b',PRECON_COLORS71[deck.colors[1]].hex);
+  host.style.setProperty('--pack-color',PRECON_COLORS71[deck.colors[0]].hex);host.style.setProperty('--pack-mid',PRECON_COLORS71[deck.colors[1]].hex);host.style.setProperty('--pack-dark','#101923');
+ }
+ if(deck){for(const emblem of root.querySelectorAll('.pack-emblem,.shop-pack-emblem'))emblem.innerHTML=preconColors71(deck);const caption=root.querySelector('.pack-caption');if(caption)caption.textContent=deck.name.toUpperCase();}
+}
+const basePreconDraft72=renderDraft;
+renderDraft=function(){const result=basePreconDraft72();themePreconPacks72($('#draft-screen'));return result;};
+const basePreconShop72=renderShop;
+renderShop=function(){const result=basePreconShop72();themePreconPacks72($('#shop-pack'));return result;};
 function preconContents71(id){
  const deck=preconDefinition71(id);if(!deck)throw Error('Unknown starter deck.');
  const find=name=>{const card=[...BUNDLED_CARDS,...FALLBACK_LANDS].find(c=>c.name===name);if(!card)throw Error(`Missing starter card: ${name}`);return card;};
@@ -24,7 +56,7 @@ function mintPrecon71(id){
   const copy=runCard59(card);if(isLand(card)){copy.runMana=true;copy.instanceId=`run-mana-${state.nextPermanentId++}`;}return copy;
  }));
 }
-function preconColors71(deck){return deck.colors.map(key=>`<span class="precon-color71" style="--gem:${PRECON_COLORS71[key].hex}" title="${PRECON_COLORS71[key].name}">${key}</span>`).join('');}
+function preconColors71(deck){return deck.colors.map(manaSymbol72).join('');}
 function renderPreconDetails71(){
  const deck=preconDefinition71(selectedPrecon71),panel=$('#precon-details');$('#precon-begin').disabled=!deck;
  if(!deck){panel.innerHTML='<div class="precon-empty71"><span aria-hidden="true">✧</span><h3>A ready-made beginning</h3><p>Choose a deck box to inspect all 24 cards.</p><small>Seven mana cards · one Booster Tutor<br>Go straight into the first encounter.</small></div>';return;}
@@ -40,7 +72,7 @@ function selectPrecon71(id){
 function onPreconTitle71(){return (!state.screen||state.screen==='start-screen')&&$('#start-screen').classList.contains('active');}
 function openGameModes71(){
  if(!onPreconTitle71()||document.querySelector('dialog[open]'))return false;
- $('#precon-grid').innerHTML=PRECONS71.map(deck=>`<button type="button" class="precon-choice71${selectedPrecon71===deck.id?' selected':''}" data-precon-deck="${deck.id}" aria-pressed="${selectedPrecon71===deck.id}" style="--deck-a:${PRECON_COLORS71[deck.colors[0]].hex};--deck-b:${PRECON_COLORS71[deck.colors[1]].hex}" aria-label="${escapeHtml(deck.name)}, ${escapeHtml(deck.theme)}, ${deck.colors.map(c=>PRECON_COLORS71[c].name).join(' and ')}, 24 cards, led by ${escapeHtml(deck.hero)}"><span class="precon-box71" aria-hidden="true"><span class="precon-lid71"></span><span class="precon-spine71"></span><span class="precon-front71"><img src="assets/precons/${deck.id}.jpg" alt="" draggable="false"><span class="precon-cover-mark71">BOOSTER TUTOR</span><span class="precon-cover-title71">${escapeHtml(deck.hero)}</span><span class="precon-box-colors71">${preconColors71(deck)}</span></span></span><span class="precon-choice-label71"><b>${escapeHtml(deck.name)}</b><small>${escapeHtml(deck.theme)} <span>24 cards</span></small></span></button>`).join('');
+ $('#precon-grid').innerHTML=PRECONS71.map(deck=>`<button type="button" class="precon-choice71${selectedPrecon71===deck.id?' selected':''}" data-precon-deck="${deck.id}" aria-pressed="${selectedPrecon71===deck.id}" style="--deck-a:${PRECON_COLORS71[deck.colors[0]].hex};--deck-b:${PRECON_COLORS71[deck.colors[1]].hex}" aria-label="${escapeHtml(deck.name)}, ${escapeHtml(deck.theme)}, ${deck.colors.map(c=>PRECON_COLORS71[c].name).join(' and ')}, 24 cards, led by ${escapeHtml(deck.hero)}"><span class="precon-box71" aria-hidden="true"><span class="precon-lid71"></span><span class="precon-spine71"></span><span class="precon-front71"><img src="assets/precons/${deck.id==='ember-echo'?'ember-echo-niv':deck.id}.jpg" alt="" draggable="false"><span class="precon-box-colors71">${preconColors71(deck)}</span></span></span><span class="precon-choice-label71"><b>${escapeHtml(deck.name)}</b><small>${escapeHtml(deck.theme)} <span>24 cards</span></small></span></button>`).join('');
  renderPreconDetails71();$('#game-modes-dialog').showModal();return true;
 }
 function inspectPreconCard71(name){

@@ -771,7 +771,8 @@ function beginBattle(node) {
 }
 
 function generateStarterManaCards(count) {
-  const pool = state.landPool.length ? state.landPool : FALLBACK_LANDS;
+  const source = state.landPool.length ? state.landPool : FALLBACK_LANDS;
+  const pool = typeof preconAllows72 === 'function' ? source.filter(preconAllows72) : source;
   return Array.from({ length: count }, () => {
     const card = pool[Math.floor(Math.random() * pool.length)];
     return { ...card, runMana: true, instanceId: `run-mana-${state.nextPermanentId++}` };
@@ -795,6 +796,7 @@ function drawToHand(maxHand) {
     }
     const drawn = battle.deck.pop();
     battle.hand.push(drawn);
+    if (typeof onCardDrawn72 === 'function') onCardDrawn72(battle, drawn);
     if (typeof queueDrawSound === 'function') queueDrawSound(battle);
     if (typeof queueHandDraw === 'function') queueHandDraw(drawn, battle.hand.length - 1, battle);
   }
@@ -2281,8 +2283,9 @@ function rerollCurrentPack() {
   state.rerolledPacks ||= new Set();
   if (state.boosterSealed || state.rerolledPacks.has(index)) return;
   const excluded = new Set(state.packs.flat().map(card => card.id));
-  let candidates = state.pool.filter(card => !excluded.has(card.id));
-  if (candidates.length < PACK_SIZE) candidates = state.pool.filter(card => !state.packs[index].some(old => old.id === card.id));
+  const source = typeof preconPackPool72 === 'function' ? preconPackPool72(state.pool) : state.pool;
+  let candidates = source.filter(card => !excluded.has(card.id));
+  if (candidates.length < PACK_SIZE) candidates = source.filter(card => !state.packs[index].some(old => old.id === card.id));
   if (candidates.length < PACK_SIZE) return showActionError('Not enough different cards to reroll.');
   state.packs[index] = shuffle(candidates).slice(0, PACK_SIZE);
   state.selection.delete(index);

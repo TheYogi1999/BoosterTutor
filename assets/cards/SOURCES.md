@@ -32,3 +32,5 @@ v0.34 adds 10 vanilla creatures, 3 simple Equipment and 6 spells. Four existing 
 - **Treasure** (common): https://scryfall.com/card/ttrk/26/treasure?utm_source=api — `b8e8c3b4-3b8d-48a4-b427-a2b8ac3e2f8b.jpg`
 - **Food** (common): https://scryfall.com/card/ttrk/23/food?utm_source=api — `dd703147-f546-45af-8511-2d108afd0ad2.jpg`
 - **Clue** (common): https://scryfall.com/card/ttrk/21/clue?utm_source=api — `306c8271-ddfc-45a4-bd23-bf31212f813d.jpg`
+
+- `5994d98a-090b-4203-b44f-b6517b6a83ea.jpg`: Niv-Mizzet, the Firemind — Todd Lockwood. Guildpact 123 (2006), oldest regular English paper print. https://scryfall.com/card/gpt/123/niv-mizzet-the-firemind

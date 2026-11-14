@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
   p.on('pageerror',e=>errors.push(e.message));
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');
   await p.waitForFunction(()=>typeof MINION_TYPES67!=='undefined');
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.71');
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.72');
   const setup=async()=>p.evaluate(()=>{
    document.querySelectorAll('dialog[open]').forEach(d=>d.close());
    closeX66();closeCreatureAbility66();closeJesterChoice65();closeTokenAction47();abortTutorSearch51();abortDiceRoll50();abortReactionChecks52();
@@ -69,6 +69,6 @@ const assert=require('node:assert/strict');
   await p.locator('[data-creature-id]').last().hover();assert.match(await p.locator('#inspector-content').innerText(),/Does not grant Flying/);
   await p.locator('#graveyard-button').click();assert.equal(await p.locator('#graveyard-dialog').evaluate(d=>d.open),true);await p.locator('#graveyard-close').click();
   await setup();await p.evaluate(()=>drawCombatArrows());await p.screenshot({path:'work/portrait-hud69-final.png'});
-  assert.deepEqual(errors,[]);console.log('PASS v0.71: square avatar; invisible 2x3 attack anchors with six exact unique endpoints and separate smooth cubic bows; two-row 24-land scroll and controller reveal; five viewports; 20 generated equal-size portrait tiles; live sword power beside life; correct actual Wyvern cast with no Flying grant; graveyard button without duplicate link.');
+  assert.deepEqual(errors,[]);console.log('PASS v0.72: square avatar; invisible 2x3 attack anchors with six exact unique endpoints and separate smooth cubic bows; two-row 24-land scroll and controller reveal; five viewports; 20 generated equal-size portrait tiles; live sword power beside life; correct actual Wyvern cast with no Flying grant; graveyard button without duplicate link.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

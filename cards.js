@@ -4851,6 +4851,36 @@ const BUNDLED_CARDS = [
       "rarity": "rare",
       "uri": "https://scryfall.com/card/lea/146/earthquake?utm_source=api"
     }
+  },
+  {
+    "id": "5994d98a-090b-4203-b44f-b6517b6a83ea",
+    "name": "Niv-Mizzet, the Firemind",
+    "mana_cost": "{2}{U}{U}{R}{R}",
+    "cmc": 6,
+    "type_line": "Legendary Creature — Dragon Wizard",
+    "oracle_text": "Flying\nWhenever you draw a card, Niv-Mizzet deals 1 damage to any target.\n{T}: Draw a card.",
+    "power": "4",
+    "toughness": "4",
+    "color_identity": [
+      "R",
+      "U"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "rarity": "rare",
+    "image": "assets/cards/5994d98a-090b-4203-b44f-b6517b6a83ea.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/9/5994d98a-090b-4203-b44f-b6517b6a83ea.jpg?1783943476",
+    "uri": "https://scryfall.com/card/gpt/123/niv-mizzet-the-firemind?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "5994d98a-090b-4203-b44f-b6517b6a83ea",
+      "set": "gpt",
+      "set_name": "Guildpact",
+      "released_at": "2006-02-03",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/gpt/123/niv-mizzet-the-firemind?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

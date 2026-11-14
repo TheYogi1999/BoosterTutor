@@ -8,13 +8,13 @@ const assert=require('node:assert/strict');
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');await p.waitForFunction(()=>typeof PRECONS71!=='undefined');
   await p.evaluate(()=>{state.soundOn=false;window.runAudio71=0;window.playRunStartAudio=()=>runAudio71++;window.scenes71=[];const original=showScreen;showScreen=function(id){scenes71.push(id);return original(id)}});
   assert.deepEqual(await p.locator('.title-menu button').allTextContents(),['PLAY','GAME MODES','OPTIONS','QUIT','COLLECTIONS']);
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.71');
+  assert.equal(await p.locator('.brand-version').innerText(),'v0.72');
   const onTitle=async()=>p.evaluate(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());showScreen('start-screen')});
   const open=async()=>{await p.locator('#title-game-modes').click();await p.waitForFunction(()=>document.querySelector('#game-modes-dialog').open)};
   const fits=async()=>p.waitForFunction(()=>Math.abs(document.querySelector('.game-shell').getBoundingClientRect().width-1600*Math.min(innerWidth/1600,innerHeight/900))<1);
   const noPageScroll=async()=>assert.equal(await p.evaluate(()=>scrollY===0&&document.documentElement.scrollWidth<=innerWidth+1&&document.documentElement.scrollHeight<=innerHeight+1),true);
   await open();assert.equal(await p.locator('[data-precon-deck]').count(),6);assert.equal(await p.locator('#precon-begin').isDisabled(),true);
-  assert.equal(await p.locator('.precon-front71 img').evaluateAll(async nodes=>{await Promise.all(nodes.map(n=>n.decode()));return nodes.every(n=>n.naturalWidth>=300)}),true);
+  assert.equal(await p.locator('.precon-front71>img').evaluateAll(async nodes=>{await Promise.all(nodes.map(n=>n.decode()));return nodes.every(n=>n.naturalWidth>=300)}),true);
   // Merely browsing or inspecting cannot reset resources or begin a run.
   const before=await p.evaluate(()=>({run:state.finishRun59,life:state.playerHealth,deck:state.deck.length,level:state.level}));
   await p.locator('[data-precon-deck="ember-echo"]').hover();assert.equal(await p.locator('[data-precon-deck][aria-pressed="true"]').count(),0);

@@ -513,3 +513,5 @@ Prodigal Pyromancer
 Prodigal Sorcerer
 Hurricane
 Earthquake
+
+Niv-Mizzet, the Firemind
