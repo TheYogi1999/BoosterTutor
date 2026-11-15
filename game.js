@@ -2610,6 +2610,7 @@ function syncCoins() { $('#coin-count').textContent=String(state.coins||0); $('#
 function awardBounty(enemy) {
   if (!enemy || enemy.owner !== 'enemy' || enemy.bountyClaimed) return 0;
   enemy.bountyClaimed=true;
+  playSfx(enemyDefeatCue77(enemy));
   if (typeof gainDefeatLevel59 === 'function') gainDefeatLevel59();
   const amount=enemy.bounty ?? 8;
   state.coins=(state.coins||0)+amount;syncCoins();addLog(`${enemy.card.name} defeated · +${amount} coins.`);

@@ -1,6 +1,6 @@
 # Enemy defeat sound auditions
 
-Nine manually played sketches: S1–S3 small, M1–M3 medium, L1–L3 large. Family 1 is physical, 2 arcane and 3 retro. `set-1.mp3` through `set-3.mp3` compare small → medium → large with 450 ms gaps. These files are not connected to gameplay; the existing game effects and audio preferences are unchanged.
+Nine manually played sketches: S1–S3 small, M1–M3 medium, L1–L3 large. Family 1 is physical, 2 arcane and 3 retro. `set-1.mp3` through `set-3.mp3` compare small → medium → large with 450 ms gaps. The player selected **S3, M3 and L3** for gameplay in v0.77. The remaining variants and sets stay available as auditions. Choosing codes on the preview page does not change game settings.
 
 ## Recording sources
 

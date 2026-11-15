@@ -1,3 +1,18 @@
+## Retro enemy defeat sounds (v0.77)
+
+The chosen **S3 / M3 / L3** previews now play when an enemy is defeated: S3 for minions, Wisps and Sprites; M3 for other ordinary/elite enemies; L3 for bosses. Classification follows enemy kind/tier rather than current or scaled health. The one-time bounty route covers combat, lethal spells, destruction, poison and exile without replaying on renders or duplicate bounty checks. Player deaths retain their existing sound. Effects mute, zero volume and hidden-tab/stopped-audio cancellation use the existing independent effects channel. The three clips are preloaded on the first audible interaction.
+
+Listen to the original choices on [the audition page](https://theyogi1999.github.io/BoosterTutor/death-sounds.html). Sound credits and reproduction are in [the audio notes](assets/audio/death-previews/README.md).
+
+Browser validation covers all 20 enemy kinds, scaled life, one-time bounty/level awards, combat/poison/destroy/exile, six simultaneous defeats, nonlethal hits, player deaths, effects mute/volume/hidden-tab cancellation and the final enemy's reward transition. Existing selected-effect, independent-channel and real HTTP-cache upgrade browser suites also pass.
+
+```sh
+node tests/enemy-death-sounds-browser.test.cjs
+node tests/selected-sounds-browser.test.cjs
+node tests/audio-channels-browser.test.cjs
+node tests/release-cache-browser.test.cjs
+```
+
 ## Immortal Expedition, Elixir and First Strike (v0.76)
 
 **GAME MODES → IMMORTAL EXPEDITION** starts with the ordinary six-booster draft, generic mana, seven-card opening hand and camp supplies. It adds two independent bonus copies of **Elixir of Immortality**: one is placed directly on the opening battlefield; the other is reserved in the Library until after the opening hand is drawn. A normal completed draft therefore starts with **19 run cards**, two mana cards in play and nine cards left in the Library. Further drafted Elixirs are ordinary additional copies.

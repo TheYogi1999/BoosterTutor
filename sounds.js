@@ -98,9 +98,18 @@ Object.assign(RECORDED_SFX,{
  draw:['assets/audio/action-previews/d1-paper-slide.mp3',.7],
  invalid:['assets/audio/action-previews/x3-retro-denied.mp3',.75],
  'enemy-hit':['assets/audio/action-previews/e3-retro-impact.mp3',.85],
- 'player-hit':['assets/audio/action-previews/p3-retro-damage.mp3',.85]
+ 'player-hit':['assets/audio/action-previews/p3-retro-damage.mp3',.85],
+ 'enemy-death-small':['assets/audio/death-previews/s3-retro-drop.mp3',.85],
+ 'enemy-death-medium':['assets/audio/death-previews/m3-retro-defeat.mp3',.85],
+ 'enemy-death-large':['assets/audio/death-previews/l3-retro-colossus.mp3',.85]
 });
-const selectedActionCues=['draw','invalid','enemy-hit','player-hit'];
+const selectedActionCues=['draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large'];
+// Use the enemy's physical kind, so Endless health/power scaling cannot change its voice.
+function enemyDefeatCue77(enemy){
+ if(enemy.tier==='boss')return 'enemy-death-large';
+ if(enemy.small67||enemy.tier==='minion'||['wisp','sprite'].includes(enemy.kind))return 'enemy-death-small';
+ return 'enemy-death-medium';
+}
 const cueCooldowns={invalid:180,'enemy-hit':65,'player-hit':65};
 const lastActionCue=new Map();
 function recordedSoundBuffer(path){
