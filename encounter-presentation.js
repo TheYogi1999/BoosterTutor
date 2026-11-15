@@ -62,10 +62,10 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coi
  finishCount(){cancelAnimationFrame(this.countFrame);this.countFrame=0;this.stopCoinSounds();this.updateCount(1);},
  count(){
   this.finishCount();if(!this.active)return;if(this.still())return;
-  this.updateCount(0);const started=performance.now(),receipt=this.active,steps=Math.min(12,Math.max(0,receipt.coins));let lastStep=0;
+  this.updateCount(0);const started=performance.now(),receipt=this.active,steps=Math.min(8,Math.max(0,receipt.coins));let lastStep=0;
   const tick=now=>{
    if(this.active!==receipt)return;
-   const t=Math.min(1,Math.max(0,(now-started-600)/1700)),progress=t*(1.25-.25*t),step=Math.floor(progress*steps);
+   const t=Math.min(1,Math.max(0,(now-started-600)/1200)),progress=t*(1.25-.25*t),step=Math.floor(progress*steps);
    this.updateCount(progress);if(step>lastStep){lastStep=step;this.coinTick(receipt);}
    if(t<1)this.countFrame=requestAnimationFrame(tick);else this.countFrame=0;
   };
@@ -107,11 +107,11 @@ showScreen=function(id){
  const cards=old==='combat-screen'&&id!==old&&state.battle?.phase==='complete'?ui.captureCards():[];
  ui.cancelMotion();if(old==='results-screen'&&id!==old&&ui.active){ui.finishCount();ui.active=null;}
  const result=baseScreenPresentation82(id);
- if(old!==id){ui.track(document.getElementById(id),[{opacity:0,translate:'0 12px'},{opacity:1,translate:'0 0'}],{duration:180,easing:'cubic-bezier(.2,.7,.25,1)'});ui.collectCards(cards);}
+ if(old!==id){playTransitionSound84(()=>state.screen===id);ui.track(document.getElementById(id),[{opacity:0,translate:'0 12px'},{opacity:1,translate:'0 0'}],{duration:180,easing:'cubic-bezier(.2,.7,.25,1)'});ui.collectCards(cards);}
  if(id==='results-screen')document.querySelector('#global-phase').textContent='RESULTS';return result;
 };
 const baseDialogPresentation82=HTMLDialogElement.prototype.showModal;
-HTMLDialogElement.prototype.showModal=function(...args){const open=this.open,result=baseDialogPresentation82.apply(this,args);if(!open){encounterPresentation82.dialogAnimations.get(this)?.cancel();const a=encounterPresentation82.track(this,[{opacity:0,translate:'0 8px'},{opacity:1,translate:'0 0'}],{duration:140,easing:'ease-out'});if(a)encounterPresentation82.dialogAnimations.set(this,a);}return result;};
+HTMLDialogElement.prototype.showModal=function(...args){const open=this.open,result=baseDialogPresentation82.apply(this,args);if(!open){playTransitionSound84(()=>this.open);encounterPresentation82.dialogAnimations.get(this)?.cancel();const a=encounterPresentation82.track(this,[{opacity:0,translate:'0 8px'},{opacity:1,translate:'0 0'}],{duration:140,easing:'ease-out'});if(a)encounterPresentation82.dialogAnimations.set(this,a);}return result;};
 document.querySelector('#results-continue').addEventListener('click',()=>encounterPresentation82.continue());
 function settlePresentation82(){encounterPresentation82.cancelMotion();encounterPresentation82.finishCount();}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)settlePresentation82()});encounterPresentation82.motion.addEventListener('change',settlePresentation82);

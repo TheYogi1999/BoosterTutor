@@ -1,5 +1,6 @@
 # Recorded audio sources (CC0)
 
+- Approved transition cue (v0.84): **T4 Velvet Air**, unchanged at `receipt-previews/round2/t4-velvet-air.mp3`; original synthesis. Screen/window transitions share the effects mute/volume channel. New finish auditions: [round3](receipt-previews/round3/README.md).
 - Approved receipt coin cue (v0.83): **C2 Crystal Tick** from `receipt-previews/c2-crystal-tick.mp3`; original synthesis, unchanged from its audition. Counting uses the separate effects volume/mute controls. New transition/finish previews are in [round2](receipt-previews/round2/README.md).
 - Transition/count/result **auditions** (v0.82): original short designs in `receipt-previews/`, using original synthesis and the existing Kenney CC0 card/impact recordings. [Sources, generation and choice codes](receipt-previews/README.md). They are previews for player selection; no new audio family is applied to gameplay by choosing on the audition page.
 

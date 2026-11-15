@@ -102,9 +102,10 @@ Object.assign(RECORDED_SFX,{
  'enemy-death-small':['assets/audio/death-previews/s3-retro-drop.mp3',.85],
  'enemy-death-medium':['assets/audio/death-previews/m3-retro-defeat.mp3',.85],
  'enemy-death-large':['assets/audio/death-previews/l3-retro-colossus.mp3',.85],
- 'receipt-coin':['assets/audio/receipt-previews/c2-crystal-tick.mp3',.62]
+ 'receipt-coin':['assets/audio/receipt-previews/c2-crystal-tick.mp3',.62],
+ 'screen-transition':['assets/audio/receipt-previews/round2/t4-velvet-air.mp3',.8]
 });
-const selectedActionCues=['draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large','receipt-coin'];
+const selectedActionCues=['draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large','receipt-coin','screen-transition'];
 // Use the enemy's physical kind, so Endless health/power scaling cannot change its voice.
 function enemyDefeatCue77(enemy){
  if(enemy.tier==='boss')return 'enemy-death-large';
@@ -192,4 +193,18 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)soundEngine
 if(typeof MutationObserver!=='undefined'){
  const combat=document.getElementById('combat-screen');
  if(combat)new MutationObserver(()=>{if(!combat.classList.contains('active'))cancelDrawSounds();}).observe(combat,{attributes:true,attributeFilter:['class']});
+}
+
+// Selected T4: one short sweep for the latest screen or newly opened window.
+// A replaced screen invalidates pending decoding and fades the previous sweep.
+let transitionGeneration84=0,transitionVoice84=null;
+function playTransitionSound84(valid=()=>true){
+ const generation=++transitionGeneration84,epoch=soundEngine.epoch||0,started=performance.now();
+ if(transitionVoice84){try{transitionVoice84.voiceGain.gain.setTargetAtTime(0,soundEngine.context.currentTime,.006);transitionVoice84.stop(soundEngine.context.currentTime+.025);}catch{}transitionVoice84=null;}
+ if(!effectsAudible75()||document.hidden)return;
+ soundEngine.resume().then(()=>recordedSoundBuffer(RECORDED_SFX['screen-transition'][0])).then(buffer=>{
+  if(generation!==transitionGeneration84||(soundEngine.epoch||0)!==epoch||!valid()||!effectsAudible75()||document.hidden||performance.now()-started>250)return;
+  const voice=startRecordedVoice('screen-transition',buffer);transitionVoice84=voice;
+  voice.addEventListener('ended',()=>{if(transitionVoice84===voice)transitionVoice84=null;},{once:true});
+ }).catch(()=>{});
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "code": "R7",
+    "title": "Deck Settle",
+    "description": "A real paper shuffle, then a soft card-stack landing.",
+    "seconds": 0.48,
+    "file": "r7-deck-settle.mp3"
+  },
+  {
+    "code": "R8",
+    "title": "Wooden Latch",
+    "description": "A dry wooden click with a small cushioned stop.",
+    "seconds": 0.34,
+    "file": "r8-wooden-latch.mp3"
+  },
+  {
+    "code": "R9",
+    "title": "Retro Stamp",
+    "description": "A compact low retro ka-chunk; no bell or fanfare.",
+    "seconds": 0.32,
+    "file": "r9-retro-stamp.mp3"
+  }
+]
