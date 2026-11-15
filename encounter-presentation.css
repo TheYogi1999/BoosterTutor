@@ -1,6 +1,4 @@
-.encounter-card-flight82{z-index:4000!important;overflow:hidden!important;min-width:0!important;min-height:0!important;border-radius:7px!important;border:1px solid #e4b76a77!important;background:#12202b!important;box-shadow:0 5px 22px #0007;will-change:transform,opacity}
-.encounter-card-flight82 img{width:100%!important;height:100%!important;object-fit:contain;display:block}
-.encounter-card-flight82,.encounter-card-flight82 *{animation:none!important;transition:none!important}
+.encounter-card-flight82{all:initial;position:fixed;display:block;box-sizing:border-box;z-index:4000;pointer-events:none;object-fit:contain;transform-origin:center;max-width:none;max-height:none;min-width:0;min-height:0;border-radius:5px;box-shadow:0 5px 18px #0008;will-change:transform,opacity;animation:none;transition:none}
 .game-shell #results-screen.active{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:26px;padding:44px 150px 38px;height:840px;background:radial-gradient(ellipse at 28% 40%,#edac3b12,transparent 60%)}
 .results-heading82{display:flex;justify-content:space-between;align-items:center;gap:28px;border-bottom:1px solid #d2b07844;padding-bottom:22px}
 .results-heading82 h2{font:400 44px/1.15 Georgia,serif;color:#f6e6c5;margin:12px 0 5px}

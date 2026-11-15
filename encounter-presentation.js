@@ -1,5 +1,5 @@
 /* Presentation follows committed game state; coin awards and card zones stay synchronous. */
-const encounterPresentation82={active:null,animations:new Set(),countFrame:0,dialogAnimations:new WeakMap(),motion:matchMedia('(prefers-reduced-motion: reduce)'),
+const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coinGeneration:0,coinPlayedAt:-Infinity,coinVoices:new Set(),dialogAnimations:new WeakMap(),motion:matchMedia('(prefers-reduced-motion: reduce)'),
  number(value,fallback=0){return Number.isFinite(value)?Math.trunc(value):fallback;},
  still(){return this.motion.matches||document.hidden;},
  track(node,frames,options,finish){
@@ -12,30 +12,63 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,dia
   if(this.still())return[];
   const selectors=['#library-button .library-stack','#graveyard-pile .graveyard-card','.mana-land','.player-card-frame','.permanent-card-frame','.hand-card'];
   const sources=[...new Set(selectors.flatMap(selector=>[...document.querySelectorAll('#combat-screen '+selector)]))];
-  return sources.filter(node=>{const r=node.getBoundingClientRect();return r.width>0&&r.height>0&&r.bottom>0&&r.right>0&&r.top<innerHeight&&r.left<innerWidth&&node.querySelector('img')}).slice(0,30).map(node=>({node:node.cloneNode(true),rect:node.getBoundingClientRect()}));
+  return sources.flatMap(node=>{
+   const image=node.querySelector('img');if(!image)return[];
+   const rect=image.getBoundingClientRect();if(!rect.width||!rect.height||rect.bottom<=0||rect.right<=0||rect.top>=innerHeight||rect.left>=innerWidth)return[];
+   // Bounding rectangles already contain fan/tap rotation. Recover the image's
+   // unrotated viewport size, including the fixed-canvas scale, only once.
+   let matrix=new DOMMatrix();
+   for(let parent=image;parent;parent=parent.parentElement){
+    const style=getComputedStyle(parent);let local=new DOMMatrix();
+    if(style.rotate!=='none')local=local.rotate(parseFloat(style.rotate)||0);
+    if(style.scale!=='none'){const scales=style.scale.split(' ').map(Number);local=local.scale(scales[0],scales[1]??scales[0]);}
+    if(style.transform!=='none')local=local.multiply(new DOMMatrix(style.transform));
+    matrix=local.multiply(matrix);
+   }
+   const style=getComputedStyle(image),width=parseFloat(style.width)*Math.hypot(matrix.a,matrix.b),height=parseFloat(style.height)*Math.hypot(matrix.c,matrix.d);
+   if(!(width>0&&height>0))return[];
+   return[{src:image.currentSrc||image.src,x:rect.left+rect.width/2,y:rect.top+rect.height/2,width,height,angle:Math.atan2(matrix.b,matrix.a)*180/Math.PI}];
+  }).slice(0,30);
  },
  collectCards(cards){
   if(this.still())return;
   const target=document.querySelector('#results-screen.active #results-bounty82')?.getBoundingClientRect();
   const x=target?target.left+target.width/2:innerWidth*.5,y=target?target.top+target.height/2:innerHeight*.46;
-  cards.forEach(({node,rect},i)=>{
-   for(const part of [node,...node.querySelectorAll('*')]){part.removeAttribute('id');part.removeAttribute('tabindex');part.classList.remove('controller-focus','controller-editing','zone-arriving');for(const attr of [...part.attributes])if(attr.name.startsWith('data-'))part.removeAttribute(attr.name);}
-   node.classList.add('encounter-card-flight82');node.setAttribute('aria-hidden','true');node.inert=true;
-   Object.assign(node.style,{position:'fixed',left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',margin:'0',padding:'0',pointerEvents:'none'});document.body.append(node);
-   const dx=x-rect.left-rect.width/2,dy=y-rect.top-rect.height/2,tilt=(i%2?1:-1)*(9+i%4*3);
-   this.track(node,[{transform:'translate3d(0,0,0) scale(1)',opacity:1},{transform:`translate3d(${dx*.32}px,${dy*.32-24}px,0) rotate(${tilt}deg) scale(.92)`,opacity:1,offset:.32},{transform:`translate3d(${dx}px,${dy}px,0) rotate(${tilt*2}deg) scale(.07)`,opacity:0}],{duration:300,delay:Math.min(84,i*6),easing:'cubic-bezier(.3,.7,.25,1)',fill:'both'},()=>node.remove());
+  cards.forEach((card,i)=>{
+   // Never copy gameplay classes or descendants into the unscaled body overlay.
+   const node=document.createElement('img');node.src=card.src;node.alt='';node.draggable=false;node.className='encounter-card-flight82';node.setAttribute('aria-hidden','true');node.inert=true;
+   Object.assign(node.style,{left:(card.x-card.width/2)+'px',top:(card.y-card.height/2)+'px',width:card.width+'px',height:card.height+'px'});document.body.append(node);
+   const dx=x-card.x,dy=y-card.y,tilt=(i%2?1:-1)*(7+i%4*2);
+   this.track(node,[{transform:`translate3d(0,0,0) rotate(${card.angle}deg) scale(1)`,opacity:1},{transform:`translate3d(${dx*.15}px,${dy*.15-18}px,0) rotate(${card.angle+tilt}deg) scale(.96)`,opacity:1,offset:.3},{transform:`translate3d(${dx}px,${dy}px,0) rotate(${card.angle+tilt*2}deg) scale(.07)`,opacity:0}],{duration:820,delay:Math.min(140,i*12),easing:'cubic-bezier(.35,.05,.25,1)',fill:'both'},()=>node.remove());
   });
+ },
+ stopCoinSounds(){
+  this.coinGeneration++;this.coinPlayedAt=-Infinity;for(const voice of this.coinVoices){try{voice.voiceGain.gain.setTargetAtTime(0,soundEngine.context.currentTime,.006);voice.stop(soundEngine.context.currentTime+.025);}catch{}}
+  this.coinVoices.clear();
+ },
+ coinTick(receipt){
+  if(!effectsAudible75()||this.still())return;
+  const generation=this.coinGeneration,epoch=soundEngine.epoch||0,started=performance.now();
+  soundEngine.resume().then(()=>recordedSoundBuffer(RECORDED_SFX['receipt-coin'][0])).then(buffer=>{
+   if(this.active!==receipt||receipt.consumed||generation!==this.coinGeneration||(soundEngine.epoch||0)!==epoch||!effectsAudible75()||this.still()||performance.now()-started>180||performance.now()-this.coinPlayedAt<100)return;
+   this.coinPlayedAt=performance.now();const voice=startRecordedVoice('receipt-coin',buffer);this.coinVoices.add(voice);voice.addEventListener('ended',()=>this.coinVoices.delete(voice),{once:true});
+  }).catch(()=>{});
  },
  updateCount(progress){
   const r=this.active;if(!r)return;const lerp=(a,b)=>Math.round(a+(b-a)*progress);
   for(const [id,text] of [['results-bounty82','+'+lerp(0,r.coins)],['results-wallet82',String(lerp(r.walletBefore,r.wallet))],['results-level82',String(lerp(r.levelBefore,r.level))]]){const node=document.getElementById(id);if(node.textContent!==text)node.textContent=text;}
   document.querySelector('#results-screen').classList.toggle('counted82',progress===1);
  },
- finishCount(){cancelAnimationFrame(this.countFrame);this.countFrame=0;this.updateCount(1);},
+ finishCount(){cancelAnimationFrame(this.countFrame);this.countFrame=0;this.stopCoinSounds();this.updateCount(1);},
  count(){
   this.finishCount();if(!this.active)return;if(this.still())return;
-  this.updateCount(0);const started=performance.now(),receipt=this.active;
-  const tick=now=>{if(this.active!==receipt)return;const t=Math.min(1,Math.max(0,(now-started-80)/620));this.updateCount(1-Math.pow(1-t,3));if(t<1)this.countFrame=requestAnimationFrame(tick);else this.countFrame=0;};
+  this.updateCount(0);const started=performance.now(),receipt=this.active,steps=Math.min(12,Math.max(0,receipt.coins));let lastStep=0;
+  const tick=now=>{
+   if(this.active!==receipt)return;
+   const t=Math.min(1,Math.max(0,(now-started-600)/1700)),progress=t*(1.25-.25*t),step=Math.floor(progress*steps);
+   this.updateCount(progress);if(step>lastStep){lastStep=step;this.coinTick(receipt);}
+   if(t<1)this.countFrame=requestAnimationFrame(tick);else this.countFrame=0;
+  };
   this.countFrame=requestAnimationFrame(tick);
  },
  present(battle,route){

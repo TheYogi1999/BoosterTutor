@@ -1,5 +1,6 @@
 # Recorded audio sources (CC0)
 
+- Approved receipt coin cue (v0.83): **C2 Crystal Tick** from `receipt-previews/c2-crystal-tick.mp3`; original synthesis, unchanged from its audition. Counting uses the separate effects volume/mute controls. New transition/finish previews are in [round2](receipt-previews/round2/README.md).
 - Transition/count/result **auditions** (v0.82): original short designs in `receipt-previews/`, using original synthesis and the existing Kenney CC0 card/impact recordings. [Sources, generation and choice codes](receipt-previews/README.md). They are previews for player selection; no new audio family is applied to gameplay by choosing on the audition page.
 
 - Enemy defeat sounds **S3 / M3 / L3** (v0.77): `death-previews/s3-retro-drop.mp3`, `m3-retro-defeat.mp3` and `l3-retro-colossus.mp3`. Original retro synthesis layered with **Kenney Impact Sounds (CC0)**. Sources, pinned recording mirror, fingerprints and reproducible generation are documented in [death-previews/README.md](death-previews/README.md). The selected clips retain their audition mastering and share the sound-effects mute/volume channel.

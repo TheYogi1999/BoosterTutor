@@ -1,0 +1,56 @@
+[
+  {
+    "code": "T4",
+    "group": "Transition",
+    "family": "Velvet",
+    "title": "Velvet Air",
+    "description": "A soft, wide air movement with no whistle or musical slide.",
+    "seconds": 0.38,
+    "file": "t4-velvet-air.mp3"
+  },
+  {
+    "code": "T5",
+    "group": "Transition",
+    "family": "Ember",
+    "title": "Ember Pulse",
+    "description": "A low cinematic breath with a small, rounded impact.",
+    "seconds": 0.44,
+    "file": "t5-ember-pulse.mp3"
+  },
+  {
+    "code": "T6",
+    "group": "Transition",
+    "family": "Glass",
+    "title": "Glass Fold",
+    "description": "Two delicate glass textures over a very light airy sweep.",
+    "seconds": 0.46,
+    "file": "t6-glass-fold.mp3"
+  },
+  {
+    "code": "R4",
+    "group": "Result finish",
+    "family": "Velvet",
+    "title": "Coin Stack",
+    "description": "Three quiet, irregular metal contacts settling into place.",
+    "seconds": 0.62,
+    "file": "r4-coin-stack.mp3"
+  },
+  {
+    "code": "R5",
+    "group": "Result finish",
+    "family": "Ember",
+    "title": "Warm Landing",
+    "description": "A deep felt impact with a short, warm wooden resonance.",
+    "seconds": 0.68,
+    "file": "r5-warm-landing.mp3"
+  },
+  {
+    "code": "R6",
+    "group": "Result finish",
+    "family": "Glass",
+    "title": "Tiny Bell",
+    "description": "One delicate bell with a soft trailing echo; no chord or jingle.",
+    "seconds": 0.56,
+    "file": "r6-tiny-bell.mp3"
+  }
+]
