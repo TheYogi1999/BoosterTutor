@@ -81,7 +81,7 @@ const assert=require('node:assert/strict');
    if(viewport.width===390)await page.screenshot({path:'work/input78-mobile.png'});
   }
   await page.setViewportSize({width:1600,height:900});await page.screenshot({path:'work/input78-nintendo.png'});
-  assert.equal(await page.locator('.brand-version').textContent(),'v0.78');assert.deepEqual(errors,[]);
+  assert.match(await page.locator('.brand-version').textContent(),/^v\d+\.\d+$/);assert.deepEqual(errors,[]);
   console.log('PASS five persisted input layouts, auto default and real device switching, accessible PS/Xbox/Nintendo glyphs, Nintendo A/B mapping, manual locks, Gamepad checkbox/select/range editing, held-button/reconnect safety, drift rejection, touch/keyboard takeover and four fitted viewports.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

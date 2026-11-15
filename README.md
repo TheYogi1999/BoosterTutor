@@ -1,3 +1,24 @@
+## Controller shortcuts directly on action buttons (v0.79)
+
+The booster **Next Pack / Build Deck / Take Card / Resume** button, **Reroll pack**, the combat **Start combat / Continue / Confirm blocks** button and shop **Continue** now display their real controller shortcut directly beside the label. Glyphs follow the automatic or manual input profile and disappear for Keyboard & mouse / Touch. Prompts survive caption replacements and repeated renders without duplicates; the original button labels and disabled states remain available.
+
+| Controller | Continue / confirm draft | Reroll opened pack |
+| --- | --- | --- |
+| Xbox | Y | RT |
+| PlayStation | Triangle | R2 |
+| Nintendo | X | ZR |
+
+Reroll uses the standard right-trigger position (index 7). It follows the existing once-per-pack allowance and is blocked for sealed/travelling packs, used rerolls, open modal windows, option editing and scenes outside drafting. Held triggers or Continue buttons cannot repeat an action or skip another pack. The card-inspection face button retains its existing action.
+
+Validation covers actual Gamepad API input for all three controller families, automatic detection by trigger input, sealed/modal/used/combat reroll guards, real pack changes, held-button safety, draft and combat caption changes, repeated renders, manual overrides, non-controller layouts and fitted combat buttons. Existing full controller gameplay, input-profile and real HTTP-cache upgrade browser suites pass.
+
+```sh
+node tests/controller-action-hints-browser.test.cjs
+node tests/input-profiles-browser.test.cjs
+node tests/controller-browser.test.cjs
+node tests/release-cache-browser.test.cjs
+```
+
 ## Input profiles and improved controller options (v0.78)
 
 **Options → Controls** now has one **Input layout** dropdown: **Xbox, PlayStation, Nintendo, Keyboard & mouse, Touch**. **Detect automatically** starts checked. Automatic detection follows actual controller, keyboard, mouse and touch/pen input; connecting a controller alone does not change the layout. Uncheck it to select and keep a manual layout. Both choices persist across reloads. Manual keyboard/touch profiles ignore gamepad navigation; pointer and keyboard access to settings remains available in controller profiles.

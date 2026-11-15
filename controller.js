@@ -1,8 +1,8 @@
 /* Standard Gamepad API input. Profiles describe the physical standard-button positions. */
 const INPUT_LAYOUTS78={
- xbox:{name:'Xbox',confirm:['A',0],back:['B',1],inspect:['X',2],advance:['Y',3],left:'LB',right:'RB',deck:'View',help:'Menu'},
- playstation:{name:'PlayStation',confirm:['✕',0],back:['○',1],inspect:['□',2],advance:['△',3],left:'L1',right:'R1',deck:'Share',help:'Options'},
- nintendo:{name:'Nintendo',confirm:['A',1],back:['B',0],inspect:['Y',2],advance:['X',3],left:'L',right:'R',deck:'−',help:'+'},
+ xbox:{name:'Xbox',confirm:['A',0],back:['B',1],inspect:['X',2],advance:['Y',3],reroll:['RT',7],left:'LB',right:'RB',deck:'View',help:'Menu'},
+ playstation:{name:'PlayStation',confirm:['✕',0],back:['○',1],inspect:['□',2],advance:['△',3],reroll:['R2',7],left:'L1',right:'R1',deck:'Share',help:'Options'},
+ nintendo:{name:'Nintendo',confirm:['A',1],back:['B',0],inspect:['Y',2],advance:['X',3],reroll:['ZR',7],left:'L',right:'R',deck:'−',help:'+'},
  keyboard:{name:'Keyboard & mouse'},touch:{name:'Touch'}
 };
 function detectedPadLayout78(id=''){
@@ -128,6 +128,22 @@ const controller = {
     const selector={'combat-screen':'#end-turn-button','draft-screen':'#draft-confirm','shop-screen':'#shop-continue'}[state.screen];
     const button=selector&&document.querySelector(selector);if(this.visible(button))button.click();this.dirty=true;this.reconcile();
   },
+  reroll(){
+    if(this.modal()||this.editing||state.screen!=='draft-screen'||boosterTravel)return;
+    const button=document.querySelector('#pack-reroll');if(this.visible(button))button.click();this.dirty=true;this.reconcile();
+  },
+  buttonHints(){
+    const layout=INPUT_LAYOUTS78[this.profile];
+    for(const [id,action] of [['draft-confirm','advance'],['pack-reroll','reroll'],['end-turn-button','advance'],['shop-continue','advance']]){
+      const button=document.getElementById(id);if(!button)continue;
+      const badge=button.querySelector(':scope > .input-action-hint79');
+      if(!this.gamepadProfile()){badge?.remove();continue;}
+      const signature=this.profile+':'+action;
+      if(badge?.dataset.binding===signature)continue;
+      badge?.remove();const node=document.createElement('span');node.className='input-action-hint79';node.dataset.binding=signature;
+      node.innerHTML=glyph78(layout[action][0],this.profile);button.append(node);
+    }
+  },
   help(){const dialog=document.querySelector('#controller-dialog');if(dialog.open)dialog.close();else dialog.showModal();this.dirty=true;this.reconcile();},
   gamepadProfile(){return Boolean(INPUT_LAYOUTS78[this.profile].confirm);},
   saveSettings(){try{localStorage.setItem('bt-input-settings-v1',JSON.stringify({profile:this.profile,autoDetect:this.autoDetect}));}catch{}},
@@ -140,7 +156,7 @@ const controller = {
   bindings(){
     const layout=INPUT_LAYOUTS78[this.profile],g=label=>glyph78(label,this.profile);
     if(this.gamepadProfile())return [
-      [g('✚')+' / '+g('LS'),'Move selection'],[g(layout.confirm[0]),'Select · play · edit an option'],[g(layout.back[0]),'Back · cancel an unpaid choice'],[g(layout.inspect[0]),'Inspect a card or opponent'],[g(layout.advance[0]),'Continue combat · confirm a pick'],[g(layout.left)+' '+g(layout.right),'Switch hand, battlefield and opponents'],[g(layout.deck),'Open your run deck'],[g(layout.help),'Open these controls'],[g('RS'),'Scroll lists and longer windows']
+      [g('✚')+' / '+g('LS'),'Move selection'],[g(layout.confirm[0]),'Select · play · edit an option'],[g(layout.back[0]),'Back · cancel an unpaid choice'],[g(layout.inspect[0]),'Inspect a card or opponent'],[g(layout.advance[0]),'Continue combat · confirm a pick'],[g(layout.reroll[0]),'Reroll an opened pack · once'],[g(layout.left)+' '+g(layout.right),'Switch hand, battlefield and opponents'],[g(layout.deck),'Open your run deck'],[g(layout.help),'Open these controls'],[g('RS'),'Scroll lists and longer windows']
     ];
     if(this.profile==='touch')return [[g('Tap'),'Select · play · choose a target'],[g('Drag'),'Move a hand card onto the battlefield'],[g('Swipe'),'Scroll card lists'],[g('×'),'Close a window · cancel'],[g('Deck'),'Inspect your run deck'],[g('Options'),'Open settings']];
     return [[g('Click')+' / '+g('Enter'),'Activate the focused button'],[g('Hover'),'Inspect cards and opponents'],[g('Drag'),'Move a hand card onto the battlefield'],[g('Tab')+' '+g('⇧ Tab'),'Move keyboard focus'],[g('Esc'),'Close a window · cancel a drag'],[g('↑ ↓ ← →'),'Change focused lists and sliders'],[g('Wheel'),'Scroll card lists'],[g('Deck'),'Inspect your run deck']];
@@ -151,6 +167,7 @@ const controller = {
     if(this.editing&&this.gamepadProfile())entries=[[g('✚'),'Change value'],[g(layout.confirm[0])+' '+g(layout.back[0]),'Finish editing']];
     const markup=`<span class="input-profile78">${layout.name}</span>`+entries.map(([icon,text])=>`<span class="input-hint78">${icon}<span>${text}</span></span>`).join('');
     if(this.hintMarkup!==markup){hints.innerHTML=markup;this.hintMarkup=markup;}
+    this.buttonHints();
     document.documentElement.dataset.inputProfile=this.profile;
     button.classList.toggle('controller-connected',this.connected);button.title=this.connected?`Controller connected: ${this.id}`:'Input settings and controls';
     const select=document.querySelector('#input-layout'),auto=document.querySelector('#input-auto-detect');
@@ -178,13 +195,13 @@ const controller = {
     const edge=index=>pressed[index]&&!this.previous[index];
     let direction=pressed[12]?'up':pressed[13]?'down':pressed[14]?'left':pressed[15]?'right':'';
     if(!direction){const x=axes[0]||0,y=axes[1]||0;const threshold=this.direction.startsWith('stick:') ? 0.4 : 0.55;if(Math.max(Math.abs(x),Math.abs(y))>threshold)direction='stick:'+(Math.abs(x)>Math.abs(y)?(x>0?'right':'left'):(y>0?'down':'up'));}
-    const input=direction||[0,1,2,3,4,5,8,9].some(edge)||Math.max(Math.abs(axes[2]||0),Math.abs(axes[3]||0))>.55;
+    const input=direction||[0,1,2,3,4,5,7,8,9].some(edge)||Math.max(Math.abs(axes[2]||0),Math.abs(axes[3]||0))>.55;
     if(input){const previousProfile=this.profile;this.setProfile(detectedPadLayout78(pad.id),true);if(this.gamepadProfile())this.enable();if(this.profile!==previousProfile)this.ready=true;}
     if(!this.gamepadProfile()){this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     if(direction){if(direction!==this.direction||now>=this.nextRepeat){this.move(direction.replace('stick:',''));this.nextRepeat=now+(direction===this.direction?155:330);}}else this.nextRepeat=0;
     this.direction=direction;
     const layout=INPUT_LAYOUTS78[this.profile];
-    if(edge(9))this.help();else if(edge(layout.back[1]))this.back();else if(edge(layout.confirm[1]))this.activate();else if(edge(layout.inspect[1]))this.inspect();else if(edge(layout.advance[1]))this.advance();else if(edge(4))this.cycleZone(-1);else if(edge(5))this.cycleZone(1);else if(edge(8)&&!this.modal()&&state.deck.length){openCollection('deck');this.dirty=true;}
+    if(edge(9))this.help();else if(edge(layout.back[1]))this.back();else if(edge(layout.confirm[1]))this.activate();else if(edge(layout.inspect[1]))this.inspect();else if(edge(layout.advance[1]))this.advance();else if(edge(layout.reroll[1]))this.reroll();else if(edge(4))this.cycleZone(-1);else if(edge(5))this.cycleZone(1);else if(edge(8)&&!this.modal()&&state.deck.length){openCollection('deck');this.dirty=true;}
     if(this.active){this.reconcile();this.scroll(axes[2]||0,axes[3]||0,Math.min(34,now-(this.lastFrame||now)));}
     this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));
   }
@@ -193,7 +210,7 @@ const controller = {
 // actual opening order, so input never leaks into a window underneath it.
 const baseShowModal78=HTMLDialogElement.prototype.showModal;
 HTMLDialogElement.prototype.showModal=function(...args){const wasOpen=this.open,result=baseShowModal78.apply(this,args);if(!wasOpen){controller.dialogs=controller.dialogs.filter(dialog=>dialog!==this&&dialog.open&&dialog.isConnected);controller.dialogs.push(this);controller.dirty=true;}return result;};
-new MutationObserver(()=>{controller.dirty=true;}).observe(document.querySelector('#game-shell'),{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','hidden','open']});
+new MutationObserver(()=>{controller.dirty=true;controller.buttonHints();}).observe(document.querySelector('#game-shell'),{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','hidden','open']});
 new MutationObserver(()=>{controller.dirty=true;}).observe(document.body,{childList:true,subtree:false,attributes:false});
 for(const dialog of document.querySelectorAll('dialog'))new MutationObserver(()=>{controller.dirty=true;}).observe(dialog,{attributes:true,attributeFilter:['open'],childList:true,subtree:true});
 document.querySelector('#controller-help-button').addEventListener('click',()=>controller.help());
