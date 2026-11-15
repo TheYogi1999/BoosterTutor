@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="effects.css?v=0.27.4" />
     <link rel="stylesheet" href="controller.css?v=0.27" />
     <link rel="stylesheet" href="input-profiles.css?v=0.80" />
-    <link rel="stylesheet" href="controller-devices.css?v=0.80" />
+    <link rel="stylesheet" href="controller-devices.css?v=0.81" />
     <link rel="stylesheet" href="expansion.css?v=0.27" />
     <link rel="stylesheet" href="ambience.css?v=0.75" />
     <link rel="stylesheet" href="title-screen.css?v=0.62" />
@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="card-finish-ui.css?v=0.63" />
     <script src="cards.js?v=0.76" defer></script>
     <script src="sounds.js?v=0.77" defer></script>
-    <script src="game.js?v=0.80" defer></script>
+    <script src="game.js?v=0.81" defer></script>
     <script src="rules.js?v=0.76" defer></script>
     <script src="expansion.js?v=0.71" defer></script>
     <script src="expedition-rewards.js?v=0.76" defer></script>
@@ -74,8 +74,8 @@
     <link rel="stylesheet" href="arrow-focus.css?v=0.70" />
     <script src="effects.js?v=0.60" defer></script>
     <script src="zone-effects.js?v=0.33" defer></script>
-    <script src="controller-devices.js?v=0.80" defer></script>
-    <script src="controller.js?v=0.80" defer></script>
+    <script src="controller-devices.js?v=0.81" defer></script>
+    <script src="controller.js?v=0.81" defer></script>
     <script src="ambience.js?v=0.75" defer></script>
     <script src="title-screen.js?v=0.75" defer></script>
     <script src="mana-symbols.js?v=0.72" defer></script>
@@ -91,10 +91,10 @@
     <header class="topbar">
       <a class="brand" href="#start" aria-label="Booster Tutor home">
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.80</span>
+        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.81</span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label" hidden><i class="status-dot"></i> v0.80 · <span id="global-phase">START</span></span>
+        <span class="pixel-label" hidden><i class="status-dot"></i> v0.81 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Audio settings">♫ Audio</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Mute sound effects" title="Mute sound effects">♪ <span>SFX ON</span></button>
       </div>
@@ -313,6 +313,7 @@
       <header><div><span class="eyebrow">CONNECTION &amp; INPUT</span><h2 id="controller-test-title">Test your controller</h2></div><button id="controller-test-close" class="graveyard-close" aria-label="Close controller test">×</button></header>
       <div class="controller-device-fields80"><label class="controller-device-label80" for="controller-test-device">Connected controller<select id="controller-test-device" disabled></select></label><label class="controller-device-label80" for="controller-setup-layout">Button symbols for setup<select id="controller-setup-layout" disabled><option value="xbox">Xbox</option><option value="playstation">PlayStation</option><option value="nintendo">Nintendo</option></select></label></div>
       <p id="controller-test-status" role="status"></p><p id="controller-test-info"></p>
+      <p id="controller-test-activity"></p><details class="controller-input-history81"><summary>Input activity · all connected devices</summary><pre id="controller-test-all-activity"></pre></details>
       <pre id="controller-test-values" aria-label="Live raw buttons and stick axes"></pre><p class="controller-test-tip80">In this window, controller input only tests or sets up controls. Use × or Esc to return to the game.</p>
       <div class="controller-test-actions80"><button id="controller-setup-start" type="button" class="quiet-button" disabled>Set up buttons</button><button id="controller-setup-reset" type="button" class="quiet-button" disabled>Reset custom setup</button><button id="controller-test-copy" type="button" class="quiet-button">Copy diagnostic report</button></div>
       <section id="controller-setup-progress" hidden><span id="controller-setup-step" class="eyebrow"></span><h3 id="controller-setup-prompt"></h3><p>Follow each prompt, then release the control. Use the D-pad for directions. Stick setup at the end is optional. Cancel with the mouse or Esc.</p><button id="controller-setup-cancel" type="button" class="quiet-button">Cancel setup</button><button id="controller-setup-skip" type="button" class="quiet-button" hidden>Skip remaining sticks &amp; save</button></section>

@@ -184,11 +184,11 @@ const controller = {
     let parent=this.focused.parentElement;while(parent&&parent!==document.body){const style=getComputedStyle(parent);const sx=/auto|scroll/.test(style.overflowX)&&parent.scrollWidth>parent.clientWidth,sy=/auto|scroll/.test(style.overflowY)&&parent.scrollHeight>parent.clientHeight;if(sx||sy){if(sx)parent.scrollLeft+=x*dt*.6;if(sy)parent.scrollTop+=y*dt*.6;return;}parent=parent.parentElement;}
   },
   frame(now){
-    const pads=controllerDevices80.poll();
-    const raw=pads.find(pad=>pad.index===controllerDevices80.preferred)||pads.find(pad=>pad.index===this.index)||pads[0];
+    controllerDevices80.poll();
+    const raw=controllerDevices80.select(this.index);
     controllerDevices80.sample(raw,now);
     if(!raw){if(this.connected){this.connected=false;this.index=null;this.ready=false;this.previous=[];this.release();}this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
-    if(this.index!==raw.index||!this.connected||this.id!==raw.id){this.index=raw.index;this.id=raw.id;this.connected=true;this.ready=false;this.previous=[];this.direction='';this.hints();}
+    if(this.index!==raw.index||!this.connected||this.id!==raw.id){this.index=raw.index;this.id=raw.id;this.connected=true;this.ready=false;this.previous=[];this.direction='';if(controllerDevices80.fresh.includes(raw)&&this.autoDetect)this.setProfile(controllerDevices80.profile(raw),true);this.hints();}
     const pad=controllerDevices80.normalize(raw);
     if(!pad||controllerDevices80.calibration||document.querySelector('#controller-test-dialog').open){this.ready=false;this.previous=[];this.direction='';if(this.active)this.release();this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     if(document.hidden||!document.hasFocus()){this.ready=false;this.previous=[];this.direction='';this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}

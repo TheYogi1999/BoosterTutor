@@ -7,6 +7,10 @@
 #controller-test-device,#controller-setup-layout{height:38px;width:100%;min-width:0;background:#152c33;color:#eee5ce;border:1px solid #bda47455;border-radius:5px;padding:6px 10px;font:13px var(--sans);color-scheme:dark}
 #controller-test-status{padding:10px 12px;border-left:2px solid #d2b17a;background:#b59a5710;color:#e6d4af;margin:13px 0 8px}
 #controller-test-info{font-size:11px;color:#a8c4c3;margin:8px 0}
+#controller-test-activity{font-size:12px;color:#ead9b5;margin:8px 0}
+.controller-input-history81{margin:7px 0;color:#b9d0cc;font-size:11px}
+.controller-input-history81 summary{cursor:pointer;padding:3px 0}
+#controller-test-all-activity{white-space:pre-wrap;overflow-wrap:anywhere;font:11px/1.6 monospace;margin:6px 0;max-height:100px;overflow:auto}
 .controller-test-tip80{font-size:11px;color:#a8c4c3;margin:8px 0}
 #controller-test-values{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.9 monospace;color:#b9d7d2;padding:12px 15px;background:#06171e99;border:1px solid #bda47422;border-radius:5px;max-height:100px;overflow:auto;margin:10px 0}
 .controller-test-actions80{display:flex;gap:12px;flex-wrap:wrap;align-items:center}

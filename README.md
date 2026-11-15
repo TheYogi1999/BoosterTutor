@@ -1,3 +1,22 @@
+## Automatic selection among physical and virtual controllers (v0.81)
+
+With **vJoy at slot 0, Xbox at slot 1 and Nintendo Pro at slot 2**, v0.80 could keep polling the first virtual device until a manual dropdown selection. Startup now prefers a usable controller, and real button/stick activity can transfer control to another device. Unmapped virtual-device activity and small idle stick jitter cannot steal a usable controller. Each source change retains the neutral/release gate, so a held button cannot activate the newly focused control. Standard Xbox/Nintendo/PlayStation mappings and saved custom maps remain supported, including calibrated axis-based D-pads.
+
+The test dropdown defaults to **Automatic**, follows the last active controller and shows its button-symbol family. A manual device selection stays pinned only while testing; closing the test restores automatic selection. Setup stays locked to its target device. The test keeps game actions paused.
+
+**Last input** retains received button presses and stick/hat movements after release. A collapsed activity list shows every connected device, and one copied report now includes all devices, raw snapshots, virtual-device flags, selection mode/reason and per-device event history. A released controller showing current zeros can therefore still prove that input arrived; a device with no observed input is identified separately. The supplied Nintendo `057e:2009` report already has a standard layout and does not require calibration just to be recognized.
+
+Validation reproduces the supplied three device IDs, slot order, 8/17/18 buttons and Xbox idle axes. Browser tests cover Xbox's first action with idle vJoy present, Xbox↔Nintendo input handoff/glyphs, held controls, drift, inactive virtual input, auto/manual test selection, retained taps, all-device reports, disconnect/reconnect and calibrated hats. Existing full device-setup, input-profile, controller gameplay, action-prompt and cache-upgrade suites pass. A physical Nintendo device reporting only zeros still needs a live input test; its hardware or Brave setup is not diagnosed from a resting snapshot.
+
+```sh
+node tests/controller-multiple-devices-browser.test.cjs
+node tests/controller-devices-browser.test.cjs
+node tests/input-profiles-browser.test.cjs
+node tests/controller-browser.test.cjs
+node tests/controller-action-hints-browser.test.cjs
+node tests/release-cache-browser.test.cjs
+```
+
 ## Controller diagnostics and nonstandard device setup (v0.80)
 
 **Options → Controls → Test controller / set up buttons** opens a live device test. The game previously discarded every controller whose browser `mapping` was not `standard`. Such devices are now detected and shown, including raw reports from Bluetooth controllers. A nonstandard layout needs setup before it can control gameplay; its raw indices are never guessed. Standard devices retain their existing browser mapping and can optionally be calibrated too.
