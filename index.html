@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="card-finish-ui.css?v=0.63" />
     <script src="cards.js?v=0.76" defer></script>
     <script src="sounds.js?v=0.77" defer></script>
-    <script src="game.js?v=0.81" defer></script>
+    <script src="game.js?v=0.82" defer></script>
     <script src="rules.js?v=0.76" defer></script>
     <script src="expansion.js?v=0.71" defer></script>
     <script src="expedition-rewards.js?v=0.76" defer></script>
@@ -75,15 +75,17 @@
     <script src="effects.js?v=0.60" defer></script>
     <script src="zone-effects.js?v=0.33" defer></script>
     <script src="controller-devices.js?v=0.81" defer></script>
-    <script src="controller.js?v=0.81" defer></script>
+    <script src="controller.js?v=0.82" defer></script>
     <script src="ambience.js?v=0.75" defer></script>
     <script src="title-screen.js?v=0.75" defer></script>
     <script src="mana-symbols.js?v=0.72" defer></script>
     <script src="precons.js?v=0.76" defer></script>
     <link rel="stylesheet" href="precons.css?v=0.72" />
     <link rel="stylesheet" href="choice-targets.css?v=0.74" />
-    <script src="immortality.js?v=0.76" defer></script>
+    <script src="immortality.js?v=0.82" defer></script>
     <link rel="stylesheet" href="immortality.css?v=0.76" />
+    <script src="encounter-presentation.js?v=0.82" defer></script>
+    <link rel="stylesheet" href="encounter-presentation.css?v=0.82" />
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
@@ -91,10 +93,10 @@
     <header class="topbar">
       <a class="brand" href="#start" aria-label="Booster Tutor home">
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.81</span>
+        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.82</span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label" hidden><i class="status-dot"></i> v0.81 · <span id="global-phase">START</span></span>
+        <span class="pixel-label" hidden><i class="status-dot"></i> v0.82 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Audio settings">♫ Audio</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Mute sound effects" title="Mute sound effects">♪ <span>SFX ON</span></button>
       </div>
@@ -230,6 +232,12 @@
       <section class="screen journey-screen" id="journey-screen" aria-labelledby="journey-title">
         <div class="eyebrow" id="journey-location">THE AETHER EXPEDITION</div><h2 id="journey-title"></h2><p id="journey-description"></p>
         <div class="journey-path" id="journey-path"></div><div class="journey-life" id="journey-life"></div><div class="camp-tools"><button class="quiet-button" id="journey-deck-button">▣ Review your deck</button><button class="quiet-button" id="return-shop" hidden>Return to shop</button></div><div class="journey-options" id="journey-options"></div>
+      </section>
+      <section class="screen results-screen82" id="results-screen" aria-labelledby="results-stage82">
+        <header class="results-heading82"><div><span class="eyebrow">ENCOUNTER CLEARED</span><h2 id="results-stage82">The Aether</h2><p id="results-run82"></p></div><div class="results-stamp82" aria-hidden="true">✦</div></header>
+        <div class="results-grid82"><section class="results-payout82" aria-label="Encounter rewards"><div class="results-coin82" aria-hidden="true">◈</div><strong id="results-bounty82">+0</strong><span>COINS EARNED</span><div class="results-stat-pair82"><div>WALLET<strong><small id="results-wallet-before82">0</small> → <b id="results-wallet82">0</b></strong></div><div>LEVEL<strong><small id="results-level-before82">1</small> → <b id="results-level82">1</b></strong></div></div></section>
+        <section class="results-ledger82" aria-label="Bounty breakdown"><span class="eyebrow">BOUNTY BREAKDOWN</span><div id="results-breakdown82"></div><div class="results-facts82"><span>FOES DEFEATED<b id="results-defeated82">0</b></span><span>TURNS<b id="results-turns82">1</b></span><span>RUN CARDS<b id="results-deck82">0</b></span></div></section></div>
+        <footer class="results-footer82"><span>Your expedition continues.</span><button id="results-continue" type="button" class="primary-button">CONTINUE →</button></footer>
       </section>
       <section class="screen shop-screen" id="shop-screen" aria-labelledby="shop-title"><div class="shop-heading"><div><span class="eyebrow" id="shop-location">BETWEEN ENCOUNTERS</span><h2 id="shop-title">The trading post</h2><p>Each purchase adds one copy to your deck.</p></div><div class="shop-wallet"><span>YOUR COINS</span><b id="shop-coins">0</b></div></div><div class="shop-grid" id="shop-grid"></div><div class="shop-pack" id="shop-pack"></div><section class="shop-counters" aria-label="Run counter shop"><header><b>RUN COUNTERS</b><span>One creature card · until this run ends</span></header><div id="shop-counter-grid"></div></section><div class="shop-footer"><p></p><button class="primary-button" id="shop-continue">Continue to camp →</button></div></section>
       <section class="screen end-screen" id="end-screen" aria-labelledby="end-title">

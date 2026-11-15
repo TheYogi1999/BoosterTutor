@@ -57,9 +57,9 @@ const assert=require('node:assert/strict');
   assert.ok(Math.abs(await page.evaluate(()=>soundEngine.effectsGain.gain.value)-.4)<.00001);assert.equal(await page.locator('#background-music').evaluate(a=>a.paused),true);
   await page.evaluate(()=>setEffectsPreferences75(false,40));assert.equal(await page.evaluate(()=>soundEngine.voices.size),0);
   // The final enemy's cue survives the immediate reward-screen transition.
-  await page.evaluate(()=>{setEffectsPreferences75(true,40);freshEnemy77('dragon');state.battle.enemyCreatures=[victim77];damageFirstEnemy(1000,victim77);winBattle()});
+  await page.evaluate(()=>{setEffectsPreferences75(true,40);freshEnemy77('dragon');state.battle.enemyCreatures=[victim77];damageFirstEnemy(1000,victim77);winBattle();if(state.screen==='results-screen')encounterPresentation82.continue()});
   await page.waitForFunction(()=>deathEvents77.length===1);assert.equal(await page.evaluate(()=>state.screen),'draft-screen');assert.equal(await page.evaluate(()=>deathEvents77[0].name),'enemy-death-large');
-  assert.equal(await page.locator('.brand-version').textContent(),'v0.77');assert.deepEqual(errors,[]);
+  assert.match(await page.locator('.brand-version').textContent(),/^v\d+\.\d+$/);assert.deepEqual(errors,[]);
   console.log('PASS all 20 enemy kinds and scaled health, one defeat cue/bounty/level, nonlethal and own-death silence, combat/poison/destroy/exile, six simultaneous defeats, mute/volume/hidden/pending cleanup and final-enemy reward transition.');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

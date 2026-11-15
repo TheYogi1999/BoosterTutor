@@ -773,6 +773,7 @@ function beginBattle(node) {
     turnEffects: [],
     log: []
   };
+  if (typeof beginEncounterPresentation82 === 'function') beginEncounterPresentation82(state.battle);
   if (typeof prepareImmortalOpening76 === 'function') prepareImmortalOpening76(state.battle);
   if (typeof deployCampTokens === 'function') deployCampTokens(state.battle);
   drawToHand(state.battle.openingHandSize);
@@ -2019,7 +2020,7 @@ function offerEncounterReward59() {
   renderDraft();
   showScreen('draft-screen');
   showToast(`Encounter in ${state.battle.stage?.name || 'the Aether'} cleared. Choose a reward, then rest.`);
-  playSfx('victory');
+  if (typeof playEncounterVictory82 === 'function') playEncounterVictory82(); else playSfx('victory');
 }
 
 function endRun(won, reason = null) {
@@ -2035,7 +2036,7 @@ function endRun(won, reason = null) {
   $('#run-summary').innerHTML = `<span>RUN <b>${state.node} / 4</b></span><span>DECK <b>${state.deck.length}</b></span><span>LIFE <b>${Math.max(0, state.playerHealth)}</b></span>`;
   if (typeof renderRunEnd59 === 'function') renderRunEnd59(won);
   showScreen('end-screen');
-  playSfx(won ? 'victory' : 'defeat');
+  if (won && typeof playEncounterVictory82 === 'function') playEncounterVictory82(); else playSfx(won ? 'victory' : 'defeat');
 }
 
 function showActionError(message) {

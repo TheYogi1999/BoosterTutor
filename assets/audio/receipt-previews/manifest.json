@@ -1,0 +1,83 @@
+[
+  {
+    "code": "T1",
+    "group": "Transition",
+    "family": "Foley",
+    "title": "Silk Sweep",
+    "description": "A short, soft card-fan sweep.",
+    "seconds": 0.2,
+    "file": "t1-silk-sweep.mp3"
+  },
+  {
+    "code": "T2",
+    "group": "Transition",
+    "family": "Arcane",
+    "title": "Aether Slip",
+    "description": "Air and a brief falling magical tone.",
+    "seconds": 0.22,
+    "file": "t2-aether-slip.mp3"
+  },
+  {
+    "code": "T3",
+    "group": "Transition",
+    "family": "Retro",
+    "title": "Quick Zip",
+    "description": "A rounded electronic slide with a clean stop.",
+    "seconds": 0.16,
+    "file": "t3-quick-zip.mp3"
+  },
+  {
+    "code": "C1",
+    "group": "Coin count",
+    "family": "Foley",
+    "title": "Small Coin",
+    "description": "A restrained metal tick with a warm body.",
+    "seconds": 0.11,
+    "file": "c1-small-coin.mp3"
+  },
+  {
+    "code": "C2",
+    "group": "Coin count",
+    "family": "Arcane",
+    "title": "Crystal Tick",
+    "description": "A light, soft crystal plink.",
+    "seconds": 0.12,
+    "file": "c2-crystal-tick.mp3"
+  },
+  {
+    "code": "C3",
+    "group": "Coin count",
+    "family": "Retro",
+    "title": "Warm Blip",
+    "description": "A rounded, brief counting pulse.",
+    "seconds": 0.095,
+    "file": "c3-warm-blip.mp3"
+  },
+  {
+    "code": "R1",
+    "group": "Result",
+    "family": "Foley",
+    "title": "Coin Settle",
+    "description": "A compact landing with a gentle metallic tail.",
+    "seconds": 0.34,
+    "file": "r1-coin-settle.mp3"
+  },
+  {
+    "code": "R2",
+    "group": "Result",
+    "family": "Arcane",
+    "title": "Golden Seal",
+    "description": "A short magical chord with a warm finish.",
+    "seconds": 0.43,
+    "file": "r2-golden-seal.mp3"
+  },
+  {
+    "code": "R3",
+    "group": "Result",
+    "family": "Retro",
+    "title": "Reward Lock",
+    "description": "A quick ascending retro resolution.",
+    "seconds": 0.33,
+    "file": "r3-reward-lock.mp3"
+  }
+]

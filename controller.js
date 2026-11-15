@@ -41,7 +41,7 @@ const controller = {
   initial(items){
     const modal=this.modal();
     if(modal)return items.find(element=>element.matches('[data-precon-deck],[data-precon-card],[data-counter-pick],[data-rule-pick],[data-tutor-pick],[data-library-pick],[data-scry-index],.collection-card,.graveyard-card'))||items.find(element=>element.id==='quit-cancel')||items[0];
-    const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','journey-screen':'[data-camp-token]','shop-screen':'[data-buy-card]','end-screen':'#endless-button,#restart-button' }[state.screen||'start-screen'];
+    const preferred={ 'start-screen':'#start-button','draft-screen':'[data-open-pack],.draft-option','combat-screen':'[data-hand-index]','results-screen':'#results-continue','journey-screen':'[data-camp-token]','shop-screen':'[data-buy-card]','end-screen':'#endless-button,#restart-button' }[state.screen||'start-screen'];
     return items.find(element=>preferred&&element.matches(preferred))||items[0];
   },
   focus(element){
@@ -125,7 +125,7 @@ const controller = {
   },
   advance(){
     if(this.modal()||this.editing)return;
-    const selector={'combat-screen':'#end-turn-button','draft-screen':'#draft-confirm','shop-screen':'#shop-continue'}[state.screen];
+    const selector={'combat-screen':'#end-turn-button','results-screen':'#results-continue','draft-screen':'#draft-confirm','shop-screen':'#shop-continue'}[state.screen];
     const button=selector&&document.querySelector(selector);if(this.visible(button))button.click();this.dirty=true;this.reconcile();
   },
   reroll(){
@@ -134,7 +134,7 @@ const controller = {
   },
   buttonHints(){
     const layout=INPUT_LAYOUTS78[this.profile];
-    for(const [id,action] of [['draft-confirm','advance'],['pack-reroll','reroll'],['end-turn-button','advance'],['shop-continue','advance']]){
+    for(const [id,action] of [['draft-confirm','advance'],['pack-reroll','reroll'],['end-turn-button','advance'],['shop-continue','advance'],['results-continue','advance']]){
       const button=document.getElementById(id);if(!button)continue;
       const badge=button.querySelector(':scope > .input-action-hint79');
       if(!this.gamepadProfile()){badge?.remove();continue;}

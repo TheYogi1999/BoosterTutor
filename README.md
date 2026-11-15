@@ -1,3 +1,23 @@
+## Snappy transitions and encounter receipts (v0.82)
+
+Screen changes use a **180 ms** fade/slide and dialog openings **140 ms**, with no logical navigation delay. After a completed encounter, visible cards from the hand, creatures, attached/free permanents, mana, Library and graveyard collect into the reward area over **300–384 ms**. The new receipt counts real bounty coins, wallet balance and level progression in **700 ms**. Its Continue button works immediately, including the controller's Y / Triangle / X shortcut. Reduced-motion and hidden-tab settings settle directly to the final values.
+
+The receipt lists actual defeated foes and their bounty, turns and run-deck size. Currency and levels are awarded once by the existing defeat path; the presentation only reads them. A ledger starts at each encounter (or each persistent Immortal wave), collects bounty across intermediate reinforcement waves, and records wallet/level before and after. Final campaign receipts continue to the existing victory/Endless screen; defeats keep their existing end screen. The existing victory cue plays once when the receipt opens. New sound designs are offered as auditions for the player to choose before integration.
+
+Exit cards are inert visual clones, capped at 30 and animated only with transforms/opacity. Actual zones, attached cards, tokens and identities remain intact, including Immortal Expedition. Fast navigation, Continue, resize, hidden tabs and reduced-motion changes clean up animations without repeating a route, counter or reward. Numeric DOM updates occur only when displayed integers change.
+
+Listen to [transition / coin-count / finish sound options](https://theyogi1999.github.io/BoosterTutor/results-sounds.html): **T1–T3**, **C1–C3**, **R1–R3**. Families are Foley, Arcane and Retro. Three matching sets play a transition, six coin ticks and a finish. Preview choices and volume are independent of game settings. Sources/reproduction: [receipt audio notes](assets/audio/receipt-previews/README.md).
+
+Validation: **443 rule tests**; real bounty/level totals and no duplicate credit, visual collection with unchanged zones, immediate/controller Continue, intermediate waves, eight persistent Immortal waves, campaign/Endless, stale callbacks, rapid screen changes, reduced motion, fitted 16:9 canvas, full controller gameplay and HTTP-cache upgrade. Nine native audio previews and three matching demos have exclusive playback, saved picks, volume control, keyboard tabs, clipboard fallback and mobile layouts.
+
+```sh
+node tests/encounter-presentation-browser.test.cjs
+node tests/immortal-mode-browser.test.cjs
+node tests/receipt-sounds-browser.test.cjs
+node tests/controller-browser.test.cjs
+node tests/release-cache-browser.test.cjs
+```
+
 ## Automatic selection among physical and virtual controllers (v0.81)
 
 With **vJoy at slot 0, Xbox at slot 1 and Nintendo Pro at slot 2**, v0.80 could keep polling the first virtual device until a manual dropdown selection. Startup now prefers a usable controller, and real button/stick activity can transfer control to another device. Unmapped virtual-device activity and small idle stick jitter cannot steal a usable controller. Each source change retains the neutral/release gate, so a held button cannot activate the newly focused control. Standard Xbox/Nintendo/PlayStation mappings and saved custom maps remain supported, including calibrated axis-based D-pads.

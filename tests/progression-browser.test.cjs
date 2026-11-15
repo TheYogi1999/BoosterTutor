@@ -66,10 +66,10 @@ const assert=require('node:assert/strict');
   // Win both real boss waves. Kills award levels once through the bounty path.
   await p.evaluate(()=>{
    state.endless=false;state.deck=[foilBear59,...Array.from({length:60},()=>runCard59(BUNDLED_CARDS.find(c=>c.name==='Grizzly Bears'))),...generateStarterManaCards(4)];state.playerHealth=37;state.coins=240;state.shop=null;beginBattle(4);window.beforeLevel59=state.level;window.waveKills59=state.battle.enemyCreatures.length;
-   const b=state.battle;for(const e of [...b.enemyCreatures]){damageFirstEnemy(10000,e);awardBounty(e)}winBattle();
+   const b=state.battle;for(const e of [...b.enemyCreatures]){damageFirstEnemy(10000,e);awardBounty(e)}winBattle();if(state.screen==='results-screen')encounterPresentation82.continue();
   });
   assert.equal(await p.evaluate(()=>state.battle.waveIndex),1);assert.equal(await p.evaluate(()=>state.level-beforeLevel59),await p.evaluate(()=>waveKills59));
-  await p.evaluate(()=>{for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle();window.beforeEndless59={deck:state.deck,life:state.playerHealth,coins:state.coins,level:state.level,run:state.finishRun59}});
+  await p.evaluate(()=>{for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle();if(state.screen==='results-screen')encounterPresentation82.continue();window.beforeEndless59={deck:state.deck,life:state.playerHealth,coins:state.coins,level:state.level,run:state.finishRun59}});
   assert.equal(await p.locator('#endless-button').isVisible(),true);assert.match(await p.locator('#run-summary').innerText(),/LEVEL/);
   assert.equal(await p.evaluate(()=>{controller.enable();return controller.focused?.id}),'endless-button');await p.evaluate(()=>controller.release());
   const record=await p.evaluate(()=>state.bestLevel59);assert.ok(record>1);
@@ -93,7 +93,7 @@ const assert=require('node:assert/strict');
    assert.equal(await p.evaluate(()=>state.battle.waves.flat().every(e=>e.maxHealth>FOE_TYPES[e.kind].health&&e.power>FOE_TYPES[e.kind].power)),true);
    if(node===5)await p.screenshot({path:'work/progression59-endless.png'});
    if(node===10)break;
-   await p.evaluate(()=>{while(state.screen==='combat-screen'){for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle()}});
+   await p.evaluate(()=>{while(state.screen==='combat-screen'){for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle();if(state.screen==='results-screen')encounterPresentation82.continue()}});
    assert.equal(await p.evaluate(()=>state.screen),'draft-screen');
   }
   await p.evaluate(()=>{state.playerHealth=0;endRun(false)});assert.equal(await p.locator('#endless-invitation').isVisible(),false);assert.match(await p.locator('#run-summary').innerText(),/ENDLESS/);

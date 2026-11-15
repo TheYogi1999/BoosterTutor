@@ -50,6 +50,7 @@ function resumeImmortalWave76(node){
  b.blockAssignments.clear();b.selectedEnemyAttackerId=null;b.selectedEnemyTargetId=null;b.pendingAttachment=null;b.pendingSpellTarget=null;b.resolvingSpellTarget=null;
  b.enemySpells=[];b.activeEnemySpellId=null;delete b.enemySpellsTurn;delete b.intentsResolvedTurn;delete b.enemyCounterUsedTurn;
  b.mulliganAvailable=false;deployCampTokens(b);refreshPermanentEffects();
+ if(typeof beginEncounterPresentation82==='function')beginEncounterPresentation82(b);
  // This is a new turn in the same battle: untap, clean up temporary effects and draw one.
  beginNextPlayerTurn45(b);
  if(b.phase==='complete')return false;

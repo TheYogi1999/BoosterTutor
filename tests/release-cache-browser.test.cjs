@@ -100,6 +100,7 @@ const { chromium, devices } = require('playwright');
       for(const key of ['width','height','offsetTop','offsetLeft','scale']) delete visualViewport[key];
       state.node=1;state.battle.waves=[[]];state.battle.waveIndex=0;state.battle.enemyCreatures=[];winBattle();
     });
+    await page.locator('#results-continue').tap();
     await page.setViewportSize({width:390,height:844});
     await page.locator('.sealed-pack').tap();
     await page.evaluate(()=>scrollTo(0,500));

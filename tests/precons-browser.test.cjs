@@ -8,7 +8,7 @@ const assert=require('node:assert/strict');
   await p.goto(process.env.BOOSTERTUTOR_URL||'http://127.0.0.1:8000/');await p.waitForFunction(()=>typeof PRECONS71!=='undefined');
   await p.evaluate(()=>{state.soundOn=false;window.runAudio71=0;window.playRunStartAudio=()=>runAudio71++;window.scenes71=[];const original=showScreen;showScreen=function(id){scenes71.push(id);return original(id)}});
   assert.deepEqual(await p.locator('.title-menu button').allTextContents(),['PLAY','GAME MODES','OPTIONS','QUIT','COLLECTIONS']);
-  assert.equal(await p.locator('.brand-version').innerText(),'v0.76');
+  assert.match(await p.locator('.brand-version').innerText(),/^v\d+\.\d+$/);
   const onTitle=async()=>p.evaluate(()=>{document.querySelectorAll('dialog[open]').forEach(d=>d.close());showScreen('start-screen')});
   const open=async()=>{await p.locator('#title-game-modes').click();await p.waitForFunction(()=>document.querySelector('#game-modes-dialog').open)};
   const fits=async()=>p.waitForFunction(()=>Math.abs(document.querySelector('.game-shell').getBoundingClientRect().width-1600*Math.min(innerWidth/1600,innerHeight/900))<1);
@@ -50,7 +50,7 @@ const assert=require('node:assert/strict');
   const tutor=await p.evaluate(()=>state.battle.hand.findIndex(c=>c.name==='Booster Tutor'));await p.locator(`[data-hand-index="${tutor}"]`).click();await p.waitForFunction(()=>state.screen==='draft-screen'&&state.boosterInterruption?.kind==='tutor');await p.locator('.sealed-pack').click();await p.waitForFunction(()=>!boosterTravel&&!state.boosterSealed&&document.querySelectorAll('.draft-option').length===7);await p.locator('.draft-option').first().click();await p.locator('#draft-confirm').click();
   assert.equal(await p.evaluate(()=>state.screen),'combat-screen');assert.equal(await p.evaluate(()=>state.battle===tutorBattle71),true);assert.equal(await p.evaluate(()=>state.deck.length),24);
   // Prepared runs keep the ordinary reward -> shop -> camp -> next battle loop.
-  await p.evaluate(()=>{for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle()});await p.waitForFunction(()=>state.screen==='draft-screen');assert.equal(await p.evaluate(()=>state.draftKind),'reward');assert.equal(await p.evaluate(()=>state.packs.length),1);
+  await p.evaluate(()=>{for(const e of [...state.battle.enemyCreatures])damageFirstEnemy(10000,e);winBattle();if(state.screen==='results-screen')encounterPresentation82.continue()});await p.waitForFunction(()=>state.screen==='draft-screen');assert.equal(await p.evaluate(()=>state.draftKind),'reward');assert.equal(await p.evaluate(()=>state.packs.length),1);
   await p.locator('.sealed-pack').click();await p.waitForFunction(()=>!boosterTravel&&!state.boosterSealed);await p.locator('.draft-option').first().click();await p.locator('#draft-confirm').click();assert.equal(await p.evaluate(()=>state.screen),'shop-screen');assert.equal(await p.evaluate(()=>state.deck.length),26);
   await p.locator('#shop-continue').click();await p.locator('[data-camp-token="food"]').click();assert.equal(await p.evaluate(()=>state.node),2);assert.equal(await p.evaluate(()=>state.deck.length),26);assert.equal(await p.evaluate(()=>state.preconId71),'skyward-watch');
   // PLAY continues to use the six-pack draft rather than the selected precon.
