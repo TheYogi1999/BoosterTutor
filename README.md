@@ -1,3 +1,23 @@
+## Controller diagnostics and nonstandard device setup (v0.80)
+
+**Options → Controls → Test controller / set up buttons** opens a live device test. The game previously discarded every controller whose browser `mapping` was not `standard`. Such devices are now detected and shown, including raw reports from Bluetooth controllers. A nonstandard layout needs setup before it can control gameplay; its raw indices are never guessed. Standard devices retain their existing browser mapping and can optionally be calibrated too.
+
+The test distinguishes unavailable API, access errors, an empty browser device list, unknown layouts, lost focus and a manual keyboard/touch lock. It shows device names, mapping type, button values and axes, supports choosing among physical/virtual devices, and copies a diagnostic report with a selectable-text fallback. Controller input in the test window never activates game actions. Windows/Bluetooth/Brave help explains clicking/pressing a button, checking **Win+R → joy.cpl → Properties**, and comparing the same connection in Edge/Chrome when Windows responds but Brave does not. An empty API list alone is not attributed to browser blocking or faulty hardware.
+
+**Set up buttons** learns the chosen Xbox/PlayStation/Nintendo symbols, nine actions and four D-pad directions, followed by four optional stick directions. Raw button indices and axis-hat values are translated into the game's canonical positions; stick centers, axes and polarity are learned rather than assuming the first four axes. Release and stable-input gates reject held/repeated controls and duplicate bindings. Setup pauses on lost focus/hidden tabs, saves only when required steps are complete and controls released, and can be cancelled without replacing an existing map. Optional sticks can be skipped. Validated mappings persist per device ID, browser mapping and button/axis counts, survive reconnect/index changes, and can be reset. A successful setup selects its button-symbol layout.
+
+Validation uses headless Chromium with simulated reports: missing/denied/empty APIs, an unmapped Nintendo Pro-style device with 18 buttons, a hat axis and legacy idle trigger axes, full setup and optional-stick skip, duplicates/held/focus guards, cancel/disconnect/reset, raw Nintendo A/B, real booster selection/reroll/Continue, stick scrolling, virtual-device selection, report fallback, persistence/reload and four fitted viewports. Existing full controller gameplay, input-profile, action-prompt, independent-audio, navigation and cache-upgrade suites pass. Physical Windows + Brave + Bluetooth behavior still needs the affected user's device test/report; no blanket Brave-specific cause is asserted.
+
+```sh
+node tests/controller-devices-browser.test.cjs
+node tests/controller-browser.test.cjs
+node tests/input-profiles-browser.test.cjs
+node tests/controller-action-hints-browser.test.cjs
+node tests/audio-channels-browser.test.cjs
+node tests/navigation-browser.test.cjs
+node tests/release-cache-browser.test.cjs
+```
+
 ## Controller shortcuts directly on action buttons (v0.79)
 
 The booster **Next Pack / Build Deck / Take Card / Resume** button, **Reroll pack**, the combat **Start combat / Continue / Confirm blocks** button and shop **Continue** now display their real controller shortcut directly beside the label. Glyphs follow the automatic or manual input profile and disappear for Keyboard & mouse / Touch. Prompts survive caption replacements and repeated renders without duplicates; the original button labels and disabled states remain available.

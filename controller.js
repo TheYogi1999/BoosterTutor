@@ -173,7 +173,7 @@ const controller = {
     const select=document.querySelector('#input-layout'),auto=document.querySelector('#input-auto-detect');
     if(select.value!==this.profile)select.value=this.profile;if(select.disabled!==this.autoDetect)select.disabled=this.autoDetect;if(auto.checked!==this.autoDetect)auto.checked=this.autoDetect;
     const status=this.autoDetect?`${layout.name} · automatic · use a device to switch.`:`${layout.name} · manual layout.`;
-    const connection=this.connected?` ${INPUT_LAYOUTS78[detectedPadLayout78(this.id)].name} controller connected.`:'';
+    const connection=this.connected?` ${INPUT_LAYOUTS78[controllerDevices80.profile(controllerDevices80.raw)].name} controller connected.`:'';
     const statusNode=document.querySelector('#controller-status');if(statusNode.textContent!==status+connection)statusNode.textContent=status+connection;
     const signature=this.profile;if(this.bindingProfile!==signature){this.bindingProfile=signature;document.querySelector('#controller-bindings').innerHTML=this.bindings().map(([icon,text])=>`<div><span class="input-binding-icons78">${icon}</span><span>${text}</span></div>`).join('');
       document.querySelector('#controller-tip').textContent=this.gamepadProfile()?'Attack: select an opponent, then your creature. Select it again to withdraw. Block: select an attacker, then your blockers. Equipment: select it, then its host. Directions change an edited option; confirm or back finishes. Changes apply immediately.':this.profile==='touch'?'Tap an opponent, then your creature to attack. Tap an attacking opponent, then your blockers. Drag cards from your hand to play them. Tap permanents to open their abilities.':'Click an opponent, then your creature to attack. Choose an attacking opponent, then your blockers. Hover cards for details. Click permanents to open their abilities.';
@@ -184,19 +184,22 @@ const controller = {
     let parent=this.focused.parentElement;while(parent&&parent!==document.body){const style=getComputedStyle(parent);const sx=/auto|scroll/.test(style.overflowX)&&parent.scrollWidth>parent.clientWidth,sy=/auto|scroll/.test(style.overflowY)&&parent.scrollHeight>parent.clientHeight;if(sx||sy){if(sx)parent.scrollLeft+=x*dt*.6;if(sy)parent.scrollTop+=y*dt*.6;return;}parent=parent.parentElement;}
   },
   frame(now){
-    let pads=[];try{pads=[...(navigator.getGamepads?.()||[])].filter(pad=>pad?.connected&&pad.mapping==='standard');}catch{/* Controller API may be disabled by the browser. */}
-    const pad=pads.find(pad=>pad.index===this.index)||pads[0];
-    if(!pad){if(this.connected){this.connected=false;this.index=null;this.ready=false;this.previous=[];this.release();}this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
+    const pads=controllerDevices80.poll();
+    const raw=pads.find(pad=>pad.index===controllerDevices80.preferred)||pads.find(pad=>pad.index===this.index)||pads[0];
+    controllerDevices80.sample(raw,now);
+    if(!raw){if(this.connected){this.connected=false;this.index=null;this.ready=false;this.previous=[];this.release();}this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
+    if(this.index!==raw.index||!this.connected||this.id!==raw.id){this.index=raw.index;this.id=raw.id;this.connected=true;this.ready=false;this.previous=[];this.direction='';this.hints();}
+    const pad=controllerDevices80.normalize(raw);
+    if(!pad||controllerDevices80.calibration||document.querySelector('#controller-test-dialog').open){this.ready=false;this.previous=[];this.direction='';if(this.active)this.release();this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     if(document.hidden||!document.hasFocus()){this.ready=false;this.previous=[];this.direction='';this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     const pressed=pad.buttons.map(button=>Boolean(button.pressed||button.value>.55));const axes=pad.axes||[];
-    if(this.index!==pad.index||!this.connected||this.id!==pad.id){this.index=pad.index;this.id=pad.id;this.connected=true;this.ready=false;this.previous=pressed;this.direction='';this.hints();}
     const neutral=!pressed.some(Boolean)&&axes.slice(0,4).every(value=>Math.abs(value)<.35);
     if(!this.ready){if(neutral)this.ready=true;this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     const edge=index=>pressed[index]&&!this.previous[index];
     let direction=pressed[12]?'up':pressed[13]?'down':pressed[14]?'left':pressed[15]?'right':'';
     if(!direction){const x=axes[0]||0,y=axes[1]||0;const threshold=this.direction.startsWith('stick:') ? 0.4 : 0.55;if(Math.max(Math.abs(x),Math.abs(y))>threshold)direction='stick:'+(Math.abs(x)>Math.abs(y)?(x>0?'right':'left'):(y>0?'down':'up'));}
     const input=direction||[0,1,2,3,4,5,7,8,9].some(edge)||Math.max(Math.abs(axes[2]||0),Math.abs(axes[3]||0))>.55;
-    if(input){const previousProfile=this.profile;this.setProfile(detectedPadLayout78(pad.id),true);if(this.gamepadProfile())this.enable();if(this.profile!==previousProfile)this.ready=true;}
+    if(input){const previousProfile=this.profile;this.setProfile(controllerDevices80.profile(raw),true);if(this.gamepadProfile())this.enable();if(this.profile!==previousProfile)this.ready=true;}
     if(!this.gamepadProfile()){this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     if(direction){if(direction!==this.direction||now>=this.nextRepeat){this.move(direction.replace('stick:',''));this.nextRepeat=now+(direction===this.direction?155:330);}}else this.nextRepeat=0;
     this.direction=direction;
@@ -223,4 +226,4 @@ let previousPointer78=null;
 document.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse'||!event.isTrusted)return;const p=previousPointer78;previousPointer78=[event.clientX,event.clientY];if(p&&Math.hypot(event.clientX-p[0],event.clientY-p[1])>3)pointerInput78(event);},true);
 document.addEventListener('keydown',event=>{if(!event.isTrusted)return;if(controller.active)controller.release();controller.setProfile('keyboard',true);},true);
 window.addEventListener('blur',()=>{controller.ready=false;controller.previous=[];controller.direction='';controller.release();});
-controller.hints();requestAnimationFrame(now=>controller.frame(now));
+controllerDevices80.initialize();controller.hints();requestAnimationFrame(now=>controller.frame(now));

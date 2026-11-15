@@ -1,0 +1,22 @@
+#controller-test-dialog{padding:24px 30px;color:#e9e7dc;font:13px/1.5 var(--sans)}
+#controller-test-dialog header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}
+#controller-test-dialog h2{font:500 30px/1.2 Georgia,serif;margin:7px 0}
+.controller-device-label80{display:flex;flex-direction:column;gap:7px;color:#d9c39a;font-size:12px}
+.controller-device-fields80{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:16px}
+@media(max-width:700px){.controller-device-fields80{grid-template-columns:1fr}}
+#controller-test-device,#controller-setup-layout{height:38px;width:100%;min-width:0;background:#152c33;color:#eee5ce;border:1px solid #bda47455;border-radius:5px;padding:6px 10px;font:13px var(--sans);color-scheme:dark}
+#controller-test-status{padding:10px 12px;border-left:2px solid #d2b17a;background:#b59a5710;color:#e6d4af;margin:13px 0 8px}
+#controller-test-info{font-size:11px;color:#a8c4c3;margin:8px 0}
+.controller-test-tip80{font-size:11px;color:#a8c4c3;margin:8px 0}
+#controller-test-values{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.9 monospace;color:#b9d7d2;padding:12px 15px;background:#06171e99;border:1px solid #bda47422;border-radius:5px;max-height:100px;overflow:auto;margin:10px 0}
+.controller-test-actions80{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+#controller-test-dialog .quiet-button,#controller-test-open{font-size:12px;min-height:32px;padding:7px 10px}
+#controller-setup-progress{padding:15px 18px;margin-top:14px;border:1px solid #cfb27b66;background:#b6953d0d;border-radius:7px}
+#controller-setup-prompt{color:#f1dbad;font:500 24px/1.3 Georgia,serif;margin:9px 0}
+#controller-setup-progress p,.controller-troubleshoot80 p{font-size:12px;color:#acbfbe}
+#controller-test-notice{font-size:12px;color:#e0c798;min-height:18px;margin:10px 0}
+#controller-test-report{width:100%;height:120px;background:#071920;color:#d2e0d8;font:11px/1.4 monospace;padding:10px}
+.controller-troubleshoot80{margin-top:10px;color:#b7c9c7;font-size:12px}
+.controller-troubleshoot80 summary{cursor:pointer;color:#ddc69d;padding:7px 0}
+.controller-troubleshoot80 ol{padding-left:20px;line-height:1.6}
+@media(max-width:700px){html.fixed-game #controller-test-dialog{width:calc(100vw - 24px)!important;height:min(760px,calc(100dvh - 24px))!important;transform:translate(-50%,-50%)!important;padding:20px;overflow:auto;overscroll-behavior:contain}#controller-test-dialog header{position:sticky;top:-20px;padding:10px 0;background:#14272d;z-index:2}#controller-test-device{height:44px;font-size:14px}.controller-test-actions80{gap:6px}#controller-test-values{font-size:11px}#controller-setup-prompt{font-size:22px}}
