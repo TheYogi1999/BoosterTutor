@@ -1,9 +1,28 @@
-/* Standard Gamepad API input. All actions use the same controls as mouse/keyboard. */
+/* Standard Gamepad API input. Profiles describe the physical standard-button positions. */
+const INPUT_LAYOUTS78={
+ xbox:{name:'Xbox',confirm:['A',0],back:['B',1],inspect:['X',2],advance:['Y',3],left:'LB',right:'RB',deck:'View',help:'Menu'},
+ playstation:{name:'PlayStation',confirm:['✕',0],back:['○',1],inspect:['□',2],advance:['△',3],left:'L1',right:'R1',deck:'Share',help:'Options'},
+ nintendo:{name:'Nintendo',confirm:['A',1],back:['B',0],inspect:['Y',2],advance:['X',3],left:'L',right:'R',deck:'−',help:'+'},
+ keyboard:{name:'Keyboard & mouse'},touch:{name:'Touch'}
+};
+function detectedPadLayout78(id=''){
+ if(/dualsense|dualshock|playstation|sony|054c/i.test(id))return 'playstation';
+ if(/nintendo|switch|joy.?con|057e/i.test(id))return 'nintendo';
+ return 'xbox';
+}
+function glyph78(label,profile){
+ const face=['A','B','X','Y','✕','○','□','△'].includes(label),color={'A':'green','B':'red','X':'blue','Y':'yellow','✕':'blue','○':'red','□':'pink','△':'green'}[label]||'';
+ const spoken={'✕':'Cross','○':'Circle','□':'Square','△':'Triangle','✚':'D-pad','LS':'Left stick','RS':'Right stick','⇧ Tab':'Shift Tab','↑ ↓ ← →':'Arrow keys'}[label]||label;
+ return `<span class="input-glyph78 ${face?'input-face78':'input-key78'} input-${profile} input-${color}" role="img" aria-label="${spoken}">${label}</span>`;
+}
+let savedInput78={};try{savedInput78=JSON.parse(localStorage.getItem('bt-input-settings-v1')||'{}')||{};}catch{}
 const controller = {
+  profile:Object.hasOwn(INPUT_LAYOUTS78,savedInput78.profile)?savedInput78.profile:'keyboard',autoDetect:savedInput78.autoDetect!==false,hintMarkup:'',
+  dialogs:[],
   index:null, id:'', connected:false, active:false, ready:false, previous:[], direction:'', nextRepeat:0,
   focused:null, key:'', context:'', editing:false, memory:new Map(), dirty:true, lastFrame:0,
   buttons:'button,summary,select,input:not([type="hidden"]),a[href],[tabindex]:not([tabindex="-1"])',
-  modal(){return document.activeElement?.closest('dialog[open]')||[...document.querySelectorAll('dialog[open]')].at(-1)||null;},
+  modal(){this.dialogs=this.dialogs.filter(dialog=>dialog.open&&dialog.isConnected);return this.dialogs.at(-1)||document.activeElement?.closest('dialog[open]')||[...document.querySelectorAll('dialog[open]')].at(-1)||null;},
   scope(){return this.modal()||document.querySelector('.screen.active');},
   contextKey(){return this.modal()?.id||`${state.screen||'start-screen'}:${state.screen==='draft-screen'?state.activePack||0:''}`;},
   visible(element){return Boolean(element&&!element.disabled&&!element.closest('[hidden],[inert]')&&element.getClientRects().length&&getComputedStyle(element).visibility!=='hidden');},
@@ -29,7 +48,7 @@ const controller = {
     if(!this.visible(element))return;
     if(this.focused!==element){this.focused?.classList.remove('controller-focus','controller-editing');this.focused=element;}
     this.key=this.elementKey(element);this.memory.set(this.contextKey(),this.key);element.classList.add('controller-focus');
-    element.classList.toggle('controller-editing',this.editing&&element.tagName==='SELECT');
+    element.classList.toggle('controller-editing',this.editing&&(element.tagName==='SELECT'||element.matches('input[type="range"]')));
     if(document.activeElement!==element)element.focus({preventScroll:true});
     this.reveal(element);
   },
@@ -51,7 +70,7 @@ const controller = {
     this.focus(found||this.initial(items));
   },
   enable(){if(!this.active){this.active=true;document.documentElement.classList.add('controller-mode');this.dirty=true;}this.reconcile();this.hints();},
-  release(){this.active=false;this.editing=false;this.focused?.classList.remove('controller-focus','controller-editing');document.documentElement.classList.remove('controller-mode');this.hints();},
+  release(){this.active=false;this.editing=false;this.ready=false;this.previous=[];this.direction='';this.focused?.classList.remove('controller-focus','controller-editing');document.documentElement.classList.remove('controller-mode');this.hints();},
   zone(element){
     if(element.closest('#hand-row'))return'hand';
     if(element.closest('#creature-row,#permanent-row'))return'battlefield';
@@ -71,7 +90,7 @@ const controller = {
   },
   move(direction){
     this.reconcile();if(!this.focused)return;
-    if(this.editing&&this.focused.tagName==='SELECT')return this.changeSelect(direction==='left'||direction==='up'?-1:1);
+    if(this.editing&&(this.focused.tagName==='SELECT'||this.focused.matches('input[type="range"]'))){return this.focused.tagName==='SELECT'?this.changeSelect(direction==='left'||direction==='up'?-1:1):this.changeRange(direction==='left'||direction==='down'?-1:1);}
     const vectors={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]};const [vx,vy]=vectors[direction];const box=this.focused.getBoundingClientRect();const x=box.left+box.width/2,y=box.top+box.height/2;
     const ranked=this.candidates().filter(element=>element!==this.focused).map(element=>{const b=element.getBoundingClientRect();const dx=b.left+b.width/2-x,dy=b.top+b.height/2-y;const forward=dx*vx+dy*vy,cross=Math.abs(dx*vy-dy*vx);return{element,forward,score:forward+cross*2.8+(cross>forward*1.5?500:0)};}).filter(item=>item.forward>2).sort((a,b)=>a.score-b.score);
     if(ranked[0])this.focus(ranked[0].element);
@@ -81,9 +100,15 @@ const controller = {
     for(let n=0;n<options.length;n++){index=(index+step+options.length)%options.length;if(!options[index].disabled&&!options[index].hidden)break;}
     if(index===select.selectedIndex)return;select.selectedIndex=index;select.dispatchEvent(new Event('change',{bubbles:true}));this.dirty=true;this.reconcile();
   },
+  changeRange(step){
+    const range=this.focused,before=range.value;
+    if(step<0)range.stepDown();else range.stepUp();
+    if(before!==range.value){range.dispatchEvent(new Event('input',{bubbles:true}));range.dispatchEvent(new Event('change',{bubbles:true}));}
+  },
   activate(){
     this.reconcile();const element=this.focused;if(!this.visible(element))return;
-    if(element.tagName==='SELECT'){this.editing=!this.editing;this.focus(element);this.hints();return;}
+    if(element.tagName==='SELECT'||element.matches('input[type="range"]')){this.editing=!this.editing;this.focus(element);this.hints();return;}
+    if(element.matches('input[type="checkbox"],input[type="radio"]')){element.click();this.dirty=true;this.reconcile();this.hints();return;}
     if(element.tagName==='INPUT'){element.focus({preventScroll:true});return;}
     element.click();this.dirty=true;this.reconcile();
   },
@@ -104,11 +129,38 @@ const controller = {
     const button=selector&&document.querySelector(selector);if(this.visible(button))button.click();this.dirty=true;this.reconcile();
   },
   help(){const dialog=document.querySelector('#controller-dialog');if(dialog.open)dialog.close();else dialog.showModal();this.dirty=true;this.reconcile();},
+  gamepadProfile(){return Boolean(INPUT_LAYOUTS78[this.profile].confirm);},
+  saveSettings(){try{localStorage.setItem('bt-input-settings-v1',JSON.stringify({profile:this.profile,autoDetect:this.autoDetect}));}catch{}},
+  setProfile(profile,automatic=false){
+    if(!Object.hasOwn(INPUT_LAYOUTS78,profile)||(!this.autoDetect&&automatic))return;
+    if(this.profile!==profile){this.profile=profile;this.editing=false;this.ready=false;this.direction='';if(!this.gamepadProfile())this.release();this.saveSettings();}
+    this.hints();
+  },
+  setAutomatic(enabled){this.autoDetect=Boolean(enabled);this.ready=false;this.direction='';this.saveSettings();this.hints();},
+  bindings(){
+    const layout=INPUT_LAYOUTS78[this.profile],g=label=>glyph78(label,this.profile);
+    if(this.gamepadProfile())return [
+      [g('✚')+' / '+g('LS'),'Move selection'],[g(layout.confirm[0]),'Select · play · edit an option'],[g(layout.back[0]),'Back · cancel an unpaid choice'],[g(layout.inspect[0]),'Inspect a card or opponent'],[g(layout.advance[0]),'Continue combat · confirm a pick'],[g(layout.left)+' '+g(layout.right),'Switch hand, battlefield and opponents'],[g(layout.deck),'Open your run deck'],[g(layout.help),'Open these controls'],[g('RS'),'Scroll lists and longer windows']
+    ];
+    if(this.profile==='touch')return [[g('Tap'),'Select · play · choose a target'],[g('Drag'),'Move a hand card onto the battlefield'],[g('Swipe'),'Scroll card lists'],[g('×'),'Close a window · cancel'],[g('Deck'),'Inspect your run deck'],[g('Options'),'Open settings']];
+    return [[g('Click')+' / '+g('Enter'),'Activate the focused button'],[g('Hover'),'Inspect cards and opponents'],[g('Drag'),'Move a hand card onto the battlefield'],[g('Tab')+' '+g('⇧ Tab'),'Move keyboard focus'],[g('Esc'),'Close a window · cancel a drag'],[g('↑ ↓ ← →'),'Change focused lists and sliders'],[g('Wheel'),'Scroll card lists'],[g('Deck'),'Inspect your run deck']];
+  },
   hints(){
-    const hints=document.querySelector('#controller-hints');const button=document.querySelector('#controller-help-button');
-    const ps=/dualsense|dualshock|playstation|sony|054c/i.test(this.id);const text=!this.connected?'Booster Tutor · Fan prototype':!this.active?'Controller connected · press a button':this.editing?'✚ Change option · A / B Finish · changes apply immediately':ps?'✚ Move · ✕ Select · ○ Back · □ Details · △ Continue · L1/R1 Zones · Options Help':'✚ Move · A Select · B Back · X Details · Y Continue · LB/RB Zones · Menu Help';
-    if(hints.textContent!==text)hints.textContent=text;
-    button.classList.toggle('controller-connected',this.connected);button.title=this.connected?`Controller connected: ${this.id}`:'Controller controls and help';
+    const hints=document.querySelector('#controller-hints'),button=document.querySelector('#controller-help-button'),layout=INPUT_LAYOUTS78[this.profile],g=label=>glyph78(label,this.profile);
+    let entries=this.gamepadProfile()?[[g('✚'),'Move'],[g(layout.confirm[0]),'Select'],[g(layout.back[0]),'Back'],[g(layout.inspect[0]),'Details'],[g(layout.advance[0]),'Continue'],[g(layout.left)+' '+g(layout.right),'Zones'],[g(layout.help),'Controls']]:this.profile==='touch'?[[g('Tap'),'Select'],[g('Drag'),'Play a card'],[g('Options'),'Controls']]:[[g('Click'),'Select'],[g('Hover'),'Details'],[g('Tab'),'Navigate'],[g('Esc'),'Back']];
+    if(this.editing&&this.gamepadProfile())entries=[[g('✚'),'Change value'],[g(layout.confirm[0])+' '+g(layout.back[0]),'Finish editing']];
+    const markup=`<span class="input-profile78">${layout.name}</span>`+entries.map(([icon,text])=>`<span class="input-hint78">${icon}<span>${text}</span></span>`).join('');
+    if(this.hintMarkup!==markup){hints.innerHTML=markup;this.hintMarkup=markup;}
+    document.documentElement.dataset.inputProfile=this.profile;
+    button.classList.toggle('controller-connected',this.connected);button.title=this.connected?`Controller connected: ${this.id}`:'Input settings and controls';
+    const select=document.querySelector('#input-layout'),auto=document.querySelector('#input-auto-detect');
+    if(select.value!==this.profile)select.value=this.profile;if(select.disabled!==this.autoDetect)select.disabled=this.autoDetect;if(auto.checked!==this.autoDetect)auto.checked=this.autoDetect;
+    const status=this.autoDetect?`${layout.name} · automatic · use a device to switch.`:`${layout.name} · manual layout.`;
+    const connection=this.connected?` ${INPUT_LAYOUTS78[detectedPadLayout78(this.id)].name} controller connected.`:'';
+    const statusNode=document.querySelector('#controller-status');if(statusNode.textContent!==status+connection)statusNode.textContent=status+connection;
+    const signature=this.profile;if(this.bindingProfile!==signature){this.bindingProfile=signature;document.querySelector('#controller-bindings').innerHTML=this.bindings().map(([icon,text])=>`<div><span class="input-binding-icons78">${icon}</span><span>${text}</span></div>`).join('');
+      document.querySelector('#controller-tip').textContent=this.gamepadProfile()?'Attack: select an opponent, then your creature. Select it again to withdraw. Block: select an attacker, then your blockers. Equipment: select it, then its host. Directions change an edited option; confirm or back finishes. Changes apply immediately.':this.profile==='touch'?'Tap an opponent, then your creature to attack. Tap an attacking opponent, then your blockers. Drag cards from your hand to play them. Tap permanents to open their abilities.':'Click an opponent, then your creature to attack. Choose an attacking opponent, then your blockers. Hover cards for details. Click permanents to open their abilities.';
+    }
   },
   scroll(x,y,dt){
     if(Math.max(Math.abs(x),Math.abs(y))<.25||!this.focused)return;
@@ -121,26 +173,37 @@ const controller = {
     if(document.hidden||!document.hasFocus()){this.ready=false;this.previous=[];this.direction='';this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     const pressed=pad.buttons.map(button=>Boolean(button.pressed||button.value>.55));const axes=pad.axes||[];
     if(this.index!==pad.index||!this.connected||this.id!==pad.id){this.index=pad.index;this.id=pad.id;this.connected=true;this.ready=false;this.previous=pressed;this.direction='';this.hints();}
-    const neutral=!pressed.some(Boolean)&&axes.slice(0,2).every(value=>Math.abs(value)<.35);
+    const neutral=!pressed.some(Boolean)&&axes.slice(0,4).every(value=>Math.abs(value)<.35);
     if(!this.ready){if(neutral)this.ready=true;this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     const edge=index=>pressed[index]&&!this.previous[index];
     let direction=pressed[12]?'up':pressed[13]?'down':pressed[14]?'left':pressed[15]?'right':'';
     if(!direction){const x=axes[0]||0,y=axes[1]||0;const threshold=this.direction.startsWith('stick:') ? 0.4 : 0.55;if(Math.max(Math.abs(x),Math.abs(y))>threshold)direction='stick:'+(Math.abs(x)>Math.abs(y)?(x>0?'right':'left'):(y>0?'down':'up'));}
-    const input=direction||[0,1,2,3,4,5,8,9].some(edge)||Math.max(Math.abs(axes[2]||0),Math.abs(axes[3]||0))>.4;
-    if(input)this.enable();
+    const input=direction||[0,1,2,3,4,5,8,9].some(edge)||Math.max(Math.abs(axes[2]||0),Math.abs(axes[3]||0))>.55;
+    if(input){const previousProfile=this.profile;this.setProfile(detectedPadLayout78(pad.id),true);if(this.gamepadProfile())this.enable();if(this.profile!==previousProfile)this.ready=true;}
+    if(!this.gamepadProfile()){this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));return;}
     if(direction){if(direction!==this.direction||now>=this.nextRepeat){this.move(direction.replace('stick:',''));this.nextRepeat=now+(direction===this.direction?155:330);}}else this.nextRepeat=0;
     this.direction=direction;
-    if(edge(9))this.help();else if(edge(1))this.back();else if(edge(0))this.activate();else if(edge(2))this.inspect();else if(edge(3))this.advance();else if(edge(4))this.cycleZone(-1);else if(edge(5))this.cycleZone(1);else if(edge(8)&&!this.modal()&&state.deck.length){openCollection('deck');this.dirty=true;}
+    const layout=INPUT_LAYOUTS78[this.profile];
+    if(edge(9))this.help();else if(edge(layout.back[1]))this.back();else if(edge(layout.confirm[1]))this.activate();else if(edge(layout.inspect[1]))this.inspect();else if(edge(layout.advance[1]))this.advance();else if(edge(4))this.cycleZone(-1);else if(edge(5))this.cycleZone(1);else if(edge(8)&&!this.modal()&&state.deck.length){openCollection('deck');this.dirty=true;}
     if(this.active){this.reconcile();this.scroll(axes[2]||0,axes[3]||0,Math.min(34,now-(this.lastFrame||now)));}
     this.previous=pressed;this.lastFrame=now;requestAnimationFrame(t=>this.frame(t));
   }
 };
+// Native dropdowns can temporarily move focus outside the top dialog. Keep the
+// actual opening order, so input never leaks into a window underneath it.
+const baseShowModal78=HTMLDialogElement.prototype.showModal;
+HTMLDialogElement.prototype.showModal=function(...args){const wasOpen=this.open,result=baseShowModal78.apply(this,args);if(!wasOpen){controller.dialogs=controller.dialogs.filter(dialog=>dialog!==this&&dialog.open&&dialog.isConnected);controller.dialogs.push(this);controller.dirty=true;}return result;};
 new MutationObserver(()=>{controller.dirty=true;}).observe(document.querySelector('#game-shell'),{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','hidden','open']});
 new MutationObserver(()=>{controller.dirty=true;}).observe(document.body,{childList:true,subtree:false,attributes:false});
 for(const dialog of document.querySelectorAll('dialog'))new MutationObserver(()=>{controller.dirty=true;}).observe(dialog,{attributes:true,attributeFilter:['open'],childList:true,subtree:true});
 document.querySelector('#controller-help-button').addEventListener('click',()=>controller.help());
 document.querySelector('#controller-close').addEventListener('click',()=>{document.querySelector('#controller-dialog').close();controller.dirty=true;});
-document.addEventListener('pointerdown',()=>{if(controller.active)controller.release();},true);
-document.addEventListener('keydown',()=>{if(controller.active)controller.release();},true);
+document.querySelector('#input-layout').addEventListener('change',event=>controller.setProfile(event.target.value));
+document.querySelector('#input-auto-detect').addEventListener('change',event=>controller.setAutomatic(event.target.checked));
+function pointerInput78(event){if(!event.isTrusted)return;if(controller.active)controller.release();controller.setProfile(['touch','pen'].includes(event.pointerType)?'touch':'keyboard',true);}
+document.addEventListener('pointerdown',pointerInput78,true);
+let previousPointer78=null;
+document.addEventListener('pointermove',event=>{if(event.pointerType!=='mouse'||!event.isTrusted)return;const p=previousPointer78;previousPointer78=[event.clientX,event.clientY];if(p&&Math.hypot(event.clientX-p[0],event.clientY-p[1])>3)pointerInput78(event);},true);
+document.addEventListener('keydown',event=>{if(!event.isTrusted)return;if(controller.active)controller.release();controller.setProfile('keyboard',true);},true);
 window.addEventListener('blur',()=>{controller.ready=false;controller.previous=[];controller.direction='';controller.release();});
 controller.hints();requestAnimationFrame(now=>controller.frame(now));

@@ -1,3 +1,21 @@
+## Input profiles and improved controller options (v0.78)
+
+**Options → Controls** now has one **Input layout** dropdown: **Xbox, PlayStation, Nintendo, Keyboard & mouse, Touch**. **Detect automatically** starts checked. Automatic detection follows actual controller, keyboard, mouse and touch/pen input; connecting a controller alone does not change the layout. Uncheck it to select and keep a manual layout. Both choices persist across reloads. Manual keyboard/touch profiles ignore gamepad navigation; pointer and keyboard access to settings remains available in controller profiles.
+
+The help window and compact footer use matching, accessible face/shoulder/key glyphs. Nintendo uses physical **A (standard index 1)** to confirm and **B (index 0)** to go back, **Y** for inspection, **X** to continue, and **− / +** for deck/help. PlayStation uses Cross/Circle/Square/Triangle; Xbox uses A/B/X/Y. Sony and Nintendo device IDs are recognized; unidentified standard-mapped pads use the Xbox layout, which can be overridden manually.
+
+Controllers can toggle checkboxes directly and edit both dropdowns and sliders. Confirm starts/finishes editing; Back first leaves edit mode. Sliders honor their native step and bounds. Held controls must return to neutral after reconnect, focus loss or pointer takeover, including right-stick drift. Nested modal windows retain their true opening order even when a native dropdown moves focus, preventing actions in a covered dialog. On small screens the controls window has readable native sizing and internal scrolling; the game canvas remains unchanged.
+
+Validation: actual Gamepad API fixtures for the five layouts, saved settings, automatic and manual device changes, accessible glyphs, Nintendo A/B positions, checkbox/dropdown/range actions, held input, reconnect, pointer takeover and stick drift; fitted 1600×900, 1280×720, 390×844 and 640×360 settings windows. Existing full controller gameplay, independent audio, Options/navigation and HTTP-cache upgrade browser suites pass.
+
+```sh
+node tests/input-profiles-browser.test.cjs
+node tests/controller-browser.test.cjs
+node tests/audio-channels-browser.test.cjs
+node tests/navigation-browser.test.cjs
+node tests/release-cache-browser.test.cjs
+```
+
 ## Retro enemy defeat sounds (v0.77)
 
 The chosen **S3 / M3 / L3** previews now play when an enemy is defeated: S3 for minions, Wisps and Sprites; M3 for other ordinary/elite enemies; L3 for bosses. Classification follows enemy kind/tier rather than current or scaled health. The one-time bounty route covers combat, lethal spells, destruction, poison and exile without replaying on renders or duplicate bounty checks. Player deaths retain their existing sound. Effects mute, zero volume and hidden-tab/stopped-audio cancellation use the existing independent effects channel. The three clips are preloaded on the first audible interaction.
