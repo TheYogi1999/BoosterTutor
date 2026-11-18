@@ -13,3 +13,5 @@ Rows, left to right:
 - Dusk Vampire · Ash Tyrant · Tide Sphinx
 
 The existing `walkers.webp` remains in use for the player avatars and the five original enemies.
+
+The shopkeeper **Vey** (v0.87) reuses the Rune Archivist portrait from the original generated `foes.webp` atlas (right column, middle row), displayed as a circular NPC portrait.

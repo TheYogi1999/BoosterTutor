@@ -55,7 +55,7 @@ Auditions are trimmed, faded and normalized; no source pitch changes are applied
 C12–C15 are original procedural sound designs.
 
 Every comparison uses approved T4 and R7 at game gains with the 1.2-second count.
-C2 remains the in-game coin sound until a replacement is selected in chat.
+C2 was active through v0.86; v0.87 selects Mediasaur sound 788073.
 Reproduce: python3 scripts/make-more-coin-auditions.py (numpy, scipy, ffmpeg).
 For your own search: https://freesound.org/search/?q=coin and https://bigsoundbank.com/
 ''')

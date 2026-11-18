@@ -102,7 +102,7 @@ Object.assign(RECORDED_SFX,{
  'enemy-death-small':['assets/audio/death-previews/s3-retro-drop.mp3',.85],
  'enemy-death-medium':['assets/audio/death-previews/m3-retro-defeat.mp3',.85],
  'enemy-death-large':['assets/audio/death-previews/l3-retro-colossus.mp3',.85],
- 'receipt-coin':['assets/audio/receipt-previews/c2-crystal-tick.mp3',.62],
+ 'receipt-coin':['assets/audio/mediasaur-coin-drop-788073.mp3',.62],
  'receipt-finish':['assets/audio/receipt-previews/round3/r7-deck-settle.mp3',.8],
  'screen-transition':['assets/audio/receipt-previews/round2/t4-velvet-air.mp3',.8]
 });

@@ -29,7 +29,21 @@
 /* Slow decorative card backs stay behind the complete, interactive receipt. */
 .game-shell #results-screen{position:relative;overflow:hidden;isolation:isolate}
 .results-heading82,.results-grid82,.results-footer82{position:relative;z-index:1}
-.results-rain86{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;user-select:none;contain:strict}
-.results-rain-card86{position:absolute;top:0;height:auto;max-width:none;border-radius:5px;box-shadow:0 6px 16px #0005;pointer-events:none;will-change:transform;animation:receipt-rain86 20s linear infinite}
-@keyframes receipt-rain86{0%{transform:translate3d(0,-180px,0) rotate(var(--rain-start86));opacity:0}8%{opacity:var(--rain-alpha86)}92%{opacity:var(--rain-alpha86)}100%{transform:translate3d(var(--rain-wind86),var(--rain-distance86),0) rotate(var(--rain-end86));opacity:0}}
+.results-rain86{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;user-select:none;contain:strict;perspective:1200px;perspective-origin:50% 35%}
+.results-rain-card86{position:absolute;top:0;max-width:none;pointer-events:none;will-change:transform;perspective:700px;animation:receipt-rain86 20s linear infinite}
+.results-rain-body87{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform;animation:receipt-flip87 var(--rain-flip-duration87) linear infinite;animation-delay:var(--rain-flip-delay87)}
+.results-rain-face87{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border:1px solid #dec99588;border-radius:5px;background:#151713;box-shadow:0 6px 16px #0006;transform:translateZ(.8px)}
+.results-rain-face87.rain-front87{transform:rotateY(180deg) translateZ(.8px)}
+.results-rain-face87 img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.results-rain-face87:after{content:'';position:absolute;inset:0;background:linear-gradient(125deg,transparent 25%,#fff3cc42 47%,transparent 66%);pointer-events:none}
+.results-rain-body87:before,.results-rain-body87:after{content:'';position:absolute;left:50%;top:1%;width:1.6px;height:98%;background:linear-gradient(#e9dbb4,#7d7154,#e9dbb4);transform:translateX(-50%) rotateY(90deg) translateZ(var(--rain-half-width87));backface-visibility:visible}
+.results-rain-body87:after{transform:translateX(-50%) rotateY(90deg) translateZ(calc(-1 * var(--rain-half-width87)))}
+@keyframes receipt-rain86{0%{transform:translate3d(0,-200px,var(--rain-depth87)) rotateZ(var(--rain-start86));opacity:0}8%{opacity:var(--rain-alpha86)}92%{opacity:var(--rain-alpha86)}100%{transform:translate3d(var(--rain-wind86),var(--rain-distance86),var(--rain-depth87)) rotateZ(var(--rain-end86));opacity:0}}
+@keyframes receipt-flip87{0%{transform:rotateX(var(--rain-tilt87)) rotateY(0deg)}25%{transform:rotateX(28deg) rotateY(calc(var(--rain-flip-direction87) * 90deg))}50%{transform:rotateX(calc(-1 * var(--rain-tilt87))) rotateY(calc(var(--rain-flip-direction87) * 180deg))}75%{transform:rotateX(-24deg) rotateY(calc(var(--rain-flip-direction87) * 270deg))}100%{transform:rotateX(var(--rain-tilt87)) rotateY(calc(var(--rain-flip-direction87) * 360deg))}}
 @media(prefers-reduced-motion:reduce){.results-rain86{display:none}}
+
+/* Vey greets the player within the existing shop heading, without taking offer space. */
+.shopkeeper87{display:grid;grid-template-columns:64px minmax(0,1fr);gap:14px;align-items:center;width:420px;max-width:42%;min-width:300px;margin:0 20px}
+.shopkeeper-portrait87{display:block;width:64px;height:64px;border-radius:50%;border:1px solid #d7b27399;background:url('assets/portraits/foes.webp') 100% 50%/300% 300%;box-shadow:0 0 0 3px #ba96531a,0 0 25px #8aa7d31a}
+.shopkeeper-name87{display:block;color:#d7bd8a;font:10px/1.4 var(--sans);letter-spacing:1.5px}
+.game-shell .shop-heading .shopkeeper87 p{color:#e8dfca;font:italic 17px/1.3 Georgia,serif;margin:6px 0 0}

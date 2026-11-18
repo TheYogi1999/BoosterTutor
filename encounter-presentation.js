@@ -80,9 +80,16 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coi
   rain.style.setProperty('--rain-distance86',(screen.clientHeight+200)+'px');
   const seed=(state.node||1)*31+(state.battle?.turn||1)*17,noise=n=>{const v=Math.sin(n*127.1+seed)*43758.5453;return v-Math.floor(v);};
   for(let i=0;i<12;i++){
-   const card=document.createElement('img');card.src='assets/mtg-card-back.jpg';card.alt='';card.draggable=false;card.className='results-rain-card86';
-   const duration=16+noise(i+20)*8;
-   card.style.cssText=`left:${3+(i+.5)/12*90}%;width:${58+noise(i+31)*40}px;--rain-wind86:${(noise(i+42)-.5)*100}px;--rain-start86:${-22+noise(i+54)*30}deg;--rain-end86:${-8+noise(i+65)*34}deg;--rain-alpha86:${.13+noise(i+77)*.12};animation-duration:${duration}s;animation-delay:${-duration*(((i*7)%12+noise(i+88)*.7)/12)}s`;
+   const card=document.createElement('div');card.className='results-rain-card86';
+   const duration=10+(i%4)*3.4+noise(i+20)*2,width=70+noise(i+31)*40,flip=4.5+noise(i+93)*6,direction=i%2?1:-1;
+   card.style.cssText=`left:${2+(i+.5)/12*90}%;width:${width}px;height:${width*680/488}px;--rain-half-width87:${width/2}px;--rain-wind86:${(noise(i+42)-.5)*180}px;--rain-start86:${-30+noise(i+54)*55}deg;--rain-end86:${direction*(35+noise(i+65)*45)}deg;--rain-depth87:${-280+noise(i+101)*320}px;--rain-alpha86:${.18+noise(i+77)*.15};--rain-flip-direction87:${direction};--rain-tilt87:${-22+noise(i+113)*44}deg;--rain-flip-duration87:${flip}s;--rain-flip-delay87:${-flip*noise(i+121)}s;animation-duration:${duration}s;animation-delay:${-duration*(((i*7)%12+noise(i+88)*.7)/12)}s`;
+   const body=document.createElement('div');body.className='results-rain-body87';
+   const art=state.deck.filter(item=>item.image);const faceCard=art.length?art[Math.floor(noise(i+141)*art.length)]:null;
+   for(const [kind,source] of [['back','assets/mtg-card-back.jpg'],['front',faceCard?.image||'assets/mtg-card-back.jpg']]){
+    const face=document.createElement('span');face.className='results-rain-face87 rain-'+kind+'87';
+    const image=document.createElement('img');image.src=source;image.alt='';image.draggable=false;face.append(image);body.append(face);
+   }
+   card.append(body);
    rain.append(card);
   }
   screen.prepend(rain);
