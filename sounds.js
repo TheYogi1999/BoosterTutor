@@ -103,9 +103,10 @@ Object.assign(RECORDED_SFX,{
  'enemy-death-medium':['assets/audio/death-previews/m3-retro-defeat.mp3',.85],
  'enemy-death-large':['assets/audio/death-previews/l3-retro-colossus.mp3',.85],
  'receipt-coin':['assets/audio/receipt-previews/c2-crystal-tick.mp3',.62],
+ 'receipt-finish':['assets/audio/receipt-previews/round3/r7-deck-settle.mp3',.8],
  'screen-transition':['assets/audio/receipt-previews/round2/t4-velvet-air.mp3',.8]
 });
-const selectedActionCues=['draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large','receipt-coin','screen-transition'];
+const selectedActionCues=['draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large','receipt-coin','receipt-finish','screen-transition'];
 // Use the enemy's physical kind, so Endless health/power scaling cannot change its voice.
 function enemyDefeatCue77(enemy){
  if(enemy.tier==='boss')return 'enemy-death-large';

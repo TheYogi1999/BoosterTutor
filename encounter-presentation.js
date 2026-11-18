@@ -1,5 +1,5 @@
 /* Presentation follows committed game state; coin awards and card zones stay synchronous. */
-const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coinGeneration:0,coinPlayedAt:-Infinity,coinVoices:new Set(),dialogAnimations:new WeakMap(),motion:matchMedia('(prefers-reduced-motion: reduce)'),
+const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coinGeneration:0,coinPlayedAt:-Infinity,coinVoices:new Set(),finishGeneration85:0,finishTimer85:0,finishVoice85:null,dialogAnimations:new WeakMap(),motion:matchMedia('(prefers-reduced-motion: reduce)'),
  number(value,fallback=0){return Number.isFinite(value)?Math.trunc(value):fallback;},
  still(){return this.motion.matches||document.hidden;},
  track(node,frames,options,finish){
@@ -54,20 +54,38 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coi
    this.coinPlayedAt=performance.now();const voice=startRecordedVoice('receipt-coin',buffer);this.coinVoices.add(voice);voice.addEventListener('ended',()=>this.coinVoices.delete(voice),{once:true});
   }).catch(()=>{});
  },
+ stopFinishSound85(){
+  this.finishGeneration85++;clearTimeout(this.finishTimer85);this.finishTimer85=0;
+  if(this.finishVoice85){try{this.finishVoice85.voiceGain.gain.setTargetAtTime(0,soundEngine.context.currentTime,.006);this.finishVoice85.stop(soundEngine.context.currentTime+.025);}catch{}this.finishVoice85=null;}
+ },
+ queueFinishSound85(receipt,delay=140){
+  if(!receipt||receipt.finishQueued85||receipt.battle.receipt82?.victoryPlayed)return;
+  receipt.finishQueued85=true;receipt.battle.receipt82.victoryPlayed=true;
+  if(!effectsAudible75()||document.hidden||receipt.consumed)return;
+  const generation=this.finishGeneration85,epoch=soundEngine.epoch||0,started=performance.now();
+  this.finishTimer85=setTimeout(()=>{
+   this.finishTimer85=0;
+   soundEngine.resume().then(()=>recordedSoundBuffer(RECORDED_SFX['receipt-finish'][0])).then(buffer=>{
+    if(this.active!==receipt||receipt.consumed||state.screen!=='results-screen'||state.battle!==receipt.battle||generation!==this.finishGeneration85||(soundEngine.epoch||0)!==epoch||!effectsAudible75()||document.hidden||performance.now()-started>delay+250)return;
+    const voice=startRecordedVoice('receipt-finish',buffer);this.finishVoice85=voice;
+    voice.addEventListener('ended',()=>{if(this.finishVoice85===voice)this.finishVoice85=null;},{once:true});
+   }).catch(()=>{});
+  },delay);
+ },
  updateCount(progress){
   const r=this.active;if(!r)return;const lerp=(a,b)=>Math.round(a+(b-a)*progress);
   for(const [id,text] of [['results-bounty82','+'+lerp(0,r.coins)],['results-wallet82',String(lerp(r.walletBefore,r.wallet))],['results-level82',String(lerp(r.levelBefore,r.level))]]){const node=document.getElementById(id);if(node.textContent!==text)node.textContent=text;}
   document.querySelector('#results-screen').classList.toggle('counted82',progress===1);
  },
- finishCount(){cancelAnimationFrame(this.countFrame);this.countFrame=0;this.stopCoinSounds();this.updateCount(1);},
+ finishCount(){cancelAnimationFrame(this.countFrame);this.countFrame=0;this.stopCoinSounds();this.stopFinishSound85();this.updateCount(1);},
  count(){
-  this.finishCount();if(!this.active)return;if(this.still())return;
+  this.finishCount();if(!this.active)return;if(this.still()){if(!document.hidden)this.queueFinishSound85(this.active,0);return;}
   this.updateCount(0);const started=performance.now(),receipt=this.active,steps=Math.min(8,Math.max(0,receipt.coins));let lastStep=0;
   const tick=now=>{
    if(this.active!==receipt)return;
    const t=Math.min(1,Math.max(0,(now-started-600)/1200)),progress=t*(1.25-.25*t),step=Math.floor(progress*steps);
    this.updateCount(progress);if(step>lastStep){lastStep=step;this.coinTick(receipt);}
-   if(t<1)this.countFrame=requestAnimationFrame(tick);else this.countFrame=0;
+   if(t<1)this.countFrame=requestAnimationFrame(tick);else{this.countFrame=0;this.queueFinishSound85(receipt);}
   };
   this.countFrame=requestAnimationFrame(tick);
  },
@@ -85,7 +103,7 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coi
   document.querySelector('#results-level-before82').textContent=String(ledger.level);
   document.querySelector('#results-deck82').textContent=String(state.deck.length);
   document.querySelector('#results-breakdown82').innerHTML=rows.length?rows.map((row,i)=>`<div class="result-bounty-row82" style="--row:${i}"><span>${escapeHtml(row.name)}${row.count>1?` <small>×${row.count}</small>`:''}</span><b>+${row.coins} <small>◈</small></b></div>`).join(''):'<div class="result-bounty-row82"><span>Encounter cleared</span><b>+0 <small>◈</small></b></div>';
-  showScreen('results-screen');playEncounterVictory82();this.count();document.querySelector('#results-continue').focus({preventScroll:true});return true;
+  showScreen('results-screen');this.count();document.querySelector('#results-continue').focus({preventScroll:true});return true;
  },
  continue(){
   const receipt=this.active;if(!receipt||receipt.consumed||state.screen!=='results-screen'||state.battle!==receipt.battle)return false;
@@ -93,7 +111,7 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coi
  }
 };
 function beginEncounterPresentation82(battle){const ledger={wallet:encounterPresentation82.number(state.coins),level:encounterPresentation82.number(state.level,1),kills:[],presented:false,victoryPlayed:false};battle.receipt82=ledger;return ledger;}
-function playEncounterVictory82(){const ledger=state.battle?.receipt82;if(ledger?.victoryPlayed)return;if(ledger)ledger.victoryPlayed=true;playSfx('victory');}
+function playEncounterVictory82(){const ledger=state.battle?.receipt82;if(ledger?.presented||ledger?.victoryPlayed)return;if(ledger)ledger.victoryPlayed=true;playSfx('receipt-finish');}
 const baseBountyPresentation82=awardBounty;
 awardBounty=function(enemy){const b=state.battle,ledger=b?(b.receipt82||beginEncounterPresentation82(b)):null,claimed=Boolean(enemy?.bountyClaimed);const amount=baseBountyPresentation82(enemy);if(ledger&&enemy?.owner==='enemy'&&!claimed&&enemy.bountyClaimed)ledger.kills.push({name:enemy.card?.name||'Enemy',coins:encounterPresentation82.number(amount)});return amount;};
 const baseRewardPresentation82=offerEncounterReward59;

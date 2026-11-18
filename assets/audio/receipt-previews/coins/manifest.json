@@ -1,0 +1,30 @@
+[
+  {
+    "code": "C4",
+    "title": "Copper Tick",
+    "description": "A warm metal contact with a short, muted ring.",
+    "seconds": 0.105,
+    "file": "c4-copper-tick.mp3"
+  },
+  {
+    "code": "C5",
+    "title": "Chip Tap",
+    "description": "A dry wooden tap, like a small casino chip.",
+    "seconds": 0.09,
+    "file": "c5-chip-tap.mp3"
+  },
+  {
+    "code": "C6",
+    "title": "Soft Pixel",
+    "description": "A low, rounded retro pulse with a soft edge.",
+    "seconds": 0.085,
+    "file": "c6-soft-pixel.mp3"
+  },
+  {
+    "code": "C7",
+    "title": "Felt Click",
+    "description": "A cushioned, low click without a metallic ring.",
+    "seconds": 0.08,
+    "file": "c7-felt-click.mp3"
+  }
+]
