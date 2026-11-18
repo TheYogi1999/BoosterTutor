@@ -1,0 +1,74 @@
+[
+  {
+    "code": "C8",
+    "title": "Single Chip",
+    "description": "A light, clean chip landing. Real chip recording, trimmed.",
+    "family": "recorded",
+    "seconds": 0.11,
+    "file": "c8-single-chip.mp3",
+    "source": "chip-lay-1.ogg"
+  },
+  {
+    "code": "C9",
+    "title": "Warm Chip",
+    "description": "A softer chip contact with a warmer body. Real chip recording.",
+    "family": "recorded",
+    "seconds": 0.105,
+    "file": "c9-warm-chip.mp3",
+    "source": "chip-lay-3.ogg"
+  },
+  {
+    "code": "C10",
+    "title": "Chip Pair",
+    "description": "Two chips touching, with a short bright clack. Real chip recording.",
+    "family": "recorded",
+    "seconds": 0.13,
+    "file": "c10-chip-pair.mp3",
+    "source": "chips-collide-1.ogg"
+  },
+  {
+    "code": "C11",
+    "title": "Stack Tick",
+    "description": "A compact chip-stack contact. Real chip recording, trimmed.",
+    "family": "recorded",
+    "seconds": 0.14,
+    "file": "c11-stack-tick.mp3",
+    "source": "chips-stack-2.ogg"
+  },
+  {
+    "code": "C12",
+    "title": "Arcade Dot",
+    "description": "A quick, clear arcade pulse without a long tail.",
+    "family": "retro",
+    "seconds": 0.075,
+    "file": "c12-arcade-dot.mp3",
+    "source": "Original synthesis"
+  },
+  {
+    "code": "C13",
+    "title": "Low Blip",
+    "description": "A lower, rounded counting pulse.",
+    "family": "retro",
+    "seconds": 0.09,
+    "file": "c13-low-blip.mp3",
+    "source": "Original synthesis"
+  },
+  {
+    "code": "C14",
+    "title": "Wooden Bead",
+    "description": "A dry percussive tick with a small wooden resonance.",
+    "family": "designed",
+    "seconds": 0.1,
+    "file": "c14-wooden-bead.mp3",
+    "source": "Original synthesis"
+  },
+  {
+    "code": "C15",
+    "title": "Soft Cash Tick",
+    "description": "A soft click with a tiny low thump; almost no ring.",
+    "family": "designed",
+    "seconds": 0.095,
+    "file": "c15-soft-cash-tick.mp3",
+    "source": "Original synthesis"
+  }
+]

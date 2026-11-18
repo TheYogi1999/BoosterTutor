@@ -1,0 +1,22 @@
+{
+  "archive": "https://opengameart.org/sites/default/files/kenney_casino-audio.zip",
+  "archive_sha256": "f36250766ac5bc378c13708ddf12a23a8e54a3251f8d482c7536e51b5dbafa18",
+  "files": [
+    {
+      "file": "chip-lay-1.ogg",
+      "sha256": "4b2111252ccb64eed67f171e061053849cfbb29873536c03948646f244a3905c"
+    },
+    {
+      "file": "chip-lay-3.ogg",
+      "sha256": "bf24ebb417b6279568800dffdb0205d3ec8854c7efe179e8964755a6341727aa"
+    },
+    {
+      "file": "chips-collide-1.ogg",
+      "sha256": "f41b3d106360fc68ebc061a211d4265b4cb5fa1fbe86e4d57d3673510e2c3784"
+    },
+    {
+      "file": "chips-stack-2.ogg",
+      "sha256": "9f985e766c3557eef1764240b48e30b2f0ffa870a99f05de85cd6bf0ea758ef5"
+    }
+  ]
+}

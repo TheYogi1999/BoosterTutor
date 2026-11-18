@@ -72,6 +72,21 @@ const encounterPresentation82={active:null,animations:new Set(),countFrame:0,coi
    }).catch(()=>{});
   },delay);
  },
+ stopRain86(){document.querySelector('.results-rain86')?.remove();},
+ startRain86(){
+  if(state.screen!=='results-screen'||this.still()||document.querySelector('.results-rain86'))return;
+  const screen=document.querySelector('#results-screen'),rain=document.createElement('div');
+  rain.className='results-rain86';rain.setAttribute('aria-hidden','true');rain.inert=true;
+  rain.style.setProperty('--rain-distance86',(screen.clientHeight+200)+'px');
+  const seed=(state.node||1)*31+(state.battle?.turn||1)*17,noise=n=>{const v=Math.sin(n*127.1+seed)*43758.5453;return v-Math.floor(v);};
+  for(let i=0;i<12;i++){
+   const card=document.createElement('img');card.src='assets/mtg-card-back.jpg';card.alt='';card.draggable=false;card.className='results-rain-card86';
+   const duration=16+noise(i+20)*8;
+   card.style.cssText=`left:${3+(i+.5)/12*90}%;width:${58+noise(i+31)*40}px;--rain-wind86:${(noise(i+42)-.5)*100}px;--rain-start86:${-22+noise(i+54)*30}deg;--rain-end86:${-8+noise(i+65)*34}deg;--rain-alpha86:${.13+noise(i+77)*.12};animation-duration:${duration}s;animation-delay:${-duration*(((i*7)%12+noise(i+88)*.7)/12)}s`;
+   rain.append(card);
+  }
+  screen.prepend(rain);
+ },
  updateCount(progress){
   const r=this.active;if(!r)return;const lerp=(a,b)=>Math.round(a+(b-a)*progress);
   for(const [id,text] of [['results-bounty82','+'+lerp(0,r.coins)],['results-wallet82',String(lerp(r.walletBefore,r.wallet))],['results-level82',String(lerp(r.levelBefore,r.level))]]){const node=document.getElementById(id);if(node.textContent!==text)node.textContent=text;}
@@ -126,11 +141,11 @@ showScreen=function(id){
  ui.cancelMotion();if(old==='results-screen'&&id!==old&&ui.active){ui.finishCount();ui.active=null;}
  const result=baseScreenPresentation82(id);
  if(old!==id){playTransitionSound84(()=>state.screen===id);ui.track(document.getElementById(id),[{opacity:0,translate:'0 12px'},{opacity:1,translate:'0 0'}],{duration:180,easing:'cubic-bezier(.2,.7,.25,1)'});ui.collectCards(cards);}
- if(id==='results-screen')document.querySelector('#global-phase').textContent='RESULTS';return result;
+ if(id==='results-screen'){document.querySelector('#global-phase').textContent='RESULTS';ui.startRain86();}else ui.stopRain86();return result;
 };
 const baseDialogPresentation82=HTMLDialogElement.prototype.showModal;
 HTMLDialogElement.prototype.showModal=function(...args){const open=this.open,result=baseDialogPresentation82.apply(this,args);if(!open){playTransitionSound84(()=>this.open);encounterPresentation82.dialogAnimations.get(this)?.cancel();const a=encounterPresentation82.track(this,[{opacity:0,translate:'0 8px'},{opacity:1,translate:'0 0'}],{duration:140,easing:'ease-out'});if(a)encounterPresentation82.dialogAnimations.set(this,a);}return result;};
 document.querySelector('#results-continue').addEventListener('click',()=>encounterPresentation82.continue());
-function settlePresentation82(){encounterPresentation82.cancelMotion();encounterPresentation82.finishCount();}
-document.addEventListener('visibilitychange',()=>{if(document.hidden)settlePresentation82()});encounterPresentation82.motion.addEventListener('change',settlePresentation82);
+function settlePresentation82(){encounterPresentation82.cancelMotion();encounterPresentation82.finishCount();encounterPresentation82.stopRain86();if(!encounterPresentation82.still())encounterPresentation82.startRain86();}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)settlePresentation82();else encounterPresentation82.startRain86();});encounterPresentation82.motion.addEventListener('change',settlePresentation82);
 window.addEventListener('resize',()=>encounterPresentation82.cancelMotion());

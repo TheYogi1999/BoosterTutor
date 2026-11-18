@@ -1,5 +1,7 @@
 # Recorded audio sources (CC0)
 
+- Expanded coin auditions (v0.86): C8–C11 use real **Kenney Casino Audio 1.1** chip recordings (CC0); original recordings, License.txt and fingerprints are bundled in `receipt-previews/coins-more/source/`. C12–C15 are original synthesis. [Source archive and reproduction](receipt-previews/coins-more/README.md). C2 remains active pending a replacement choice.
+
 - Approved receipt finish (v0.85): **R7 Deck Settle**, unchanged at `receipt-previews/round3/r7-deck-settle.mp3`. Uses Kenney Casino Audio CC0 card recordings; plays once after the count through the effects channel. New coin auditions are documented in [coins](receipt-previews/coins/README.md).
 
 - Approved transition cue (v0.84): **T4 Velvet Air**, unchanged at `receipt-previews/round2/t4-velvet-air.mp3`; original synthesis. Screen/window transitions share the effects mute/volume channel. New finish auditions: [round3](receipt-previews/round3/README.md).

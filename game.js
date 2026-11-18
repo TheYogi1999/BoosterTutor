@@ -336,6 +336,7 @@ function makeStarterPacks() {
 }
 
 function prepareNewRun71(mode = 'draft') {
+  state.runGeneration86=(state.runGeneration86||0)+1;
   if (typeof resetRunProgress59 === 'function') resetRunProgress59();
   if (typeof window.playRunStartAudio === 'function') window.playRunStartAudio();
   if (state.soundOn) soundEngine.unlock().catch(() => {});
@@ -364,8 +365,10 @@ function startNewRun(event) {
   if (event?.currentTarget?.id === 'restart-button' && state.runMode71 === 'precon' && typeof startPrecon71 === 'function') return startPrecon71(state.preconId71, true);
   const immortal = event?.runMode76 === 'immortal' || (event?.currentTarget?.id === 'restart-button' && state.runMode71 === 'immortal');
   prepareNewRun71(immortal ? 'immortal' : 'draft');
+  const generation86=state.runGeneration86;
   showScreen('loading-screen');
   ensureCardPool().then(({ cards, lands, fallback, missingCount, sourceCount, warning }) => {
+    if(state.runGeneration86!==generation86||state.screen!=='loading-screen')return;
     state.pool = cards;
     state.landPool = lands;
     const status = $('#start-api-status span');
@@ -525,7 +528,6 @@ function effectDescriptions(card) {
     const keywords = creatureKeywordLabels(creatureKeywords(card));
     lines.push(`Creature: ${stats.power} power / ${stats.toughness} toughness.${keywords ? ' Keywords: ' + keywords + '.' : ''}`);
     lines.push(creatureKeywords(card).defender ? 'Defender: cannot attack.' : creatureKeywords(card).haste ? 'Haste: can join this turn’s combat phase.' : 'Summoning sickness: may block now, but attacks from your next turn.');
-    lines.push('Flying monsters can only be attacked by creatures with Flying or Reach.');
     lines.push('Monsters retaliate if they can block this creature. Flying, reach and menace apply. First/double strike use separate steps.');
     if(/\{T\}: Add/i.test(card.oracle_text||''))lines.push('Tap this creature to add 1 generic mana. Summoning sickness applies.');
     if(/attacks each combat if able/i.test(card.oracle_text||''))lines.push('Must attack at turn end if able. Walls cannot block it.');
@@ -2243,10 +2245,19 @@ $('#sound-toggle').addEventListener('click', () => {
     playSfx('select');
   }
 });
-$('#quit-button').addEventListener('click', () => $('#quit-dialog').showModal());
+function requestTitleReturn86(fromBrand=false){
+  if(fromBrand&&state.screen==='start-screen')return;
+  $('#quit-title86').textContent=fromBrand?'Return to the title screen?':'Abandon this run?';
+  $('#quit-confirm').textContent=fromBrand?'RETURN TO TITLE':'ABANDON';
+  if(!$('#quit-dialog').open)$('#quit-dialog').showModal();
+}
+$('#quit-button').addEventListener('click', () => requestTitleReturn86());
+$('#brand-home').addEventListener('click', event => {event.preventDefault();requestTitleReturn86(true);});
 $('#quit-cancel').addEventListener('click', () => $('#quit-dialog').close());
 $('#quit-confirm').addEventListener('click', () => {
   $('#quit-dialog').close();
+  state.runGeneration86=(state.runGeneration86||0)+1;
+  if(state.battle){state.battle.phase='complete';state.battle.priorityCallback=null;state.battle.phaseTicket=(state.battle.phaseTicket||0)+1;}
   state.battle = null;
   showScreen('start-screen');
 });

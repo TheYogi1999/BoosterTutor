@@ -25,3 +25,11 @@
 .results-footer82 .primary-button{min-width:190px}
 .counted82 .results-coin82{box-shadow:inset 0 0 0 4px #93632488,0 3px 0 #76502c,0 0 30px #e5b44722}
 @media(prefers-reduced-motion:no-preference){#results-screen.active .result-bounty-row82{animation:receipt-row82 .16s both;animation-delay:calc(80ms + var(--row)*35ms)}@keyframes receipt-row82{from{opacity:0;translate:0 7px}to{opacity:1;translate:0 0}}}
+
+/* Slow decorative card backs stay behind the complete, interactive receipt. */
+.game-shell #results-screen{position:relative;overflow:hidden;isolation:isolate}
+.results-heading82,.results-grid82,.results-footer82{position:relative;z-index:1}
+.results-rain86{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;user-select:none;contain:strict}
+.results-rain-card86{position:absolute;top:0;height:auto;max-width:none;border-radius:5px;box-shadow:0 6px 16px #0005;pointer-events:none;will-change:transform;animation:receipt-rain86 20s linear infinite}
+@keyframes receipt-rain86{0%{transform:translate3d(0,-180px,0) rotate(var(--rain-start86));opacity:0}8%{opacity:var(--rain-alpha86)}92%{opacity:var(--rain-alpha86)}100%{transform:translate3d(var(--rain-wind86),var(--rain-distance86),0) rotate(var(--rain-end86));opacity:0}}
+@media(prefers-reduced-motion:reduce){.results-rain86{display:none}}
