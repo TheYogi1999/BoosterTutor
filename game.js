@@ -9,13 +9,13 @@ const STARTING_LIFE = 20;
 const CARD_POOL_FILE = 'card-pool.txt';
 const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
 const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
-const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v5';
+const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v6';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
 const SEEN_CARD_KEY = 'booster-tutor-seen-cards-v1';
 const seenCardKeys = new Set();
 const discoveryViews = new WeakMap();
 const LAND_QUERY = 'game:paper lang:en t:basic t:land';
-const COMBAT_KEYWORDS = ['flying','reach','lifelink','deathtouch','first strike','double strike','haste','vigilance','trample','menace','defender','hexproof','lure'];
+const COMBAT_KEYWORDS = ['flying','reach','lifelink','deathtouch','first strike','double strike','haste','vigilance','trample','menace','defender','hexproof','lure','indestructible'];
 const SUPPORTED_KEYWORDS = [...COMBAT_KEYWORDS, 'flash', 'equip', 'enchant', 'scry'];
 const AVATARS = [
   { id: 'mage', name: 'Arcane Mage', symbol: '✦' },
@@ -171,6 +171,7 @@ function creatureKeywords(card) {
     menace: hasKeywordLine(text, 'menace'),
     defender: hasKeywordLine(text, 'defender'),
     hexproof: hasKeywordLine(text, 'hexproof'),
+    indestructible: hasKeywordLine(text, 'indestructible'),
     lure: card.name === 'Taunting Elf' || hasKeywordLine(text, 'lure') || (card.keywords || []).some(keyword => keyword.toLowerCase() === 'lure')
   };
 }
@@ -194,6 +195,7 @@ function canBlockCreature(blocker, attacker) {
 
 function creatureKeywordLabels(creature) {
   const labels = [
+    ['indestructible', 'Indestructible'],
     ['flying', 'Flying'],
     ['lifelink', 'Lifelink'],
     ['double strike', 'Double strike'],
@@ -982,7 +984,7 @@ function showCardPreview(card, element) {
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
   if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= CREATURE_LIMIT && !(typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)) ? 'All six creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
-  const keywordInfo = { lure:'Lure: attacking enemies attack your first living Lure creature instead of you, even if it is tapped. Trample may overflow to you.', trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
+  const keywordInfo = { indestructible:'Indestructible: lethal damage, Deathtouch and destroy effects do not destroy this creature. Exile, sacrifice and toughness 0 still remove it.', lure:'Lure: attacking enemies attack your first living Lure creature instead of you, even if it is tapped. Trample may overflow to you.', trample:'Trample: excess damage gets through blockers; in your duels it reaches the next monster.', menace:'Menace: needs at least two blockers; a lone monster cannot retaliate against it.', defender:'Defender: cannot attack.', flying:'Flying: can attack flying monsters; only flying or reach can block it.', reach:'Reach: can attack flying monsters and block flying attackers.', lifelink:'Lifelink: combat damage restores life.', deathtouch:'Deathtouch: any unprevented combat damage is lethal to creatures.', 'first strike':'First strike: deals damage before the normal step.', 'double strike':'Double strike: deals damage in both steps.', haste:'Haste: can join this turn’s combat phase.', vigilance:'Vigilance: attacking does not tap this creature; it may still block.' };
   const activeKeywords = creature ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creature, keyword)) : isCreature(card) ? Object.keys(keywordInfo).filter(keyword => hasCreatureKeyword(creatureKeywords(card), keyword)) : [];
   preview.innerHTML = `<div class="bubble-header"><b>${escapeHtml(card.name)}</b><strong>${cost} Mana</strong></div><div class="bubble-type">${escapeHtml(card.type_line)} · generic costs only</div><ul>${lines.map(line => `<li>${typeof keywordText61 === 'function' ? keywordText61(line) : escapeHtml(line)}</li>`).join('')}</ul>${typeof keywordChips61 === 'function' && displayKeywords(card).length ? `<div class="bubble-keyword-tags61">${keywordChips61(card)}</div>` : ''}${activeKeywords.length ? `<div class="bubble-keywords">${activeKeywords.map(keyword => typeof keywordText61 === 'function' ? keywordText61(keywordInfo[keyword]) : escapeHtml(keywordInfo[keyword])).join('<br>')}</div>` : ''}`;
   if (permanent) preview.innerHTML += '<p class="battlefield-action-hint73">Tap this card on the battlefield to open its abilities.</p>';
@@ -1623,7 +1625,7 @@ function removeDeadCreatures(creatures, owner = 'player', clearDamage = false) {
   for (const creature of creatures) {
     const dead = owner === 'enemy'
       ? creature.health <= 0
-      : creature.toughness <= 0 || (creature.damage || 0) >= creature.toughness || creature.deathtouchDamage;
+      : creature.toughness <= 0 || (!hasCreatureKeyword(creature,'indestructible') && ((creature.damage || 0) >= creature.toughness || creature.deathtouchDamage));
     if (dead) {
       deadIds.add(creature.id);
       addLog(`${creature.card.name} is destroyed and goes to the ${owner === 'player' ? 'graveyard' : 'enemy graveyard'}.`);
@@ -1644,7 +1646,7 @@ function removeDeadCreatures(creatures, owner = 'player', clearDamage = false) {
 function creatureAlive(creature) {
   if (!creature) return false;
   if (creature.owner === 'enemy') return creature.health > 0;
-  return !creature.deathtouchDamage && (creature.damage || 0) < creature.toughness;
+  return creature.toughness>0 && (hasCreatureKeyword(creature,'indestructible') || (!creature.deathtouchDamage && (creature.damage || 0) < creature.toughness));
 }
 
 function dealsInCombatStep(creature, firstStep) {

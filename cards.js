@@ -2775,106 +2775,106 @@ const BUNDLED_CARDS = [
       "uri": "https://scryfall.com/card/m10/2/angels-mercy?utm_source=api"
     }
   },
-{
-  "id": "0df55e3f-14de-46ef-b6b1-616618724d9e",
-  "name": "Counterspell",
-  "mana_cost": "{U}{U}",
-  "cmc": 2.0,
-  "type_line": "Instant",
-  "oracle_text": "Counter target spell.",
-  "color_identity": [
-    "U"
-  ],
-  "keywords": [],
-  "rarity": "uncommon",
-  "image": "assets/cards/0df55e3f-14de-46ef-b6b1-616618724d9e.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/0/d/0df55e3f-14de-46ef-b6b1-616618724d9e.jpg?1783948707",
-  "uri": "https://scryfall.com/card/lea/54/counterspell?utm_source=api",
-  "verified": true,
-  "art_print": {
+  {
     "id": "0df55e3f-14de-46ef-b6b1-616618724d9e",
-    "set": "lea",
-    "set_name": "Limited Edition Alpha",
-    "released_at": "1993-08-05",
+    "name": "Counterspell",
+    "mana_cost": "{U}{U}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Counter target spell.",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/lea/54/counterspell?utm_source=api"
-  }
-},
-{
-  "id": "5a501252-e722-4ebf-bcf7-f53a42745fa7",
-  "name": "Negate",
-  "mana_cost": "{1}{U}",
-  "cmc": 2.0,
-  "type_line": "Instant",
-  "oracle_text": "Counter target noncreature spell.",
-  "color_identity": [
-    "U"
-  ],
-  "keywords": [],
-  "rarity": "common",
-  "image": "assets/cards/5a501252-e722-4ebf-bcf7-f53a42745fa7.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/5/a/5a501252-e722-4ebf-bcf7-f53a42745fa7.jpg?1783942799",
-  "uri": "https://scryfall.com/card/mor/43/negate?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/0df55e3f-14de-46ef-b6b1-616618724d9e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/d/0df55e3f-14de-46ef-b6b1-616618724d9e.jpg?1783948707",
+    "uri": "https://scryfall.com/card/lea/54/counterspell?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "0df55e3f-14de-46ef-b6b1-616618724d9e",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/54/counterspell?utm_source=api"
+    }
+  },
+  {
     "id": "5a501252-e722-4ebf-bcf7-f53a42745fa7",
-    "set": "mor",
-    "set_name": "Morningtide",
-    "released_at": "2008-02-01",
+    "name": "Negate",
+    "mana_cost": "{1}{U}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Counter target noncreature spell.",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
     "rarity": "common",
-    "uri": "https://scryfall.com/card/mor/43/negate?utm_source=api"
-  }
-},
-{
-  "id": "f178d0cc-5dd1-41ab-a2e8-218ece6f2a86",
-  "name": "Dispel",
-  "mana_cost": "{U}",
-  "cmc": 1.0,
-  "type_line": "Instant",
-  "oracle_text": "Counter target instant spell.",
-  "color_identity": [
-    "U"
-  ],
-  "keywords": [],
-  "rarity": "common",
-  "image": "assets/cards/f178d0cc-5dd1-41ab-a2e8-218ece6f2a86.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/f/1/f178d0cc-5dd1-41ab-a2e8-218ece6f2a86.jpg?1783942063",
-  "uri": "https://scryfall.com/card/wwk/26/dispel?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/5a501252-e722-4ebf-bcf7-f53a42745fa7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/a/5a501252-e722-4ebf-bcf7-f53a42745fa7.jpg?1783942799",
+    "uri": "https://scryfall.com/card/mor/43/negate?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "5a501252-e722-4ebf-bcf7-f53a42745fa7",
+      "set": "mor",
+      "set_name": "Morningtide",
+      "released_at": "2008-02-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mor/43/negate?utm_source=api"
+    }
+  },
+  {
     "id": "f178d0cc-5dd1-41ab-a2e8-218ece6f2a86",
-    "set": "wwk",
-    "set_name": "Worldwake",
-    "released_at": "2010-02-05",
+    "name": "Dispel",
+    "mana_cost": "{U}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Counter target instant spell.",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
     "rarity": "common",
-    "uri": "https://scryfall.com/card/wwk/26/dispel?utm_source=api"
-  }
-},
-{
-  "id": "1e55d6be-7682-4786-9872-e847afd710b0",
-  "name": "Dismiss",
-  "mana_cost": "{2}{U}{U}",
-  "cmc": 4.0,
-  "type_line": "Instant",
-  "oracle_text": "Counter target spell.\nDraw a card.",
-  "color_identity": [
-    "U"
-  ],
-  "keywords": [],
-  "rarity": "uncommon",
-  "image": "assets/cards/1e55d6be-7682-4786-9872-e847afd710b0.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/1/e/1e55d6be-7682-4786-9872-e847afd710b0.jpg?1783946657",
-  "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/f178d0cc-5dd1-41ab-a2e8-218ece6f2a86.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/1/f178d0cc-5dd1-41ab-a2e8-218ece6f2a86.jpg?1783942063",
+    "uri": "https://scryfall.com/card/wwk/26/dispel?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "f178d0cc-5dd1-41ab-a2e8-218ece6f2a86",
+      "set": "wwk",
+      "set_name": "Worldwake",
+      "released_at": "2010-02-05",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/wwk/26/dispel?utm_source=api"
+    }
+  },
+  {
     "id": "1e55d6be-7682-4786-9872-e847afd710b0",
-    "set": "tmp",
-    "set_name": "Tempest",
-    "released_at": "1997-10-14",
+    "name": "Dismiss",
+    "mana_cost": "{2}{U}{U}",
+    "cmc": 4.0,
+    "type_line": "Instant",
+    "oracle_text": "Counter target spell.\nDraw a card.",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api"
-  }
-},
+    "image": "assets/cards/1e55d6be-7682-4786-9872-e847afd710b0.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/e/1e55d6be-7682-4786-9872-e847afd710b0.jpg?1783946657",
+    "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "1e55d6be-7682-4786-9872-e847afd710b0",
+      "set": "tmp",
+      "set_name": "Tempest",
+      "released_at": "1997-10-14",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/tmp/58/dismiss?utm_source=api"
+    }
+  },
   {
     "id": "afc114b0-2e95-4143-a4b6-6537813946e7",
     "name": "Canopy Spider",
@@ -3270,320 +3270,320 @@ const BUNDLED_CARDS = [
       "uri": "https://scryfall.com/card/ust/116/mother-kangaroo?utm_source=api"
     }
   },
-{
-  "id": "df39eaac-b13f-4cb3-960d-8f7a0d590663",
-  "name": "Hoarding Ogre",
-  "mana_cost": "{3}{R}",
-  "cmc": 4.0,
-  "type_line": "Creature — Ogre",
-  "oracle_text": "Whenever this creature attacks, roll a d20.\n1—9 | Create a Treasure token. (It's an artifact with \"{T}, Sacrifice this token: Add one mana of any color.\")\n10—19 | Create two Treasure tokens.\n20 | Create three Treasure tokens.",
-  "color_identity": [
-    "R"
-  ],
-  "keywords": [
-    "Treasure"
-  ],
-  "rarity": "common",
-  "power": "3",
-  "toughness": "3",
-  "image": "assets/cards/df39eaac-b13f-4cb3-960d-8f7a0d590663.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/d/f/df39eaac-b13f-4cb3-960d-8f7a0d590663.jpg?1783926478",
-  "uri": "https://scryfall.com/card/afr/146/hoarding-ogre?utm_source=api",
-  "verified": true,
-  "art_print": {
+  {
     "id": "df39eaac-b13f-4cb3-960d-8f7a0d590663",
-    "set": "afr",
-    "set_name": "Adventures in the Forgotten Realms",
-    "released_at": "2021-07-23",
+    "name": "Hoarding Ogre",
+    "mana_cost": "{3}{R}",
+    "cmc": 4.0,
+    "type_line": "Creature — Ogre",
+    "oracle_text": "Whenever this creature attacks, roll a d20.\n1—9 | Create a Treasure token. (It's an artifact with \"{T}, Sacrifice this token: Add one mana of any color.\")\n10—19 | Create two Treasure tokens.\n20 | Create three Treasure tokens.",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "Treasure"
+    ],
     "rarity": "common",
-    "uri": "https://scryfall.com/card/afr/146/hoarding-ogre?utm_source=api"
-  }
-},
-{
-  "id": "a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2",
-  "name": "Contact Other Plane",
-  "mana_cost": "{3}{U}",
-  "cmc": 4.0,
-  "type_line": "Instant",
-  "oracle_text": "Roll a d20.\n1—9 | Draw two cards.\n10—19 | Scry 2, then draw two cards.\n20 | Scry 3, then draw three cards.",
-  "color_identity": [
-    "U"
-  ],
-  "keywords": [
-    "Scry"
-  ],
-  "rarity": "common",
-  "image": "assets/cards/a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/a/6/a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2.jpg?1783926518",
-  "uri": "https://scryfall.com/card/afr/52/contact-other-plane?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "power": "3",
+    "toughness": "3",
+    "image": "assets/cards/df39eaac-b13f-4cb3-960d-8f7a0d590663.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/f/df39eaac-b13f-4cb3-960d-8f7a0d590663.jpg?1783926478",
+    "uri": "https://scryfall.com/card/afr/146/hoarding-ogre?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "df39eaac-b13f-4cb3-960d-8f7a0d590663",
+      "set": "afr",
+      "set_name": "Adventures in the Forgotten Realms",
+      "released_at": "2021-07-23",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/afr/146/hoarding-ogre?utm_source=api"
+    }
+  },
+  {
     "id": "a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2",
-    "set": "afr",
-    "set_name": "Adventures in the Forgotten Realms",
-    "released_at": "2021-07-23",
+    "name": "Contact Other Plane",
+    "mana_cost": "{3}{U}",
+    "cmc": 4.0,
+    "type_line": "Instant",
+    "oracle_text": "Roll a d20.\n1—9 | Draw two cards.\n10—19 | Scry 2, then draw two cards.\n20 | Scry 3, then draw three cards.",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Scry"
+    ],
     "rarity": "common",
-    "uri": "https://scryfall.com/card/afr/52/contact-other-plane?utm_source=api"
-  }
-},
-{
-  "id": "f6f735f1-2528-424d-8454-e94746a2b58f",
-  "name": "Squirrel-Powered Scheme",
-  "mana_cost": "{2}{B}",
-  "cmc": 3.0,
-  "type_line": "Enchantment",
-  "oracle_text": "Increase the result of each die you roll by 2.",
-  "color_identity": [
-    "B"
-  ],
-  "keywords": [],
-  "rarity": "uncommon",
-  "image": "assets/cards/f6f735f1-2528-424d-8454-e94746a2b58f.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/f/6/f6f735f1-2528-424d-8454-e94746a2b58f.jpg?1783935428",
-  "uri": "https://scryfall.com/card/ust/70/squirrel-powered-scheme?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/6/a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2.jpg?1783926518",
+    "uri": "https://scryfall.com/card/afr/52/contact-other-plane?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "a6fefb38-c6f2-43c4-a6b9-ac82f8827bc2",
+      "set": "afr",
+      "set_name": "Adventures in the Forgotten Realms",
+      "released_at": "2021-07-23",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/afr/52/contact-other-plane?utm_source=api"
+    }
+  },
+  {
     "id": "f6f735f1-2528-424d-8454-e94746a2b58f",
-    "set": "ust",
-    "set_name": "Unstable",
-    "released_at": "2017-12-08",
+    "name": "Squirrel-Powered Scheme",
+    "mana_cost": "{2}{B}",
+    "cmc": 3.0,
+    "type_line": "Enchantment",
+    "oracle_text": "Increase the result of each die you roll by 2.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/ust/70/squirrel-powered-scheme?utm_source=api"
-  }
-},
-{
-  "id": "47240ed3-f256-45fb-ab38-7b07e672d2ed",
-  "name": "Tavern Swindler",
-  "mana_cost": "{1}{B}",
-  "cmc": 2.0,
-  "type_line": "Creature — Human Rogue",
-  "oracle_text": "{T}, Pay 3 life: Flip a coin. If you win the flip, you gain 6 life.",
-  "color_identity": [
-    "B"
-  ],
-  "keywords": [],
-  "rarity": "uncommon",
-  "power": "2",
-  "toughness": "2",
-  "image": "assets/cards/47240ed3-f256-45fb-ab38-7b07e672d2ed.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/4/7/47240ed3-f256-45fb-ab38-7b07e672d2ed.jpg?1783940359",
-  "uri": "https://scryfall.com/card/rtr/79/tavern-swindler?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/f6f735f1-2528-424d-8454-e94746a2b58f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/6/f6f735f1-2528-424d-8454-e94746a2b58f.jpg?1783935428",
+    "uri": "https://scryfall.com/card/ust/70/squirrel-powered-scheme?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "f6f735f1-2528-424d-8454-e94746a2b58f",
+      "set": "ust",
+      "set_name": "Unstable",
+      "released_at": "2017-12-08",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/ust/70/squirrel-powered-scheme?utm_source=api"
+    }
+  },
+  {
     "id": "47240ed3-f256-45fb-ab38-7b07e672d2ed",
-    "set": "rtr",
-    "set_name": "Return to Ravnica",
-    "released_at": "2012-10-05",
+    "name": "Tavern Swindler",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Rogue",
+    "oracle_text": "{T}, Pay 3 life: Flip a coin. If you win the flip, you gain 6 life.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/rtr/79/tavern-swindler?utm_source=api"
-  }
-},
-{
-  "id": "55082c8a-d792-4cd8-94b1-d80c65804463",
-  "name": "Tavern Scoundrel",
-  "mana_cost": "{1}{R}",
-  "cmc": 2.0,
-  "type_line": "Creature — Human Rogue",
-  "oracle_text": "Whenever you win a coin flip, create two Treasure tokens. (They're artifacts with \"{T}, Sacrifice this token: Add one mana of any color.\")\n{1}, {T}, Sacrifice another permanent: Flip a coin.",
-  "color_identity": [
-    "R"
-  ],
-  "keywords": [
-    "Treasure"
-  ],
-  "rarity": "common",
-  "power": "1",
-  "toughness": "3",
-  "image": "assets/cards/55082c8a-d792-4cd8-94b1-d80c65804463.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/5/5/55082c8a-d792-4cd8-94b1-d80c65804463.jpg?1783926839",
-  "uri": "https://scryfall.com/card/mh2/144/tavern-scoundrel?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/47240ed3-f256-45fb-ab38-7b07e672d2ed.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/7/47240ed3-f256-45fb-ab38-7b07e672d2ed.jpg?1783940359",
+    "uri": "https://scryfall.com/card/rtr/79/tavern-swindler?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "47240ed3-f256-45fb-ab38-7b07e672d2ed",
+      "set": "rtr",
+      "set_name": "Return to Ravnica",
+      "released_at": "2012-10-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/rtr/79/tavern-swindler?utm_source=api"
+    }
+  },
+  {
     "id": "55082c8a-d792-4cd8-94b1-d80c65804463",
-    "set": "mh2",
-    "set_name": "Modern Horizons 2",
-    "released_at": "2021-06-18",
+    "name": "Tavern Scoundrel",
+    "mana_cost": "{1}{R}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Rogue",
+    "oracle_text": "Whenever you win a coin flip, create two Treasure tokens. (They're artifacts with \"{T}, Sacrifice this token: Add one mana of any color.\")\n{1}, {T}, Sacrifice another permanent: Flip a coin.",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [
+      "Treasure"
+    ],
     "rarity": "common",
-    "uri": "https://scryfall.com/card/mh2/144/tavern-scoundrel?utm_source=api"
-  }
-},
-{
-  "id": "78a5d49a-747e-4ec8-a20a-ca917c315774",
-  "name": "Krark's Thumb",
-  "mana_cost": "{2}",
-  "cmc": 2.0,
-  "type_line": "Legendary Artifact",
-  "oracle_text": "If you would flip a coin, instead flip two coins and ignore one.",
-  "color_identity": [],
-  "keywords": [],
-  "rarity": "rare",
-  "image": "assets/cards/78a5d49a-747e-4ec8-a20a-ca917c315774.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/7/8/78a5d49a-747e-4ec8-a20a-ca917c315774.jpg?1783944517",
-  "uri": "https://scryfall.com/card/mrd/190/krarks-thumb?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "power": "1",
+    "toughness": "3",
+    "image": "assets/cards/55082c8a-d792-4cd8-94b1-d80c65804463.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/5/55082c8a-d792-4cd8-94b1-d80c65804463.jpg?1783926839",
+    "uri": "https://scryfall.com/card/mh2/144/tavern-scoundrel?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "55082c8a-d792-4cd8-94b1-d80c65804463",
+      "set": "mh2",
+      "set_name": "Modern Horizons 2",
+      "released_at": "2021-06-18",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mh2/144/tavern-scoundrel?utm_source=api"
+    }
+  },
+  {
     "id": "78a5d49a-747e-4ec8-a20a-ca917c315774",
-    "set": "mrd",
-    "set_name": "Mirrodin",
-    "released_at": "2003-10-02",
+    "name": "Krark's Thumb",
+    "mana_cost": "{2}",
+    "cmc": 2.0,
+    "type_line": "Legendary Artifact",
+    "oracle_text": "If you would flip a coin, instead flip two coins and ignore one.",
+    "color_identity": [],
+    "keywords": [],
     "rarity": "rare",
-    "uri": "https://scryfall.com/card/mrd/190/krarks-thumb?utm_source=api"
-  }
-},
-{
-  "id": "a91376ed-5868-4887-8389-5ef5b9471786",
-  "name": "Fiery Gambit",
-  "mana_cost": "{2}{R}",
-  "cmc": 3.0,
-  "type_line": "Sorcery",
-  "oracle_text": "Flip a coin until you lose a flip or choose to stop flipping. If you lose a flip, Fiery Gambit has no effect. If you win one or more flips, Fiery Gambit deals 3 damage to target creature. If you win two or more flips, Fiery Gambit deals 6 damage to each opponent. If you win three or more flips, draw nine cards and untap all lands you control.",
-  "color_identity": [
-    "R"
-  ],
-  "keywords": [],
-  "rarity": "rare",
-  "image": "assets/cards/a91376ed-5868-4887-8389-5ef5b9471786.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/a/9/a91376ed-5868-4887-8389-5ef5b9471786.jpg?1783944541",
-  "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/78a5d49a-747e-4ec8-a20a-ca917c315774.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/8/78a5d49a-747e-4ec8-a20a-ca917c315774.jpg?1783944517",
+    "uri": "https://scryfall.com/card/mrd/190/krarks-thumb?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "78a5d49a-747e-4ec8-a20a-ca917c315774",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/mrd/190/krarks-thumb?utm_source=api"
+    }
+  },
+  {
     "id": "a91376ed-5868-4887-8389-5ef5b9471786",
-    "set": "mrd",
-    "set_name": "Mirrodin",
-    "released_at": "2003-10-02",
+    "name": "Fiery Gambit",
+    "mana_cost": "{2}{R}",
+    "cmc": 3.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Flip a coin until you lose a flip or choose to stop flipping. If you lose a flip, Fiery Gambit has no effect. If you win one or more flips, Fiery Gambit deals 3 damage to target creature. If you win two or more flips, Fiery Gambit deals 6 damage to each opponent. If you win three or more flips, draw nine cards and untap all lands you control.",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
     "rarity": "rare",
-    "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api"
-  }
-},
-{
-  "id": "b0faa7f2-b547-42c4-a810-839da50dadfe",
-  "name": "Black Lotus",
-  "mana_cost": "{0}",
-  "cmc": 0.0,
-  "type_line": "Artifact",
-  "oracle_text": "{T}, Sacrifice this artifact: Add three mana of any one color.",
-  "color_identity": [],
-  "keywords": [],
-  "rarity": "rare",
-  "image": "assets/cards/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/b/0/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg?1783948669",
-  "uri": "https://scryfall.com/card/lea/232/black-lotus?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/a91376ed-5868-4887-8389-5ef5b9471786.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/9/a91376ed-5868-4887-8389-5ef5b9471786.jpg?1783944541",
+    "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "a91376ed-5868-4887-8389-5ef5b9471786",
+      "set": "mrd",
+      "set_name": "Mirrodin",
+      "released_at": "2003-10-02",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/mrd/90/fiery-gambit?utm_source=api"
+    }
+  },
+  {
     "id": "b0faa7f2-b547-42c4-a810-839da50dadfe",
-    "set": "lea",
-    "set_name": "Limited Edition Alpha",
-    "released_at": "1993-08-05",
+    "name": "Black Lotus",
+    "mana_cost": "{0}",
+    "cmc": 0.0,
+    "type_line": "Artifact",
+    "oracle_text": "{T}, Sacrifice this artifact: Add three mana of any one color.",
+    "color_identity": [],
+    "keywords": [],
     "rarity": "rare",
-    "uri": "https://scryfall.com/card/lea/232/black-lotus?utm_source=api"
-  }
-},
-{
-  "id": "c4300d24-1cae-4dd5-be7e-38cc677cf5bd",
-  "name": "Sol Ring",
-  "mana_cost": "{1}",
-  "cmc": 1.0,
-  "type_line": "Artifact",
-  "oracle_text": "{T}: Add {C}{C}.",
-  "color_identity": [],
-  "keywords": [],
-  "rarity": "uncommon",
-  "image": "assets/cards/c4300d24-1cae-4dd5-be7e-38cc677cf5bd.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/c/4/c4300d24-1cae-4dd5-be7e-38cc677cf5bd.jpg?1783948661",
-  "uri": "https://scryfall.com/card/lea/269/sol-ring?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/0/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg?1783948669",
+    "uri": "https://scryfall.com/card/lea/232/black-lotus?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "b0faa7f2-b547-42c4-a810-839da50dadfe",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/lea/232/black-lotus?utm_source=api"
+    }
+  },
+  {
     "id": "c4300d24-1cae-4dd5-be7e-38cc677cf5bd",
-    "set": "lea",
-    "set_name": "Limited Edition Alpha",
-    "released_at": "1993-08-05",
+    "name": "Sol Ring",
+    "mana_cost": "{1}",
+    "cmc": 1.0,
+    "type_line": "Artifact",
+    "oracle_text": "{T}: Add {C}{C}.",
+    "color_identity": [],
+    "keywords": [],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/lea/269/sol-ring?utm_source=api"
-  }
-},
-{
-  "id": "2e7f9919-0713-4ef9-96eb-3e0c444e47f4",
-  "name": "Isamaru, Hound of Konda",
-  "mana_cost": "{W}",
-  "cmc": 1.0,
-  "type_line": "Legendary Creature — Dog",
-  "oracle_text": "",
-  "color_identity": [
-    "W"
-  ],
-  "keywords": [],
-  "rarity": "rare",
-  "power": "2",
-  "toughness": "2",
-  "image": "assets/cards/2e7f9919-0713-4ef9-96eb-3e0c444e47f4.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/2/e/2e7f9919-0713-4ef9-96eb-3e0c444e47f4.jpg?1783944338",
-  "uri": "https://scryfall.com/card/chk/19/isamaru-hound-of-konda?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "image": "assets/cards/c4300d24-1cae-4dd5-be7e-38cc677cf5bd.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/4/c4300d24-1cae-4dd5-be7e-38cc677cf5bd.jpg?1783948661",
+    "uri": "https://scryfall.com/card/lea/269/sol-ring?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "c4300d24-1cae-4dd5-be7e-38cc677cf5bd",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/269/sol-ring?utm_source=api"
+    }
+  },
+  {
     "id": "2e7f9919-0713-4ef9-96eb-3e0c444e47f4",
-    "set": "chk",
-    "set_name": "Champions of Kamigawa",
-    "released_at": "2004-10-01",
+    "name": "Isamaru, Hound of Konda",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Legendary Creature — Dog",
+    "oracle_text": "",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
     "rarity": "rare",
-    "uri": "https://scryfall.com/card/chk/19/isamaru-hound-of-konda?utm_source=api"
-  }
-},
-{
-  "id": "645cfc1b-76f2-4823-9fb0-03cb009f8b32",
-  "name": "Yargle, Glutton of Urborg",
-  "mana_cost": "{4}{B}",
-  "cmc": 5.0,
-  "type_line": "Legendary Creature — Frog Spirit",
-  "oracle_text": "",
-  "color_identity": [
-    "B"
-  ],
-  "keywords": [],
-  "rarity": "uncommon",
-  "power": "9",
-  "toughness": "3",
-  "image": "assets/cards/645cfc1b-76f2-4823-9fb0-03cb009f8b32.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/6/4/645cfc1b-76f2-4823-9fb0-03cb009f8b32.jpg?1783934999",
-  "uri": "https://scryfall.com/card/dom/113/yargle-glutton-of-urborg?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/2e7f9919-0713-4ef9-96eb-3e0c444e47f4.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/e/2e7f9919-0713-4ef9-96eb-3e0c444e47f4.jpg?1783944338",
+    "uri": "https://scryfall.com/card/chk/19/isamaru-hound-of-konda?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "2e7f9919-0713-4ef9-96eb-3e0c444e47f4",
+      "set": "chk",
+      "set_name": "Champions of Kamigawa",
+      "released_at": "2004-10-01",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/chk/19/isamaru-hound-of-konda?utm_source=api"
+    }
+  },
+  {
     "id": "645cfc1b-76f2-4823-9fb0-03cb009f8b32",
-    "set": "dom",
-    "set_name": "Dominaria",
-    "released_at": "2018-04-27",
+    "name": "Yargle, Glutton of Urborg",
+    "mana_cost": "{4}{B}",
+    "cmc": 5.0,
+    "type_line": "Legendary Creature — Frog Spirit",
+    "oracle_text": "",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/dom/113/yargle-glutton-of-urborg?utm_source=api"
-  }
-},
-{
-  "id": "4cddb2d2-d813-4b83-a592-380ba4edf54f",
-  "name": "Syr Alin, the Lion's Claw",
-  "mana_cost": "{3}{W}{W}",
-  "cmc": 5.0,
-  "type_line": "Legendary Creature — Human Knight",
-  "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)\nWhenever Syr Alin attacks, other creatures you control get +1/+1 until end of turn.",
-  "color_identity": [
-    "W"
-  ],
-  "keywords": [
-    "First strike"
-  ],
-  "rarity": "uncommon",
-  "power": "4",
-  "toughness": "4",
-  "image": "assets/cards/4cddb2d2-d813-4b83-a592-380ba4edf54f.jpg",
-  "art": "https://cards.scryfall.io/art_crop/front/4/c/4cddb2d2-d813-4b83-a592-380ba4edf54f.jpg?1783932665",
-  "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api",
-  "verified": true,
-  "art_print": {
+    "power": "9",
+    "toughness": "3",
+    "image": "assets/cards/645cfc1b-76f2-4823-9fb0-03cb009f8b32.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/4/645cfc1b-76f2-4823-9fb0-03cb009f8b32.jpg?1783934999",
+    "uri": "https://scryfall.com/card/dom/113/yargle-glutton-of-urborg?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "645cfc1b-76f2-4823-9fb0-03cb009f8b32",
+      "set": "dom",
+      "set_name": "Dominaria",
+      "released_at": "2018-04-27",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/dom/113/yargle-glutton-of-urborg?utm_source=api"
+    }
+  },
+  {
     "id": "4cddb2d2-d813-4b83-a592-380ba4edf54f",
-    "set": "eld",
-    "set_name": "Throne of Eldraine",
-    "released_at": "2019-10-04",
+    "name": "Syr Alin, the Lion's Claw",
+    "mana_cost": "{3}{W}{W}",
+    "cmc": 5.0,
+    "type_line": "Legendary Creature — Human Knight",
+    "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)\nWhenever Syr Alin attacks, other creatures you control get +1/+1 until end of turn.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike"
+    ],
     "rarity": "uncommon",
-    "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api"
-  }
-},
+    "power": "4",
+    "toughness": "4",
+    "image": "assets/cards/4cddb2d2-d813-4b83-a592-380ba4edf54f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/c/4cddb2d2-d813-4b83-a592-380ba4edf54f.jpg?1783932665",
+    "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "4cddb2d2-d813-4b83-a592-380ba4edf54f",
+      "set": "eld",
+      "set_name": "Throne of Eldraine",
+      "released_at": "2019-10-04",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/eld/32/syr-alin-the-lions-claw?utm_source=api"
+    }
+  },
   {
     "id": "8b94f4c6-b518-43b3-be52-e889d1f3ea38",
     "name": "Glistener Elf",
@@ -5106,6 +5106,805 @@ const BUNDLED_CARDS = [
       "released_at": "1993-08-05",
       "rarity": "uncommon",
       "uri": "https://scryfall.com/card/lea/27/lance?utm_source=api"
+    }
+  },
+  {
+    "id": "9864f811-db2e-4d6d-ad59-a491a790bdd4",
+    "name": "Sedge Scorpion",
+    "mana_cost": "{G}",
+    "cmc": 1.0,
+    "type_line": "Creature — Scorpion",
+    "oracle_text": "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Deathtouch"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/66733fcb-fddc-4c15-bc51-c2cd42ac5a70.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/6/66733fcb-fddc-4c15-bc51-c2cd42ac5a70.jpg?1783939738",
+    "uri": "https://scryfall.com/card/m20/192/sedge-scorpion?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "66733fcb-fddc-4c15-bc51-c2cd42ac5a70",
+      "set": "ths",
+      "set_name": "Theros",
+      "released_at": "2013-09-27",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ths/177/sedge-scorpion?utm_source=api"
+    }
+  },
+  {
+    "id": "047bb416-1fe7-4965-907f-8e2a5fb4a925",
+    "name": "Giant Scorpion",
+    "mana_cost": "{2}{B}",
+    "cmc": 3.0,
+    "type_line": "Creature — Scorpion",
+    "oracle_text": "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Deathtouch"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "3",
+    "image": "assets/cards/c27221df-ec7a-4c51-b3a8-34b65b236b49.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/2/c27221df-ec7a-4c51-b3a8-34b65b236b49.jpg?1783942153",
+    "uri": "https://scryfall.com/card/ddr/50/giant-scorpion?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "c27221df-ec7a-4c51-b3a8-34b65b236b49",
+      "set": "zen",
+      "set_name": "Zendikar",
+      "released_at": "2009-10-02",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/zen/90/giant-scorpion?utm_source=api"
+    }
+  },
+  {
+    "id": "7bc8325b-c7a8-49a5-8a54-a419800ffb93",
+    "name": "Daggerback Basilisk",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Creature — Basilisk",
+    "oracle_text": "Deathtouch (Any amount of damage this deals to a creature is enough to destroy it.)",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Deathtouch"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/d4343cb0-6490-496c-9d58-ac1f7d3a91c6.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/4/d4343cb0-6490-496c-9d58-ac1f7d3a91c6.jpg?1783941966",
+    "uri": "https://scryfall.com/card/m19/174/daggerback-basilisk?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "d4343cb0-6490-496c-9d58-ac1f7d3a91c6",
+      "set": "roe",
+      "set_name": "Rise of the Eldrazi",
+      "released_at": "2010-04-23",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/roe/182/daggerback-basilisk?utm_source=api"
+    }
+  },
+  {
+    "id": "37f9be6b-ae6e-4708-9749-83bebd351102",
+    "name": "Ambush Viper",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Snake",
+    "oracle_text": "Flash\nDeathtouch",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Flash",
+      "Deathtouch"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "1",
+    "image": "assets/cards/0c082aa8-bf7f-47f2-baf8-43ad253fd7d7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/c/0c082aa8-bf7f-47f2-baf8-43ad253fd7d7.jpg?1783940925",
+    "uri": "https://scryfall.com/card/inr/186/ambush-viper?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "0c082aa8-bf7f-47f2-baf8-43ad253fd7d7",
+      "set": "isd",
+      "set_name": "Innistrad",
+      "released_at": "2011-09-30",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/isd/169/ambush-viper?utm_source=api"
+    }
+  },
+  {
+    "id": "ef46580c-a204-4b0b-8526-2310b1ca32b4",
+    "name": "Snapping Drake",
+    "mana_cost": "{3}{U}",
+    "cmc": 4.0,
+    "type_line": "Creature — Drake",
+    "oracle_text": "Flying (This creature can't be blocked except by creatures with flying or reach.)",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "rarity": "common",
+    "power": "3",
+    "toughness": "2",
+    "image": "assets/cards/7b49dd4c-ead6-4d94-9acb-0518d1f6426e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/b/7b49dd4c-ead6-4d94-9acb-0518d1f6426e.jpg?1783946836",
+    "uri": "https://scryfall.com/card/m20/318/snapping-drake?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "7b49dd4c-ead6-4d94-9acb-0518d1f6426e",
+      "set": "por",
+      "set_name": "Portal",
+      "released_at": "1997-05-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/por/67/snapping-drake?utm_source=api"
+    }
+  },
+  {
+    "id": "c8545377-421b-4d28-b2cc-ca18a170fee0",
+    "name": "Fighting Drake",
+    "mana_cost": "{2}{U}{U}",
+    "cmc": 4.0,
+    "type_line": "Creature — Drake",
+    "oracle_text": "Flying",
+    "color_identity": [
+      "U"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "4",
+    "image": "assets/cards/be436b65-9193-45ca-93e0-c5e9718f7e72.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/e/be436b65-9193-45ca-93e0-c5e9718f7e72.jpg?1783946657",
+    "uri": "https://scryfall.com/card/tpr/49/fighting-drake?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "be436b65-9193-45ca-93e0-c5e9718f7e72",
+      "set": "tmp",
+      "set_name": "Tempest",
+      "released_at": "1997-10-14",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/tmp/63/fighting-drake?utm_source=api"
+    }
+  },
+  {
+    "id": "1388ce6e-8199-46c1-8ee3-71266b0929bf",
+    "name": "Sunspire Griffin",
+    "mana_cost": "{1}{W}{W}",
+    "cmc": 3.0,
+    "type_line": "Creature — Griffin",
+    "oracle_text": "Flying",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "3",
+    "image": "assets/cards/1388ce6e-8199-46c1-8ee3-71266b0929bf.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/3/1388ce6e-8199-46c1-8ee3-71266b0929bf.jpg?1783940373",
+    "uri": "https://scryfall.com/card/rtr/25/sunspire-griffin?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "1388ce6e-8199-46c1-8ee3-71266b0929bf",
+      "set": "rtr",
+      "set_name": "Return to Ravnica",
+      "released_at": "2012-10-05",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/rtr/25/sunspire-griffin?utm_source=api"
+    }
+  },
+  {
+    "id": "febcc690-3dd6-4207-987c-b71d842d2c16",
+    "name": "Sungrace Pegasus",
+    "mana_cost": "{1}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Pegasus",
+    "oracle_text": "Flying\nLifelink (Damage dealt by this creature also causes you to gain that much life.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Lifelink"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "2",
+    "image": "assets/cards/52d851b9-c290-4fcc-860d-a3250923b850.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/2/52d851b9-c290-4fcc-860d-a3250923b850.jpg?1783939197",
+    "uri": "https://scryfall.com/card/j25/265/sungrace-pegasus?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "52d851b9-c290-4fcc-860d-a3250923b850",
+      "set": "m15",
+      "set_name": "Magic 2015",
+      "released_at": "2014-07-18",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m15/38/sungrace-pegasus?utm_source=api"
+    }
+  },
+  {
+    "id": "fe349432-8726-49cf-ad07-6f8add8f78c8",
+    "name": "Hitchclaw Recluse",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Reach",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "4",
+    "image": "assets/cards/bf335eac-e57b-44ec-afe2-8aed567469e7.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/f/bf335eac-e57b-44ec-afe2-8aed567469e7.jpg?1783938322",
+    "uri": "https://scryfall.com/card/grn/133/hitchclaw-recluse?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "bf335eac-e57b-44ec-afe2-8aed567469e7",
+      "set": "ori",
+      "set_name": "Magic Origins",
+      "released_at": "2015-07-17",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ori/181/hitchclaw-recluse?utm_source=api"
+    }
+  },
+  {
+    "id": "98518e4a-d1d0-4e41-bae7-242c779f06a1",
+    "name": "Giant Mantis",
+    "mana_cost": "{3}{G}",
+    "cmc": 4.0,
+    "type_line": "Creature — Insect",
+    "oracle_text": "Reach (This creature can block creatures with flying.)",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "4",
+    "image": "assets/cards/2b56c895-37d3-4475-a542-dc6d21c46f06.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/b/2b56c895-37d3-4475-a542-dc6d21c46f06.jpg?1783947065",
+    "uri": "https://scryfall.com/card/bfz/173/giant-mantis?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "2b56c895-37d3-4475-a542-dc6d21c46f06",
+      "set": "mir",
+      "set_name": "Mirage",
+      "released_at": "1996-10-08",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mir/218/giant-mantis?utm_source=api"
+    }
+  },
+  {
+    "id": "26da4278-ba44-4555-8837-e24627b46533",
+    "name": "Blightwidow",
+    "mana_cost": "{3}{G}",
+    "cmc": 4.0,
+    "type_line": "Creature — Phyrexian Spider",
+    "oracle_text": "Reach (This creature can block creatures with flying.)\nInfect (This creature deals damage to creatures in the form of -1/-1 counters and to players in the form of poison counters.)",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Infect"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "4",
+    "image": "assets/cards/26da4278-ba44-4555-8837-e24627b46533.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/6/26da4278-ba44-4555-8837-e24627b46533.jpg?1783941376",
+    "uri": "https://scryfall.com/card/mbs/77/blightwidow?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "26da4278-ba44-4555-8837-e24627b46533",
+      "set": "mbs",
+      "set_name": "Mirrodin Besieged",
+      "released_at": "2011-02-04",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/mbs/77/blightwidow?utm_source=api"
+    }
+  },
+  {
+    "id": "ff737c53-9489-4a8c-8fa1-5d108222ae3f",
+    "name": "Skysnare Spider",
+    "mana_cost": "{4}{G}{G}",
+    "cmc": 6.0,
+    "type_line": "Creature — Spider",
+    "oracle_text": "Vigilance (Attacking doesn't cause this creature to tap.)\nReach (This creature can block creatures with flying.)",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Vigilance"
+    ],
+    "rarity": "common",
+    "power": "6",
+    "toughness": "6",
+    "image": "assets/cards/f1743227-94fd-44c0-884d-fa269bcfd67d.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/1/f1743227-94fd-44c0-884d-fa269bcfd67d.jpg?1783938318",
+    "uri": "https://scryfall.com/card/cmm/322/skysnare-spider?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "f1743227-94fd-44c0-884d-fa269bcfd67d",
+      "set": "ori",
+      "set_name": "Magic Origins",
+      "released_at": "2015-07-17",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/ori/197/skysnare-spider?utm_source=api"
+    }
+  },
+  {
+    "id": "6156d61c-640e-4e8c-bd2f-838dfef0c885",
+    "name": "Knight of Meadowgrain",
+    "mana_cost": "{W}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Kithkin Knight",
+    "oracle_text": "First strike\nLifelink (Damage dealt by this creature also causes you to gain that much life.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Lifelink",
+      "First strike"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/1eb33901-1f97-4080-a9dd-922ef29f42c9.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/e/1eb33901-1f97-4080-a9dd-922ef29f42c9.jpg?1783942912",
+    "uri": "https://scryfall.com/card/ddg/5/knight-of-meadowgrain?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "1eb33901-1f97-4080-a9dd-922ef29f42c9",
+      "set": "lrw",
+      "set_name": "Lorwyn",
+      "released_at": "2007-10-12",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lrw/28/knight-of-meadowgrain?utm_source=api"
+    }
+  },
+  {
+    "id": "0e8411c9-4f6f-4301-ac36-386016a32852",
+    "name": "Elvish Archers",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Creature — Elf Archer",
+    "oracle_text": "First strike",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "rarity": "rare",
+    "power": "2",
+    "toughness": "1",
+    "image": "assets/cards/c3240d5e-b3d4-4368-b09b-c309bc935152.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/3/c3240d5e-b3d4-4368-b09b-c309bc935152.jpg?1783948616",
+    "uri": "https://scryfall.com/card/7ed/239/elvish-archers?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "c3240d5e-b3d4-4368-b09b-c309bc935152",
+      "set": "leb",
+      "set_name": "Limited Edition Beta",
+      "released_at": "1993-10-04",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/leb/192/elvish-archers?utm_source=api"
+    }
+  },
+  {
+    "id": "d0ae60d0-20d3-452c-9953-e229567c06f5",
+    "name": "Benalish Knight",
+    "mana_cost": "{2}{W}",
+    "cmc": 3.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "Flash (You may cast this spell any time you could cast an instant.)\nFirst strike (This creature deals combat damage before creatures without first strike.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike",
+      "Flash"
+    ],
+    "rarity": "common",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/c2c184bb-6c7d-4118-a111-ef27171cfee6.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/2/c2c184bb-6c7d-4118-a111-ef27171cfee6.jpg?1783946749",
+    "uri": "https://scryfall.com/card/10e/11/benalish-knight?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "c2c184bb-6c7d-4118-a111-ef27171cfee6",
+      "set": "wth",
+      "set_name": "Weatherlight",
+      "released_at": "1997-06-09",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/wth/9/benalish-knight?utm_source=api"
+    }
+  },
+  {
+    "id": "5af01330-05c2-4c5b-9830-2886711b2b5d",
+    "name": "Boros Recruit",
+    "mana_cost": "{R/W}",
+    "cmc": 1.0,
+    "type_line": "Creature — Goblin Soldier",
+    "oracle_text": "({R/W} can be paid with either {R} or {W}.)\nFirst strike",
+    "color_identity": [
+      "R",
+      "W"
+    ],
+    "keywords": [
+      "First strike"
+    ],
+    "rarity": "common",
+    "power": "1",
+    "toughness": "1",
+    "image": "assets/cards/5af01330-05c2-4c5b-9830-2886711b2b5d.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/a/5af01330-05c2-4c5b-9830-2886711b2b5d.jpg?1783943607",
+    "uri": "https://scryfall.com/card/rav/243/boros-recruit?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "5af01330-05c2-4c5b-9830-2886711b2b5d",
+      "set": "rav",
+      "set_name": "Ravnica: City of Guilds",
+      "released_at": "2005-10-07",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/rav/243/boros-recruit?utm_source=api"
+    }
+  },
+  {
+    "id": "5dcd0c4e-4047-47a2-8969-c62616d457c2",
+    "name": "Doom Blade",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target nonblack creature.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/6e19acff-f3dd-417a-a9ab-ea3e36c1ba61.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/6/e/6e19acff-f3dd-417a-a9ab-ea3e36c1ba61.jpg?1783942383",
+    "uri": "https://scryfall.com/card/msc/576/doom-blade?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "6e19acff-f3dd-417a-a9ab-ea3e36c1ba61",
+      "set": "m10",
+      "set_name": "Magic 2010",
+      "released_at": "2009-07-17",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m10/93/doom-blade?utm_source=api"
+    }
+  },
+  {
+    "id": "7fdafc6a-a53e-421d-8494-2a34f945d178",
+    "name": "Go for the Throat",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target nonartifact creature.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/1c665cfc-7e9a-444b-96b5-e8e4ef57a98a.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/c/1c665cfc-7e9a-444b-96b5-e8e4ef57a98a.jpg?1783941384",
+    "uri": "https://scryfall.com/card/j25/447/go-for-the-throat?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "1c665cfc-7e9a-444b-96b5-e8e4ef57a98a",
+      "set": "mbs",
+      "set_name": "Mirrodin Besieged",
+      "released_at": "2011-02-04",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/mbs/43/go-for-the-throat?utm_source=api"
+    }
+  },
+  {
+    "id": "5469e696-bbf1-43e3-9c25-fe089b36caed",
+    "name": "Plummet",
+    "mana_cost": "{1}{G}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target creature with flying.",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/a67bb585-cc4f-4cbc-9a5a-d31df98c07ae.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/6/a67bb585-cc4f-4cbc-9a5a-d31df98c07ae.jpg?1783941902",
+    "uri": "https://scryfall.com/card/mid/193/plummet?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "a67bb585-cc4f-4cbc-9a5a-d31df98c07ae",
+      "set": "arc",
+      "set_name": "Archenemy",
+      "released_at": "2010-06-18",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/arc/65/plummet?utm_source=api"
+    }
+  },
+  {
+    "id": "9c103163-31b7-4d25-aa2c-02ca082ee1bf",
+    "name": "Smite the Monstrous",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target creature with power 4 or greater.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/0103f3b1-88c2-4cbf-a67c-49420f92970f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/1/0103f3b1-88c2-4cbf-a67c-49420f92970f.jpg?1783940986",
+    "uri": "https://scryfall.com/card/znr/42/smite-the-monstrous?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "0103f3b1-88c2-4cbf-a67c-49420f92970f",
+      "set": "isd",
+      "set_name": "Innistrad",
+      "released_at": "2011-09-30",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/isd/33/smite-the-monstrous?utm_source=api"
+    }
+  },
+  {
+    "id": "af2498a2-3763-408a-9bd2-279034869285",
+    "name": "Destroy Evil",
+    "mana_cost": "{1}{W}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Choose one —\n• Destroy target creature with toughness 4 or greater.\n• Destroy target enchantment.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/4f7862ef-2c8d-4d28-9e50-7cc41861f245.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/f/4f7862ef-2c8d-4d28-9e50-7cc41861f245.jpg?1783921366",
+    "uri": "https://scryfall.com/card/msc/128/destroy-evil?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "4f7862ef-2c8d-4d28-9e50-7cc41861f245",
+      "set": "dmu",
+      "set_name": "Dominaria United",
+      "released_at": "2022-09-09",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/dmu/17/destroy-evil?utm_source=api"
+    }
+  },
+  {
+    "id": "1d7d5b71-7c1b-4fc2-a5ec-7285e17ffe0f",
+    "name": "Broken Wings",
+    "mana_cost": "{2}{G}",
+    "cmc": 3.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target artifact, enchantment, or creature with flying.",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/c0fc2dfd-85b0-4add-be18-b39549235921.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/0/c0fc2dfd-85b0-4add-be18-b39549235921.jpg?1783929342",
+    "uri": "https://scryfall.com/card/dft/156/broken-wings?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "c0fc2dfd-85b0-4add-be18-b39549235921",
+      "set": "znr",
+      "set_name": "Zendikar Rising",
+      "released_at": "2020-09-25",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/znr/181/broken-wings?utm_source=api"
+    }
+  },
+  {
+    "id": "f67b323d-0dda-45f8-84b7-d883ce5045a8",
+    "name": "Infernal Grasp",
+    "mana_cost": "{1}{B}",
+    "cmc": 2.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target creature. You lose 2 life.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/17824929-f131-4b8d-addb-66c25323155e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/7/17824929-f131-4b8d-addb-66c25323155e.jpg?1783925615",
+    "uri": "https://scryfall.com/card/soc/216/infernal-grasp?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "17824929-f131-4b8d-addb-66c25323155e",
+      "set": "mid",
+      "set_name": "Innistrad: Midnight Hunt",
+      "released_at": "2021-09-24",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/mid/107/infernal-grasp?utm_source=api"
+    }
+  },
+  {
+    "id": "935cb9a2-11ba-45d9-ab38-dea23cecf521",
+    "name": "Vanquish the Weak",
+    "mana_cost": "{2}{B}",
+    "cmc": 3.0,
+    "type_line": "Instant",
+    "oracle_text": "Destroy target creature with power 3 or less.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/e599ed0b-4b3b-4341-b6ac-7fdfdc6799a3.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/5/e599ed0b-4b3b-4341-b6ac-7fdfdc6799a3.jpg?1783935752",
+    "uri": "https://scryfall.com/card/mom/129/vanquish-the-weak?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "e599ed0b-4b3b-4341-b6ac-7fdfdc6799a3",
+      "set": "xln",
+      "set_name": "Ixalan",
+      "released_at": "2017-09-29",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/xln/127/vanquish-the-weak?utm_source=api"
+    }
+  },
+  {
+    "id": "8f202f6b-710f-4376-a49c-e5f135b26eaf",
+    "name": "Final Reward",
+    "mana_cost": "{4}{B}",
+    "cmc": 5.0,
+    "type_line": "Instant",
+    "oracle_text": "Exile target creature.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/8f202f6b-710f-4376-a49c-e5f135b26eaf.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/f/8f202f6b-710f-4376-a49c-e5f135b26eaf.jpg?1783936505",
+    "uri": "https://scryfall.com/card/akh/92/final-reward?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "8f202f6b-710f-4376-a49c-e5f135b26eaf",
+      "set": "akh",
+      "set_name": "Amonkhet",
+      "released_at": "2017-04-28",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/akh/92/final-reward?utm_source=api"
+    }
+  },
+  {
+    "id": "24e30acf-b30f-4bb3-b80e-dc7e9559da51",
+    "name": "Oblivion Strike",
+    "mana_cost": "{3}{B}",
+    "cmc": 4.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Devoid (This card has no color.)\nExile target creature.",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Devoid"
+    ],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/24e30acf-b30f-4bb3-b80e-dc7e9559da51.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/2/4/24e30acf-b30f-4bb3-b80e-dc7e9559da51.jpg?1783937914",
+    "uri": "https://scryfall.com/card/ogw/75/oblivion-strike?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "24e30acf-b30f-4bb3-b80e-dc7e9559da51",
+      "set": "ogw",
+      "set_name": "Oath of the Gatewatch",
+      "released_at": "2016-01-22",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ogw/75/oblivion-strike?utm_source=api"
+    }
+  },
+  {
+    "id": "7bd4fc26-8351-4371-948b-f43346c3e771",
+    "name": "Revoke Existence",
+    "mana_cost": "{1}{W}",
+    "cmc": 2.0,
+    "type_line": "Sorcery",
+    "oracle_text": "Exile target artifact or enchantment.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/18ae62f9-361c-4849-b0af-2b08fc0421c8.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/8/18ae62f9-361c-4849-b0af-2b08fc0421c8.jpg?1783941744",
+    "uri": "https://scryfall.com/card/2xm/28/revoke-existence?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "18ae62f9-361c-4849-b0af-2b08fc0421c8",
+      "set": "som",
+      "set_name": "Scars of Mirrodin",
+      "released_at": "2010-10-01",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/som/18/revoke-existence?utm_source=api"
+    }
+  },
+  {
+    "id": "0fd1fc09-a09d-45e6-8a07-3a8a83b4e6ec",
+    "name": "Mithril Coat",
+    "mana_cost": "{3}",
+    "cmc": 3.0,
+    "type_line": "Legendary Artifact — Equipment",
+    "oracle_text": "Flash\nIndestructible\nWhen Mithril Coat enters, attach it to target legendary creature you control.\nEquipped creature has indestructible.\nEquip {3}",
+    "color_identity": [],
+    "keywords": [
+      "Indestructible",
+      "Equip",
+      "Flash"
+    ],
+    "rarity": "rare",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/0fd1fc09-a09d-45e6-8a07-3a8a83b4e6ec.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/0/f/0fd1fc09-a09d-45e6-8a07-3a8a83b4e6ec.jpg?1783916237",
+    "uri": "https://scryfall.com/card/ltr/245/mithril-coat?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "0fd1fc09-a09d-45e6-8a07-3a8a83b4e6ec",
+      "set": "ltr",
+      "set_name": "The Lord of the Rings: Tales of Middle-earth",
+      "released_at": "2023-06-23",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/ltr/245/mithril-coat?utm_source=api"
     }
   }
 ];

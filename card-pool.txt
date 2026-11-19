@@ -524,3 +524,33 @@ Halberdier
 Razorfoot Griffin
 Sabretooth Tiger
 Lance
+
+# v0.88 · Combat keywords, removal and Mithril Coat
+Sedge Scorpion
+Giant Scorpion
+Daggerback Basilisk
+Ambush Viper
+Snapping Drake
+Fighting Drake
+Sunspire Griffin
+Sungrace Pegasus
+Hitchclaw Recluse
+Giant Mantis
+Blightwidow
+Skysnare Spider
+Knight of Meadowgrain
+Elvish Archers
+Benalish Knight
+Boros Recruit
+Doom Blade
+Go for the Throat
+Plummet
+Smite the Monstrous
+Destroy Evil
+Broken Wings
+Infernal Grasp
+Vanquish the Weak
+Final Reward
+Oblivion Strike
+Revoke Existence
+Mithril Coat

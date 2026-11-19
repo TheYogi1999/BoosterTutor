@@ -1,0 +1,14 @@
+/* Reviewed combat expansion: clear protection, compact color identity, original foe portraits. */
+.keyword-tag61[data-keyword="indestructible"]{border-color:#f1d384aa;background:#69552b55;color:#ffedb4;box-shadow:0 0 7px #e4b75525}
+.coat-dialog88{width:min(880px,90vw)}
+#coat-options88{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;max-height:450px;overflow:auto;margin:20px 0}
+#coat-options88>button{border:1px solid #d5b37744;border-radius:7px;background:#132630;color:#e8d7b6;padding:10px;min-width:0;cursor:pointer}
+#coat-options88>button.selected{border-color:#f2d28a;box-shadow:0 0 0 1px #f2d28a55,inset 0 0 22px #dca73611}
+#coat-options88 .card-face{display:block;max-width:170px;margin:auto;position:relative}
+#coat-options88 img{display:block;width:100%;aspect-ratio:488/680;object-fit:contain;border-radius:6px}
+#coat-options88 b,#coat-options88 small{display:block;margin-top:9px;line-height:1.4;font:12px/1.4 var(--sans)}
+#coat-options88 small{font-size:10px;color:#b9c4b7}
+#coat-confirm88{float:right}
+.walker-portrait[class*="portrait-"]:is(.portrait-venomfang,.portrait-boneblade,.portrait-gloomwing,.portrait-silkweaver,.portrait-stormtalon,.portrait-runegolem,.portrait-graveoracle,.portrait-cinderhydra){background-image:url('assets/portraits/enemies-v88.webp')!important;background-size:400% auto!important;background-position:var(--portrait-x) var(--portrait-y)!important}
+.portrait-venomfang{--portrait-x:0%;--portrait-y:0%}.portrait-boneblade{--portrait-x:33.3333%;--portrait-y:0%}.portrait-gloomwing{--portrait-x:66.6667%;--portrait-y:0%}.portrait-silkweaver{--portrait-x:100%;--portrait-y:0%}
+.portrait-stormtalon{--portrait-x:0%;--portrait-y:100%}.portrait-runegolem{--portrait-x:33.3333%;--portrait-y:100%}.portrait-graveoracle{--portrait-x:66.6667%;--portrait-y:100%}.portrait-cinderhydra{--portrait-x:100%;--portrait-y:100%}

@@ -45,3 +45,38 @@ v0.34 adds 10 vanilla creatures, 3 simple Equipment and 6 spells. Four existing 
 - `819e2046-9b78-4fd0-92f8-798bfac51195.jpg`: Razorfoot Griffin — Ben Thompson; Invasion (2000-10-02), oldest regular English paper print. https://scryfall.com/card/inv/29/razorfoot-griffin?utm_source=api
 - `6914c5a8-2114-41c5-a471-ca97524d622f.jpg`: Sabretooth Tiger — Melissa A. Benson; Ice Age (1995-06-03), oldest regular English paper print. https://scryfall.com/card/ice/215/sabretooth-tiger?utm_source=api
 - `ddb633f5-cc4d-4157-8217-def90cb15e24.jpg`: Lance — Rob Alexander; Limited Edition Alpha (1993-08-05), oldest regular English paper print. https://scryfall.com/card/lea/27/lance?utm_source=api
+
+## v0.88 reviewed combat expansion
+
+28 real cards imported from the Scryfall API; current Oracle rules and the earliest English paper artwork, preferring regular printings over promotional date placeholders.
+
+- **Sedge Scorpion**: https://scryfall.com/card/ths/177/sedge-scorpion?utm_source=api · 2013-09-27 · `66733fcb-fddc-4c15-bc51-c2cd42ac5a70.jpg`
+- **Giant Scorpion**: https://scryfall.com/card/zen/90/giant-scorpion?utm_source=api · 2009-10-02 · `c27221df-ec7a-4c51-b3a8-34b65b236b49.jpg`
+- **Daggerback Basilisk**: https://scryfall.com/card/roe/182/daggerback-basilisk?utm_source=api · 2010-04-23 · `d4343cb0-6490-496c-9d58-ac1f7d3a91c6.jpg`
+- **Ambush Viper**: https://scryfall.com/card/isd/169/ambush-viper?utm_source=api · 2011-09-30 · `0c082aa8-bf7f-47f2-baf8-43ad253fd7d7.jpg`
+- **Snapping Drake**: https://scryfall.com/card/por/67/snapping-drake?utm_source=api · 1997-05-01 · `7b49dd4c-ead6-4d94-9acb-0518d1f6426e.jpg`
+- **Fighting Drake**: https://scryfall.com/card/tmp/63/fighting-drake?utm_source=api · 1997-10-14 · `be436b65-9193-45ca-93e0-c5e9718f7e72.jpg`
+- **Sunspire Griffin**: https://scryfall.com/card/rtr/25/sunspire-griffin?utm_source=api · 2012-10-05 · `1388ce6e-8199-46c1-8ee3-71266b0929bf.jpg`
+- **Sungrace Pegasus**: https://scryfall.com/card/m15/38/sungrace-pegasus?utm_source=api · 2014-07-18 · `52d851b9-c290-4fcc-860d-a3250923b850.jpg`
+- **Hitchclaw Recluse**: https://scryfall.com/card/ori/181/hitchclaw-recluse?utm_source=api · 2015-07-17 · `bf335eac-e57b-44ec-afe2-8aed567469e7.jpg`
+- **Giant Mantis**: https://scryfall.com/card/mir/218/giant-mantis?utm_source=api · 1996-10-08 · `2b56c895-37d3-4475-a542-dc6d21c46f06.jpg`
+- **Blightwidow**: https://scryfall.com/card/mbs/77/blightwidow?utm_source=api · 2011-02-04 · `26da4278-ba44-4555-8837-e24627b46533.jpg`
+- **Skysnare Spider**: https://scryfall.com/card/ori/197/skysnare-spider?utm_source=api · 2015-07-17 · `f1743227-94fd-44c0-884d-fa269bcfd67d.jpg`
+- **Knight of Meadowgrain**: https://scryfall.com/card/lrw/28/knight-of-meadowgrain?utm_source=api · 2007-10-12 · `1eb33901-1f97-4080-a9dd-922ef29f42c9.jpg`
+- **Elvish Archers**: https://scryfall.com/card/leb/192/elvish-archers?utm_source=api · 1993-10-04 · `c3240d5e-b3d4-4368-b09b-c309bc935152.jpg`
+- **Benalish Knight**: https://scryfall.com/card/wth/9/benalish-knight?utm_source=api · 1997-06-09 · `c2c184bb-6c7d-4118-a111-ef27171cfee6.jpg`
+- **Boros Recruit**: https://scryfall.com/card/rav/243/boros-recruit?utm_source=api · 2005-10-07 · `5af01330-05c2-4c5b-9830-2886711b2b5d.jpg`
+- **Doom Blade**: https://scryfall.com/card/m10/93/doom-blade?utm_source=api · 2009-07-17 · `6e19acff-f3dd-417a-a9ab-ea3e36c1ba61.jpg`
+- **Go for the Throat**: https://scryfall.com/card/mbs/43/go-for-the-throat?utm_source=api · 2011-02-04 · `1c665cfc-7e9a-444b-96b5-e8e4ef57a98a.jpg`
+- **Plummet**: https://scryfall.com/card/arc/65/plummet?utm_source=api · 2010-06-18 · `a67bb585-cc4f-4cbc-9a5a-d31df98c07ae.jpg`
+- **Smite the Monstrous**: https://scryfall.com/card/isd/33/smite-the-monstrous?utm_source=api · 2011-09-30 · `0103f3b1-88c2-4cbf-a67c-49420f92970f.jpg`
+- **Destroy Evil**: https://scryfall.com/card/dmu/17/destroy-evil?utm_source=api · 2022-09-09 · `4f7862ef-2c8d-4d28-9e50-7cc41861f245.jpg`
+- **Broken Wings**: https://scryfall.com/card/znr/181/broken-wings?utm_source=api · 2020-09-25 · `c0fc2dfd-85b0-4add-be18-b39549235921.jpg`
+- **Infernal Grasp**: https://scryfall.com/card/mid/107/infernal-grasp?utm_source=api · 2021-09-24 · `17824929-f131-4b8d-addb-66c25323155e.jpg`
+- **Vanquish the Weak**: https://scryfall.com/card/xln/127/vanquish-the-weak?utm_source=api · 2017-09-29 · `e599ed0b-4b3b-4341-b6ac-7fdfdc6799a3.jpg`
+- **Final Reward**: https://scryfall.com/card/akh/92/final-reward?utm_source=api · 2017-04-28 · `8f202f6b-710f-4376-a49c-e5f135b26eaf.jpg`
+- **Oblivion Strike**: https://scryfall.com/card/ogw/75/oblivion-strike?utm_source=api · 2016-01-22 · `24e30acf-b30f-4bb3-b80e-dc7e9559da51.jpg`
+- **Revoke Existence**: https://scryfall.com/card/som/18/revoke-existence?utm_source=api · 2010-10-01 · `18ae62f9-361c-4849-b0af-2b08fc0421c8.jpg`
+- **Mithril Coat**: https://scryfall.com/card/ltr/245/mithril-coat?utm_source=api · 2023-06-23 · `0fd1fc09-a09d-45e6-8a07-3a8a83b4e6ec.jpg`
+
+Elvish Archers uses Limited Edition Beta, the earliest corrected 2/1 printing; Alpha misprinted 1/2.

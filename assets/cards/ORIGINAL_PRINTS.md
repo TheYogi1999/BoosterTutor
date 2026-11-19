@@ -129,3 +129,36 @@ The title shows all three English paper prints in shuffled positions. Unhinged #
 - **Booster Tutor** — Arena League 2004 #11 · https://scryfall.com/card/pal04/11/booster-tutor?utm_source=api
 - **Booster Tutor** — Unhinged #51 · https://scryfall.com/card/unh/51/booster-tutor?utm_source=api
 - **Booster Tutor** — Unsanctioned #33 · https://scryfall.com/card/und/33/booster-tutor?utm_source=api
+
+## Combat expansion v0.88
+
+- Sedge Scorpion — Theros (2013-09-27): https://scryfall.com/card/ths/177/sedge-scorpion?utm_source=api
+- Giant Scorpion — Zendikar (2009-10-02): https://scryfall.com/card/zen/90/giant-scorpion?utm_source=api
+- Daggerback Basilisk — Rise of the Eldrazi (2010-04-23): https://scryfall.com/card/roe/182/daggerback-basilisk?utm_source=api
+- Ambush Viper — Innistrad (2011-09-30): https://scryfall.com/card/isd/169/ambush-viper?utm_source=api
+- Snapping Drake — Portal (1997-05-01): https://scryfall.com/card/por/67/snapping-drake?utm_source=api
+- Fighting Drake — Tempest (1997-10-14): https://scryfall.com/card/tmp/63/fighting-drake?utm_source=api
+- Sunspire Griffin — Return to Ravnica (2012-10-05): https://scryfall.com/card/rtr/25/sunspire-griffin?utm_source=api
+- Sungrace Pegasus — Magic 2015 (2014-07-18): https://scryfall.com/card/m15/38/sungrace-pegasus?utm_source=api
+- Hitchclaw Recluse — Magic Origins (2015-07-17): https://scryfall.com/card/ori/181/hitchclaw-recluse?utm_source=api
+- Giant Mantis — Mirage (1996-10-08): https://scryfall.com/card/mir/218/giant-mantis?utm_source=api
+- Blightwidow — Mirrodin Besieged (2011-02-04): https://scryfall.com/card/mbs/77/blightwidow?utm_source=api
+- Skysnare Spider — Magic Origins (2015-07-17): https://scryfall.com/card/ori/197/skysnare-spider?utm_source=api
+- Knight of Meadowgrain — Lorwyn (2007-10-12): https://scryfall.com/card/lrw/28/knight-of-meadowgrain?utm_source=api
+- Elvish Archers — Limited Edition Beta (1993-10-04): https://scryfall.com/card/leb/192/elvish-archers?utm_source=api
+- Benalish Knight — Weatherlight (1997-06-09): https://scryfall.com/card/wth/9/benalish-knight?utm_source=api
+- Boros Recruit — Ravnica: City of Guilds (2005-10-07): https://scryfall.com/card/rav/243/boros-recruit?utm_source=api
+- Doom Blade — Magic 2010 (2009-07-17): https://scryfall.com/card/m10/93/doom-blade?utm_source=api
+- Go for the Throat — Mirrodin Besieged (2011-02-04): https://scryfall.com/card/mbs/43/go-for-the-throat?utm_source=api
+- Plummet — Archenemy (2010-06-18): https://scryfall.com/card/arc/65/plummet?utm_source=api
+- Smite the Monstrous — Innistrad (2011-09-30): https://scryfall.com/card/isd/33/smite-the-monstrous?utm_source=api
+- Destroy Evil — Dominaria United (2022-09-09): https://scryfall.com/card/dmu/17/destroy-evil?utm_source=api
+- Broken Wings — Zendikar Rising (2020-09-25): https://scryfall.com/card/znr/181/broken-wings?utm_source=api
+- Infernal Grasp — Innistrad: Midnight Hunt (2021-09-24): https://scryfall.com/card/mid/107/infernal-grasp?utm_source=api
+- Vanquish the Weak — Ixalan (2017-09-29): https://scryfall.com/card/xln/127/vanquish-the-weak?utm_source=api
+- Final Reward — Amonkhet (2017-04-28): https://scryfall.com/card/akh/92/final-reward?utm_source=api
+- Oblivion Strike — Oath of the Gatewatch (2016-01-22): https://scryfall.com/card/ogw/75/oblivion-strike?utm_source=api
+- Revoke Existence — Scars of Mirrodin (2010-10-01): https://scryfall.com/card/som/18/revoke-existence?utm_source=api
+- Mithril Coat — The Lord of the Rings: Tales of Middle-earth (2023-06-23): https://scryfall.com/card/ltr/245/mithril-coat?utm_source=api
+
+Elvish Archers uses Beta to match the corrected Oracle 2/1 stats; Alpha printed 1/2.
