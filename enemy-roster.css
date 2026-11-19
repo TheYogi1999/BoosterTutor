@@ -1,0 +1,10 @@
+/* Equal portrait sizes and proportional art. A slight inset keeps atlas neighbors out. */
+.walker-portrait[class*="portrait-"]:is(.portrait-emberimp,.portrait-miretoad,.portrait-copperscarab,.portrait-dawncentaur,.portrait-cinderphoenix,.portrait-thornstag,.portrait-moonmyconid,.portrait-abyssleviathan){background-image:url('assets/portraits/enemies-v89.webp')!important;background-size:448% auto!important;background-position:var(--portrait-x) var(--portrait-y)!important}
+.portrait-emberimp{--portrait-x:1.7%;--portrait-y:0%}
+.portrait-miretoad{--portrait-x:33.9%;--portrait-y:0%}
+.portrait-copperscarab{--portrait-x:66.1%;--portrait-y:0%}
+.portrait-dawncentaur{--portrait-x:98.3%;--portrait-y:0%}
+.portrait-cinderphoenix{--portrait-x:1.7%;--portrait-y:100%}
+.portrait-thornstag{--portrait-x:33.9%;--portrait-y:100%}
+.portrait-moonmyconid{--portrait-x:66.1%;--portrait-y:100%}
+.portrait-abyssleviathan{--portrait-x:98.3%;--portrait-y:100%}
