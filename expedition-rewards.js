@@ -3,7 +3,15 @@ const SHOP_PACK_TYPES = [
  {id:'mythic',name:'Mythic pack',price:38,symbol:'✦',description:'1 mythic + 6 rare or uncommon cards'},
  {id:'equipment',name:'Equipment pack',price:23,symbol:'⚔',description:'7 Equipment cards'},
  {id:'instant',name:'Instant pack',price:20,symbol:'ϟ',description:'7 Instant cards'},
- {id:'creature',name:'Creature pack',price:20,symbol:'♜',description:'7 Creature cards'}
+ {id:'creature',name:'Creature pack',price:20,symbol:'♜',description:'7 Creature cards'},
+ {id:'artifact',name:'Artifact pack',price:24,symbol:'◇',description:'7 Artifact cards'},
+ {id:'enchantment',name:'Enchantment pack',price:22,symbol:'✧',description:'7 Enchantment cards'},
+ {id:'aura',name:'Aura pack',price:20,symbol:'❖',description:'7 Auras to enhance your creatures'},
+ {id:'sorcery',name:'Sorcery pack',price:20,symbol:'✹',description:'7 Sorcery cards'},
+ {id:'legendary',name:'Legendary pack',price:34,symbol:'♛',description:'7 Legendary cards'},
+ {id:'flying',name:'Skyborne pack',price:22,symbol:'↟',description:'7 creatures with Flying'},
+ {id:'venom',name:'Venom pack',price:24,symbol:'♢',description:'7 creatures with Deathtouch, Infect or Toxic'},
+ {id:'firststrike',name:'First Strike pack',price:22,symbol:'⚔',description:'7 creatures with First Strike or Double Strike'}
 ];
 const CAMP_REWARDS = {
  treasure:{name:'Treasure',symbol:'◇',cost:0,description:'Sacrifice: add 1 floating generic mana.'},
@@ -79,7 +87,16 @@ renderBattle=function(){syncCampTokens(state.battle);sourceBattleRender34();};
 function packCandidates(type,source=state.pool.length?state.pool:BUNDLED_CARDS){
  const unique=[...new Map(playableCards(source).filter(card=>!isLand(card)).map(card=>[card.name,card])).values()];
  if(type==='mythic')return unique.filter(card=>['mythic','rare','uncommon'].includes(card.rarity));
- return unique.filter(card=>type==='equipment'?/\bEquipment\b/.test(card.type_line):type==='instant'?isInstant(card):isCreature(card));
+ const typeLines={equipment:'Equipment',artifact:'Artifact',enchantment:'Enchantment',aura:'Aura',sorcery:'Sorcery',legendary:'Legendary'};
+ if(typeLines[type])return unique.filter(card=>new RegExp(`\\b${typeLines[type]}\\b`).test(card.type_line));
+ if(type==='instant')return unique.filter(isInstant);
+ if(type==='creature')return unique.filter(isCreature);
+ if(['flying','venom','firststrike'].includes(type))return unique.filter(card=>{
+  if(!isCreature(card))return false;
+  const keywords=creatureKeywords(card);
+  return type==='flying'?hasCreatureKeyword(keywords,'flying'):type==='venom'?(keywords.deathtouch||keywords.infect||keywords.toxic):(hasCreatureKeyword(keywords,'first strike')||hasCreatureKeyword(keywords,'double strike'));
+ });
+ return [];
 }
 function buildShopPack(type){
  const pool=packCandidates(type);if(pool.length<PACK_SIZE)return null;

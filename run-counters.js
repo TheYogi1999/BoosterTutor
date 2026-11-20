@@ -4,7 +4,7 @@ const RUN_COUNTERS60 = {
  lifelink:{name:'Lifelink',price:20,symbol:'♥',description:'Its damage restores that much life to you.'},
  flying:{name:'Flying',price:18,symbol:'↟',description:'Can attack flying foes; evades ground blockers.'},
  deathtouch:{name:'Deathtouch',price:24,symbol:'◆',description:'Any combat damage it deals to a monster is lethal.'},
- toxic:{name:'Toxic 1',price:18,symbol:'☣',description:'Combat damage also gives the hit monster 1 poison counter.'},
+ toxic:{name:'Toxic 1',price:18,symbol:'<svg class="toxic-vial94" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M9 3h6m-5 0v6l-4.5 9a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m8.5 14-2 4a1 1 0 0 0 .9 1.5h9.2a1 1 0 0 0 .9-1.5l-2-4Z" fill="currentColor" opacity=".3"/><path d="m10 15 4 4m0-4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="11.5" r=".8" fill="currentColor"/></svg>',description:'Combat damage also gives the hit monster 1 poison counter.'},
  trample:{name:'Trample',price:15,symbol:'➶',description:'Excess combat damage reaches another legal monster.'},
  vigilance:{name:'Vigilance',price:17,symbol:'◇',description:'Attacking does not tap this creature.'},
  mystery:{name:'Mystery',price:14,symbol:'?',description:'A random run counter. Revealed only when applied.'},
@@ -85,7 +85,7 @@ function renderCounterOffers60(){
  if(!shop.counters60)shop.counters60=shuffle(Object.keys(RUN_COUNTERS60)).slice(0,3).map(kind=>({kind,sold:false}));
  $('#shop-counter-grid').innerHTML=shop.counters60.map((offer,index)=>{
   const type=RUN_COUNTERS60[offer.kind],legal=counterShopTargets60(offer.kind).length>0;
-  return `<article class="counter-offer${offer.sold?' sold':''}"><span class="counter-icon" aria-hidden="true">${type.symbol}</span><div><b>${typeof keywordText61==='function'?keywordText61(type.name):type.name}</b><small>${type.description}</small></div><button type="button" class="quiet-button" data-buy-counter="${index}" ${offer.sold||!legal||(state.coins||0)<type.price?'disabled':''}>${offer.sold?'SOLD':!legal?'No target':`${type.price} coins`}</button></article>`;
+  return `<article data-counter-kind="${offer.kind}" class="counter-offer${offer.sold?' sold':''}"><span class="counter-icon" aria-hidden="true">${type.symbol}</span><div><b>${typeof keywordText61==='function'?keywordText61(type.name):type.name}</b><small>${type.description}</small></div><button type="button" class="quiet-button" data-buy-counter="${index}" ${offer.sold||!legal||(state.coins||0)<type.price?'disabled':''}>${offer.sold?'SOLD':!legal?'No target':`${type.price} coins`}</button></article>`;
  }).join('');
 }
 const baseCounterShop60=renderShop;

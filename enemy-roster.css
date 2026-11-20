@@ -8,3 +8,8 @@
 .portrait-thornstag{--portrait-x:33.9%;--portrait-y:100%}
 .portrait-moonmyconid{--portrait-x:66.1%;--portrait-y:100%}
 .portrait-abyssleviathan{--portrait-x:98.3%;--portrait-y:100%}
+
+/* Keep heads, horns and wings visible instead of clipping them into an arch. */
+.game-shell .monster-figure .walker-portrait,
+.collection-monster .walker-portrait,
+.enemy-choice74 .enemy-choice-art74 .walker-portrait{border-radius:6px;mask-image:none;-webkit-mask-image:none}

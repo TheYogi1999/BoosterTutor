@@ -52,3 +52,6 @@ html.fixed-game .token-action-dialog[data-kind="permanent"]{max-height:700px;ove
 .poison-hit60 i{background:radial-gradient(circle,#b9f47c77,transparent 70%)}
 
 .game-shell .shop-offer .draft-card-summary>span{flex-shrink:0}
+
+.counter-offer[data-counter-kind="toxic"] .counter-icon{color:#b7e680;display:grid;place-items:center;filter:drop-shadow(0 0 5px #9bd65333)}
+.toxic-vial94{display:block;width:26px;height:26px;overflow:visible}
