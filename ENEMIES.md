@@ -1,4 +1,11 @@
-# Enemy roster expansion — v0.89
+# Enemy roster expansions
+
+## v0.90 — 42 enemies
+
+Six additional enemies, explicit color identities for the complete roster, Sliver
+synergies and boss color protection are documented in [COLOR_PROTECTION.md](COLOR_PROTECTION.md).
+
+## v0.89 — 36 enemies
 
 Eight new original enemies bring the shared roster to 36 enemies. Normal encounters,
 late encounter waves, Precon runs and Immortal runs all use the same roster. Existing

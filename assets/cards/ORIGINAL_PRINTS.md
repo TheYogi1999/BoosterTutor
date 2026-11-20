@@ -162,3 +162,20 @@ The title shows all three English paper prints in shuffled positions. Unhinged #
 - Mithril Coat — The Lord of the Rings: Tales of Middle-earth (2023-06-23): https://scryfall.com/card/ltr/245/mithril-coat?utm_source=api
 
 Elvish Archers uses Beta to match the corrected Oracle 2/1 stats; Alpha printed 1/2.
+
+## v0.90 — Color protection
+
+- **White Knight** — Limited Edition Alpha (1993-08-05): https://scryfall.com/card/lea/43/white-knight?utm_source=api · `assets/cards/50abfba8-c9f9-4ebf-965a-4b425fe83129.jpg`
+- **Black Knight** — Limited Edition Alpha (1993-08-05): https://scryfall.com/card/lea/94/black-knight?utm_source=api · `assets/cards/c1662949-0d69-49a3-8c69-daf10717ed4e.jpg`
+- **Silver Knight** — Scourge (2003-05-26): https://scryfall.com/card/scg/23/silver-knight?utm_source=api · `assets/cards/93f559da-08ad-402d-8c6b-3050bce5867b.jpg`
+- **Paladin en-Vec** — Exodus (1998-06-15): https://scryfall.com/card/exo/12/paladin-en-vec?utm_source=api · `assets/cards/bf1ea89d-4b9d-455f-a7f4-a26026e0c272.jpg`
+- **Voice of Law** — Urza's Saga (1998-10-12): https://scryfall.com/card/usg/55/voice-of-law?utm_source=api · `assets/cards/daec52a4-02da-4bff-aff4-5247baed1326.jpg`
+- **Voice of Grace** — Urza's Saga (1998-10-12): https://scryfall.com/card/usg/54/voice-of-grace?utm_source=api · `assets/cards/72e8eb3b-3ebf-426c-8dc8-138ec9b7c671.jpg`
+- **Voice of Duty** — Urza's Destiny (1999-06-07): https://scryfall.com/card/uds/23/voice-of-duty?utm_source=api · `assets/cards/1c648e59-c872-4e04-b45f-2729b42410af.jpg`
+- **Voice of Reason** — Urza's Destiny (1999-06-07): https://scryfall.com/card/uds/24/voice-of-reason?utm_source=api · `assets/cards/ed3d5a10-6d4b-4383-b400-7323f2b4670e.jpg`
+- **Black Ward** — Limited Edition Alpha (1993-08-05): https://scryfall.com/card/lea/5/black-ward?utm_source=api · `assets/cards/15967a39-303f-457d-bcde-51837c8d63e1.jpg`
+- **Blue Ward** — Limited Edition Alpha (1993-08-05): https://scryfall.com/card/lea/8/blue-ward?utm_source=api · `assets/cards/93f9f0f2-e1cc-4740-888c-1336c6de0a27.jpg`
+- **Red Ward** — Limited Edition Alpha (1993-08-05): https://scryfall.com/card/lea/33/red-ward?utm_source=api · `assets/cards/e0c64c01-c2aa-470b-88c6-3d3e4a969649.jpg`
+- **Green Ward** — Limited Edition Alpha (1993-08-05): https://scryfall.com/card/lea/20/green-ward?utm_source=api · `assets/cards/1f6118b2-fe01-425a-a2ed-6d7c42286c8e.jpg`
+- **Gods Willing** — Theros (2013-09-27): https://scryfall.com/card/ths/16/gods-willing?utm_source=api · `assets/cards/abafabb3-b2e7-4d78-b4b7-d8f701d3ee8b.jpg`
+- **Stave Off** — Magic 2012 (2011-07-15): https://scryfall.com/card/m12/36/stave-off?utm_source=api · `assets/cards/3bb09157-5d7a-4da2-92b6-9354489e607f.jpg`

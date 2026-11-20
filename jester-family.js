@@ -174,7 +174,7 @@ function withJesterWard65(b,target,source,effect,done){
  openJesterChoice65({battle:b,title:`${source} · Ward (${cost} mana)`,instruction:`Pay ${cost} generic mana or this triggered ability is countered. This is an ability, not a spell.`,options:[...(b.mana>=cost?[{label:`Pay ${cost} mana`,pay:true}]:[]),{label:'Let the ability be countered',pay:false}],accept:selected=>{if(selected[0].pay&&payMana(cost,b))resolve();else{addLog(`${source}'s ability is countered by Ward.`);done();}}});
 }
 function notifySacrifice65(b,sources=havocSources65(b)){
- for(const source of sources)queueJester65(b,done=>openJesterChoice65({battle:b,title:'Havoc Jester · sacrifice trigger',instruction:'A permanent was sacrificed. Choose any creature or your life for 1 damage. Enemy Hexproof and Ward apply.',options:jesterTargetOptions65(b),accept:selected=>withJesterWard65(b,selected[0].target,'Havoc Jester',unit=>{
+ for(const source of sources)queueJester65(b,done=>openJesterChoice65({battle:b,title:'Havoc Jester · sacrifice trigger',instruction:'A permanent was sacrificed. Choose any creature or your life for 1 damage. Enemy Hexproof and Ward apply.',options:jesterTargetOptions65(b,false,source),accept:selected=>withJesterWard65(b,selected[0].target,'Havoc Jester',unit=>{
   if(selected[0].target.side==='life'){state.playerHealth-=1;playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(1);}else if(unit?.owner==='enemy')damageFirstEnemy(1,unit);else if(unit)unit.damage=(unit.damage||0)+1;
   if(unit&&hasCreatureKeyword(source,'deathtouch')){unit.deathtouchDamage=true;if(unit.owner==='enemy')unit.health=0;}gainLifelinkLife(source,'player',1,b);if(state.playerHealth<=0)endRun(false);
  },done)}));
@@ -185,7 +185,7 @@ const baseFamilyPermanentSac65=sacrificePermanent55;
 sacrificePermanent55=function(key,b){const sources=havocSources65(b),result=baseFamilyPermanentSac65(key,b);if(result&&!key.startsWith('player:'))notifySacrifice65(b,sources);return result;};
 function onPlayerSpellCast65(card,b){
  if(!/\{[^}]*R[^}]*\}/.test(card.mana_cost||''))return;
- for(const source of b.creatures.filter(u=>u.card.name==='Goblin Battle Jester'))queueJester65(b,done=>{const options=jesterTargetOptions65(b,true);if(!options.length)return done();openJesterChoice65({battle:b,title:'Goblin Battle Jester · red spell',instruction:'Roguelike variant: choose an enemy that cannot retaliate against your attacks this turn. Hexproof and Ward apply. Triggers when you cast a red spell, even if that spell is countered.',options,accept:selected=>withJesterWard65(b,selected[0].target,source.card.name,unit=>{unit.noRetaliation65=b.turn;addLog(`${unit.card.name} cannot retaliate against your attacks this turn.`);},done)});});
+ for(const source of b.creatures.filter(u=>u.card.name==='Goblin Battle Jester'))queueJester65(b,done=>{const options=jesterTargetOptions65(b,true,source);if(!options.length)return done();openJesterChoice65({battle:b,title:'Goblin Battle Jester · red spell',instruction:'Roguelike variant: choose an enemy that cannot retaliate against your attacks this turn. Hexproof and Ward apply. Triggers when you cast a red spell, even if that spell is countered.',options,accept:selected=>withJesterWard65(b,selected[0].target,source.card.name,unit=>{unit.noRetaliation65=b.turn;addLog(`${unit.card.name} cannot retaliate against your attacks this turn.`);},done)});});
 }
 const baseFamilyCombat65=resolveCombatDamage;
 resolveCombatDamage=function(attackers,assignments,side='player',onDamageStep=null){

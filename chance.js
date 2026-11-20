@@ -166,7 +166,7 @@ resolveDiceEffect50=function(effect,target,context,resume){
   const collect=()=>{
    if(state.battle!==battle||battle.phase==='complete')return;
    if(wins>=1)resolveReviewedEffect({kind:'damage',amount:3},target,context);
-   if(wins>=2)for(const enemy of [...battle.enemyCreatures])damageFirstEnemy(6,enemy);
+   if(wins>=2)for(const enemy of [...battle.enemyCreatures])damageFirstEnemy(6,enemy,context.card);
    if(wins>=3){for(let n=0;n<9&&battle.phase!=='complete';n++)drawOneCard();if(battle.phase!=='complete'){battle.lands.forEach(land=>{land.tapped=false;});syncMana(battle);}}
    if(battle.phase!=='complete')resume();
   };

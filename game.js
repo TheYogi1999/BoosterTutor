@@ -9,7 +9,7 @@ const STARTING_LIFE = 20;
 const CARD_POOL_FILE = 'card-pool.txt';
 const COLLECTION_API = 'https://api.scryfall.com/cards/collection';
 const SEARCH_API = 'https://api.scryfall.com/cards/search?q=';
-const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v6';
+const CARD_CACHE_KEY = 'booster-tutor-reviewed-pool-v7';
 const CARD_CACHE_TTL = 12 * 60 * 60 * 1000;
 const SEEN_CARD_KEY = 'booster-tutor-seen-cards-v1';
 const seenCardKeys = new Set();
@@ -1690,6 +1690,10 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
   const battle = state.battle;
   const lure = attackingSide === 'enemy' ? activeLure70(battle) : null;
   if (lure) assignments = new Map(attackers.map(attacker => [attacker.id, [lure]]));
+  // The normal step remembers who had First/Double strike when the first step began.
+  // Losing a shared Sliver ability between steps must not produce a second normal hit.
+  const firstStrikers = new Set([...attackers, ...[...assignments.values()].flatMap(group => Array.isArray(group) ? group : group ? [group] : [])].filter(unit => hasCreatureKeyword(unit, 'first strike') || hasCreatureKeyword(unit, 'double strike')));
+  const dealsThisStep = (unit, first) => first ? firstStrikers.has(unit) : !firstStrikers.has(unit) || hasCreatureKeyword(unit, 'double strike');
   let damageToPlayer = 0;
   let damageToOpponent = 0;
   const enemyLifelinkEvents = [];
@@ -1708,7 +1712,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
       const menaceUnblocked = !lure && attackingSide === 'enemy' && hasCreatureKeyword(attacker,'menace') && group.length < 2;
       if (menaceUnblocked) blockers = [];
       if (!group.length || menaceUnblocked) {
-        if (!dealsInCombatStep(attacker, firstStep)) continue;
+        if (!dealsThisStep(attacker, firstStep)) continue;
         if (attackingSide === 'enemy') {
           const amount = Math.max(0, attacker.power);
           damageToPlayer += amount;
@@ -1716,7 +1720,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
         } else damageToOpponent += damageFirstEnemy(Math.max(0, attacker.power));
         continue;
       }
-      if (dealsInCombatStep(attacker, firstStep)) {
+      if (dealsThisStep(attacker, firstStep)) {
         let remaining = Math.max(0, attacker.power);
         blockers.forEach((blocker, index) => {
           const lethal = hasCreatureKeyword(attacker, 'deathtouch') ? 1 : blocker.owner === 'enemy' ? (typeof lethalToEnemy60 === 'function' ? lethalToEnemy60(attacker, blocker) : Math.max(0, blocker.health)) : Math.max(0, blocker.toughness - (blocker.damage || 0));
@@ -1728,8 +1732,8 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
       }
       for (const blocker of blockers) {
         if (lure && lureRetaliated.has(blocker.id)) continue;
-        if (lure && dealsInCombatStep(blocker, firstStep)) lureRetaliated.add(blocker.id);
-        if (dealsInCombatStep(blocker, firstStep) && (attackingSide !== 'player' || (canBlockCreature(blocker,attacker) && !hasCreatureKeyword(attacker,'menace')))) exchanges.push({ source: blocker, target: attacker, controller: attackingSide === 'player' ? 'enemy' : 'player', amount: Math.max(0, blocker.power) });
+        if (lure && dealsThisStep(blocker, firstStep)) lureRetaliated.add(blocker.id);
+        if (dealsThisStep(blocker, firstStep) && (attackingSide !== 'player' || (canBlockCreature(blocker,attacker) && !hasCreatureKeyword(attacker,'menace')))) exchanges.push({ source: blocker, target: attacker, controller: attackingSide === 'player' ? 'enemy' : 'player', amount: Math.max(0, blocker.power) });
       }
     }
     // Eligibility is captured before applying the step: normal damage is simultaneous.
@@ -1743,7 +1747,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
     battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
     for (const hit of overflow) {
       if (hit.side === 'enemy') { damageToPlayer += hit.amount; if (hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:hit.amount}); }
-      else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? (typeof poisonOverflow60 === 'function' && (hit.source.infect || hit.source.toxic) ? poisonOverflow60(hit.source, next, hit.amount, battle) : damageFirstEnemy(hit.amount,next)) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
+      else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? (typeof poisonOverflow60 === 'function' && (hit.source.infect || hit.source.toxic) ? poisonOverflow60(hit.source, next, hit.amount, battle) : damageFirstEnemy(hit.amount,next,hit.source)) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
     }
     onDamageStep?.({firstStep,damageToPlayer:damageToPlayer-previousPlayerDamage,enemyLifelinkEvents:enemyLifelinkEvents.slice(previousEnemyEvents)});
     if (battle.phase === 'complete') break;

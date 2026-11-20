@@ -5906,6 +5906,418 @@ const BUNDLED_CARDS = [
       "rarity": "rare",
       "uri": "https://scryfall.com/card/ltr/245/mithril-coat?utm_source=api"
     }
+  },
+  {
+    "id": "660f69ef-c04f-4f53-80e6-8190549ab12a",
+    "name": "White Knight",
+    "mana_cost": "{W}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)\nProtection from black (This creature can't be blocked, targeted, dealt damage, or enchanted by anything black.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/50abfba8-c9f9-4ebf-965a-4b425fe83129.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/5/0/50abfba8-c9f9-4ebf-965a-4b425fe83129.jpg?1783948709",
+    "uri": "https://scryfall.com/card/ddg/9/white-knight?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "50abfba8-c9f9-4ebf-965a-4b425fe83129",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/43/white-knight?utm_source=api"
+    }
+  },
+  {
+    "id": "db593d4f-d3c1-48ae-a55d-4b61d2cb5cc2",
+    "name": "Black Knight",
+    "mana_cost": "{B}{B}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "First strike (This creature deals combat damage before creatures without first strike.)\nProtection from white (This creature can't be blocked, targeted, dealt damage, or enchanted by anything white.)",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "First strike",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/c1662949-0d69-49a3-8c69-daf10717ed4e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/c/1/c1662949-0d69-49a3-8c69-daf10717ed4e.jpg?1783948698",
+    "uri": "https://scryfall.com/card/me4/71/black-knight?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "c1662949-0d69-49a3-8c69-daf10717ed4e",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/94/black-knight?utm_source=api"
+    }
+  },
+  {
+    "id": "297316bd-e91b-4b18-9d13-31dd51c92cce",
+    "name": "Silver Knight",
+    "mana_cost": "{W}{W}",
+    "cmc": 2.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "First strike, protection from red",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/93f559da-08ad-402d-8c6b-3050bce5867b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/3/93f559da-08ad-402d-8c6b-3050bce5867b.jpg?1783944890",
+    "uri": "https://scryfall.com/card/ddg/8/silver-knight?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "93f559da-08ad-402d-8c6b-3050bce5867b",
+      "set": "scg",
+      "set_name": "Scourge",
+      "released_at": "2003-05-26",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/scg/23/silver-knight?utm_source=api"
+    }
+  },
+  {
+    "id": "6ebea0dd-7d31-4688-a6c4-0e57d08de100",
+    "name": "Paladin en-Vec",
+    "mana_cost": "{1}{W}{W}",
+    "cmc": 3.0,
+    "type_line": "Creature — Human Knight",
+    "oracle_text": "First strike, protection from black and from red (This creature deals combat damage before creatures without first strike. It can't be blocked, targeted, dealt damage, or enchanted by anything black or red.)",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "First strike",
+      "Protection"
+    ],
+    "rarity": "rare",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/bf1ea89d-4b9d-455f-a7f4-a26026e0c272.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/b/f/bf1ea89d-4b9d-455f-a7f4-a26026e0c272.jpg?1783946531",
+    "uri": "https://scryfall.com/card/tpr/23/paladin-en-vec?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "bf1ea89d-4b9d-455f-a7f4-a26026e0c272",
+      "set": "exo",
+      "set_name": "Exodus",
+      "released_at": "1998-06-15",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/exo/12/paladin-en-vec?utm_source=api"
+    }
+  },
+  {
+    "id": "daec52a4-02da-4bff-aff4-5247baed1326",
+    "name": "Voice of Law",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Angel",
+    "oracle_text": "Flying, protection from red",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/daec52a4-02da-4bff-aff4-5247baed1326.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/a/daec52a4-02da-4bff-aff4-5247baed1326.jpg?1783946365",
+    "uri": "https://scryfall.com/card/usg/55/voice-of-law?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "daec52a4-02da-4bff-aff4-5247baed1326",
+      "set": "usg",
+      "set_name": "Urza's Saga",
+      "released_at": "1998-10-12",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/usg/55/voice-of-law?utm_source=api"
+    }
+  },
+  {
+    "id": "72e8eb3b-3ebf-426c-8dc8-138ec9b7c671",
+    "name": "Voice of Grace",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Angel",
+    "oracle_text": "Flying, protection from black",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/72e8eb3b-3ebf-426c-8dc8-138ec9b7c671.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/2/72e8eb3b-3ebf-426c-8dc8-138ec9b7c671.jpg?1783946365",
+    "uri": "https://scryfall.com/card/usg/54/voice-of-grace?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "72e8eb3b-3ebf-426c-8dc8-138ec9b7c671",
+      "set": "usg",
+      "set_name": "Urza's Saga",
+      "released_at": "1998-10-12",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/usg/54/voice-of-grace?utm_source=api"
+    }
+  },
+  {
+    "id": "1c648e59-c872-4e04-b45f-2729b42410af",
+    "name": "Voice of Duty",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Angel",
+    "oracle_text": "Flying, protection from green",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/1c648e59-c872-4e04-b45f-2729b42410af.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/c/1c648e59-c872-4e04-b45f-2729b42410af.jpg?1783946081",
+    "uri": "https://scryfall.com/card/uds/23/voice-of-duty?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "1c648e59-c872-4e04-b45f-2729b42410af",
+      "set": "uds",
+      "set_name": "Urza's Destiny",
+      "released_at": "1999-06-07",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/uds/23/voice-of-duty?utm_source=api"
+    }
+  },
+  {
+    "id": "ed3d5a10-6d4b-4383-b400-7323f2b4670e",
+    "name": "Voice of Reason",
+    "mana_cost": "{3}{W}",
+    "cmc": 4.0,
+    "type_line": "Creature — Angel",
+    "oracle_text": "Flying, protection from blue",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Protection"
+    ],
+    "rarity": "uncommon",
+    "power": "2",
+    "toughness": "2",
+    "image": "assets/cards/ed3d5a10-6d4b-4383-b400-7323f2b4670e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/d/ed3d5a10-6d4b-4383-b400-7323f2b4670e.jpg?1783946081",
+    "uri": "https://scryfall.com/card/uds/24/voice-of-reason?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "ed3d5a10-6d4b-4383-b400-7323f2b4670e",
+      "set": "uds",
+      "set_name": "Urza's Destiny",
+      "released_at": "1999-06-07",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/uds/24/voice-of-reason?utm_source=api"
+    }
+  },
+  {
+    "id": "218b1327-5f76-4ee2-a93d-d2ba412043c2",
+    "name": "Black Ward",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Enchantment — Aura",
+    "oracle_text": "Enchant creature\nEnchanted creature has protection from black. This effect doesn't remove this Aura.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Enchant"
+    ],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/15967a39-303f-457d-bcde-51837c8d63e1.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/5/15967a39-303f-457d-bcde-51837c8d63e1.jpg?1783948717",
+    "uri": "https://scryfall.com/card/4ed/8/black-ward?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "15967a39-303f-457d-bcde-51837c8d63e1",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/5/black-ward?utm_source=api"
+    }
+  },
+  {
+    "id": "de62c833-c66b-442e-99ed-99ccd8eca024",
+    "name": "Blue Ward",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Enchantment — Aura",
+    "oracle_text": "Enchant creature\nEnchanted creature has protection from blue. This effect doesn't remove this Aura.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Enchant"
+    ],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/93f9f0f2-e1cc-4740-888c-1336c6de0a27.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/9/3/93f9f0f2-e1cc-4740-888c-1336c6de0a27.jpg?1783948716",
+    "uri": "https://scryfall.com/card/4ed/10/blue-ward?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "93f9f0f2-e1cc-4740-888c-1336c6de0a27",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/8/blue-ward?utm_source=api"
+    }
+  },
+  {
+    "id": "543e8ec0-f36a-46a6-b7b1-e983e90a091a",
+    "name": "Red Ward",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Enchantment — Aura",
+    "oracle_text": "Enchant creature\nEnchanted creature has protection from red. This effect doesn't remove this Aura.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Enchant"
+    ],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/e0c64c01-c2aa-470b-88c6-3d3e4a969649.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/0/e0c64c01-c2aa-470b-88c6-3d3e4a969649.jpg?1783948710",
+    "uri": "https://scryfall.com/card/4ed/44/red-ward?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "e0c64c01-c2aa-470b-88c6-3d3e4a969649",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/33/red-ward?utm_source=api"
+    }
+  },
+  {
+    "id": "b7548dc7-11dc-4611-85a5-71bdb48d8a62",
+    "name": "Green Ward",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Enchantment — Aura",
+    "oracle_text": "Enchant creature\nEnchanted creature has protection from green. This effect doesn't remove this Aura.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Enchant"
+    ],
+    "rarity": "uncommon",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/1f6118b2-fe01-425a-a2ed-6d7c42286c8e.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/f/1f6118b2-fe01-425a-a2ed-6d7c42286c8e.jpg?1783948713",
+    "uri": "https://scryfall.com/card/4ed/27/green-ward?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "1f6118b2-fe01-425a-a2ed-6d7c42286c8e",
+      "set": "lea",
+      "set_name": "Limited Edition Alpha",
+      "released_at": "1993-08-05",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/lea/20/green-ward?utm_source=api"
+    }
+  },
+  {
+    "id": "138f0e49-71d5-4582-92be-797e753f0f42",
+    "name": "Gods Willing",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Target creature you control gains protection from the color of your choice until end of turn. (It can't be blocked, targeted, dealt damage, enchanted, or equipped by anything of that color.)\nScry 1.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Scry"
+    ],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/abafabb3-b2e7-4d78-b4b7-d8f701d3ee8b.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/b/abafabb3-b2e7-4d78-b4b7-d8f701d3ee8b.jpg?1783939814",
+    "uri": "https://scryfall.com/card/clu/63/gods-willing?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "abafabb3-b2e7-4d78-b4b7-d8f701d3ee8b",
+      "set": "ths",
+      "set_name": "Theros",
+      "released_at": "2013-09-27",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ths/16/gods-willing?utm_source=api"
+    }
+  },
+  {
+    "id": "8257cc36-4886-449a-bb45-51f6abf09e82",
+    "name": "Stave Off",
+    "mana_cost": "{W}",
+    "cmc": 1.0,
+    "type_line": "Instant",
+    "oracle_text": "Target creature gains protection from the color of your choice until end of turn.",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [],
+    "rarity": "common",
+    "power": "",
+    "toughness": "",
+    "image": "assets/cards/3bb09157-5d7a-4da2-92b6-9354489e607f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/3/b/3bb09157-5d7a-4da2-92b6-9354489e607f.jpg?1783941099",
+    "uri": "https://scryfall.com/card/ddn/61/stave-off?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "3bb09157-5d7a-4da2-92b6-9354489e607f",
+      "set": "m12",
+      "set_name": "Magic 2012",
+      "released_at": "2011-07-15",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/m12/36/stave-off?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

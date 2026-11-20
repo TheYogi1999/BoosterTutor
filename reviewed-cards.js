@@ -47,7 +47,7 @@ function settleReviewed66(b=state.battle){
 function onCardDrawn72(b,card){
  for(const source of b.creatures.filter(u=>u.card.name==='Niv-Mizzet, the Firemind'&&creatureAlive(u))){
   const snapshot=snapshotSource66(source);
-  queueJester65(b,done=>openJesterChoice65({battle:b,title:'Niv-Mizzet · draw trigger',instruction:`You drew ${card.name}. Choose any target for 1 damage. Hexproof and Ward apply. This trigger resolves after the current spell or ability.`,options:jesterTargetOptions65(b),accept:chosen=>withJesterWard65(b,chosen[0].target,source.card.name,()=>{dealAbility66(b.creatures.includes(source)?source:snapshot,chosen[0].target,1,b);settleReviewed66(b);},done)}));
+  queueJester65(b,done=>openJesterChoice65({battle:b,title:'Niv-Mizzet · draw trigger',instruction:`You drew ${card.name}. Choose any target for 1 damage. Hexproof and Ward apply. This trigger resolves after the current spell or ability.`,options:jesterTargetOptions65(b,false,source),accept:chosen=>withJesterWard65(b,chosen[0].target,source.card.name,()=>{dealAbility66(b.creatures.includes(source)?source:snapshot,chosen[0].target,1,b);settleReviewed66(b);},done)}));
  }
 }
 function announceEntry66(unit,b=state.battle){
@@ -70,7 +70,7 @@ onCreatureEntered=function(unit){
  }
  baseRescueEntry66(unit);announceEntry66(unit,b);
  if(unit.card.name==='Murderous Redcap'){
-  queueJester65(b,done=>openJesterChoice65({battle:b,title:'Murderous Redcap · enters',instruction:'Choose any target. Damage equals its power when this trigger resolves (last known power if it left). Hexproof and Ward apply.',options:jesterTargetOptions65(b),accept:options=>withJesterWard65(b,options[0].target,unit.card.name,()=>{const source=b.creatures.includes(unit)?unit:unit.lastKnown66||snapshotSource66(unit);dealAbility66(source,options[0].target,source.power,b);},done)}));
+  queueJester65(b,done=>openJesterChoice65({battle:b,title:'Murderous Redcap · enters',instruction:'Choose any target. Damage equals its power when this trigger resolves (last known power if it left). Hexproof and Ward apply.',options:jesterTargetOptions65(b,false,unit),accept:options=>withJesterWard65(b,options[0].target,unit.card.name,()=>{const source=b.creatures.includes(unit)?unit:unit.lastKnown66||snapshotSource66(unit);dealAbility66(source,options[0].target,source.power,b);},done)}));
  }
 };
 const baseRescueRefresh66=refreshPermanentEffects;

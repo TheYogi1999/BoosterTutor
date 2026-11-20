@@ -87,7 +87,7 @@ function prepareEnemySpells38(battle) {
   if(!['rune','scorch','drain'].includes(intent))continue;
   const name=intent==='rune'?'Shock':intent==='scorch'?'Lava Spike':"Sovereign's Bite";
   const card=[...BUNDLED_CARDS,...BUNDLED_ENEMY_SPELLS].find(card=>card.name===name);
-  const ally=intent==='rune'?battle.creatures.filter(unit=>!hasCreatureKeyword(unit,'hexproof')).sort((a,b)=>b.power-a.power)[0]:null;
+  const ally=intent==='rune'?battle.creatures.filter(unit=>!hasCreatureKeyword(unit,'hexproof')&&(typeof protectedFrom90!=='function'||!protectedFrom90(unit,card))).sort((a,b)=>b.power-a.power)[0]:null;
   const target=ally?{side:'player',id:ally.id}:{side:'life'};
   const spell={id:`enemy-spell-${state.nextPermanentId++}`,owner:'enemy',card,sourceId:enemy.id,sourceName:enemy.card.name,target,status:typeof requestEnemySpellRoll52==='function'?'awaiting-roll':'pending',intent,manaRemaining:enemy.runeMana||1};
   battle.enemySpells.push(spell);
