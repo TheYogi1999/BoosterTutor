@@ -2061,44 +2061,20 @@ function showToast(message) {
 }
 
 function primeBoosterOpeningSound() {
-  if (!effectsAudible75()) return;
-  // Start the media element silently in the tap gesture. Safari can then keep
-  // playing it when the visible tear happens after the travel animation.
-  const audio = $('#booster-audio');
-  soundEngine.resume().catch(() => {});
-  const context = soundEngine.context;
-  if (!soundEngine.packGain) {
-    soundEngine.packSource = context.createMediaElementSource(audio);
-    soundEngine.packGain = context.createGain();
-    soundEngine.packSource.connect(soundEngine.packGain);
-    soundEngine.packGain.connect(soundEngine.effectsGain);
-  }
-  soundEngine.packGain.gain.value = 0;
-  audio.currentTime = 0;
-  applyEffectsVolume75();
-  audio.play().catch(() => {});
+  return packAudio93.prime();
 }
 
 function playBoosterOpeningSound() {
-  if (!effectsAudible75()) return;
-  if (!soundEngine.packGain) primeBoosterOpeningSound();
-  const audio = $('#booster-audio');
-  if (soundEngine.packGain) soundEngine.packGain.gain.value = 1;
-  audio.currentTime = 0;
-  applyEffectsVolume75();
-  audio.play().catch(() => showToast('Click SOUND once to enable audio.'));
+  return packAudio93.play();
 }
 
 let boosterTravel = null;
 function cancelBoosterTravel() {
+  packAudio93.cancel();
   if (!boosterTravel) return;
   const travel = boosterTravel;
   boosterTravel = null;
   travel.animation?.cancel();
-  if (soundEngine.packGain) {
-    $('#booster-audio').pause();
-    $('#booster-audio').currentTime = 0;
-  }
   travel.pack.remove();
   $('#draft-screen').classList.remove('pack-travelling');
   $('#draft-grid').removeAttribute('aria-busy');
@@ -2116,6 +2092,7 @@ async function openCurrentBooster() {
   const transform = style.transform;
   const pulse = parseFloat(style.scale) || 1;
   state.boosterSealed = false;
+  try { primeBoosterOpeningSound(); } catch { /* Audio is optional. */ }
   if (reduced || !pack.animate) {
     renderDraft();
     animateBoosterOpening();
@@ -2123,7 +2100,6 @@ async function openCurrentBooster() {
   }
   const matrix = new DOMMatrixReadOnly(transform === 'none' ? undefined : transform);
   const angle = Math.atan2(matrix.b, matrix.a) * 180 / Math.PI;
-  try { primeBoosterOpeningSound(); } catch { /* Audio is optional. */ }
   const travel = { pack, cards: state.packs[state.activePack || 0], index: state.activePack || 0, revealed: false };
   boosterTravel = travel;
   const screen = $('#draft-screen');

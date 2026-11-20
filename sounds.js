@@ -6,7 +6,7 @@ function effectsAudible75(){return state.soundOn&&effectsPreferences75.volume>0;
 function applyEffectsVolume75(){
  const level=state.soundOn?effectsPreferences75.volume/100:0;
  if(soundEngine.effectsGain)soundEngine.effectsGain.gain.value=level;
- for(const [id,base] of [['booster-audio',.72],['title-intro-audio',.65],['play-start-audio',.65]]){const audio=document.querySelector('#'+id);if(audio){audio.volume=base*(id==='booster-audio'?1:effectsPreferences75.volume/100);audio.muted=!state.soundOn||!effectsPreferences75.volume;}}
+ for(const [id,base] of [['title-intro-audio',.65],['play-start-audio',.65]]){const audio=document.querySelector('#'+id);if(audio){audio.volume=base*(effectsPreferences75.volume/100);audio.muted=!state.soundOn||!effectsPreferences75.volume;}}
 }
 function renderEffectsControls75(){
  document.querySelector('#sound-toggle span').textContent=state.soundOn?'SFX ON':'SFX OFF';
@@ -33,7 +33,7 @@ function initializeEffectsControls75(){
 // Original, consistently mastered sound cues. No third-party samples.
 const SFX_CUES = {"select": {"start": 0, "duration": 0.085, "file": "assets/audio/select.wav"}, "grab": {"start": 0.26, "duration": 0.14}, "cancel": {"start": 0.5, "duration": 0.2}, "shuffle": {"start": 0.8, "duration": 0.62}, "creature": {"start": 1.52, "duration": 0.62}, "cast": {"start": 2.24, "duration": 0.55}, "attach": {"start": 2.89, "duration": 0.4}, "hit": {"start": 3.39, "duration": 0.34}, "heal": {"start": 3.83, "duration": 0.65}, "block": {"start": 4.58, "duration": 0.4}, "turn": {"start": 5.08, "duration": 0.38}, "victory": {"start": 5.56, "duration": 1.1}, "defeat": {"start": 6.76, "duration": 0.85}};
 const soundEngine = {
-  context: null, bus: null, effectsGain: null, buffer: null, loading: null, selectBuffer: null, selectLoading: null, packSource: null, packGain: null, voices: new Set(),
+  context: null, bus: null, effectsGain: null, buffer: null, loading: null, selectBuffer: null, selectLoading: null, voices: new Set(),
   async resume() {
     this.context ||= new (window.AudioContext || window.webkitAudioContext)();
     if (!this.bus) {
@@ -64,8 +64,6 @@ const soundEngine = {
   stop() {
     for (const voice of this.voices) { try { voice.stop(); } catch {} }
     this.voices.clear();
-    const pack = document.querySelector('#booster-audio');
-    if (pack) { pack.pause(); pack.currentTime = 0; }
   }
 };
 function playSfx(name) {
@@ -95,6 +93,7 @@ RECORDED_SFX.turn=['assets/audio/card-place.ogg',.17];
 RECORDED_SFX.block=['assets/audio/card-place.ogg',.25];
 const recordedBuffers=new Map();const originalPlaySfx=playSfx;let lastRecordedCue=0;
 Object.assign(RECORDED_SFX,{
+ 'pack-open':['assets/audio/pack-reveal.mp3',.72],
  draw:['assets/audio/action-previews/d1-paper-slide.mp3',.7],
  invalid:['assets/audio/action-previews/x3-retro-denied.mp3',.75],
  'enemy-hit':['assets/audio/action-previews/e3-retro-impact.mp3',.85],
@@ -106,7 +105,7 @@ Object.assign(RECORDED_SFX,{
  'receipt-finish':['assets/audio/receipt-previews/round3/r7-deck-settle.mp3',.8],
  'screen-transition':['assets/audio/receipt-previews/round2/t4-velvet-air.mp3',.8]
 });
-const selectedActionCues=['draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large','receipt-coin','receipt-finish','screen-transition'];
+const selectedActionCues=['pack-open','draw','invalid','enemy-hit','player-hit','enemy-death-small','enemy-death-medium','enemy-death-large','receipt-coin','receipt-finish','screen-transition'];
 // Use the enemy's physical kind, so Endless health/power scaling cannot change its voice.
 function enemyDefeatCue77(enemy){
  if(enemy.tier==='boss')return 'enemy-death-large';
@@ -123,7 +122,7 @@ function recordedSoundBuffer(path){
  }
  return loading;
 }
-function startRecordedVoice(name,buffer,when=null,scale=1){
+function startRecordedVoice(name,buffer,when=null,scale=1,output=soundEngine.bus){
  while(soundEngine.voices.size>=24){
   const oldest=soundEngine.voices.values().next().value;
   try{oldest.voiceGain?.gain.setTargetAtTime(0,soundEngine.context.currentTime,.008);oldest.stop(soundEngine.context.currentTime+.025);}catch{}
@@ -131,11 +130,50 @@ function startRecordedVoice(name,buffer,when=null,scale=1){
  }
  const source=soundEngine.context.createBufferSource(),gain=soundEngine.context.createGain();
  gain.gain.value=RECORDED_SFX[name][1]*scale;source.buffer=buffer;
- source.connect(gain);gain.connect(soundEngine.bus);source.voiceGain=gain;source.cueName=name;
+ source.connect(gain);gain.connect(output);source.voiceGain=gain;source.cueName=name;
  source.scheduledAt=when??soundEngine.context.currentTime;
  soundEngine.voices.add(source);source.onended=()=>soundEngine.voices.delete(source);source.start(source.scheduledAt);
  return source;
 }
+
+// A decoded, one-shot source avoids sticky HTML media errors and play/seek races.
+// Prime inside the input gesture, then start only when the visible pack tears.
+const packAudio93={pending:null,voice:null,generation:0,timer:0,
+ current(p){return Boolean(p&&this.pending===p&&p.generation===this.generation&&p.epoch===(soundEngine.epoch||0)&&effectsAudible75()&&!document.hidden&&state.screen===p.screen&&(state.activePack||0)===p.index&&state.packs?.[p.index]===p.cards);},
+ cancel(){
+  this.generation++;clearTimeout(this.timer);this.timer=0;this.pending=null;
+  if(this.voice){try{const now=soundEngine.context.currentTime;this.voice.voiceGain.gain.setTargetAtTime(0,now,.004);this.voice.stop(now+.02);}catch{}soundEngine.voices.delete(this.voice);this.voice=null;}
+ },
+ prime(){
+  this.cancel();if(!effectsAudible75()||document.hidden)return;
+  const p={generation:this.generation,epoch:soundEngine.epoch||0,screen:state.screen,index:state.activePack||0,cards:state.packs?.[state.activePack||0],requested:false,started:false};
+  this.pending=p;
+  // resume() creates the context synchronously, even if autoplay must await input.
+  p.running=soundEngine.resume().catch(()=>false);
+  p.ready=this.load(p).catch(()=>null);
+  return p;
+ },
+ async load(p){
+  for(let attempt=0;attempt<2;attempt++){
+   try{return await recordedSoundBuffer(RECORDED_SFX['pack-open'][0]);}
+   catch(error){if(attempt||!this.current(p))throw error;}
+  }
+ },
+ play(){
+  if(!effectsAudible75()||document.hidden){this.cancel();return;}
+  const p=this.current(this.pending)?this.pending:this.prime();if(!p||p.requested)return;
+  p.requested=true;p.requestedAt=Date.now();
+  // A late decode/unlock must never play on a later pack, after mute or after exit.
+  this.timer=setTimeout(()=>{if(this.pending===p&&!p.started)this.cancel();},2000);
+  Promise.all([p.running,p.ready]).then(([,buffer])=>{
+   if(!buffer||!this.current(p)||p.started||Date.now()-p.requestedAt>2000||soundEngine.context.state!=='running')return;
+   p.started=true;clearTimeout(this.timer);this.timer=0;
+   // Match the old pack's level and direct effects routing; music is independent.
+   const voice=startRecordedVoice('pack-open',buffer,null,1,soundEngine.effectsGain);this.voice=voice;
+   voice.addEventListener('ended',()=>{if(this.voice===voice)this.voice=null;},{once:true});
+  }).catch(()=>{});
+ }
+};
 playSfx=function(name){
  if(!effectsAudible75()||document.hidden)return;
  const entry=RECORDED_SFX[name];if(!entry)return originalPlaySfx(name);
@@ -181,7 +219,7 @@ function cancelDrawSounds(){
  for(const voice of [...soundEngine.voices])if(voice.cueName==='draw'){try{voice.stop();}catch{}soundEngine.voices.delete(voice);}
 }
 const originalStopSounds=soundEngine.stop.bind(soundEngine);
-soundEngine.stop=function(){this.epoch=(this.epoch||0)+1;cancelDrawSounds();lastActionCue.clear();originalStopSounds();};
+soundEngine.stop=function(){this.epoch=(this.epoch||0)+1;packAudio93.cancel();cancelDrawSounds();lastActionCue.clear();originalStopSounds();};
 let actionsWarmed=false;
 function warmActionSounds(event){
  if(!event.isTrusted||!effectsAudible75()||document.hidden||actionsWarmed)return;

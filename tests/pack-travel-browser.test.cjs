@@ -67,19 +67,18 @@ async function sealed(page){
     assert.equal(await page.locator('.pack-opening-flight').count(),0);
     assert.equal(await page.locator('.draft-option').first().isVisible(),true);
     assert.equal(await page.evaluate(()=>openingSounds),1);
-    // The actual HTML audio is unlocked silently during the tap, then rewound
-    // and made audible only when the pack arrives (also works with Safari's
-    // gesture requirement). This check uses the real decoded media element.
+    // The real buffer is prepared during the gesture, with no silent media play.
+    // Only the reveal creates a fresh, audible one-shot source.
     await page.emulateMedia({reducedMotion:'no-preference'});await sealed(page);
     await page.evaluate(()=>{state.soundOn=true;playBoosterOpeningSound=realPackSound;});
     await page.locator('.sealed-pack').click({force:true});
     await page.evaluate(()=>boosterTravel.animation.pause());
-    await page.waitForFunction(()=>soundEngine.packGain && !document.querySelector('#booster-audio').paused);
-    assert.equal(await page.evaluate(()=>soundEngine.packGain.gain.value),0,'travel audio stays silent');
+    await page.evaluate(()=>packAudio93.pending.ready.then(buffer=>{if(!buffer)throw Error('Pack audio did not decode')}));
+    assert.equal(await page.evaluate(()=>packAudio93.voice),null,'travel remains silent');
     await page.evaluate(()=>boosterTravel.animation.play());
-    await page.waitForFunction(()=>boosterTravel?.revealed);
-    assert.equal(await page.evaluate(()=>soundEngine.packGain.gain.value),1,'opening is audible at the first slot');
-    assert.equal(await page.locator('#booster-audio').evaluate(el=>el.paused),false);
+    await page.waitForFunction(()=>boosterTravel?.revealed&&packAudio93.voice?.cueName==='pack-open');
+    assert.ok(await page.evaluate(()=>packAudio93.voice.buffer.duration>1));
+    assert.equal(await page.evaluate(()=>soundEngine.voices.has(packAudio93.voice)),true);
     await page.waitForFunction(()=>!boosterTravel);
     await page.evaluate(()=>soundEngine.stop());
     assert.deepEqual(errors,[]);
