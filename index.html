@@ -91,8 +91,10 @@
     <script src="enemy-roster.js?v=0.89" defer></script>
     <link rel="stylesheet" href="enemy-roster.css?v=0.89" />
     <script src="color-protection.js?v=0.90" defer></script>
-    <script src="enemy-colors.js?v=0.90" defer></script>
-    <link rel="stylesheet" href="trading-post.css?v=0.90" />
+    <script src="enemy-colors.js?v=0.91" defer></script>
+    <script src="sliver-hive.js?v=0.91" defer></script>
+    <link rel="stylesheet" href="trading-post.css?v=0.91" />
+    <link rel="stylesheet" href="sliver-hive.css?v=0.91" />
   </head>
   <body>
     <div class="scanlines" aria-hidden="true"></div>
@@ -100,10 +102,10 @@
     <header class="topbar">
       <a class="brand" id="brand-home" href="#start" aria-label="Booster Tutor · return to title screen">
         <svg class="brand-cards" viewBox="0 0 64 56" aria-hidden="true"><rect x="8" y="10" width="28" height="39" rx="4" transform="rotate(-18 22 30)"/><rect x="22" y="6" width="28" height="39" rx="4" transform="rotate(12 36 26)"/><path d="m35 15 3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.90</span>
+        <span>BOOSTER TUTOR <small>Deckbuilding Roguelike</small></span><span class="brand-version" aria-label="Game version">v0.91</span>
       </a>
       <div class="topbar-right"><span class="coin-purse" aria-label="Run coins">◈ <b id="coin-count">0</b></span><button class="quiet-button" id="options-button">Options</button>
-        <span class="pixel-label" hidden><i class="status-dot"></i> v0.90 · <span id="global-phase">START</span></span>
+        <span class="pixel-label" hidden><i class="status-dot"></i> v0.91 · <span id="global-phase">START</span></span>
         <button class="quiet-button" id="music-settings" aria-label="Audio settings">♫ Audio</button>
         <button class="quiet-button" id="sound-toggle" aria-label="Mute sound effects" title="Mute sound effects">♪ <span>SFX ON</span></button>
       </div>
@@ -247,7 +249,7 @@
         <footer class="results-footer82"><span>Your expedition continues.</span><button id="results-continue" type="button" class="primary-button">CONTINUE →</button></footer>
       </section>
       <section class="screen shop-screen" id="shop-screen" aria-labelledby="shop-title">
-        <aside class="shopkeeper87 shopkeeper90" aria-label="Vey, the shopkeeper"><span class="shopkeeper-portrait87" role="img" aria-label="Vey, a silver-haired arcane curio dealer offering a glowing booster"></span><div class="shopkeeper-copy90"><span class="shopkeeper-name87">VEY · CURIO DEALER</span><p id="shopkeeper-greeting87">“Welcome, traveler. Your next lucky draw awaits.”</p><span class="shopkeeper-note90">A little luck. A lasting advantage.</span></div></aside>
+        <aside class="shopkeeper87 shopkeeper90" aria-label="Vey, the shopkeeper"><span class="shopkeeper-portrait87" role="img" aria-label="Vey, a silver-haired curio dealer in leather gloves, offering a glowing booster in his booster shop"></span><div class="shopkeeper-copy90"><span class="shopkeeper-name87">VEY · CURIO DEALER</span><p id="shopkeeper-greeting87">“Welcome, traveler. Your next lucky draw awaits.”</p><span class="shopkeeper-note90">A little luck. A lasting advantage.</span></div></aside>
         <div class="shop-heading"><div><span class="eyebrow" id="shop-location">BETWEEN ENCOUNTERS</span><h2 id="shop-title">Vey’s trading post</h2><p>Find your next advantage.</p></div><div class="shop-wallet"><span>YOUR COINS</span><b id="shop-coins">0</b></div></div>
         <div class="shop-grid" id="shop-grid" aria-label="Three cards for sale"></div>
         <div class="shop-pack" id="shop-pack" aria-label="Booster packs for sale"></div>

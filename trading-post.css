@@ -1,7 +1,7 @@
 /* Vey's lantern-lit trading post, laid out on the existing 1600 × 900 canvas. */
-.game-shell #shop-screen.active{display:grid!important;grid-template-columns:284px minmax(0,1fr);grid-template-rows:76px minmax(0,1fr) 122px 108px 48px;gap:16px 28px;padding:24px 34px!important;box-sizing:border-box;overflow:hidden;background-image:radial-gradient(ellipse at 10% 60%,#bd7b2926,transparent 60%),linear-gradient(120deg,#111e22f5,#10242ae8 60%,#121e25f5),var(--stage-scene);border:1px solid #bfa06944}
+.game-shell #shop-screen.active{display:grid!important;grid-template-columns:360px minmax(0,1fr);grid-template-rows:76px minmax(0,1fr) 122px 108px 48px;gap:16px 28px;padding:24px 34px!important;box-sizing:border-box;overflow:hidden;background-image:radial-gradient(ellipse at 10% 60%,#bd7b2926,transparent 60%),linear-gradient(120deg,#111e22f5,#10242ae8 60%,#121e25f5),var(--stage-scene);border:1px solid #bfa06944}
 .game-shell #shop-screen .shopkeeper90{grid-column:1;grid-row:1/5;display:block;position:relative;width:auto;min-width:0;max-width:none;height:auto;min-height:0;margin:0;overflow:hidden;border:1px solid #d3a45b66;border-radius:8px;background:#15272d;box-shadow:0 12px 38px #0005}
-.game-shell .shopkeeper90 .shopkeeper-portrait87{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;background-image:linear-gradient(0deg,#0b181df7 0%,#0b181d44 35%,transparent 60%),url('assets/portraits/vey-v90.webp');background-position:center,center 18%;background-size:cover;box-shadow:none}
+.game-shell .shopkeeper90 .shopkeeper-portrait87{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;background-image:linear-gradient(0deg,#0b181df7 0%,#0b181d44 35%,transparent 60%),url('assets/portraits/vey-v91.webp');background-position:center,60% 18%;background-size:cover;box-shadow:none}
 .shopkeeper-copy90{position:absolute;bottom:25px;left:22px;right:20px;z-index:1}
 .game-shell .shopkeeper90 .shopkeeper-name87{font:600 14px/1.5 var(--sans);letter-spacing:2px;color:#f1ce8f}
 .game-shell .shopkeeper90 #shopkeeper-greeting87{font:italic 24px/1.4 Georgia,serif;color:#fff0d7;margin:13px 0 18px;text-shadow:0 2px 9px #000}
@@ -13,9 +13,9 @@
 .game-shell #shop-screen .shop-wallet b{font:600 34px/1.2 var(--sans);color:#f8d28b}
 .game-shell #shop-screen .shop-wallet span{font-size:12px;letter-spacing:1px}
 .game-shell #shop-screen .shop-grid{grid-column:2;grid-row:2;width:auto;height:100%;min-height:0;margin:0;gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
-.game-shell #shop-screen .shop-offer{position:relative;height:100%;min-height:0;display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 15px 12px;border:1px solid #b5a07944;background:linear-gradient(150deg,#28404688,#102029ee);box-sizing:border-box;overflow:hidden;transition:border-color .15s,background .15s}
+.game-shell #shop-screen .shop-offer{position:relative;height:100%;min-height:0;display:flex;flex-direction:column;align-items:center;gap:7px;padding:36px 15px 12px;border:1px solid #b5a07944;background:linear-gradient(150deg,#28404688,#102029ee);box-sizing:border-box;overflow:visible;transition:border-color .15s,background .15s}
 .game-shell #shop-screen .shop-offer:hover{border-color:#e2bf7f88;background:linear-gradient(150deg,#314950bb,#152830ee)}
-.game-shell #shop-screen .shop-card-face,.game-shell #shop-screen .shop-card-face .card-image-wrap{width:118px!important;height:164px!important;flex:none}
+.game-shell #shop-screen .shop-card-face,.game-shell #shop-screen .shop-card-face .card-image-wrap{width:110.5px!important;height:154px!important;flex:none;overflow:visible!important}
 .game-shell #shop-screen .shop-offer .draft-card-name{width:100%;min-height:20px;font:500 18px/1.2 Georgia,serif!important;margin:4px 0 0;white-space:normal;text-align:center}
 .game-shell #shop-screen .shop-offer .draft-card-summary{flex:1;min-height:0;max-height:none!important;height:auto!important;width:100%;display:flex;flex-direction:column;gap:5px;overflow:auto!important;scrollbar-width:thin;padding-right:3px}
 .game-shell #shop-screen .shop-offer .draft-card-summary>span{flex-shrink:0;max-height:none!important;white-space:normal!important;-webkit-line-clamp:unset;overflow:visible!important;line-height:1.4}

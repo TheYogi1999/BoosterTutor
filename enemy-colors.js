@@ -23,17 +23,24 @@ let sliverCombatDepth90=0;
 const baseSliverCombat90=resolveCombatDamage;
 resolveCombatDamage=function(...args){sliverCombatDepth90++;try{return baseSliverCombat90(...args);}finally{sliverCombatDepth90--;}};
 const baseSliverKeyword90=hasCreatureKeyword;
+const SHARED_SLIVER_KEYWORDS90=new Set(['flying','deathtouch','first strike','reach','lifelink','haste','vigilance','trample','menace','double strike','hexproof']);
+function sliverTemplate90(u){return /\bSliver\b/.test(u?.card?.type_line||'')?FOE_TYPES[u.kind||u.card.enemyKind]:null;}
+function sliverAllies90(u,b=state.battle){return !u||!b||!['player','enemy'].includes(u.owner)?[]:u.owner==='enemy'?b.enemyCreatures:b.creatures;}
+function sliverSources90(u,keyword,b=state.battle){
+ if(!sliverTemplate90(u))return[];
+ return sliverAllies90(u,b).filter(d=>(creatureAlive(d)||sliverCombatDepth90>0)&&sliverTemplate90(d)?.hiveKeyword===keyword);
+}
 hasCreatureKeyword=function(u,keyword){
  if(baseSliverKeyword90(u,keyword))return true;
- if(!u||!['flying','deathtouch','first strike','reach'].includes(keyword)||!/\bSliver\b/.test(u.card?.type_line||''))return false;
- const allies=u.owner==='enemy'?state.battle?.enemyCreatures:state.battle?.creatures;
- return Boolean(allies?.some(d=>(creatureAlive(d)||sliverCombatDepth90>0)&&/\bSliver\b/.test(d.card?.type_line||'')&&FOE_TYPES[d.kind||d.card.enemyKind]?.hiveKeyword===keyword));
+ return SHARED_SLIVER_KEYWORDS90.has(keyword)&&sliverSources90(u,keyword).length>0;
 };
+const baseSliverWard90=wardCost;
+wardCost=function(u){return Math.max(baseSliverWard90(u),...sliverSources90(u,'ward').map(d=>sliverTemplate90(d).hiveWard||1));};
 const baseSliverTeam90=createEnemyTeam;
 createEnemyTeam=function(encounter){
  const team=baseSliverTeam90(encounter),node=ENCOUNTERS.indexOf(encounter)+1||state.node;
  if(node<2||!team.some(u=>/\bSliver\b/.test(u.card.type_line)))return team;
- const kinds=Object.keys(FOES90).filter(k=>FOES90[k].hiveKeyword&&(FOES90[k].minNode||2)<=node&&!team.some(u=>u.kind===k));
+ const kinds=Object.keys(FOE_TYPES).filter(k=>FOE_TYPES[k].hiveKeyword&&(FOE_TYPES[k].minNode||2)<=node&&!team.some(u=>u.kind===k));
  const replace=team.findIndex(u=>u.tier==='minion');if(kinds.length&&replace>=0)team[replace]=createFoe(shuffle(kinds)[0],node);
  return team;
 };

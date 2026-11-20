@@ -18,7 +18,7 @@ const assert=require('node:assert/strict');
    window.ally89=name=>{const card=BUNDLED_CARDS.find(c=>c.name===name),u={id:'ally-'+state.nextPermanentId++,owner:'player',card,...parseStats(card),...creatureKeywords(card),summonedTurn:0,summoningSick:false};state.battle.creatures.push(u);return u};
    reset89();
   });
-  assert.equal(await p.evaluate(()=>Object.keys(FOES89).length),8);assert.equal(await p.evaluate(()=>Object.keys(FOE_TYPES).length),42);
+  assert.equal(await p.evaluate(()=>Object.keys(FOES89).length),8);assert.equal(await p.evaluate(()=>Object.keys(FOE_TYPES).length),50);
   // A seeded sample exercises real encounters and late-wave generation, without flaky random reachability.
   const encounters=await p.evaluate(()=>{
    const random=Math.random;let seed=89;Math.random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
@@ -90,6 +90,6 @@ const assert=require('node:assert/strict');
    assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1&&document.documentElement.scrollHeight<=innerHeight+1),true);
   }
   assert.deepEqual(errors,[]);
-  console.log('PASS eight new enemies, 42 total; seeded real encounters and waves; six slots; Haste/Flying/Reach, First Strike/Lifelink, Deathtouch, real restricted removal, Ward, physical Mill/healing, D6 spell attempts, all eight original portraits, equal sizes, desktop/tablet/mobile, no page errors.');
+  console.log('PASS eight new enemies, 50 total; seeded real encounters and waves; six slots; Haste/Flying/Reach, First Strike/Lifelink, Deathtouch, real restricted removal, Ward, physical Mill/healing, D6 spell attempts, all eight original portraits, equal sizes, desktop/tablet/mobile, no page errors.');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});

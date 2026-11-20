@@ -1,0 +1,23 @@
+/* Source = gold broadcast. Received = blue inbound link. No extra attack arrows. */
+.hive-marker91{display:inline-flex;align-items:center;vertical-align:-1px;height:9px;line-height:0;gap:1px;margin-left:1px;cursor:help;white-space:nowrap}
+.hive-marker91 svg{width:9px;height:9px;flex:none;filter:drop-shadow(0 0 2px currentColor)}
+.hive-marker91 small{font:700 8px/1 var(--sans)}
+.game-shell #enemy-board .enemy-keyword-badge[data-hive-keyword91]{padding-left:2px!important;padding-right:2px!important}
+.game-shell #enemy-board .monster-keywords:has([data-hive-keyword91]){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;justify-content:stretch;justify-items:center}
+.game-shell #enemy-board .monster-keywords:has([data-hive-keyword91])>.enemy-keyword-badge{grid-column:1/-1}
+.game-shell #enemy-board .monster-keywords>[data-hive-keyword91="flying"],.game-shell #enemy-board .monster-keywords>[data-hive-keyword91="reach"],.game-shell #enemy-board .monster-keywords>[data-hive-keyword91="haste"]{grid-column:auto!important}
+.game-shell #enemy-board .monster-keywords>.enemy-keyword-badge:has(.hive-give91):has(.hive-receive91){grid-column:1/-1!important}
+.hive-give91{color:#ffe09a}.hive-receive91{color:#88e3ff}
+.hive-roles91{position:absolute;top:3px;right:2px;display:flex;gap:3px;background:#0a1823d9;border:1px solid #c9b17d44;border-radius:4px;padding:2px 3px;z-index:3}
+.hive-roles91 .hive-marker91{margin:0;height:11px}.hive-roles91 .hive-marker91 svg{width:11px;height:11px}
+.hive-legend91{display:inline-flex;gap:9px;margin-left:10px;font:9px/13px var(--sans);letter-spacing:0;vertical-align:middle}
+.hive-legend91>span{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.hive-legend91>span:first-child{color:#f3d18b}.hive-legend91>span:last-child{color:#92ddeb}
+.hive-legend91 svg{width:12px;height:12px}
+.hive-source91 .walker-portrait,.hive-source91>.creature-token .player-card-frame{outline:2px solid #f4cc7f;outline-offset:2px;box-shadow:0 0 18px #eab34c77!important}
+.hive-recipient91 .walker-portrait,.hive-recipient91>.creature-token .player-card-frame{outline:2px solid #8dddf3;outline-offset:2px;box-shadow:0 0 16px #68cce56b!important}
+.enemy-identity90.is-multicolor91{border-color:#e1c79a;background:linear-gradient(120deg,#41453ddd,#162a37ed);box-shadow:0 0 7px #c5b47333}
+.game-shell #creature-row .creature-group:has([data-hive-keyword91]) .keyword-strip{max-height:56px!important;overflow:auto;scrollbar-width:thin}
+.walker-portrait[class*="portrait-"]:is(.portrait-sunbondsliver,.portrait-quickcrestsliver,.portrait-dawnwatchsliver,.portrait-thornchargesliver,.portrait-dreadcoilsliver,.portrait-prismaticsliver,.portrait-twinbladesliver,.portrait-mistshroudsliver){background-image:url('assets/portraits/slivers-v91.webp')!important;background-size:400% auto!important;background-position:var(--portrait-x) var(--portrait-y)!important}
+.portrait-sunbondsliver{--portrait-x:0%;--portrait-y:0%}.portrait-quickcrestsliver{--portrait-x:33.3333%;--portrait-y:0%}.portrait-dawnwatchsliver{--portrait-x:66.6667%;--portrait-y:0%}.portrait-thornchargesliver{--portrait-x:100%;--portrait-y:0%}
+.portrait-dreadcoilsliver{--portrait-x:0%;--portrait-y:100%}.portrait-prismaticsliver{--portrait-x:33.3333%;--portrait-y:100%}.portrait-twinbladesliver{--portrait-x:66.6667%;--portrait-y:100%}.portrait-mistshroudsliver{--portrait-x:100%;--portrait-y:100%}

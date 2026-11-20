@@ -1,5 +1,10 @@
 # Enemy roster expansions
 
+## v0.91 — 50 enemies
+
+Eight additional Slivers, seven with actual combined colors, and visible ability
+source/recipient symbols are documented in [SLIVER_HIVE.md](SLIVER_HIVE.md).
+
 ## v0.90 — 42 enemies
 
 Six additional enemies, explicit color identities for the complete roster, Sliver
