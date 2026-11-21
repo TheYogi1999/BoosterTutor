@@ -1714,9 +1714,10 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
       if (!group.length || menaceUnblocked) {
         if (!dealsThisStep(attacker, firstStep)) continue;
         if (attackingSide === 'enemy') {
-          const amount = Math.max(0, attacker.power);
+          const raw = Math.max(0, attacker.power);
+          const amount = typeof playerDamageAmount95 === 'function' ? playerDamageAmount95(raw,battle) : raw;
           damageToPlayer += amount;
-          if (hasCreatureKeyword(attacker, 'lifelink')) enemyLifelinkEvents.push({ creature: attacker, damage: amount });
+          if (amount && hasCreatureKeyword(attacker, 'lifelink')) enemyLifelinkEvents.push({ creature: attacker, damage: amount });
         } else damageToOpponent += damageFirstEnemy(Math.max(0, attacker.power));
         continue;
       }
@@ -1739,6 +1740,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
     // Eligibility is captured before applying the step: normal damage is simultaneous.
     const stepLifelinkEvents = [];
     if (firstStep && (exchanges.length || damageToPlayer > previousPlayerDamage)) addLog('First strike damage resolves before normal combat damage.');
+    if (typeof beforeCombatDamageStep95 === 'function') beforeCombatDamageStep95(battle);
     for (const exchange of exchanges) dealCreatureDamage(exchange.source, exchange.target, exchange.controller, battle, exchange.amount, stepLifelinkEvents);
     // Finish all simultaneous damage before enemy self-healing. Lethal damage
     // cannot be healed away; player lifegain still happens if its source dies.
@@ -1746,9 +1748,10 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
     battle.creatures = removeDeadCreatures(battle.creatures, 'player', false);
     battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
     for (const hit of overflow) {
-      if (hit.side === 'enemy') { damageToPlayer += hit.amount; if (hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:hit.amount}); }
+      if (hit.side === 'enemy') { const amount=typeof playerDamageAmount95==='function'?playerDamageAmount95(hit.amount,battle):hit.amount; damageToPlayer += amount; if (amount&&hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:amount}); }
       else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? (typeof poisonOverflow60 === 'function' && (hit.source.infect || hit.source.toxic) ? poisonOverflow60(hit.source, next, hit.amount, battle) : damageFirstEnemy(hit.amount,next,hit.source)) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
     }
+    if (typeof afterCombatDamageStep95 === 'function') afterCombatDamageStep95(battle);
     onDamageStep?.({firstStep,damageToPlayer:damageToPlayer-previousPlayerDamage,enemyLifelinkEvents:enemyLifelinkEvents.slice(previousEnemyEvents)});
     if (battle.phase === 'complete') break;
   }
@@ -1903,7 +1906,7 @@ function resolveEnemyCombat() {
   });
   if (battle.phase === 'complete') return;
   if (!damageToPlayer && attackers.length) {
-    addLog('All enemy attacks were blocked.');
+    addLog(typeof playerProtected95==='function'&&playerProtected95(battle)?'The One Ring protects you from enemy combat damage.':'All enemy attacks were blocked.');
   }
   if (state.playerHealth <= 0) return endRun(false);
   if (!battle.enemyCreatures.length) return winBattle();
@@ -1919,6 +1922,7 @@ function beginNextPlayerTurn45(battle = state.battle) {
   if (!battle.enemyCreatures.length) return winBattle();
   battle.creatures = removeDeadCreatures(battle.creatures, 'player');
   battle.turn += 1;
+  if (typeof expireRingProtection95 === 'function') expireRingProtection95(battle);
   battle.lands.forEach(land => { land.tapped = false; });
   battle.permanents.forEach(permanent => { permanent.tapped = false; });
   battle.floatingMana = 0;
@@ -1934,6 +1938,8 @@ function beginNextPlayerTurn45(battle = state.battle) {
     creature.attackedThisTurn = false;
   });
   for (const permanent of battle.permanents) if (permanent.card.name === 'Fountain of Renewal') state.playerHealth += 1;
+  if (typeof playerUpkeep95 === 'function') playerUpkeep95(battle);
+  if (battle.phase === 'complete') return;
   drawOneCard();
   if (battle.phase === 'complete') return;
   renderBattle();

@@ -6318,6 +6318,62 @@ const BUNDLED_CARDS = [
       "rarity": "common",
       "uri": "https://scryfall.com/card/m12/36/stave-off?utm_source=api"
     }
+  },
+  {
+    "id": "e41cf82d-3213-47ce-a015-6e51a8b07e4f",
+    "name": "Questing Beast",
+    "mana_cost": "{2}{G}{G}",
+    "cmc": 4.0,
+    "type_line": "Legendary Creature — Beast",
+    "oracle_text": "Vigilance, deathtouch, haste\nQuesting Beast can't be blocked by creatures with power 2 or less.\nCombat damage that would be dealt by creatures you control can't be prevented.\nWhenever Questing Beast deals combat damage to an opponent, it deals that much damage to target planeswalker that player controls.",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Vigilance",
+      "Haste",
+      "Deathtouch"
+    ],
+    "rarity": "mythic",
+    "power": "4",
+    "toughness": "4",
+    "image": "assets/cards/e41cf82d-3213-47ce-a015-6e51a8b07e4f.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/e/4/e41cf82d-3213-47ce-a015-6e51a8b07e4f.jpg?1783932604",
+    "uri": "https://scryfall.com/card/eld/171/questing-beast?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "e41cf82d-3213-47ce-a015-6e51a8b07e4f",
+      "set": "eld",
+      "set_name": "Throne of Eldraine",
+      "released_at": "2019-10-04",
+      "rarity": "mythic",
+      "uri": "https://scryfall.com/card/eld/171/questing-beast?utm_source=api"
+    }
+  },
+  {
+    "id": "d5806e68-1054-458e-866d-1f2470f682b2",
+    "name": "The One Ring",
+    "mana_cost": "{4}",
+    "cmc": 4.0,
+    "type_line": "Legendary Artifact",
+    "oracle_text": "Indestructible\nWhen The One Ring enters, if you cast it, you gain protection from everything until your next turn.\nAt the beginning of your upkeep, you lose 1 life for each burden counter on The One Ring.\n{T}: Put a burden counter on The One Ring, then draw a card for each burden counter on The One Ring.",
+    "color_identity": [],
+    "keywords": [
+      "Indestructible"
+    ],
+    "rarity": "mythic",
+    "image": "assets/cards/d5806e68-1054-458e-866d-1f2470f682b2.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/d/5/d5806e68-1054-458e-866d-1f2470f682b2.jpg?1790212038",
+    "uri": "https://scryfall.com/card/ltr/246/the-one-ring?utm_source=api",
+    "verified": true,
+    "art_print": {
+      "id": "d5806e68-1054-458e-866d-1f2470f682b2",
+      "set": "ltr",
+      "set_name": "The Lord of the Rings: Tales of Middle-earth",
+      "released_at": "2023-06-23",
+      "rarity": "mythic",
+      "uri": "https://scryfall.com/card/ltr/246/the-one-ring?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

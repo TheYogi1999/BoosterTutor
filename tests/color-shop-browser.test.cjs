@@ -7,7 +7,7 @@ const{chromium}=require('playwright');const assert=require('node:assert/strict')
   window.reset90=()=>{showScreen('start-screen');state.runMode71='draft';state.immortal76=null;state.endless=false;state.playerHealth=30;state.coins=500;state.deck=Array.from({length:45},()=>physicalRunCopy60(card90('Grizzly Bears')));state.deck.push(...generateStarterManaCards(4));beginBattle(1);const b=state.battle;b.turn=5;b.phase='main';b.creatures=[];b.permanents=[];b.hand=[];b.graveyard=[];b.exile=[];b.enemyCreatures=[createFoe('boar',1)];b.waves=[b.enemyCreatures];b.floatingMana=30;syncMana(b);renderBattle();return b};
   window.ally90=(name,id=name)=>{const card=physicalRunCopy60(card90(name)),u={id,owner:'player',card,...parseStats(card),...creatureKeywords(card),summonedTurn:0,summoningSick:false};state.battle.creatures.push(u);return u};reset90();
  });
- assert.equal(await p.evaluate(()=>BUNDLED_CARDS.length),227);assert.equal(await p.evaluate(()=>playableCards(BUNDLED_CARDS).length),224);assert.equal(await p.evaluate(()=>Object.keys(FOE_TYPES).length),50);
+ assert.equal(await p.evaluate(()=>BUNDLED_CARDS.length),229);assert.equal(await p.evaluate(()=>playableCards(BUNDLED_CARDS).length),226);assert.equal(await p.evaluate(()=>Object.keys(FOE_TYPES).length),50);
  // A real instant cast and mandatory controller-operated color choice, followed by Scry 1.
  await p.evaluate(()=>{ally90('Grizzly Bears','bear');state.battle.hand=[physicalRunCopy60(card90('Gods Willing'))];renderBattle()});
  const mana=await p.evaluate(()=>state.battle.mana);await p.locator('[data-hand-index="0"]').click();await p.locator('[data-rule-pick="player:bear"]').click();await p.locator('#rule-confirm').click();await p.waitForFunction(()=>visibleJesterChoice65?.options.length===5);

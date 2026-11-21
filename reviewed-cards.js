@@ -235,7 +235,7 @@ resolveDiceEffect50=function(effect,target,context,resume){
  if(effect.kind==='mass-damage66'){
   const amount=effect.variable?context.card.xValue66||0:effect.amount;
   for(const u of [...b.creatures,...b.enemyCreatures])if(!effect.filter||(effect.filter==='flying')===hasCreatureKeyword(u,'flying'))dealAbility66(source,{side:u.owner==='enemy'?'enemy':'player',id:u.id},amount,b);
-  state.playerHealth-=amount;if(amount){playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(amount);}settleReviewed66(b);if(b.phase!=='complete')resume();return true;
+  const playerAmount=typeof playerDamageAmount95==='function'?playerDamageAmount95(amount,b):amount;state.playerHealth-=playerAmount;if(playerAmount){playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(playerAmount);}settleReviewed66(b);if(b.phase!=='complete')resume();return true;
  }
  if(effect.kind==='index66'){
   const count=Math.min(5,b.deck.length);if(!count){resume();return true;}const cards=b.deck.slice(-count).reverse();
