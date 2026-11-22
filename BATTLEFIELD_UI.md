@@ -18,7 +18,8 @@ Mulligan stays beside the hand. Six complete creature slots remain on each side;
 free permanents scroll horizontally without moving the page. Combat fits the
 actual display aspect ratio rather than always shrinking a 1600×900 letterbox.
 Landscape keeps your formation left and enemies right; tall displays place enemies
-above your formation. Menus, drafting, shop and camp retain their existing canvas.
+above your formation. Since v0.99, menus, drafting, shop and camp use native viewport-sized layouts;
+combat retains the adaptive camera described here.
 
 Hold a card for 440ms to open a floating details window. Moving more than eight
 pixels cancels the hold so dragging stays immediate. Release after inspection

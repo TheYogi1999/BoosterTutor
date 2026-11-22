@@ -1,0 +1,305 @@
+/* v0.99: menus use readable screen pixels rather than a letterboxed 1600×900 page. */
+html.scene-ui99 .game-shell{position:fixed!important;left:var(--scene-left99,0px)!important;top:var(--scene-top99,0px)!important;width:var(--scene-width99,100vw)!important;height:var(--scene-height99,100dvh)!important;max-width:none!important;min-height:0!important;transform:none!important;display:grid!important;grid-template-rows:44px minmax(0,1fr) 20px;overflow:hidden;box-sizing:border-box}
+html.scene-ui99 .game-shell main{grid-row:2;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden}
+html.scene-ui99 .game-shell .screen{width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;box-sizing:border-box;padding:24px clamp(16px,3vw,56px)!important;margin:0!important;overflow:hidden}
+html.scene-ui99 .game-shell .screen:not(.active){display:none!important}
+html.scene-ui99 .game-shell .topbar{position:relative!important;inset:auto!important;width:100%!important;max-width:none;height:44px!important;margin:0!important;padding:0 20px!important;box-sizing:border-box;gap:12px;flex-wrap:nowrap}
+html.scene-ui99 .game-shell .brand{min-width:0;gap:8px;white-space:nowrap;font-size:14px!important}
+html.scene-ui99 .game-shell .brand small{display:none}
+html.scene-ui99 .game-shell .brand-cards{width:27px;height:29px}
+html.scene-ui99 .game-shell .brand-version{font-size:10px}
+html.scene-ui99 .game-shell .topbar-right{gap:7px;min-width:0}
+html.scene-ui99 .game-shell .site-footer{grid-row:3;width:100%!important;height:20px!important;min-height:0;margin:0;padding:0 20px!important;box-sizing:border-box;overflow:hidden;font-size:10px}
+html.scene-ui99 .scene-scroll99{overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b19b68 #102029}
+html.scene-ui99 .scene-actions99{display:flex;align-items:flex-start;justify-content:flex-end;align-self:start;flex:none;gap:8px;z-index:5}
+html.scene-ui99 .scene-actions99>button,html.scene-ui99 .mode-actions99>.primary-button{min-height:44px!important;min-width:160px;padding:10px 16px!important;font:600 13px/20px var(--sans)!important;white-space:normal;box-sizing:border-box}
+/* Title: the three real Booster Tutor prints retain their proportions. */
+html.scene-ui99 .game-shell.title-menu-active{grid-template-rows:0 minmax(0,1fr) 0}
+html.scene-ui99 .title-menu-active .topbar{position:absolute!important;top:0!important;z-index:10}
+html.scene-ui99 .game-shell #start-screen{padding:0!important}
+html.scene-ui99 #start-screen .title-copy{left:max(6vw,24px);top:50%;width:46%;transform:translateY(-50%)}
+html.scene-ui99 #start-screen .title-copy #game-title{font-size:clamp(60px,8vw,140px);margin-bottom:clamp(22px,4vh,48px)}
+html.scene-ui99 #start-screen .title-menu{width:min(310px,100%);gap:5px}
+html.scene-ui99 #start-screen .title-menu button{font-size:14px;height:43px;line-height:43px;letter-spacing:3px}
+html.scene-ui99 #start-screen .title-menu .title-play{font-size:22px;height:48px;line-height:48px;margin-bottom:6px}
+html.scene-ui99 #start-screen .title-menu button:before{top:20px}
+html.scene-ui99 #start-screen .title-record{font-size:11px;margin:22px 0 0 32px}
+html.scene-ui99 #start-screen .hero-card-stack{left:52%;top:50%;width:44%;height:auto;aspect-ratio:690/540;transform:translateY(-50%)}
+html.scene-ui99 #start-screen .hero-card{width:35%;left:0;top:18%;aspect-ratio:488/680;height:auto}
+html.scene-ui99 #start-screen .hero-card:nth-child(2){left:31%;top:0}
+html.scene-ui99 #start-screen .hero-card:nth-child(3){left:60%;top:18%}
+/* Booster choices: the heading and confirmation stay outside the scroll area. */
+html.scene-ui99 #draft-screen.active{display:grid!important;grid-template-rows:auto 28px minmax(0,1fr) auto;gap:10px;max-width:1900px;margin-inline:auto!important}
+html.scene-ui99 #draft-screen .screen-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:18px;min-height:0!important}
+html.scene-ui99 #draft-title{font-size:clamp(24px,2.6vw,38px);margin:6px 0!important}
+html.scene-ui99 #draft-instruction{font-size:13px;max-width:none}
+html.scene-ui99 .pack-ribbon{height:28px;min-height:0;margin:0!important;padding:4px!important;box-sizing:border-box;font-size:10px}
+html.scene-ui99 #draft-grid{position:relative;display:block;height:100%!important;min-height:0!important;max-height:none!important;width:100%;margin:0!important;padding:0!important;overflow:auto!important}
+html.scene-ui99 .booster-pack{width:100%!important;height:auto!important;min-height:100%;padding:8px 4px 20px!important;box-sizing:border-box;background:none!important;border:0!important}
+html.scene-ui99 .booster-pack>header{height:25px;margin-bottom:18px;padding:0 10px;box-sizing:border-box}
+html.scene-ui99 .booster-cards{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:clamp(10px,1.3vw,24px)!important;width:100%!important;height:auto!important;min-height:0!important;align-items:start;overflow:visible!important;padding:20px 12px 12px!important;box-sizing:border-box}
+html.scene-ui99 .draft-option{display:flex!important;flex-direction:column;align-items:center;gap:10px;width:100%!important;height:auto!important;min-width:0!important;min-height:0!important;padding:0!important;overflow:visible!important}
+html.scene-ui99 #draft-screen .draft-option .card-image-wrap{display:block;width:100%!important;max-width:190px;min-height:0!important;height:auto!important;aspect-ratio:488/680;flex:none}
+html.scene-ui99 #draft-screen .draft-option .card-image-wrap>img{width:100%!important;height:100%!important;object-fit:contain}
+html.scene-ui99 .draft-option .draft-card-name{width:100%;height:auto!important;min-height:36px;font:500 16px/18px Georgia,serif!important;white-space:normal;text-align:center;margin:4px 0 0!important;overflow:visible}
+html.scene-ui99 .draft-option .draft-card-summary{display:flex;flex-direction:column;gap:7px;width:100%;height:auto!important;min-height:0!important;max-height:none!important;font:12px/1.5 var(--sans)!important;overflow:visible!important}
+html.scene-ui99 .draft-option .draft-card-summary>span{white-space:normal!important;height:auto!important;max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important}
+html.scene-ui99 #draft-screen .draft-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 14px;height:auto!important;min-height:44px;margin:0!important;padding:5px 0 0!important;position:static}
+html.scene-ui99 .draft-footer .selection-status{font-size:12px;margin:0;flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere}
+html.scene-ui99 .draft-footer .deck-counter{display:flex;align-items:center;gap:7px;padding:6px 9px;height:auto;min-height:0}
+html.scene-ui99 .draft-footer .deck-counter b{font-size:19px;line-height:22px}
+html.scene-ui99 .draft-footer .deck-counter :is(span,small){font-size:9px}
+html.scene-ui99 #pack-reroll{min-height:40px;font-size:12px!important;padding:8px!important}
+html.scene-ui99 .pack-stage{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%!important;min-height:0!important;margin:0!important;gap:22px;padding:26px 20px!important;box-sizing:border-box}
+html.scene-ui99 .pack-stage>p{font-size:13px;margin:0;flex:none}
+html.scene-ui99 #draft-screen .sealed-pack{flex:none;zoom:1!important;width:calc(208px * var(--pack-fit99,1))!important;height:calc(312px * var(--pack-fit99,1))!important;padding:calc(37px * var(--pack-fit99,1)) calc(20px * var(--pack-fit99,1)) calc(29px * var(--pack-fit99,1));box-sizing:border-box}
+html.scene-ui99 .sealed-pack .pack-logo{font-size:calc(22px * var(--pack-fit99,1));letter-spacing:calc(3px * var(--pack-fit99,1))}
+html.scene-ui99 .sealed-pack .pack-logo b{font-size:calc(28px * var(--pack-fit99,1));letter-spacing:calc(4px * var(--pack-fit99,1))}
+html.scene-ui99 .sealed-pack .pack-emblem{font-size:calc(78px * var(--pack-fit99,1))}
+html.scene-ui99 .sealed-pack .pack-caption{font-size:calc(10px * var(--pack-fit99,1));letter-spacing:calc(2px * var(--pack-fit99,1))}
+html.scene-ui99 .sealed-pack .pack-card-count{font-size:calc(12px * var(--pack-fit99,1));letter-spacing:calc(3px * var(--pack-fit99,1))}
+html.scene-ui99 #draft-screen.scene-sealed99{grid-template-rows:auto minmax(0,1fr)}
+html.scene-ui99 .scene-sealed99 :is(.pack-ribbon,.draft-footer){display:none!important}
+html.scene-ui99 .scene-sealed99 #draft-grid{overflow:hidden!important}
+/* Vey stays left on wide displays; offers remain full-sized on smaller ones. */
+html.scene-ui99 .game-shell #shop-screen.active{display:grid!important;grid-template-columns:clamp(180px,22vw,360px) minmax(0,1fr);grid-template-rows:auto minmax(320px,1fr) auto auto;gap:18px 24px;padding:22px clamp(16px,3vw,48px)!important;overflow:auto!important}
+html.scene-ui99 .game-shell #shop-screen .shopkeeper90{grid-column:1;grid-row:1/5;min-height:400px}
+html.scene-ui99 .game-shell #shop-screen .shop-heading{grid-column:2;grid-row:1;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:start}
+html.scene-ui99 .game-shell #shop-screen .shop-heading h2{font-size:clamp(24px,2.5vw,36px)}
+html.scene-ui99 .game-shell #shop-screen .shop-heading p{display:none}
+html.scene-ui99 .game-shell #shop-screen .shop-wallet{padding:6px 10px;gap:9px;min-height:42px;box-sizing:border-box}
+html.scene-ui99 .game-shell #shop-screen .shop-wallet b{font-size:27px}
+html.scene-ui99 .game-shell #shop-screen .shop-wallet span{font-size:10px;letter-spacing:.7px}
+html.scene-ui99 .game-shell #shop-screen .shop-grid{grid-column:2;grid-row:2;height:auto;min-height:320px;gap:14px}
+html.scene-ui99 .game-shell #shop-screen .shop-offer{height:auto;min-height:320px;padding:30px 12px 12px;gap:8px}
+html.scene-ui99 .game-shell #shop-screen .shop-offer .draft-card-summary{overflow:visible!important;flex:none;font-size:12px}
+html.scene-ui99 .game-shell #shop-screen .shop-pack{grid-column:2;grid-row:3;grid-template-columns:repeat(2,minmax(0,1fr)) 145px;gap:10px;min-height:108px}
+html.scene-ui99 .game-shell #shop-screen #shop-pack-confirm{width:145px;max-width:145px;min-width:0!important}
+html.scene-ui99 .game-shell #shop-screen .shop-booster-offer{padding:10px!important;grid-template-columns:34px minmax(0,1fr)}
+html.scene-ui99 .game-shell #shop-screen .shop-pack .shop-pack-copy b{font-size:17px}
+html.scene-ui99 .game-shell #shop-screen .shop-counters{grid-column:2;grid-row:4;min-height:100px}
+html.scene-ui99 .game-shell #shop-screen #shop-counter-grid{height:auto}
+html.scene-ui99 .game-shell #shop-screen .counter-offer{height:auto;min-height:78px;grid-template-columns:22px minmax(0,1fr) 56px;gap:5px}
+html.scene-ui99 .game-shell #shop-screen .shop-footer{display:none}
+html.scene-ui99 .game-shell .shopkeeper90 #shopkeeper-greeting87{font-size:clamp(18px,1.8vw,24px)}
+/* Camp and receipt adapt to the available height; their content stays readable. */
+html.scene-ui99 #journey-screen.active{display:flex!important;flex-direction:column;align-items:center;overflow:auto!important;text-align:center;gap:10px}
+html.scene-ui99 #journey-title{font-size:clamp(28px,3vw,42px);margin:5px 0}
+html.scene-ui99 #journey-description{margin:0;font-size:14px}
+html.scene-ui99 .journey-path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;width:min(900px,100%);margin:12px auto!important;flex:none}
+html.scene-ui99 .path-node{width:auto!important;min-width:0;height:auto!important;padding:15px 10px!important;box-sizing:border-box}
+html.scene-ui99 .path-node b{white-space:normal;font-size:12px}
+html.scene-ui99 .path-node::after{display:none}
+html.scene-ui99 .journey-life{font-size:12px;margin:0}
+html.scene-ui99 .camp-tools{margin:0;flex-wrap:wrap;gap:8px}
+html.scene-ui99 .journey-options{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));width:min(940px,100%);gap:18px;margin:6px auto 0!important;flex:none}
+html.scene-ui99 .journey-options>button[data-camp-token]{width:100%!important;min-height:210px;padding:20px!important}
+html.scene-ui99 .game-shell #results-screen.active{display:grid;grid-template-rows:auto minmax(0,1fr);padding:28px clamp(16px,7vw,160px)!important;gap:22px}
+html.scene-ui99 .results-heading82{padding-bottom:15px;gap:16px}
+html.scene-ui99 .results-heading82 h2{font-size:clamp(26px,3.4vw,44px);margin:8px 0}
+html.scene-ui99 .results-heading82 .results-stamp82{display:none}
+html.scene-ui99 .results-grid82{grid-template-columns:minmax(0,1fr) minmax(0,1fr);overflow:auto;gap:22px}
+html.scene-ui99 .results-payout82,html.scene-ui99 .results-ledger82{padding:24px;min-height:300px}
+html.scene-ui99 .results-footer82{display:none}
+html.scene-ui99 #results-bounty82{font-size:clamp(64px,7vw,100px)}
+html.scene-ui99 #end-screen.active{position:relative;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding-top:90px!important;overflow:auto!important}
+html.scene-ui99 #end-title{font-size:clamp(30px,4vw,52px);margin:4px 0}
+html.scene-ui99 #end-message{font-size:14px;margin:0;max-width:600px}
+html.scene-ui99 .run-summary{flex-wrap:wrap;gap:15px;margin:8px 0;font-size:13px}
+html.scene-ui99 #restart-button{position:absolute;top:20px;right:24px;min-height:44px;font-size:13px!important;padding:10px 14px!important}
+html.scene-ui99 #end-screen .endless-invitation{max-width:600px;margin:0;padding:0}
+html.scene-ui99 #endless-button{position:absolute;right:24px;top:20px;min-height:44px;font-size:13px!important}
+html.scene-ui99 #end-screen:has(.endless-invitation:not([hidden])) #restart-button{position:static;min-height:40px;margin-top:5px}
+html.scene-ui99 #end-screen .endless-invitation p{font-size:13px;margin:0}
+html.scene-ui99 #loading-screen.active{display:flex!important;align-items:center;justify-content:center}
+html.scene-ui99 .loading-frame{width:min(510px,100%);padding:30px 20px;box-sizing:border-box}
+/* All out-of-combat windows fit the physical viewport, with internal scrolling. */
+html.scene-ui99 dialog:not(#dice-roll-dialog){left:var(--game-center-x,50%)!important;top:var(--game-center-y,50%)!important;transform:translate(-50%,-50%)!important;width:min(1120px,calc(var(--scene-width99,100vw) - 24px))!important;height:min(740px,calc(var(--scene-height99,100dvh) - 24px))!important;max-width:calc(var(--scene-width99,100vw) - 24px)!important;max-height:calc(var(--scene-height99,100dvh) - 24px)!important;padding:24px!important;overflow:auto!important;box-sizing:border-box}
+html.scene-ui99 dialog:is(.title-options-dialog,.title-exit-dialog,.confirm-dialog,#music-dialog,#controller-dialog,#controller-test-dialog){width:min(700px,calc(var(--scene-width99,100vw) - 24px))!important;height:auto!important;min-height:0}
+html.scene-ui99 dialog>header{gap:14px}
+html.scene-ui99 dialog h2{font-size:clamp(24px,3vw,31px)!important}
+html.scene-ui99 .collection-dialog[open]{display:flex;flex-direction:column}
+html.scene-ui99 .collection-dialog>header,html.scene-ui99 .collection-dialog>p,html.scene-ui99 .collection-tools{flex:none}
+html.scene-ui99 .collection-tools{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px}
+html.scene-ui99 .collection-tools input{grid-column:1/-1;width:100%;min-width:0}
+html.scene-ui99 .collection-grid{flex:1;min-height:0;max-height:none!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;overflow:auto!important}
+html.scene-ui99 .collection-entry{grid-template-columns:minmax(90px,30%) minmax(0,1fr);gap:16px;padding:15px}
+html.scene-ui99 .collection-entry .collection-card{width:100%;min-width:0}
+html.scene-ui99 .collection-tools #collection-stats{grid-column:1/-1!important}
+html.scene-ui99 #game-modes-dialog{width:min(1456px,calc(var(--scene-width99,100vw) - 24px))!important;height:min(860px,calc(var(--scene-height99,100dvh) - 24px))!important}
+html.scene-ui99 #game-modes-dialog[open]{grid-template-rows:auto auto minmax(0,1fr) auto;gap:14px;overflow:hidden!important}
+html.scene-ui99 .mode-actions99{display:flex;align-items:flex-start;gap:10px;flex:none}
+html.scene-ui99 .precon-footer71{padding-top:6px}
+html.scene-ui99 .precon-workspace71{grid-template-columns:minmax(0,1fr) minmax(220px,30%);gap:18px;overflow:auto}
+html.scene-ui99 .precon-grid71{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(240px,1fr))}
+html.scene-ui99 .precon-box71{width:200px!important;min-width:200px;max-width:none;transform-origin:center;scale:.9}
+html.scene-ui99 .precon-details71{overflow:auto}
+html.scene-ui99 .precon-list71{flex:none;overflow:visible}
+html.scene-ui99 #precon-card-content{grid-template-columns:minmax(140px,32%) minmax(0,1fr);height:auto;min-height:100%;gap:24px}
+html.scene-ui99 .precon-inspect-art71{width:100%}
+html.scene-ui99 .precon-inspect-copy71{height:auto;max-height:none;overflow:visible}
+html.scene-ui99 .immortal-workspace76{grid-template-columns:minmax(180px,30%) minmax(0,1fr);overflow:auto}
+@media(max-width:1100px){
+ html.scene-ui99 .game-shell #shop-screen.active{grid-template-columns:170px minmax(0,1fr);gap:14px}
+ html.scene-ui99 .game-shell #shop-screen .shop-heading{grid-template-columns:minmax(0,1fr) auto}
+ html.scene-ui99 .game-shell #shop-screen .shop-heading>div:first-child{grid-column:1/-1;grid-row:2}
+ html.scene-ui99 .game-shell #shop-screen .shop-heading .shop-wallet{grid-column:1;grid-row:1;justify-self:start}
+ html.scene-ui99 .game-shell #shop-screen .shop-heading .scene-actions99{grid-column:2;grid-row:1}
+ html.scene-ui99 .game-shell #shop-screen .shop-pack{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html.scene-ui99 .game-shell #shop-screen #shop-pack-confirm{grid-column:1/-1;justify-self:end;height:42px;width:100%;max-width:220px}
+ html.scene-ui99 .game-shell #shop-screen #shop-counter-grid{grid-template-columns:1fr}
+ html.scene-ui99 .shopkeeper-copy90{left:14px;right:14px}
+ html.scene-ui99 .shopkeeper-note90{display:none}
+ html.scene-ui99 .precon-grid71{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(240px,1fr))}
+}
+@media(max-width:900px){
+ html.scene-ui99 .booster-cards{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:28px 18px!important}
+ html.scene-ui99 .game-shell #shop-screen.active{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto auto;align-content:start}
+ html.scene-ui99 .game-shell #shop-screen .shop-heading{grid-column:1;grid-row:1;position:sticky;top:-22px;z-index:15;background:#14262bf5;padding:10px 0}
+ html.scene-ui99 .game-shell #shop-screen .shopkeeper90{grid-column:1;grid-row:2;min-height:145px;height:145px;overflow:hidden}
+ html.scene-ui99 .game-shell #shop-screen .shopkeeper-portrait87{width:145px;background-position:center,60% 20%}
+ html.scene-ui99 .shopkeeper-copy90{left:165px;top:15px;bottom:auto;right:15px}
+ html.scene-ui99 .game-shell .shopkeeper90 #shopkeeper-greeting87{font-size:20px;margin:10px 0}
+ html.scene-ui99 .game-shell #shop-screen .shop-grid{grid-column:1;grid-row:3}
+ html.scene-ui99 .game-shell #shop-screen .shop-pack{grid-column:1;grid-row:4}
+ html.scene-ui99 .game-shell #shop-screen .shop-counters{grid-column:1;grid-row:5}
+ html.scene-ui99 .game-shell #shop-screen #shop-counter-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ html.scene-ui99 .game-shell #shop-screen .counter-offer{grid-template-columns:24px minmax(0,1fr)}
+ html.scene-ui99 .game-shell #shop-screen .counter-offer button{grid-column:1/-1}
+ html.scene-ui99 .journey-path{gap:8px}
+ html.scene-ui99 .precon-workspace71{grid-template-columns:minmax(0,1fr) minmax(220px,38%)}
+ html.scene-ui99 .precon-choice71{padding:5px}
+ html.scene-ui99 .precon-box71{scale:.65;margin-inline:-25px}
+ html.scene-ui99 .precon-choice-label71>b{font-size:15px}
+ html.scene-ui99 .precon-grid71{gap:8px}
+}
+@media(max-width:600px){
+ html.scene-ui99 .game-shell{grid-template-rows:42px minmax(0,1fr) 18px}
+ html.scene-ui99 .game-shell .screen{padding:14px!important}
+ html.scene-ui99 .game-shell .topbar{height:42px!important;padding:0 12px!important;gap:6px}
+ html.scene-ui99 .game-shell .brand{font-size:11px!important;gap:5px;letter-spacing:.6px}
+ html.scene-ui99 .game-shell .brand-cards,html.scene-ui99 .game-shell .topbar .coin-purse{display:none}
+ html.scene-ui99 .game-shell .brand-version{font-size:9px;margin-left:2px}
+ html.scene-ui99 .game-shell .topbar-right{gap:3px}
+ html.scene-ui99 .game-shell .topbar #options-button{padding:3px!important;font-size:10px!important;letter-spacing:0}
+ html.scene-ui99 .game-shell .topbar :is(#music-settings,#sound-toggle){font-size:9px!important;padding:3px 5px!important;letter-spacing:0}
+ html.scene-ui99 .game-shell .site-footer{grid-row:3;height:18px!important;font-size:9px;padding:0 14px!important}
+ html.scene-ui99 .scene-actions99>button,html.scene-ui99 .mode-actions99>.primary-button{min-width:118px;font-size:11px!important;max-width:145px;padding:8px!important}
+ html.scene-ui99 #start-screen .title-copy{left:24px;top:47%;width:calc(100% - 48px);transform:none}
+ html.scene-ui99 #start-screen .title-copy #game-title{font-size:clamp(58px,17vw,86px);margin-bottom:20px;letter-spacing:-2px}
+ html.scene-ui99 #start-screen .title-copy #game-title span{letter-spacing:7px;margin-top:3px}
+ html.scene-ui99 #start-screen .title-menu{gap:0;width:100%}
+ html.scene-ui99 #start-screen .title-menu button{height:38px;line-height:38px;font-size:12px}
+ html.scene-ui99 #start-screen .title-menu .title-play{height:42px;line-height:42px;font-size:20px;margin-bottom:0}
+ html.scene-ui99 #start-screen .title-menu button:before{top:18px}
+ html.scene-ui99 #start-screen .title-record{font-size:10px;margin:12px 0 0 32px}
+ html.scene-ui99 #start-screen .hero-card-stack{left:17%;top:10%;width:68%;max-height:33%;transform:none}
+ html.scene-ui99 #draft-screen.active{grid-template-rows:auto 24px minmax(0,1fr) auto;gap:8px}
+ html.scene-ui99 #draft-screen .screen-heading{gap:10px;grid-template-columns:minmax(0,1fr) 124px}
+ html.scene-ui99 #draft-title{font-size:24px}
+ html.scene-ui99 #draft-instruction{font-size:12px}
+ html.scene-ui99 .screen-heading .eyebrow{font-size:8px;letter-spacing:1px!important}
+ html.scene-ui99 .screen-heading .eyebrow span{display:block;margin:4px 0 0}
+ html.scene-ui99 .booster-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:30px 18px!important;padding:26px 9px 12px!important}
+ html.scene-ui99 .booster-pack>header{font-size:9px;padding:0 5px;margin-bottom:6px}
+ html.scene-ui99 .draft-option .draft-card-name{font-size:16px!important}
+ html.scene-ui99 .draft-footer .selection-status{flex-basis:100%;order:3}
+ html.scene-ui99 .draft-footer .deck-counter{padding:4px 6px}
+ html.scene-ui99 .pack-stage{gap:12px;padding:20px!important}
+ html.scene-ui99 .pack-stage .sealed-pack{zoom:.82}
+ html.scene-ui99 .game-shell #shop-screen.active{padding:14px!important;gap:14px}
+ html.scene-ui99 .game-shell #shop-screen .shop-heading{top:-14px}
+ html.scene-ui99 .game-shell #shop-screen .shop-grid{grid-template-columns:1fr;gap:16px}
+ html.scene-ui99 .game-shell #shop-screen .shop-offer{display:grid;grid-template-columns:111px minmax(0,1fr);grid-template-rows:auto 1fr auto;gap:8px 16px;min-height:220px;padding:30px 12px 12px;text-align:left;align-items:start}
+ html.scene-ui99 .game-shell #shop-screen .shop-card-face{grid-column:1;grid-row:1/4;margin:0}
+ html.scene-ui99 .game-shell #shop-screen .shop-offer .draft-card-name{grid-column:2;grid-row:1;text-align:left;font-size:20px!important}
+ html.scene-ui99 .game-shell #shop-screen .shop-offer .draft-card-summary{grid-column:2;grid-row:2;font-size:12px}
+ html.scene-ui99 .game-shell #shop-screen .shop-offer .primary-button{grid-column:2;grid-row:3}
+ html.scene-ui99 .game-shell #shop-screen .shop-pack{grid-template-columns:1fr}
+ html.scene-ui99 .game-shell #shop-screen #shop-counter-grid{grid-template-columns:1fr}
+ html.scene-ui99 .game-shell #shop-screen .counter-offer{grid-template-columns:24px minmax(0,1fr) 65px}
+ html.scene-ui99 .game-shell #shop-screen .counter-offer button{grid-column:auto}
+ html.scene-ui99 .shopkeeper-copy90{left:132px;right:10px;top:12px}
+ html.scene-ui99 .game-shell #shop-screen .shopkeeper-portrait87{width:118px}
+ html.scene-ui99 .game-shell .shopkeeper90 #shopkeeper-greeting87{font-size:17px}
+ html.scene-ui99 .shopkeeper-name87{font-size:10px!important;letter-spacing:1px!important}
+ html.scene-ui99 .journey-path{grid-template-columns:repeat(2,minmax(0,1fr));margin:5px auto!important}
+ html.scene-ui99 .path-node{padding:8px!important}
+ html.scene-ui99 .path-node>span{font-size:22px}
+ html.scene-ui99 .journey-options{grid-template-columns:1fr;gap:12px}
+ html.scene-ui99 .journey-options>button[data-camp-token]{min-height:170px;padding:16px!important}
+ html.scene-ui99 .results-heading82{align-items:start;gap:8px}
+ html.scene-ui99 .results-heading82 .eyebrow{font-size:9px;letter-spacing:1px!important}
+ html.scene-ui99 .results-heading82 p{font-size:10px;letter-spacing:1px}
+ html.scene-ui99 .results-grid82{grid-template-columns:1fr;gap:14px;align-content:start}
+ html.scene-ui99 .results-payout82,html.scene-ui99 .results-ledger82{padding:20px;min-height:270px}
+ html.scene-ui99 .results-stat-pair82{margin-top:16px;padding-top:16px}
+ html.scene-ui99 dialog:not(#dice-roll-dialog){padding:16px!important}
+ html.scene-ui99 .collection-tools{grid-template-columns:repeat(2,minmax(0,1fr))!important;margin-bottom:10px}
+ html.scene-ui99 .collection-grid{grid-template-columns:1fr!important;gap:16px 12px}
+ html.scene-ui99 .collection-entry{grid-template-columns:100px minmax(0,1fr);padding:10px;gap:12px}
+ html.scene-ui99 .collection-dialog>p{font-size:12px;margin-bottom:8px}
+ html.scene-ui99 .title-options-dialog #avatar-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html.scene-ui99 .title-option-actions{flex-wrap:wrap;gap:8px;margin-top:16px}
+ html.scene-ui99 .title-option-actions button{flex:1;min-width:100px}
+ html.scene-ui99 .title-options-dialog .options-credits{margin-top:16px}
+ html.scene-ui99 .precon-heading71{gap:8px}
+ html.scene-ui99 .precon-heading71 h2{font-size:23px!important}
+ html.scene-ui99 .mode-actions99{flex-direction:column-reverse;align-items:end;gap:8px}
+ html.scene-ui99 .precon-mode-tabs71 button{font-size:9px;padding:4px 6px;line-height:18px;letter-spacing:.7px;flex:1}
+ html.scene-ui99 .precon-workspace71{display:block;overflow:auto}
+ html.scene-ui99 .precon-grid71{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,220px)}
+ html.scene-ui99 .precon-details71{border:0;border-top:1px solid #cbb77c44;padding:15px 0 0;margin-top:14px;overflow:visible}
+ html.scene-ui99 .precon-footer71 p{font-size:10px}
+ html.scene-ui99 #precon-card-content{grid-template-columns:minmax(90px,34%) minmax(0,1fr);gap:15px;align-items:start;padding-top:20px}
+ html.scene-ui99 .precon-inspect-copy71{padding-top:10px;font-size:12px}
+ html.scene-ui99 .immortal-workspace76{grid-template-columns:1fr}
+ html.scene-ui99 #immortal-card76{width:140px!important;margin:0 auto}
+ html.scene-ui99 .immortal-copy76{padding:0}
+ html.scene-ui99 .controller-device-fields80,html.scene-ui99 .input-settings78{grid-template-columns:1fr}
+}
+@media(max-height:650px) and (min-aspect-ratio:1/1){
+ html.scene-ui99 #start-screen .title-copy{top:50%;transform:translateY(-50%);left:5%;width:45%}
+ html.scene-ui99 #start-screen .title-copy #game-title{font-size:clamp(44px,10vh,72px);margin-bottom:12px}
+ html.scene-ui99 #start-screen .title-menu{gap:0}
+ html.scene-ui99 #start-screen .title-menu button{height:31px;line-height:31px;font-size:12px}
+ html.scene-ui99 #start-screen .title-menu .title-play{height:34px;line-height:34px;font-size:19px;margin:0}
+ html.scene-ui99 #start-screen .title-menu button:before{top:14px}
+ html.scene-ui99 #start-screen .title-record{margin-top:8px;font-size:9px}
+ html.scene-ui99 #start-screen .hero-card-stack{left:56%;width:38%;top:50%;transform:translateY(-50%);max-height:none}
+ html.scene-ui99 .game-shell .screen{padding-block:12px!important}
+ html.scene-ui99 .pack-stage .sealed-pack{zoom:.68}
+ html.scene-ui99 .results-heading82{padding-bottom:8px}
+ html.scene-ui99 .results-payout82,html.scene-ui99 .results-ledger82{min-height:280px}
+ html.scene-ui99 #end-screen.active{justify-content:flex-start;padding-top:80px!important}
+}
+@media(prefers-reduced-motion:reduce){html.scene-ui99 .screen{animation:none!important}}
+
+html.scene-ui99 .game-shell #shop-screen .shop-heading{position:sticky;top:-22px;z-index:15;background:#14262bf5;padding:4px 0}
+@media(max-width:600px){html.scene-ui99 .game-shell #shop-screen .shop-heading{top:-14px}}
+html.scene-ui99 #draft-screen .selection-status{white-space:normal!important;overflow-wrap:anywhere;max-width:100%;min-width:0}
+html.scene-ui99 #draft-screen .draft-footer{min-width:0}
+@media(max-width:600px){html.scene-ui99 #draft-screen .selection-status{flex:1 1 100%!important}html.scene-ui99 #draft-screen .draft-footer .deck-counter{flex:none}}
+@media(max-width:600px) and (max-height:760px) and (max-aspect-ratio:1/1){
+ html.scene-ui99 #start-screen .title-copy{top:43%}
+ html.scene-ui99 #start-screen .title-copy #game-title{font-size:clamp(48px,14vw,64px);margin-bottom:12px}
+ html.scene-ui99 #start-screen .title-menu button{height:33px;line-height:33px}
+ html.scene-ui99 #start-screen .title-menu .title-play{height:36px;line-height:36px}
+ html.scene-ui99 #start-screen .hero-card-stack{left:20%;width:60%;top:8%}
+}
+/* Rules bubbles follow the art without intercepting selection or confirmation. */
+html.scene-ui99 #card-preview,html.scene-ui99 #card-preview *{pointer-events:none!important}
+/* Intrinsic rows keep long offer rules and the two-line shop heading from shrinking. */
+html.scene-ui99 .game-shell #shop-screen.active{grid-template-rows:max-content minmax(max-content,1fr) max-content max-content;align-content:start}
+html.scene-ui99 .game-shell #shop-screen .shop-grid{min-height:max-content}
+html.scene-ui99 .game-shell #shop-screen .shop-offer{min-height:max-content}
+@media(max-width:900px){html.scene-ui99 .game-shell #shop-screen.active{grid-template-rows:max-content 145px max-content max-content max-content}}
+html.scene-ui99 .counter-shop-dialog[open]{display:flex;flex-direction:column;gap:12px}
+html.scene-ui99 #counter-shop-grid{height:auto;min-height:0;flex:1;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));overflow:auto}
+html.scene-ui99 .counter-shop-dialog>footer{flex-wrap:wrap;flex:none}
+html.scene-ui99 #counter-shop-note{margin:0;font-size:13px}
+@media(max-width:600px){html.scene-ui99 .immortal-workspace76{padding:6px 0 16px;gap:20px}html.scene-ui99 .immortal-copy76{font-size:13px;line-height:1.6}html.scene-ui99 .immortal-copy76 h3{font-size:30px;line-height:1.2;margin-bottom:14px}}
+/* The opening light is centered even when its animation is disabled. */
+html.scene-ui99 #draft-grid{overflow-x:hidden!important}
+html.scene-ui99 #draft-screen.opening #draft-grid::after{transform:translate(-50%,-50%)}
+@media(prefers-reduced-motion:reduce){html.scene-ui99 #draft-screen.opening #draft-grid::after{display:none!important}}
