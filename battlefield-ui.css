@@ -148,3 +148,55 @@ html.battle-ui97 #card-preview *{pointer-events:none!important}
 /* Dice still enter from beyond the edge of the enlarged, adaptive table. */
 html.battle-ui97 #combat-screen #dice-roll-dialog{--throw-x:calc(-1 * var(--throw-distance97,1300px))!important}
 html.battle-ui97 #combat-screen #dice-roll-dialog[data-owner="enemy"]{--throw-x:var(--throw-distance97,1300px)!important}
+/* v0.98: matched piles and the primary combat action in the upper-right HUD. */
+html.battle-ui97 #combat-screen .combat-topline{height:58px!important;gap:10px}
+html.battle-ui97 #combat-screen .combat-topline .combat-actions-panel{position:static!important;inset:auto!important;width:206px!important;height:48px!important;min-height:48px;flex:none;display:flex!important;align-items:center;justify-content:center;margin:0!important;padding:0!important;grid-area:auto}
+html.battle-ui97 #combat-screen .combat-topline #end-turn-button{height:46px!important;min-height:46px!important;font-size:14px!important;padding:8px 10px!important}
+html.battle-ui97 #combat-screen .hand-panel{width:calc(100% - 382px)!important}
+html.battle-ui97 #combat-screen .battle-piles98{position:absolute;right:26px;bottom:26px;width:304px;height:192px;display:grid;grid-template-columns:repeat(3,96px);gap:8px;align-items:start;z-index:12}
+html.battle-ui97 #combat-screen .battle-piles98 .battle-pile98{position:relative!important;inset:auto!important;width:96px!important;height:192px!important;min-height:0!important;display:flex!important;flex-direction:column;align-items:center;justify-content:flex-start;gap:0!important;margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;box-sizing:border-box}
+html.battle-ui97 #combat-screen .battle-piles98 .library-zone-heading,html.battle-ui97 #combat-screen .battle-piles98 .graveyard-links,html.battle-ui97 #combat-screen .battle-piles98 .pile-heading98{order:0;flex:none!important;width:96px;height:24px!important;min-height:24px;display:flex!important;align-items:center;justify-content:center;gap:3px!important;margin:0;padding:0}
+html.battle-ui97 #combat-screen .battle-piles98 .discard-info{width:100%;height:24px;display:flex!important;align-items:center;justify-content:center;flex-direction:row!important}
+html.battle-ui97 #combat-screen .battle-piles98 .library-label{font-size:9px!important;letter-spacing:.5px}
+html.battle-ui97 #combat-screen .battle-piles98 #deck-button,html.battle-ui97 #combat-screen .battle-piles98 #graveyard-button,html.battle-ui97 #combat-screen .battle-piles98 #exile-button{font:600 10px/16px var(--sans)!important;min-height:24px!important;height:24px!important;padding:3px!important;white-space:nowrap}
+html.battle-ui97 #combat-screen .battle-piles98 #library-button{height:168px!important;gap:0!important;flex:none;margin:0!important}
+html.battle-ui97 #combat-screen .battle-piles98 .library-stack,html.battle-ui97 #combat-screen .battle-piles98 .graveyard-pile-area,html.battle-ui97 #combat-screen .battle-piles98 .pile-face98{position:relative!important;order:1;flex:none!important;width:76px!important;height:106px!important;min-width:76px!important;min-height:106px!important;margin:26px 0 0!important;padding:0!important;box-sizing:border-box;border:0!important;border-radius:6px;background:none;overflow:visible;display:block}
+html.battle-ui97 #combat-screen .battle-piles98 #graveyard-pile,html.battle-ui97 #combat-screen .battle-piles98 #graveyard-pile .graveyard-card,html.battle-ui97 #combat-screen .battle-piles98 .empty-graveyard{width:76px!important;height:106px!important;min-width:76px!important;min-height:106px!important;margin:0!important;box-sizing:border-box}
+html.battle-ui97 #combat-screen .battle-piles98 .pile-face98 img{display:block;width:100%;height:100%;object-fit:contain;border-radius:6px}
+html.battle-ui97 #combat-screen .battle-piles98 .pile-face98 .foil-card-face{display:block;width:100%;height:100%}
+html.battle-ui97 #combat-screen .battle-piles98 .library-caption,html.battle-ui97 #combat-screen .battle-piles98 .pile-count98{order:2;width:100%;height:29px;margin:7px 0 0!important;text-align:center;font:600 16px/17px var(--sans)!important;color:#e3cd9e;flex:none}
+html.battle-ui97 #combat-screen .battle-piles98 .library-caption b,html.battle-ui97 #combat-screen .battle-piles98 .pile-count98 b{font:600 16px/17px var(--sans)!important}
+html.battle-ui97 #combat-screen .battle-piles98 .library-caption small,html.battle-ui97 #combat-screen .battle-piles98 .pile-count98 small{display:block;font:500 9px/12px var(--sans)!important;color:#b3c3c5}
+html.battle-ui97 #combat-screen .battle-piles98 .library-stack{transform:translate3d(var(--deck-side98,0px),calc(-1 * var(--deck-depth98,0px)),0);isolation:isolate}
+html.battle-ui97 #combat-screen .battle-piles98 .library-stack::before,html.battle-ui97 #combat-screen .battle-piles98 .library-stack::after{display:none!important}
+.library-depth98{position:absolute;inset:0;pointer-events:none;z-index:-1}
+.library-depth98 i{position:absolute;inset:0;border-radius:5px;border:1px solid #b1a180;background:linear-gradient(90deg,#393c33,#d4c8a5 8%,#938770 75%,#292d2a);box-shadow:0 1px 1px #0006;transform:translate3d(calc(-1 * var(--deck-side98,0px) * var(--sheet98)),calc(var(--deck-depth98,0px) * var(--sheet98)),0)}
+.pile-empty98{display:flex;position:absolute;inset:0;align-items:center;justify-content:center;border:1px dashed #b5c7bc66;border-radius:6px;box-sizing:border-box;color:#b1c4c5;font:32px/1 var(--sans);background:#0d20263d;pointer-events:none}
+html.battle-ui97 .library-stack>.pile-empty98{display:none}
+html.battle-ui97 #library-button.is-empty .library-stack>img{visibility:hidden}
+html.battle-ui97 #library-button.is-empty .library-stack>.pile-empty98{display:flex}
+html.battle-ui97 #library-button.is-empty .library-stack{border:0!important}
+html.battle-ui97 #combat-screen .battle-piles98 .empty-graveyard{display:grid!important;place-items:center;border:1px dashed #b5c7bc66;border-radius:6px;font-size:32px;background:#0d20263d}
+html.battle-ui97 #combat-screen .battle-piles98 .empty-graveyard small{display:none}
+.exile-foe98{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+html.battle-ui97 #combat-screen .exile-foe98 .walker-portrait{width:76px!important;height:95px!important;min-width:0!important;aspect-ratio:4/5;border-radius:5px}
+/* A second HUD row avoids shrinking or overlapping controls on narrower canvases. */
+html.battle-compact98 #combat-screen .combat-topline,html.battle-tall97 #combat-screen .combat-topline{height:112px!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:50px 42px;gap:6px 10px}
+html.battle-compact98 #combat-screen .combat-topline .run-progress,html.battle-tall97 #combat-screen .combat-topline .run-progress{grid-column:1;grid-row:1}
+html.battle-compact98 #combat-screen .combat-topline .combat-actions-panel,html.battle-tall97 #combat-screen .combat-topline .combat-actions-panel{grid-column:2!important;grid-row:1!important;justify-self:end}
+html.battle-compact98 #combat-screen .battle-system97,html.battle-tall97 #combat-screen .battle-system97{grid-column:2;grid-row:2;justify-self:end}
+html.battle-compact98 #combat-screen #phase-strip,html.battle-tall97 #combat-screen #phase-strip{grid-column:1!important;grid-row:2;justify-content:flex-start}
+html.battle-compact98 #combat-screen #phase-strip li,html.battle-tall97 #combat-screen #phase-strip li{font-size:10px!important;padding:6px!important}
+html.battle-compact98 #combat-screen .arena-side{top:140px!important}
+html.battle-compact98 #combat-screen #player-drop-zone{grid-template-rows:90px 18px 240px 18px 88px!important}
+html.battle-compact98 #combat-screen .player-side-header{height:90px!important}
+html.battle-compact98 #combat-screen #creature-row{height:240px!important}
+html.battle-compact98 #combat-screen #creature-row .creature-group{height:238px!important}
+html.battle-compact98 #combat-screen .enemy-side-header{height:58px!important;min-height:58px!important}
+html.battle-compact98 #combat-screen #enemy-board,html.battle-compact98 #combat-screen #enemy-board .monster-rank{height:300px!important;min-height:300px!important}
+html.battle-compact98 #combat-screen #enemy-board .monster{height:300px!important;grid-template-rows:30px 118px 28px 28px 36px 50px!important}
+html.battle-compact98 #combat-screen #enemy-board .monster-figure{height:118px!important}
+html.battle-tall97 #combat-screen .hand-panel{width:calc(100% - 382px)!important}
+html.battle-ui97 #combat-screen .battle-piles98 #graveyard-pile .graveyard-card{transform:none!important}
+
+html.battle-compact98 #combat-screen #enemy-board .walker-portrait{max-width:94px!important;max-height:118px!important}

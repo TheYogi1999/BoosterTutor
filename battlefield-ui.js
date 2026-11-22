@@ -6,6 +6,26 @@ const battlefieldUI97=(()=>{
  field.prepend(toolbar);field.append(hand,library,grave,actions);utility.remove();
  const system=document.createElement('div');system.className='battle-system97';toolbar.append(system);system.append($('#quit-button'));
  const controls=['options-button','music-settings'].map(id=>{const node=$('#'+id),marker=document.createComment('home-'+id);node.before(marker);return{node,marker};});
+ // Matching physical zones, with an actual Exile pile beside Library and Graveyard.
+ const piles=document.createElement('div');piles.className='battle-piles98';field.append(piles);piles.append(library,grave);toolbar.append(actions);
+ library.classList.add('battle-pile98');grave.classList.add('battle-pile98');
+ const graveCount=$('#graveyard-count'),exileCount=$('#exile-count'),exileButton=$('#exile-button');
+ $('#graveyard-button').replaceChildren(document.createTextNode('Graveyard'));exileButton.replaceChildren(document.createTextNode('Exile'));
+ const graveCaption=document.createElement('div');graveCaption.className='pile-count98';graveCaption.append(graveCount);graveCaption.insertAdjacentHTML('beforeend','<small>cards</small>');grave.append(graveCaption);
+ const exile=document.createElement('section');exile.className='exile-zone98 battle-pile98';exile.setAttribute('aria-label','Exile');
+ const exileHeading=document.createElement('div');exileHeading.className='pile-heading98';exileHeading.append(exileButton);
+ const exileFace=document.createElement('button');exileFace.type='button';exileFace.id='exile-pile98';exileFace.className='pile-face98';exileFace.setAttribute('aria-label','Inspect exiled cards');exileFace.addEventListener('click',()=>exileButton.click());
+ const exileCaption=document.createElement('div');exileCaption.className='pile-count98';exileCaption.append(exileCount);exileCaption.insertAdjacentHTML('beforeend','<small>cards</small>');exile.append(exileHeading,exileFace,exileCaption);piles.append(exile);
+ const stack=library.querySelector('.library-stack'),layers=document.createElement('span'),emptyDeck=document.createElement('span');layers.className='library-depth98';layers.setAttribute('aria-hidden','true');emptyDeck.className='pile-empty98';emptyDeck.setAttribute('aria-hidden','true');emptyDeck.textContent='◇';stack.prepend(layers);stack.append(emptyDeck);
+ let pileSignature98='';
+ function renderPiles98(b=state.battle){
+  if(!b)return;const count=libraryCardCount49(b),depth=count>1?24*(1-Math.exp(-(count-1)/55)):0,layerCount=Math.min(14,Math.ceil(Math.max(0,count-1)/5));
+  library.dataset.remaining98=String(count);stack.style.setProperty('--deck-depth98',depth.toFixed(3)+'px');stack.style.setProperty('--deck-side98',(depth*.12).toFixed(3)+'px');$('#library-button').classList.toggle('is-empty',count===0);
+  if(layers.childElementCount!==layerCount)layers.innerHTML=Array.from({length:layerCount},(_,i)=>`<i style="--sheet98:${(i+1)/Math.max(1,layerCount)}"></i>`).join('');
+  const cards=[...(b.exile||[]),...(b.enemyExile||[])],card=cards.at(-1),signature=card?`${card.id}:${card.enemyKind||''}:${isFoilCard59(card)}:${runCounterKey60(card)}`:'empty';
+  if(signature!==pileSignature98){pileSignature98=signature;exileFace.innerHTML=card?card.enemyKind?`<span class="exile-foe98 collection-monster">${walkerPortrait(card.enemyKind)}</span>`:cardFace(card):'<span class="pile-empty98" aria-hidden="true">✧</span>';}
+  exileFace.setAttribute('aria-label',`Inspect Exile · ${cards.length} cards${card?', top: '+card.name:''}`);exileFace.disabled=exileButton.disabled;
+ }
  const oldInspector=combat.querySelector('.card-inspector'),content=$('#inspector-content');oldInspector.remove();
  const inspector=document.createElement('dialog');inspector.id='card-inspect-dialog97';inspector.className='floating-card-inspector97';inspector.setAttribute('aria-labelledby','card-inspect-name97');
  inspector.innerHTML='<header><div><span class="eyebrow">CARD DETAILS</span><h2 id="card-inspect-name97"></h2></div><button id="card-inspect-close97" class="graveyard-close" aria-label="Close card details">×</button></header>';
@@ -51,10 +71,10 @@ const battlefieldUI97=(()=>{
  }
  const baseFit=fitGameCanvas;
  fitGameCanvas=function(){
-  baseFit();sync();if(state.screen!=='combat-screen'){root.classList.remove('battle-tall97');return;}
+  baseFit();sync();if(state.screen!=='combat-screen'){root.classList.remove('battle-tall97','battle-compact98');return;}
   const viewport=window.visualViewport,use=viewport&&Math.abs(viewport.scale-1)<.01,w=use?viewport.width:innerWidth,h=use?viewport.height:innerHeight,ratio=w/h,tall=ratio<.85;
   const width=tall?880:Math.max(1200,ratio*900),height=tall?Math.max(1280,880/ratio):width/ratio;
-  root.classList.toggle('battle-tall97',tall);root.style.setProperty('--battle-width97',width+'px');root.style.setProperty('--battle-height97',height+'px');
+  root.classList.toggle('battle-tall97',tall);root.classList.toggle('battle-compact98',!tall&&width<1450);root.style.setProperty('--battle-width97',width+'px');root.style.setProperty('--battle-height97',height+'px');
   root.style.setProperty('--game-scale',Math.min(w/width,h/height));field.style.setProperty('--throw-distance97',(field.clientWidth/2+420)+'px');root.style.setProperty('--battle-dialog-scale97',Math.min((w-20)/1120,(h-20)/720));
   requestAnimationFrame(()=>{fitHand();drawCombatArrows();for(const dialog of document.querySelectorAll('dialog[open]'))fitDialog(dialog);placeInspector();});
  };
@@ -64,13 +84,13 @@ const battlefieldUI97=(()=>{
  showCardPreview=function(card,element){if(state.screen==='combat-screen'&&(inspector.open||element?.dataset.previewOwner!=='hand')){hideCardPreview();return;}return basePreview(card,element);};
  inspectBattlefieldCard=function(card,element){if(state.screen!=='combat-screen')return baseInspect(card,element);state.inspectedId=null;if(inspector.open&&inspection?.id===element?.dataset.previewId)fillInspector(card,inspection.element);};
  const baseBattle=renderBattle;
- renderBattle=function(){const result=baseBattle();for(const node of combat.querySelectorAll('[data-enemy-attacker]')){node.dataset.previewOwner='enemy';node.dataset.previewId=node.dataset.enemyAttacker;}fitHand();if(inspector.open&&inspection){const u=unitFor(inspection.element),handIndex=inspection.owner==='hand'?state.battle.hand.indexOf(inspection.card):-1;if(inspection.battle!==state.battle||(inspection.id&&!u)||(inspection.owner==='hand'&&handIndex<0))closeInspect();else{const current=inspection.id?combat.querySelector(`[data-preview-id="${inspection.id}"][data-preview-owner="${inspection.owner}"]`):handIndex>=0?combat.querySelector(`[data-hand-index="${handIndex}"]`):null;if(current)inspection.element=current;fillInspector(u?.card||inspection.card,inspection.element);}}return result;};
+ renderBattle=function(){const result=baseBattle();renderPiles98();for(const node of combat.querySelectorAll('[data-enemy-attacker]')){node.dataset.previewOwner='enemy';node.dataset.previewId=node.dataset.enemyAttacker;}fitHand();if(inspector.open&&inspection){const u=unitFor(inspection.element),handIndex=inspection.owner==='hand'?state.battle.hand.indexOf(inspection.card):-1;if(inspection.battle!==state.battle||(inspection.id&&!u)||(inspection.owner==='hand'&&handIndex<0))closeInspect();else{const current=inspection.id?combat.querySelector(`[data-preview-id="${inspection.id}"][data-preview-owner="${inspection.owner}"]`):handIndex>=0?combat.querySelector(`[data-hand-index="${handIndex}"]`):null;if(current)inspection.element=current;fillInspector(u?.card||inspection.card,inspection.element);}}return result;};
  const baseScreen=showScreen;
  showScreen=function(id){if(id!=='combat-screen'){cancelHold();closeInspect();}const result=baseScreen(id);fitGameCanvas();return result;};
  const baseDiceLock97=lockDiceBattlefield53;
- lockDiceBattlefield53=function(job){baseDiceLock97(job);for(const node of field.querySelectorAll('.library-zone,.combat-actions-panel'))if(!job.lockedUI.some(entry=>entry.node===node)){job.lockedUI.push({node,inert:node.inert});node.inert=true;}};
+ lockDiceBattlefield53=function(job){baseDiceLock97(job);for(const node of field.querySelectorAll('.library-zone,.combat-actions-panel,.exile-zone98'))if(!job.lockedUI.some(entry=>entry.node===node)){job.lockedUI.push({node,inert:node.inert});node.inert=true;}};
  const baseControllerZone=controller.zone.bind(controller);
- controller.zone=function(element){if(element?.closest('.battle-system97'))return'system';if(element?.closest('.library-zone,.table-graveyard,.combat-actions-panel,.hand-heading'))return'actions';return baseControllerZone(element);};
+ controller.zone=function(element){if(element?.closest('.battle-system97'))return'system';if(element?.closest('.library-zone,.table-graveyard,.exile-zone98,.combat-actions-panel,.hand-heading'))return'actions';return baseControllerZone(element);};
  const baseControllerInspect=controller.inspect.bind(controller);
  controller.inspect=function(){this.reconcile();const element=this.focused;if(state.screen!=='combat-screen')return baseControllerInspect();if(element?.dataset.enemyAttacker){element.dataset.previewOwner='enemy';element.dataset.previewId=element.dataset.enemyAttacker;}const card=element?.dataset.previewOwner?previewCardFor(element):null;if(card)openInspect(card,element);};
  $('#card-inspect-close97').addEventListener('click',closeInspect);
