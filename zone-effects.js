@@ -4,7 +4,7 @@ const cardZoneEffects = (() => {
   const draws = new WeakMap(), graveMoves = new WeakMap();
   const flights = new Set();
   const combat = document.getElementById('combat-screen');
-  let snapshot = null, frame = 0, generation = 0, hit = null, drawSequence = 0;
+  let snapshot = null, frame = 0, generation = 0, hit = null, shake = null, drawSequence = 0;
   const rect = element => {
     if (!element?.isConnected) return null;
     const box = element.getBoundingClientRect();
@@ -25,18 +25,19 @@ const cardZoneEffects = (() => {
       return true;
     });
   }
+  function cardRect(element){return rect(element)?cardVisualPose96(element):null;}
   function collectSources(old, battle) {
     if (!old) return [];
     const alive = new Set([...battle.creatures,...battle.permanents].map(unit=>unit.id));
-    const units = old.units.filter(unit=>!alive.has(unit.id)).map(unit=>({card:unit.card,originalCard:unit.originalCard,box:rect(document.querySelector(`[data-creature-id="${unit.id}"] .player-card-frame,[data-permanent-id="${unit.id}"] .permanent-card-frame`))}));
+    const units = old.units.filter(unit=>!alive.has(unit.id)).map(unit=>({card:unit.card,originalCard:unit.originalCard,box:cardRect(document.querySelector(`[data-creature-id="${unit.id}"] .player-card-frame,[data-permanent-id="${unit.id}"] .permanent-card-frame`))}));
     const justDrawn=(draws.get(battle)||[]).filter(event=>event.sequence>old.drawSequence).map(event=>event.card);
     const removed = added(battle.hand,[...old.hand,...justDrawn]);
     const hand = [];
-    old.hand.forEach((card,index)=>{const n=removed.indexOf(card);if(n<0)return;removed.splice(n,1);hand.push({card,box:rect(document.querySelector(`[data-hand-index="${index}"]`))});});
+    old.hand.forEach((card,index)=>{const n=removed.indexOf(card);if(n<0)return;removed.splice(n,1);hand.push({card,box:cardRect(document.querySelector(`[data-hand-index="${index}"]`))});});
     return [...units,...hand];
   }
   function fly(card, source, destination, kind, delay, flip = false) {
-    const target = rect(destination);
+    const target = cardRect(destination);
     if (!source || !target || motion.matches || !visible()) return;
     const node = document.createElement('div');
     node.className = `zone-flight zone-flight-${kind}`;
@@ -45,21 +46,16 @@ const cardZoneEffects = (() => {
     node.querySelectorAll('img').forEach(img => {img.loading='eager';});
     Object.assign(node.style,{left:source.left+'px',top:source.top+'px',width:source.width+'px',height:source.height+'px'});
     document.body.append(node);
-    const scale = parseFloat(document.documentElement.style.getPropertyValue('--game-scale')) || 1;
-    const width = destination.offsetWidth*scale || target.width;
-    const height = destination.offsetHeight*scale || target.height;
-    const transform = getComputedStyle(destination).transform;
-    const matrix = new DOMMatrixReadOnly(transform==='none'?undefined:transform);
-    const angle = Math.atan2(matrix.b,matrix.a)*180/Math.PI;
-    const dx=target.left+target.width/2-source.left-source.width/2;
-    const dy=target.top+target.height/2-source.top-source.height/2;
-    const sx=width/source.width, sy=height/source.height;
-    const arc=Math.min(65*scale,Math.hypot(dx,dy)*.15);
+    const dx=target.x-source.x,dy=target.y-source.y;
+    const uniform=Math.min(target.width/source.width,target.height/source.height);
+    const angle=source.angle+((target.angle-source.angle+540)%360-180);
+    const canvasScale = parseFloat(document.documentElement.style.getPropertyValue('--game-scale')) || 1;
+    const arc=Math.min(65*canvasScale,Math.hypot(dx,dy)*.15);
     const duration=kind==='draw'?520:460;
     const frames=[
-      {transform:'translate(0,0) rotate(0deg) scale(1)',opacity:1},
-      {transform:`translate(${dx*.55}px,${dy*.55-arc}px) rotate(${kind==='draw'?-8:10}deg) scale(${1+(sx-1)*.55},${1+(sy-1)*.55})`,opacity:1,offset:.55},
-      {transform:`translate(${dx}px,${dy}px) rotate(${angle}deg) scale(${sx},${sy})`,opacity:1}
+      {transform:`translate(0,0) rotate(${source.angle}deg) scale(1)`,opacity:1},
+      {transform:`translate(${dx*.55}px,${dy*.55-arc}px) rotate(${source.angle+(kind==='draw'?-8:10)}deg) scale(${1+(uniform-1)*.55})`,opacity:1,offset:.55},
+      {transform:`translate(${dx}px,${dy}px) rotate(${angle}deg) scale(${uniform})`,opacity:1}
     ];
     if (kind==='draw') destination.classList.add('zone-arriving');
     const animation=node.animate(frames,{duration,delay,easing:'cubic-bezier(.22,.65,.3,1)',fill:'both'});
@@ -85,7 +81,7 @@ const cardZoneEffects = (() => {
       const incoming=draws.get(battle)||[],outgoing=graveMoves.get(battle)||[];
       draws.delete(battle);graveMoves.delete(battle);
       if(token!==generation||state.battle!==battle||!visible()||motion.matches){clearFlights();return;}
-      const library=rect(document.querySelector('#library-button .library-stack'));
+      const library=cardRect(document.querySelector('#library-button .library-stack'));
       const destinations=new Set();
       incoming.forEach((event,i)=>{
         let index=event.index;
@@ -104,7 +100,7 @@ const cardZoneEffects = (() => {
     const old=snapshot?.battle===battle?snapshot:null;
     const sources=battle?collectSources(old,battle):[];
     const arrivals=old?added(old.graveyard,battle.graveyard):[];
-    const library=rect(document.querySelector('#library-button .library-stack'));
+    const library=cardRect(document.querySelector('#library-button .library-stack'));
     const jobs=arrivals.map(card=>{
       const source=sources.findIndex(item=>(item.card===card||item.originalCard===card)&&item.box);
       if(source>=0)return {card,box:sources.splice(source,1)[0].box,fromLibrary:false};
@@ -123,15 +119,25 @@ const cardZoneEffects = (() => {
     if(accepted&&flight?.payload?.kind==='hand'&&(graveMoves.get(state.battle)||[]).some(event=>event.card.id===flight.payload.cardId))return;
     return baseLanding(flight,accepted);
   };
+  function clearShake(){if(!shake)return;const previous=shake;shake=null;previous.animation.cancel();combat.classList.remove('combat-hit-shake96');}
+  function shakeScreen(amount){
+    clearShake();if(motion.matches||!visible())return;
+    const a=Math.min(6,1.4+Math.sqrt(amount)*1.1);
+    const offsets=[[0,0],[-a,a*.4],[a*.8,-a*.35],[-a*.6,a*.2],[a*.35,-a*.14],[-a*.16,a*.06],[0,0]];
+    combat.classList.add('combat-hit-shake96');
+    const animation=combat.animate(offsets.map(([x,y])=>({transform:`translate3d(${x}px,${y}px,0)`})),{duration:200+Math.min(60,amount*2),easing:'linear'});
+    const current={animation};shake=current;
+    animation.finished.then(()=>{if(shake===current)clearShake();},()=>{});
+  }
   function clearHit() {
-    if(!hit)return;
+    clearShake();if(!hit)return;
     const previous=hit;hit=null;
     previous.animation?.cancel();previous.avatarAnimation?.cancel();
     previous.node.remove();previous.avatar.classList.remove('avatar-hit-active');
   }
   function damage(amount) {
     if(amount<=0||!visible())return;
-    clearHit();
+    clearHit();shakeScreen(amount);
     const avatar=document.getElementById('player-avatar'),box=rect(avatar);
     if(!box)return;
     const node=document.createElement('div');node.className='player-hit-number';node.setAttribute('aria-hidden','true');node.textContent=`−${amount}`;

@@ -1294,6 +1294,7 @@ function updateDragFeedback(payload, target) {
   if (ghost) { ghost.classList.toggle('valid-drop', allowed); ghost.classList.toggle('invalid-drop', Boolean(zone) && !allowed); }
 }
 function finishDrag() {
+  if (typeof cancelCardDragMotion96 === 'function') cancelCardDragMotion96(pointerDrag);
   if (pointerDrag?.source) {
     dragClickGuard = pointerDrag.source;
     pointerDrag.source.classList.remove('is-grabbed');
@@ -1340,9 +1341,13 @@ document.addEventListener('pointerdown', event => {
   const payload = dragPayloadFor(event.target);
   const source = event.target.closest('button');
   if (!payload || !source) return;
-  const face = source.querySelector('.player-card-frame, .permanent-card-frame') || source;
+  const face = source.querySelector('.player-card-frame, .permanent-card-frame, .foil-card-face') || source.querySelector('img, .printed-card') || source;
   const box = face.getBoundingClientRect();
-  pointerDrag = { payload, source, face, pointerId: event.pointerId, x: event.clientX, y: event.clientY, offsetX: Math.max(0, Math.min(box.width, event.clientX - box.left)), offsetY: Math.max(0, Math.min(box.height, event.clientY - box.top)), width: box.width, height: box.height, active: false };
+  const pose = typeof cardVisualPose96 === 'function' ? cardVisualPose96(face) : null;
+  const width = pose?.width || box.width, height = pose?.height || box.height;
+  const angle = (pose?.angle || 0) * Math.PI / 180;
+  const dx = event.clientX - (box.left + box.width / 2), dy = event.clientY - (box.top + box.height / 2);
+  pointerDrag = { payload, source, face, pointerId: event.pointerId, x: event.clientX, y: event.clientY, offsetX: Math.max(0, Math.min(width, width/2 + dx*Math.cos(angle) + dy*Math.sin(angle))), offsetY: Math.max(0, Math.min(height, height/2 - dx*Math.sin(angle) + dy*Math.cos(angle))), width, height, active: false, motion96:{x:event.clientX,y:event.clientY,time:performance.now(),vx:0,vy:0,angle:pose?.angle||0,frame:0} };
   source.setPointerCapture(event.pointerId);
 });
 document.addEventListener('pointermove', event => {
@@ -1356,10 +1361,12 @@ document.addEventListener('pointermove', event => {
     pointerDrag.source.classList.add('is-grabbed');
     const ghost = document.createElement('div');
     ghost.id = 'drag-ghost'; ghost.className = 'drag-card';
-    const image = pointerDrag.face.querySelector('.foil-card-face') || pointerDrag.face.querySelector('img, .printed-card');
+    const image = pointerDrag.face.matches('.foil-card-face,img,.printed-card') ? pointerDrag.face : pointerDrag.face.querySelector('.foil-card-face,img,.printed-card');
     if (image) ghost.append(image.cloneNode(true));
     ghost.style.setProperty('--drag-width', `${pointerDrag.width}px`);
     ghost.style.setProperty('--drag-height', `${pointerDrag.height}px`);
+    ghost.style.setProperty('--grab-x96', `${pointerDrag.offsetX}px`);
+    ghost.style.setProperty('--grab-y96', `${pointerDrag.offsetY}px`);
     document.body.append(ghost);
     document.body.classList.add('drag-active');
     document.querySelectorAll('.drop-zone').forEach(zone => { if (dropFeedback(state.dragPayload, zone)) zone.classList.add('drop-possible'); });
@@ -1369,6 +1376,7 @@ document.addEventListener('pointermove', event => {
   const ghost = $('#drag-ghost');
   ghost.style.left = `${event.clientX - pointerDrag.offsetX}px`;
   ghost.style.top = `${event.clientY - pointerDrag.offsetY}px`;
+  if (typeof updateCardDragMotion96 === 'function') updateCardDragMotion96(pointerDrag,event,ghost);
   updateDragFeedback(pointerDrag.payload, document.elementFromPoint(event.clientX, event.clientY));
 }, { passive: false });
 document.addEventListener('pointerup', event => {
