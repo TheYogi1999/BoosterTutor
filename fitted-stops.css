@@ -1,0 +1,206 @@
+/* v0.101: the receipt and trading post never scroll their main view. */
+html.scene-ui99 #results-screen.fit-stop101.active{padding:24px clamp(16px,5vw,100px)!important;gap:18px;overflow:hidden!important}
+html.scene-ui99 #results-screen.fit-stop101 .results-heading82{padding-bottom:12px;gap:18px;min-height:0}
+html.scene-ui99 #results-screen.fit-stop101 .results-heading82 h2{font-size:clamp(25px,3vw,40px);line-height:1.12;margin:7px 0 4px}
+html.scene-ui99 #results-screen.fit-stop101 .results-grid82{height:100%;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:20px;overflow:hidden}
+html.scene-ui99 #results-screen.fit-stop101 :is(.results-payout82,.results-ledger82){height:100%;min-height:0!important;padding:24px;box-sizing:border-box;overflow:hidden}
+html.scene-ui99 #results-screen.fit-stop101 .results-ledger82{gap:12px}
+html.scene-ui99 #results-screen.fit-stop101 #results-breakdown82{display:grid;grid-auto-rows:minmax(0,1fr);overflow:hidden;flex:1;min-height:0}
+html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82{min-height:0;gap:12px;font-size:14px;line-height:1.25}
+html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82>span{min-width:0;overflow-wrap:anywhere}
+html.scene-ui99 #results-screen.fit-stop101 .results-facts82{gap:12px;font-size:9px;line-height:1.4;flex:none}
+html.scene-ui99 #results-screen.fit-stop101 .results-facts82 b{font-size:23px}
+html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82{margin-top:20px;padding-top:18px;gap:16px}
+/* Trading post: three cards, two boosters and three counters on wide displays. */
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.active{grid-template-columns:clamp(180px,22vw,340px) minmax(0,1fr);grid-template-rows:64px minmax(0,1fr) 100px 98px;gap:14px 22px;padding:18px 28px!important;overflow:hidden!important;align-content:stretch}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shopkeeper90{grid-column:1;grid-row:1/5;min-height:0;height:auto}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-heading{grid-column:2;grid-row:1;grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:auto;gap:14px;position:static;height:100%;padding:0;background:none;align-items:start}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-heading>div:first-child{grid-column:1;grid-row:1}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-heading .shop-wallet{grid-column:2;grid-row:1;justify-self:end}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-heading .scene-actions99{grid-column:3;grid-row:1}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-heading h2{font-size:29px;margin:4px 0}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 #shop-location{font-size:9px;letter-spacing:1.8px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-grid{grid-column:2;grid-row:2;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:minmax(0,1fr);height:100%;min-height:0;gap:14px;align-items:stretch}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-offer{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;height:100%;min-height:0;max-height:100%;padding:30px 12px 10px;gap:7px;overflow:visible}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-face,html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-face .card-image-wrap{width:min(100%,calc(var(--shop-art101,160px) * 488 / 680))!important;height:auto!important;min-height:0!important;aspect-ratio:488/680;flex:none;cursor:pointer}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-face .card-image-wrap{display:block;width:100%!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-face img{display:block;width:100%;height:100%;object-fit:contain}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-offer .draft-card-name{grid-area:auto;margin:0!important;padding:0;min-height:36px;flex:none;font:500 18px/18px Georgia,serif!important;text-align:center;white-space:normal}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-offer .draft-card-summary{grid-area:auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:5px;font:12px/1.35 var(--sans);padding:0;overflow:visible!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .draft-card-ability{display:none!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-actions101{display:flex;align-items:stretch;gap:8px;flex:none;width:100%;margin-top:auto}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-actions101>button{min-height:32px!important;height:32px!important;min-width:0;width:auto;flex:1;padding:5px 4px!important;font:600 11px/20px var(--sans)!important;margin:0!important;white-space:nowrap}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-pack{grid-column:2;grid-row:3;grid-template-columns:repeat(2,minmax(0,1fr)) 150px;grid-template-rows:minmax(0,1fr);height:100%;min-height:0;gap:12px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-booster-offer{height:100%;min-height:0;grid-template-columns:32px minmax(0,1fr);padding:8px 12px!important;gap:12px;box-sizing:border-box}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-pack .shop-pack-emblem{width:30px;height:48px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-pack .shop-pack-copy b{font-size:17px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-pack .shop-pack-copy :is(span,small){font-size:11px;line-height:1.3}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 #shop-pack-confirm{grid-column:3;grid-row:1;align-self:center;width:150px;max-width:150px;min-height:40px;height:auto}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-counters{grid-column:2;grid-row:4;display:flex;flex-direction:column;height:100%;min-height:0;gap:6px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-counters>header{margin:0;flex:none;font-size:10px;line-height:14px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 #shop-counter-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:minmax(0,1fr);min-height:0;height:auto;flex:1;gap:10px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .counter-offer{height:100%;min-height:0;grid-template-columns:22px minmax(0,1fr) 58px;grid-template-rows:auto;gap:7px;padding:8px;align-content:center}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .counter-offer b{font-size:13px;line-height:16px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .counter-offer small{font-size:10px;line-height:13px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .counter-offer button{grid-area:auto;font-size:10px!important;min-height:32px;padding:5px!important}
+.shop-tabs101{display:flex;gap:8px;align-items:stretch}
+.shop-tabs101>button{flex:1;min-width:0;border:1px solid #c6ad7938;border-radius:4px;background:#102029aa;color:#c1cbc4;font:600 12px/20px var(--sans);letter-spacing:1px;text-transform:uppercase;padding:4px 10px;cursor:pointer}
+.shop-tabs101>button[aria-selected="true"]{color:#f8d799;border-color:#d5b576;background:#aa82401a}
+.shop-tabs101>button:focus-visible{outline:2px solid #edcd93;outline-offset:2px}
+html.scene-ui99 #shop-screen.fit-stop101 :is(.shop-grid,.shop-pack,.shop-counters,.shop-tabs101)[hidden]{display:none!important}
+/* Full adapted effects are a deliberate, readable inspection action. */
+html.scene-ui99 #shop-card-dialog101{width:min(760px,calc(100vw - 24px))!important;height:auto!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important}
+.shop-card-dialog101>header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.shop-detail-body101{display:grid;grid-template-columns:minmax(100px,34%) minmax(0,1fr);gap:24px;align-items:start;font:14px/1.6 var(--sans)}
+.shop-detail-art101{width:100%;aspect-ratio:488/680}.shop-detail-art101>img,.shop-detail-art101>.foil-card-face{display:block;width:100%;height:100%;object-fit:contain;border-radius:8px}
+.shop-detail-body101 h2{margin:0 0 10px}.shop-detail-body101 p{margin:0 0 15px}.shop-detail-rules101{margin-top:16px}
+/* Departments replace scrolling on compact windows. */
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101.active{grid-template-columns:minmax(0,1fr);grid-template-rows:62px 32px 64px minmax(0,1fr);gap:8px;padding:12px 16px!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading{grid-column:1;grid-row:1;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:34px 24px;gap:2px 12px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading>div:first-child{grid-column:1;grid-row:1}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading h2{font-size:25px;line-height:30px;margin:0}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shop-location{display:none}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-wallet{grid-column:1;grid-row:2;justify-self:start;padding:0;min-height:0;height:24px;border:0;background:none;gap:9px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-wallet b{font-size:20px;line-height:24px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-wallet span{font-size:9px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading .scene-actions99{grid-column:2;grid-row:1/3}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-tabs101{grid-column:1;grid-row:2;width:100%;height:32px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper90{grid-column:1;grid-row:3;width:100%;height:64px;min-height:0}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-portrait87{width:64px;height:64px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-copy90{left:78px;right:12px;top:6px;bottom:auto}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-name87{font-size:8px!important;line-height:10px;letter-spacing:1px!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shopkeeper-greeting87{font-size:13px;line-height:17px;margin:4px 0 0}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-note90{display:none}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 :is(.shop-grid,.shop-pack,.shop-counters){grid-column:1;grid-row:4;min-height:0;height:100%}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer{padding:26px 10px 8px;gap:7px;--shop-art101:180px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer .draft-card-name{font-size:17px!important;line-height:18px!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-pack{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1fr) 44px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shop-pack-confirm{grid-column:1/-1;grid-row:2;justify-self:end;width:180px;max-width:180px;height:40px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shop-counter-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer{grid-template-columns:24px minmax(0,1fr);grid-template-rows:auto auto;gap:12px;align-content:center}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer button{grid-column:1/-1;min-height:36px}
+@media(max-width:600px){
+ html.scene-ui99 #results-screen.fit-stop101.active{padding:14px!important;gap:10px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-heading82{gap:10px;padding-bottom:8px;align-items:start}
+ html.scene-ui99 #results-screen.fit-stop101 .results-heading82 h2{font-size:23px;line-height:25px;margin:5px 0}
+ html.scene-ui99 #results-screen.fit-stop101 .results-grid82{grid-template-columns:minmax(0,1fr);grid-template-rows:100px minmax(0,1fr);gap:10px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-payout82{position:relative;display:grid;grid-template-columns:90px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;gap:2px 16px;padding:10px 14px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-coin82{display:none}
+ html.scene-ui99 #results-screen.fit-stop101 #results-bounty82{grid-column:1;grid-row:1;font-size:48px;line-height:1;margin:0}
+ html.scene-ui99 #results-screen.fit-stop101 .results-payout82>span{grid-column:1;grid-row:2;font-size:8px;letter-spacing:1px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82{grid-column:2;grid-row:1/3;margin:0;padding:0;border:0;gap:8px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82>div{font-size:9px;gap:7px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 strong{font-size:22px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 small{font-size:12px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-ledger82{padding:10px 12px;gap:8px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-ledger82>.eyebrow{font-size:9px;line-height:12px;letter-spacing:1.5px}
+ html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82{font-size:11px;line-height:14px;gap:8px}
+ html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82 b{font-size:17px}
+ html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82 small{font-size:10px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-facts82{font-size:8px;gap:6px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-facts82 b{font-size:20px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101.active{padding:10px 12px!important;grid-template-rows:62px 32px 64px minmax(0,1fr);gap:7px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading h2{font-size:21px;line-height:24px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading .scene-actions99>button{min-width:118px;max-width:135px;font-size:10px!important}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-grid{gap:8px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer{padding:24px 5px 6px;gap:6px;--shop-art101:150px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer .draft-card-name{font-size:14px!important;line-height:16px!important;min-height:32px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-type{font-size:10px;line-height:13px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-summary{font-size:10px;gap:4px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-keywords>b{display:none}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .keyword-tag61{font-size:9px!important;line-height:12px!important;padding:1px 3px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .stat-badge{font-size:10px!important;line-height:14px!important;padding:0 2px;gap:1px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .stat-badge svg{width:10px;height:10px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .combat-stats{gap:2px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-card-actions101{flex-direction:column;gap:3px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-card-actions101>button{min-height:26px!important;height:26px!important;font-size:9px!important;padding:2px!important;letter-spacing:.5px!important}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .new-card-badge{font-size:12px;top:-22px;letter-spacing:1px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-pack{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(2,minmax(0,1fr)) 44px;gap:8px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shop-pack-confirm{grid-column:1;grid-row:3}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shop-counter-grid{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:8px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer{grid-template-columns:22px minmax(0,1fr) 62px;grid-template-rows:auto;gap:9px;padding:9px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer b{font-size:14px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer small{font-size:11px;line-height:15px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer button{grid-column:3;grid-row:1}
+ .shop-detail-body101{grid-template-columns:minmax(90px,30%) minmax(0,1fr);gap:14px;font-size:13px}
+}
+@media(max-width:600px) and (max-height:700px){
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer{--shop-art101:80px;gap:5px;padding-top:22px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-type{display:none}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-name87{display:none}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shopkeeper-greeting87{margin:0;font-size:12px;line-height:16px}
+}
+@media(max-height:650px) and (min-aspect-ratio:1/1){
+ html.scene-ui99 #results-screen.fit-stop101.active{padding:10px 20px!important;gap:10px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-heading82{padding-bottom:7px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-heading82 h2{font-size:25px;line-height:27px;margin:4px 0}
+ html.scene-ui99 #results-screen.fit-stop101 .results-heading82 .eyebrow{font-size:9px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-grid82{gap:12px}
+ html.scene-ui99 #results-screen.fit-stop101 :is(.results-payout82,.results-ledger82){padding:10px 14px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-payout82{gap:4px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-coin82{width:28px;height:28px;min-height:28px;font-size:17px;flex:none}
+ html.scene-ui99 #results-screen.fit-stop101 #results-bounty82{font-size:43px;line-height:46px;margin:0}
+ html.scene-ui99 #results-screen.fit-stop101 .results-payout82>span{font-size:8px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82{margin-top:6px;padding-top:6px;gap:12px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82>div{font-size:9px;gap:3px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 strong{font-size:22px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 small{font-size:12px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-ledger82{gap:6px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-ledger82>.eyebrow{font-size:9px;line-height:12px}
+ html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82{font-size:11px;line-height:13px}
+ html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82 b{font-size:16px}
+ html.scene-ui99 #results-screen.fit-stop101 .result-bounty-row82 small{font-size:9px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-facts82{font-size:8px}
+ html.scene-ui99 #results-screen.fit-stop101 .results-facts82 b{font-size:18px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101.active{grid-template-columns:120px minmax(0,1fr);grid-template-rows:45px 28px minmax(0,1fr);gap:7px 14px;padding:10px 16px!important}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading{grid-column:1/-1;grid-row:1;grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:44px;align-items:start}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-wallet{grid-column:2;grid-row:1;height:40px;align-items:center}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading .scene-actions99{grid-column:3;grid-row:1}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-heading h2{font-size:24px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper90{grid-column:1;grid-row:2/4;height:100%}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-portrait87{width:100%;height:100%}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-copy90{left:8px;right:8px;top:auto;bottom:12px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 #shopkeeper-greeting87{font-size:12px;line-height:16px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-tabs101{grid-column:2;grid-row:2;height:28px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 :is(.shop-grid,.shop-pack,.shop-counters){grid-column:2;grid-row:3}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer{--shop-art101:64px;padding:20px 6px 6px;gap:4px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer .draft-card-name{font-size:14px!important;line-height:16px!important;min-height:32px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-type{display:none}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-summary{font-size:10px;gap:3px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-keywords>b{display:none}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .keyword-tag61{font-size:9px!important;line-height:12px!important;padding:1px 3px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-card-actions101{gap:3px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-card-actions101>button{font-size:9px!important;min-height:26px!important;height:26px!important;padding:2px!important}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-counters>header>span{display:none}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer{gap:6px;padding:7px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer b{font-size:12px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .counter-offer small{font-size:10px;line-height:13px}
+}
+
+@media(max-height:650px) and (min-aspect-ratio:1/1){
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer{--shop-art101:50px}
+ html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-offer .draft-card-name{min-height:0}
+}
+html.scene-ui99 #shop-screen.fit-stop101 .new-card-badge{top:-21px!important;font:700 11px/14px var(--sans);letter-spacing:1px}
+html.scene-ui99 .enemy-hit-fx{display:none!important}
+html.scene-ui99 #results-screen.fit-stop101 #results-bounty82{--receipt-base101:100;display:block;min-width:0;max-width:100%;text-align:center}
+html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 strong{--receipt-stat-base101:30;display:block;min-width:0;white-space:nowrap}
+@media(max-width:600px){html.scene-ui99 #results-screen.fit-stop101 #results-bounty82{--receipt-base101:48}html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 strong{--receipt-stat-base101:22}}
+@media(max-height:650px) and (min-aspect-ratio:1/1){html.scene-ui99 #results-screen.fit-stop101 #results-bounty82{--receipt-base101:43}html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 strong{--receipt-stat-base101:22}}
+html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82{grid-template-columns:repeat(2,minmax(0,1fr))}
+html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82>div{min-width:0}
+html.scene-ui99 #results-screen.fit-stop101 .results-stat-pair82 strong{width:100%}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shopkeeper-portrait87{height:100%}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-actions101>button{letter-spacing:.2px!important}
+/* Reserve space for every fact and action before assigning the card art height. */
+html.scene-ui99 .game-shell #shop-screen.fit-stop101:not(.shop-paged101) .shop-offer{--shop-art101:clamp(60px,calc(100dvh - 700px),160px)}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-keywords{display:flex!important;flex-wrap:wrap;align-content:flex-start;align-items:flex-start;gap:3px!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .draft-card-keywords>.keyword-tag61{margin:0!important}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 .shop-card-actions101>button[data-buy-card]{flex-grow:1.7}
+/* Purchase feedback belongs to Vey, leaving every offer and receipt value exposed. */
+html.fitted-stop-active101 #toast{opacity:0!important}
+.shop-status101{display:none}
+.shop-has-status101 :is(.shopkeeper-name87,#shopkeeper-greeting87,.shopkeeper-note90){visibility:hidden}
+.shop-has-status101 .shop-status101{display:block;position:absolute;inset:0 0 auto;margin:0;color:#fff0d7;font:italic 18px/1.4 Georgia,serif}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101.shop-paged101 .shop-status101{font:italic 12px/16px Georgia,serif}
+html.scene-ui99 .game-shell #shop-screen.fit-stop101 #shop-pack-confirm{padding:4px 8px!important;font:600 11px/14px var(--sans)!important;letter-spacing:.2px!important}

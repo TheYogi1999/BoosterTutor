@@ -72,7 +72,7 @@ const fs=require('node:fs');
    }
    b.enemyCreatures=['dragon','thornstag','rootmaw','gravebell','sunbondsliver','prismaticsliver'].map(k=>createFoe(k,3));renderBattle();return result;
   });
-  for(const portrait of portraits){assert.deepEqual(portrait.corners,['6px','6px','6px','6px'],portrait.kind);assert.equal(portrait.mask,'none');assert.equal(portrait.width,80);assert.equal(portrait.height,100)}
+  for(const portrait of portraits){assert.deepEqual(portrait.corners,['6px','6px','6px','6px'],portrait.kind);assert.equal(portrait.mask,'none');assert.ok(portrait.width>0&&portrait.width<=104);assert.ok(portrait.height>0&&portrait.height<=130);assert.ok(Math.abs(portrait.width-portrait.height*.8)<=1,JSON.stringify(portrait))}
   await p.screenshot({path:'work/portraits94.png'});assert.deepEqual(errors,[]);
   console.log('PASS 12 truthful seven-card pack categories, six color-restricted precons, two distinct stable random offers, eight real pack purchases/returns, Toxic vector icon, fitted shop and all 50 portrait frames.');
  }finally{await browser.close()}

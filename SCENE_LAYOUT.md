@@ -1,4 +1,4 @@
-# Responsive menus and travel stops — v0.100
+# Responsive menus and travel stops — v0.101
 
 Outside combat, the game uses the visible viewport in screen pixels. It no longer
 shrinks a 1600×900 page into a letterbox. The title, loading screen, draft,
@@ -21,13 +21,15 @@ during a flight finishes the reveal safely and restores selection/confirmation.
 The opening glow cannot create a horizontal scrollbar or block input.
 
 Vey remains on the left on wide displays and becomes a compact greeting panel on
-narrow ones. Shop rows size to their content; long effects cannot overlap booster
-offers or counters. Continue stays in the sticky shop heading while offers scroll.
+narrow ones. Shop and receipt use the fixed-view layouts documented in FITTED_STOPS.md.
+On compact windows, shop departments replace scrolling. Full card effects open
+through Details or the card image; overview facts and colored keywords remain
+visible. Continue stays in the upper-right heading.
 Camp fits its header, compact four-node path, utility buttons and all three
 complete supply choices in one view without scrolling. Wide windows place the
 choices side by side; narrow portrait windows use three compact rows. Token
-effects and carried counts remain visible. Receipt panels stack as needed; their
-internal scroll area starts at the top on a new visit without scrolling the document.
+effects and carried counts remain visible. Receipt panels stack as needed, and all payout values and six grouped bounty
+rows fit without scrolling.
 Camp retains its existing direct token choice; no extra confirmation is required.
 
 Collection, options, audio, controller, precon and counter-selection windows fit
