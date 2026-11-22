@@ -36,9 +36,9 @@ const battlefieldUI97=(()=>{
  function unitFor(element,b=state.battle){const id=element?.dataset.previewId||element?.dataset.enemyAttacker;return b&&[...b.creatures,...b.enemyCreatures,...b.permanents,...b.lands].find(u=>u.id===id);}
  function placeInspector(){
   if(!inspector.open)return;const box=inspector.getBoundingClientRect(),anchor=inspection?.element?.getBoundingClientRect();
-  const margin=12;let x=(innerWidth-box.width)/2,y=(innerHeight-box.height)/2;
-  if(anchor&&innerWidth>780){x=anchor.right+18;if(x+box.width>innerWidth-margin)x=anchor.left-box.width-18;if(x<margin)x=(innerWidth-box.width)/2;y=anchor.top+anchor.height/2-box.height/2;}
-  inspector.style.setProperty('left',Math.max(margin,Math.min(innerWidth-box.width-margin,x))+'px','important');inspector.style.setProperty('top',Math.max(margin,Math.min(innerHeight-box.height-margin,y))+'px','important');
+  const area=typeof safeGameViewport102==='function'?safeGameViewport102():{left:0,top:0,width:innerWidth,height:innerHeight},margin=12,right=area.left+area.width,bottom=area.top+area.height;let x=area.left+(area.width-box.width)/2,y=area.top+(area.height-box.height)/2;
+  if(anchor&&area.width>780){x=anchor.right+18;if(x+box.width>right-margin)x=anchor.left-box.width-18;if(x<area.left+margin)x=area.left+(area.width-box.width)/2;y=anchor.top+anchor.height/2-box.height/2;}
+  inspector.style.setProperty('left',Math.max(area.left+margin,Math.min(right-box.width-margin,x))+'px','important');inspector.style.setProperty('top',Math.max(area.top+margin,Math.min(bottom-box.height-margin,y))+'px','important');
  }
  function fillInspector(card,element){
   const b=state.battle,u=unitFor(element),enemy=u?.owner==='enemy',permanent=b?.permanents.includes(u),attached=permanent?b.creatures.find(c=>c.id===u.attachedTo):null;
@@ -60,7 +60,7 @@ const battlefieldUI97=(()=>{
   inspection={card,element,battle:state.battle,owner:element.dataset.previewOwner,id:element.dataset.previewId};state.inspectedId=null;
   fillInspector(card,element);inspector.showModal();placeInspector();$('#card-inspect-close97').focus({preventScroll:true});return true;
  }
- function fitDialog(dialog){if(state.screen!=='combat-screen'||dialog===inspector||dialog.id==='dice-roll-dialog'||dialog.classList.contains('token-action-dialog'))return;const scale=Math.min(1,(innerWidth-24)/(dialog.offsetWidth||1120),(innerHeight-24)/(dialog.offsetHeight||720));dialog.style.setProperty('--battle-dialog-scale97',String(scale));}
+ function fitDialog(dialog){if(state.screen!=='combat-screen'||dialog===inspector||dialog.id==='dice-roll-dialog'||dialog.classList.contains('token-action-dialog'))return;const area=typeof safeGameViewport102==='function'?safeGameViewport102():{width:innerWidth,height:innerHeight},scale=Math.min(1,(area.width-24)/(dialog.offsetWidth||1120),(area.height-24)/(dialog.offsetHeight||720));dialog.style.setProperty('--battle-dialog-scale97',String(scale));}
  const baseModal97=HTMLDialogElement.prototype.showModal;
  HTMLDialogElement.prototype.showModal=function(...args){const result=baseModal97.apply(this,args);fitDialog(this);return result;};
  function sync(){
@@ -72,7 +72,8 @@ const battlefieldUI97=(()=>{
  const baseFit=fitGameCanvas;
  fitGameCanvas=function(){
   baseFit();sync();if(state.screen!=='combat-screen'){root.classList.remove('battle-tall97','battle-compact98');return;}
-  const viewport=window.visualViewport,use=viewport&&Math.abs(viewport.scale-1)<.01,w=use?viewport.width:innerWidth,h=use?viewport.height:innerHeight,ratio=w/h,tall=ratio<.85;
+  const viewport=window.visualViewport,use=viewport&&Math.abs(viewport.scale-1)<.01,safe=typeof safeGameViewport102==='function'?safeGameViewport102():null,w=safe?.width??(use?viewport.width:innerWidth),h=safe?.height??(use?viewport.height:innerHeight),ratio=w/h,tall=ratio<.85;
+  if(safe){root.style.setProperty('--game-center-x',safe.left+w/2+'px');root.style.setProperty('--game-center-y',safe.top+h/2+'px');root.style.setProperty('--usable-width102',w+'px');root.style.setProperty('--usable-height102',h+'px');}
   const width=tall?880:Math.max(1200,ratio*900),height=tall?Math.max(1280,880/ratio):width/ratio;
   root.classList.toggle('battle-tall97',tall);root.classList.toggle('battle-compact98',!tall&&width<1450);root.style.setProperty('--battle-width97',width+'px');root.style.setProperty('--battle-height97',height+'px');
   root.style.setProperty('--game-scale',Math.min(w/width,h/height));field.style.setProperty('--throw-distance97',(field.clientWidth/2+420)+'px');root.style.setProperty('--battle-dialog-scale97',Math.min((w-20)/1120,(h-20)/720));

@@ -48,3 +48,7 @@ readable popup bounds, matching pile geometry, upper-right Continue, decreasing
 Library depth across 120/60/20/7/1/0 cards, actual draw/mill updates, player/enemy
 Exile previews, pile inspection and restored camp chrome. Dice locks include the
 relocated Continue and all piles; drag/landing regressions are checked separately.
+
+Since v0.102 the camera and floating inspector also exclude device safe-area
+insets and use the safe visible-viewport center, protecting Continue and popup
+controls around notches, status bars and the home indicator.

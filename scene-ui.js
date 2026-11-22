@@ -1,3 +1,9 @@
+/* The visible game area excludes device cutouts and the home/status indicators. */
+function safeGameViewport102(){
+ const v=window.visualViewport,use=v&&Math.abs(v.scale-1)<.01,s=getComputedStyle(document.documentElement),edge=name=>Math.max(0,parseFloat(s.getPropertyValue('--safe-'+name+'102'))||0);
+ const left=edge('left'),right=edge('right'),top=edge('top'),bottom=edge('bottom');
+ return{left:(use?v.offsetLeft:0)+left,top:(use?v.offsetTop:0)+top,width:Math.max(1,(use?v.width:innerWidth)-left-right),height:Math.max(1,(use?v.height:innerHeight)-top-bottom)};
+}
 /* v0.99 — viewport-sized menus, drafting and travel stops. Combat keeps its own camera. */
 (()=>{
  const root=document.documentElement;
@@ -21,14 +27,16 @@
   const active=state.screen!=='combat-screen';root.classList.toggle('scene-ui99',active);
   const result=baseFit();
   if(active){
-   const v=window.visualViewport,use=v&&Math.abs(v.scale-1)<.01;
-   root.style.setProperty('--scene-width99',(use?v.width:innerWidth)+'px');
-   root.style.setProperty('--scene-height99',(use?v.height:innerHeight)+'px');
-   root.style.setProperty('--scene-left99',(use?v.offsetLeft:0)+'px');
-   root.style.setProperty('--scene-top99',(use?v.offsetTop:0)+'px');
+   const area=safeGameViewport102();
+   root.style.setProperty('--scene-width99',area.width+'px');
+   root.style.setProperty('--scene-height99',area.height+'px');
+   root.style.setProperty('--scene-left99',area.left+'px');
+   root.style.setProperty('--scene-top99',area.top+'px');
+   root.style.setProperty('--usable-width102',area.width+'px');root.style.setProperty('--usable-height102',area.height+'px');
+   root.style.setProperty('--game-center-x',area.left+area.width/2+'px');root.style.setProperty('--game-center-y',area.top+area.height/2+'px');
    root.style.setProperty('--game-scale','1');
    fitPack();
-   const size=(use?v.width:innerWidth)+'x'+(use?v.height:innerHeight),resized=sceneSize&&sceneSize!==size;sceneSize=size;
+   const size=area.width+'x'+area.height,resized=sceneSize&&sceneSize!==size;sceneSize=size;
    if(resized&&state.screen==='draft-screen'&&boosterTravel){const revealed=boosterTravel.revealed;cancelBoosterTravel();renderDraft();syncDraftSelection();if(!revealed)animateBoosterOpening();}
   }
   return result;
@@ -36,8 +44,9 @@
  const baseDraft=renderDraft;
  function fitPack(){
   const grid=$('#draft-grid'),stage=grid.querySelector('.pack-stage');if(!stage||state.screen!=='draft-screen')return;
+  const pack=stage.querySelector('.sealed-pack');if(pack&&!pack.querySelector('.pack-art102')){const art=document.createElement('span');art.className='pack-art102';art.setAttribute('aria-hidden','true');art.append(...pack.childNodes);pack.append(art);}
   const s=getComputedStyle(stage),caption=stage.querySelector('p'),vertical=parseFloat(s.paddingTop)+parseFloat(s.paddingBottom)+(caption?.offsetHeight||0)+(parseFloat(s.rowGap)||0),horizontal=parseFloat(s.paddingLeft)+parseFloat(s.paddingRight);
-  const fit=Math.max(.12,Math.min(1,(grid.clientHeight-vertical-16)/334,(grid.clientWidth-horizontal-16)/238));draft.style.setProperty('--pack-fit99',String(fit));
+  const fit=Math.max(.08,Math.min(1,(grid.clientHeight-vertical-16)/382,(grid.clientWidth-horizontal-16)/240));draft.style.setProperty('--pack-fit99',String(fit));
  }
  renderDraft=function(){const result=baseDraft();draft.classList.toggle('scene-sealed99',Boolean(state.boosterSealed));fitPack();return result;};
  new ResizeObserver(fitPack).observe($('#draft-grid'));

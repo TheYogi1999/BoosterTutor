@@ -1,4 +1,4 @@
-# Responsive menus and travel stops — v0.101
+# Responsive menus and travel stops — v0.102
 
 Outside combat, the game uses the visible viewport in screen pixels. It no longer
 shrinks a 1600×900 page into a letterbox. The title, loading screen, draft,
@@ -13,10 +13,12 @@ hover flips, audio settings and reduced-motion behavior remain available.
 Draft confirmation, shop Continue, receipt Continue, run restart/Endless and
 prepared-deck Begin Run sit at the upper right of their view. Their original DOM
 nodes move, preserving event handlers, state and controller-specific button hints.
-Draft choices use seven, four or two columns. The header and footer remain outside
-the card scroller; card descriptions stay complete and art keeps its printed
-aspect ratio. Only art lifts on hover. Sealed packs scale their actual dimensions
-to the available space so opening-flight coordinates stay consistent. Resizing
+Draft choices always use seven columns in landscape; portrait choices use
+responsive columns. The compact booster controls and device-safe camera are
+documented in BOOSTER_VIEW.md. The compact heading remains outside the card scroller; the duplicate ribbon
+and lower action row are hidden; card descriptions stay complete and art keeps its printed
+aspect ratio. Only art lifts on hover. Sealed packs scale one complete foil design into a
+matching physical frame so opening-flight coordinates stay consistent. Resizing
 during a flight finishes the reveal safely and restores selection/confirmation.
 The opening glow cannot create a horizontal scrollbar or block input.
 
