@@ -1,0 +1,150 @@
+/* One adaptive canvas; every combat element belongs to the same table. */
+html.battle-ui97 .game-shell{width:var(--battle-width97)!important;height:var(--battle-height97)!important;padding:0!important}
+html.battle-ui97 .topbar,html.battle-ui97 .site-footer,html.battle-ui97 footer:has(#controller-hints){display:none!important}
+html.battle-ui97 #app{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important}
+html.battle-ui97 #combat-screen.active{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:8px!important;box-sizing:border-box;overflow:hidden!important}
+html.battle-ui97 #combat-screen>.arena-table{position:relative!important;display:block!important;inset:auto!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;box-sizing:border-box;overflow:hidden!important;border-radius:12px!important}
+html.battle-ui97 #combat-screen .combat-topline{position:absolute!important;left:22px;right:22px;top:12px;height:50px!important;min-height:0!important;display:flex!important;align-items:center;gap:14px;padding:4px 0!important;margin:0!important;background:none!important;border:0!important;border-bottom:1px solid #dfc8922b!important;box-shadow:none!important;z-index:8}
+html.battle-ui97 .combat-topline .run-progress{flex:none;gap:8px;font-size:12px}html.battle-ui97 .combat-topline .arrow-legend{display:none!important}
+html.battle-ui97 #phase-strip{flex:1;display:flex!important;justify-content:center;gap:5px;min-width:0;margin:0;padding:0}
+html.battle-ui97 #phase-strip li{font:500 11px/16px var(--sans)!important;padding:7px 8px!important;white-space:nowrap;min-width:0}
+.battle-system97{display:flex;align-items:center;gap:6px;flex:none}
+html.battle-ui97 .combat-topline .battle-system97 .quiet-button{font:600 12px/18px var(--sans)!important;padding:7px 9px!important;min-height:34px;white-space:nowrap}
+html.battle-ui97 #combat-screen .arena-side{position:absolute!important;top:86px!important;bottom:254px!important;width:calc(50% - 38px)!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;box-sizing:border-box;overflow:visible!important}
+html.battle-ui97 #player-drop-zone{left:26px!important;display:grid!important;grid-template-rows:110px 18px 270px 18px 88px!important;gap:4px!important;align-content:start}
+html.battle-ui97 #enemy-drop-zone{right:26px!important;left:auto!important;display:flex!important;flex-direction:column;gap:5px!important}
+html.battle-ui97 #combat-screen .player-side-header{height:110px!important;grid-template-columns:92px 180px 108px minmax(0,1fr)!important;grid-template-rows:54px 42px!important;gap:4px 10px!important;padding:0!important;margin:0!important;overflow:visible}
+html.battle-ui97 #combat-screen .player-avatar-block #player-avatar{width:84px!important;height:84px!important;min-width:84px!important;max-height:84px!important;flex-basis:84px!important}
+html.battle-ui97 #combat-screen .player-avatar-block #run-level{width:90px!important;font-size:11px!important;line-height:17px}
+html.battle-ui97 #combat-screen #player-health-label{font-size:32px!important;line-height:36px!important}
+html.battle-ui97 #combat-screen .health-label>span{font-size:11px!important}
+html.battle-ui97 #combat-screen .combat-coins{font:500 14px/20px var(--sans)!important;gap:7px}
+html.battle-ui97 #combat-screen .player-side-header .mana-display{font-size:17px!important;max-width:180px!important}
+html.battle-ui97 #combat-screen .mana-display>small{font-size:10px!important}html.battle-ui97 #combat-screen #mana-label{font-size:21px!important}
+html.battle-ui97 #combat-screen .player-attack-anchors68{width:108px!important}
+html.battle-ui97 #combat-screen .player-side-header .mana-land-row{height:94px!important;max-height:94px!important;grid-template-rows:repeat(2,40px);grid-auto-columns:30px;gap:5px!important}
+html.battle-ui97 #combat-screen .mana-land-row .mana-land{width:28px!important;min-width:28px!important;max-width:28px!important;height:39px!important}
+html.battle-ui97 #combat-screen .arena-zone-header{font-size:12px!important;line-height:18px!important;height:18px!important;min-height:0!important;margin:0!important}
+html.battle-ui97 #combat-screen .arena-zone-header>span,html.battle-ui97 #combat-screen .arena-zone-header>small{font-size:11px!important;letter-spacing:.5px}
+html.battle-ui97 #combat-screen #creature-row{height:270px!important;display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px!important;padding:2px 0!important;overflow:visible!important}
+html.battle-ui97 #combat-screen #creature-row .creature-group{height:266px!important;gap:4px!important;min-width:0}
+html.battle-ui97 #combat-screen #creature-row .creature-token{width:min(116px,100%)!important;min-width:0!important;flex:none!important;height:auto!important;gap:3px!important}
+html.battle-ui97 #combat-screen #creature-row .player-card-frame{width:100%!important;height:auto!important;max-height:none!important;aspect-ratio:488/680!important}
+html.battle-ui97 #combat-screen #creature-row .field-caption>b{font:600 13px/17px var(--sans)!important}
+html.battle-ui97 #combat-screen #creature-row .stat-badge{font:650 14px/19px var(--sans)!important;padding:1px 3px;gap:3px}
+html.battle-ui97 #combat-screen #creature-row .stat-badge svg{width:14px;height:14px}
+html.battle-ui97 #combat-screen #creature-row .keyword-strip{max-height:47px!important;overflow:auto!important;scrollbar-width:thin;gap:3px}
+html.battle-ui97 #combat-screen #creature-row .keyword-tag61{font:600 10px/13px var(--sans)!important;padding:1px 3px}
+html.battle-ui97 #combat-screen #creature-row .field-caption>small{font:10px/13px var(--sans)!important;max-height:13px!important}
+html.battle-ui97 #combat-screen #creature-row .stat-modifiers{font-size:10px;line-height:13px}
+html.battle-ui97 #combat-screen .creature-slot-empty67{height:242px;background:#172a2a12;border-color:#c4d9c51c}
+html.battle-ui97 #combat-screen #creature-row .unit-attachments{height:158px!important;left:-9px!important;width:32px!important}
+html.battle-ui97 #combat-screen #creature-row .unit-attachments .permanent-card{width:29px!important;min-width:29px!important}
+html.battle-ui97 #combat-screen #permanent-row{height:88px!important;display:flex!important;align-items:start;flex-wrap:nowrap!important;gap:12px!important;padding:3px 2px!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior:contain;scrollbar-width:thin}
+html.battle-ui97 #combat-screen #permanent-row .permanent-card{width:50px!important;min-width:50px!important;flex:0 0 50px!important;gap:2px!important}
+html.battle-ui97 #combat-screen #permanent-row .permanent-card-frame{width:50px!important;height:70px!important;aspect-ratio:488/680!important}
+html.battle-ui97 #combat-screen #permanent-row .field-caption>b{font:500 10px/13px var(--sans)!important}html.battle-ui97 #combat-screen #permanent-row .field-caption small{display:none!important}
+html.battle-ui97 #combat-screen .enemy-side-header{height:88px!important;min-height:88px!important;padding:0!important;margin:0!important}
+html.battle-ui97 #combat-screen .enemy-side-header h2{font:600 24px/30px var(--sans)!important}
+html.battle-ui97 #combat-screen .enemy-rank{font-size:11px!important;line-height:16px}
+html.battle-ui97 #combat-screen #enemy-board{height:318px!important;min-height:318px!important;overflow:visible!important}
+html.battle-ui97 #combat-screen #enemy-board .monster-rank{height:318px!important;gap:8px!important}
+html.battle-ui97 #combat-screen #enemy-board .monster{height:318px!important;grid-template-rows:30px 136px 28px 28px 36px 50px!important;gap:2px!important}
+html.battle-ui97 #combat-screen #enemy-board .monster-figure{height:136px!important;width:100%!important;max-width:none!important;display:flex;align-items:center!important;justify-content:center!important}
+html.battle-ui97 #combat-screen #enemy-board .monster .monster-figure .walker-portrait{width:min(104px,100%)!important;height:auto!important;min-width:0!important;max-width:104px!important;max-height:130px!important;aspect-ratio:4/5;flex:0 1 104px!important}
+html.battle-ui97 #combat-screen #enemy-board .monster-intent{font:500 11px/14px var(--sans)!important;min-height:28px;padding:3px 4px!important}
+html.battle-ui97 #combat-screen #enemy-board .monster>strong{font:600 13px/16px var(--sans)!important;max-height:32px}
+html.battle-ui97 #combat-screen #enemy-board .enemy-type67{font:10px/13px var(--sans)!important;max-height:28px}
+html.battle-ui97 #combat-screen #enemy-board .monster-life .stat-badge{font:650 15px/21px var(--sans)!important;padding:0 3px!important}
+html.battle-ui97 #combat-screen #enemy-board .monster-bounty{font-size:10px!important;line-height:13px!important}
+html.battle-ui97 #combat-screen #enemy-board .monster-keywords{max-height:50px!important;overflow:auto!important;scrollbar-width:thin;gap:3px!important}
+html.battle-ui97 #combat-screen #enemy-board .enemy-keyword-badge{font:600 10px/13px var(--sans)!important;padding:2px 4px!important}
+html.battle-ui97 #combat-screen #enemy-spell-panel{max-height:112px!important;min-height:0;flex-shrink:0}
+html.battle-ui97 #combat-screen #blocking-panel{max-height:112px!important;min-height:0;flex-shrink:0}
+/* Floating hand, physical piles and a single persistent lower-right action. */
+html.battle-ui97 #combat-screen .hand-panel{position:absolute!important;left:24px!important;bottom:18px!important;top:auto!important;right:auto!important;width:calc(100% - 338px)!important;height:222px!important;display:block!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;pointer-events:none;z-index:20}
+html.battle-ui97 #combat-screen .hand-heading{position:absolute!important;left:0;bottom:6px;top:auto;display:block;max-width:150px;height:auto!important;min-height:0!important;z-index:1;pointer-events:auto}
+html.battle-ui97 #combat-screen .hand-title-group{width:150px!important;min-width:0!important;gap:12px;flex:none!important}
+html.battle-ui97 #combat-screen .hand-title-group>div{min-width:0!important;gap:7px!important;flex-wrap:wrap!important}
+html.battle-ui97 #combat-screen .hand-title-group>div>span,html.battle-ui97 #combat-screen .hand-title-group>div>small{font:600 11px/17px var(--sans)!important}
+html.battle-ui97 #combat-screen #mulligan-button{font:600 11px/17px var(--sans)!important;height:32px!important;padding:5px 7px!important;white-space:nowrap}
+html.battle-ui97 #combat-screen .hand-help,html.battle-ui97 #combat-screen .phase-status,html.battle-ui97 #combat-screen .combat-source-note,html.battle-ui97 #combat-screen .battle-log-panel{display:none!important}
+html.battle-ui97 #combat-screen #hand-row{position:absolute!important;left:154px!important;right:0!important;bottom:0!important;top:auto!important;width:calc(100% - 154px)!important;height:222px!important;min-height:0!important;margin:0!important;padding:14px 0 0!important;display:flex!important;align-items:flex-start!important;justify-content:center!important;overflow:visible!important;pointer-events:none}
+html.battle-ui97 #combat-screen .hand-card{--card-width:140px;width:140px!important;height:auto!important;aspect-ratio:488/680!important;flex:0 0 140px!important;margin-left:calc(var(--hand-step,104px) - 140px)!important;pointer-events:auto;touch-action:none}
+html.battle-ui97 #combat-screen .hand-card:first-child{margin-left:0!important}
+html.battle-ui97 #combat-screen .hand-card:hover,html.battle-ui97 #combat-screen .hand-card:focus-visible{transform:translateY(-40px) rotate(0deg) scale(1.08)!important}
+html.battle-ui97 #combat-screen .hand-card.is-grabbed{transform:var(--grabbed-transform)!important}
+html.battle-ui97 #combat-screen .library-zone{position:absolute!important;left:auto!important;right:150px!important;top:auto!important;bottom:104px!important;width:108px!important;height:176px!important;display:block!important;grid-area:auto!important;margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;z-index:12}
+html.battle-ui97 #combat-screen .library-zone-heading{display:flex!important;align-items:center;justify-content:center;gap:7px;height:28px;min-height:0}
+html.battle-ui97 #combat-screen .library-label{font:600 10px/15px var(--sans)!important;letter-spacing:1px}
+html.battle-ui97 #combat-screen #deck-button{font:600 11px/17px var(--sans)!important;padding:3px 5px!important;min-height:24px}
+html.battle-ui97 #combat-screen #library-button{display:flex!important;flex-direction:column;align-items:center;width:100%!important;height:146px!important;padding:0!important;margin:0!important;gap:7px;background:none!important;border:0!important}
+html.battle-ui97 #combat-screen .library-stack{width:76px!important;height:106px!important;min-height:0;flex:none}
+html.battle-ui97 #combat-screen .library-caption{font-size:13px!important;line-height:17px;text-align:center}
+html.battle-ui97 #combat-screen .library-caption b{font-size:16px!important}html.battle-ui97 #combat-screen .library-caption small{font-size:9px!important;line-height:12px}
+html.battle-ui97 #combat-screen .table-graveyard{position:absolute!important;left:auto!important;right:28px!important;top:auto!important;bottom:104px!important;width:108px!important;height:176px!important;min-height:0!important;display:flex!important;flex-direction:column;align-items:center;justify-content:start;gap:8px;grid-area:auto!important;margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;z-index:12}
+html.battle-ui97 #combat-screen .graveyard-links{order:-1;flex:none!important;width:100%}
+html.battle-ui97 #combat-screen .graveyard-links .discard-info{display:flex!important;flex-direction:column;gap:2px!important;align-items:center}
+html.battle-ui97 #combat-screen .graveyard-links button{font:600 11px/16px var(--sans)!important;padding:3px 4px!important;min-height:22px;text-align:center!important}
+html.battle-ui97 #combat-screen .graveyard-pile-area{flex:none!important;width:68px!important;height:94px!important}
+html.battle-ui97 #combat-screen #graveyard-pile,html.battle-ui97 #combat-screen #graveyard-pile .graveyard-card{width:68px!important;height:94px!important;min-height:0!important}
+html.battle-ui97 #combat-screen .empty-graveyard{width:68px!important;height:94px!important;box-sizing:border-box;font-size:32px;background:#10232a33}
+html.battle-ui97 #combat-screen .empty-graveyard small{font:9px/13px var(--sans)!important}
+html.battle-ui97 #combat-screen .combat-actions-panel{position:absolute!important;right:26px;bottom:22px;left:auto;top:auto;width:264px;height:58px;display:flex;justify-content:center;margin:0;padding:0;border:0;background:none;box-shadow:none;z-index:25}
+html.battle-ui97 #combat-screen .combat-actions-panel>.eyebrow{display:none!important}
+html.battle-ui97 #combat-screen #end-turn-button{width:100%!important;height:54px!important;min-height:54px!important;padding:10px 14px!important;font:650 15px/22px var(--sans)!important;background:linear-gradient(100deg,#353422bb,#152c2bbb)!important;border:1px solid #d3b26c88!important;border-radius:5px;box-shadow:0 4px 20px #0003}
+html.battle-ui97 #combat-screen .drop-hint,html.battle-ui97 #combat-screen .versus-mark{display:none!important}
+/* Tall displays use the whole viewport and place the two formations above the hand. */
+html.battle-tall97 #combat-screen .combat-topline{height:104px!important;display:grid!important;grid-template-columns:1fr auto;grid-template-rows:44px 44px;gap:6px}
+html.battle-tall97 #phase-strip{grid-row:2;grid-column:1/3;justify-content:flex-start}
+html.battle-tall97 .battle-system97{grid-row:1;grid-column:2}
+html.battle-tall97 #combat-screen .arena-side{left:26px!important;right:26px!important;width:auto!important;bottom:auto!important}
+html.battle-tall97 #combat-screen #enemy-drop-zone{top:132px!important;height:390px!important}
+html.battle-tall97 #combat-screen .enemy-side-header{height:54px!important;min-height:54px!important}
+html.battle-tall97 #combat-screen #enemy-board{height:306px!important;min-height:306px!important}
+html.battle-tall97 #combat-screen #enemy-board .monster-rank{height:306px!important}
+html.battle-tall97 #combat-screen #enemy-board .monster{height:304px!important}
+html.battle-tall97 #combat-screen #player-drop-zone{top:max(530px,calc(530px + (var(--battle-height97) - 1400px)*.3))!important;height:458px!important;grid-template-rows:90px 18px 240px 18px 76px!important}
+html.battle-tall97 #combat-screen .player-side-header{height:90px!important;grid-template-columns:92px 180px 108px minmax(0,1fr)!important}
+html.battle-tall97 #combat-screen #creature-row{height:240px!important}
+html.battle-tall97 #combat-screen #creature-row .creature-group{height:238px!important}
+html.battle-tall97 #combat-screen #creature-row .creature-token{width:min(106px,100%)!important}
+html.battle-tall97 #combat-screen #permanent-row{height:76px!important}
+html.battle-tall97 #combat-screen #permanent-row .permanent-card{width:43px!important;min-width:43px!important;flex-basis:43px!important}
+html.battle-tall97 #combat-screen #permanent-row .permanent-card-frame{width:43px!important;height:60px!important}
+html.battle-tall97 #combat-screen .hand-panel{width:calc(100% - 290px)!important;height:222px!important}
+html.battle-tall97 #combat-screen #hand-row{left:0!important;width:100%!important;bottom:40px!important;height:190px!important;padding-top:0!important}
+html.battle-tall97 #combat-screen .hand-card{--card-width:126px;width:126px!important;flex-basis:126px!important;margin-left:calc(var(--hand-step,80px) - 126px)!important}
+html.battle-tall97 #combat-screen .hand-card:first-child{margin-left:0!important}
+html.battle-tall97 #combat-screen .hand-heading{bottom:-2px!important;left:0!important;max-width:none}
+html.battle-tall97 #combat-screen .hand-title-group{width:auto!important;flex-direction:row!important;align-items:center;gap:12px}
+html.battle-tall97 #combat-screen .hand-title-group>div{gap:8px!important}
+html.battle-tall97 #combat-screen .library-zone,html.battle-tall97 #combat-screen .table-graveyard{bottom:84px!important}
+html.battle-tall97 #combat-screen .combat-actions-panel{width:244px!important;bottom:18px!important}
+/* The long-press window uses readable screen pixels, not the scene's fitted scale. */
+html.fixed-game dialog.floating-card-inspector97{position:fixed!important;inset:auto!important;width:min(760px,calc(100vw - 24px))!important;height:auto!important;max-height:calc(100dvh - 24px)!important;max-width:calc(100vw - 24px)!important;transform:none!important;margin:0!important;padding:22px!important;box-sizing:border-box;overflow:auto!important;color:#eee7d6;background:linear-gradient(145deg,#21373c,#10202a 75%);border:1px solid #d0b77a88;border-radius:12px;box-shadow:0 20px 85px #000b}
+html.fixed-game dialog.floating-card-inspector97::backdrop{background:#02080e33;backdrop-filter:blur(1px)}
+.floating-card-inspector97>header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:16px}
+.floating-card-inspector97 .eyebrow{font:11px/16px var(--sans);letter-spacing:2px;color:#d6bc82}
+.floating-card-inspector97 h2{font:500 25px/31px Georgia,serif;margin:4px 0 0;color:#f4e5bd}
+html.fixed-game .floating-card-inspector97 .graveyard-close{width:36px!important;height:36px!important;min-width:36px;display:grid;place-items:center;padding:0!important;line-height:1!important;font-size:25px!important;flex:none}
+.floating-card-inspector97 #inspector-content{display:grid!important;grid-template-columns:minmax(0,245px) minmax(0,1fr);gap:24px;min-height:0;max-height:none;overflow:visible;font:14px/1.6 var(--sans)}
+.inspect-art97{min-width:0;align-self:start}.inspect-art97 img{display:block;width:100%;height:auto;max-height:350px;object-fit:contain;border-radius:8px}.inspect-art97 .foil-card-face{display:block;width:100%;aspect-ratio:488/680}
+.inspect-foe97{width:100%;aspect-ratio:4/5;background-repeat:no-repeat;background-color:#14222a;border:1px solid #dbc18b77;border-radius:6px}
+.inspect-meta97{color:#d9c79f;font:500 12px/18px var(--sans);margin:0 0 12px}.inspect-live97{font:650 16px/22px var(--sans);color:#e6d29c;margin:0 0 12px}.inspect-keywords97{line-height:24px;margin:0 0 14px}
+.inspect-rules97{max-height:400px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:5px;color:#d5ded7}.inspect-rules97 p{margin:0 0 12px}
+html.battle-ui97 dialog:not(.floating-card-inspector97):not(#dice-roll-dialog){transform:translate(-50%,-50%) scale(var(--battle-dialog-scale97))!important}
+html.fixed-game.battle-ui97 dialog.token-action-dialog[data-kind]{width:min(600px,calc(100vw - 24px))!important;height:auto!important;max-height:calc(100dvh - 24px)!important;transform:translate(-50%,-50%)!important;padding:24px!important;overflow:auto!important}
+html.battle-ui97 [data-preview-owner]{-webkit-touch-callout:none}
+@media(max-width:600px){.floating-card-inspector97 #inspector-content{grid-template-columns:105px minmax(0,1fr);gap:14px}.floating-card-inspector97 h2{font-size:22px;line-height:28px}.floating-card-inspector97 .inspect-rules97{max-height:calc(100dvh - 190px)}html.fixed-game dialog.floating-card-inspector97{padding:16px!important}.floating-card-inspector97 #inspector-content{font-size:13px}.inspect-live97{font-size:14px}.inspect-meta97{font-size:11px}}
+@media(prefers-reduced-motion:reduce){html.battle-ui97 #combat-screen .hand-card{transition:none!important}}
+
+html.battle-ui97 #player-drop-zone.drop-ready{background:#a1dfb208!important;outline:1px solid #a1dfb24d;outline-offset:5px}
+html.battle-ui97 #combat-screen .combat-topline{z-index:30}
+/* Short hand hints never steal the pointer from the card underneath. */
+html.battle-ui97 #card-preview{pointer-events:none!important}
+html.battle-ui97 #card-preview *{pointer-events:none!important}
+
+/* Dice still enter from beyond the edge of the enlarged, adaptive table. */
+html.battle-ui97 #combat-screen #dice-roll-dialog{--throw-x:calc(-1 * var(--throw-distance97,1300px))!important}
+html.battle-ui97 #combat-screen #dice-roll-dialog[data-owner="enemy"]{--throw-x:var(--throw-distance97,1300px)!important}

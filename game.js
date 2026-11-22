@@ -980,7 +980,7 @@ function showCardPreview(card, element) {
   const cost = Math.ceil(card.cmc || 0);
   const lines = element.dataset.previewOwner === 'enemy'
     ? [`Enemy: ${creature.power} damage · ${creature.health} life.`, `Attack ${creatureCanAttack(creature, battle.turn) ? 'this turn' : 'from next turn'}.`, creatureKeywordLabels(creature) || 'No special combat keywords.']
-    : effectDescriptions(card);
+    : [...effectDescriptions(card)];
   if (creature?.owner === 'player') lines.unshift(`Current: ${creature.power}/${creature.toughness} · ${creature.damage || 0} Damage · ${creature.tapped ? 'tapped; cannot block' : 'may block'}.`);
   if (permanent) lines.push(attached ? `Attached to: ${attached}.` : isAttachment(card) ? 'Not attached.' : 'Active on the battlefield.');
   if (element.dataset.previewOwner === 'hand') lines.push(isLand(card) ? battle.landAvailable && battle.phase === 'main' ? 'Play this mana card during your main phase. It enters untapped and adds one generic mana.' : 'You already played a mana card this turn, or it is not your main phase.' : !canCastNow(card, battle) ? battle.enemyCounterWindow ? 'A spell is pending. Cast an instant or continue to resolve it.' : (typeof SPELL_RULES !== 'undefined' && SPELL_RULES[card.name]?.target?.startsWith('opposing-') ? 'Needs a legal pending enemy spell. Wait for its response window.' : 'Only instants can be cast outside the main phase.') : battle.mana < cost ? `Need ${cost - battle.mana} more mana.` : isCreature(card) && battle.creatures.length >= CREATURE_LIMIT && !(typeof replacesLegend58 === 'function' && replacesLegend58(card,battle)) ? 'All six creature slots are occupied.' : isAura(card) && !battle.creatures.length ? 'Requires an allied creature.' : 'Click or drag to cast.');
