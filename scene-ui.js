@@ -3,6 +3,12 @@
  const root=document.documentElement;
  const moveAction=(button,heading)=>{const action=document.createElement('div');action.className='scene-actions99';action.append(button);heading.append(action);};
  const draft=$('#draft-screen');
+ const camp=$('#journey-screen'),overview=document.createElement('div'),campHeader=document.createElement('header');
+ overview.className='camp-overview100';campHeader.className='camp-header100';
+ campHeader.append($('#journey-location'),$('#journey-title'),$('#journey-description'),$('#journey-life'));
+ overview.append(campHeader,$('#journey-path'));camp.prepend(overview);
+ const baseCampMarkup=campRewardMarkup;
+ campRewardMarkup=function(){return baseCampMarkup().replace(/ carried · choose one/g,' carried');};
  draft.querySelector('.draft-footer').prepend(draft.querySelector('.deck-counter'));
  moveAction($('#draft-confirm'),draft.querySelector('.screen-heading'));
  moveAction($('#shop-continue'),$('#shop-screen .shop-heading'));
@@ -21,13 +27,18 @@
    root.style.setProperty('--scene-left99',(use?v.offsetLeft:0)+'px');
    root.style.setProperty('--scene-top99',(use?v.offsetTop:0)+'px');
    root.style.setProperty('--game-scale','1');
+   fitPack();
    const size=(use?v.width:innerWidth)+'x'+(use?v.height:innerHeight),resized=sceneSize&&sceneSize!==size;sceneSize=size;
    if(resized&&state.screen==='draft-screen'&&boosterTravel){const revealed=boosterTravel.revealed;cancelBoosterTravel();renderDraft();syncDraftSelection();if(!revealed)animateBoosterOpening();}
   }
   return result;
  };
  const baseDraft=renderDraft;
- const fitPack=()=>{const grid=$('#draft-grid');if(!grid.querySelector('.pack-stage'))return;const fit=Math.max(.2,Math.min(1,(grid.clientHeight-65)/340,(grid.clientWidth-65)/240));draft.style.setProperty('--pack-fit99',String(fit));};
+ function fitPack(){
+  const grid=$('#draft-grid'),stage=grid.querySelector('.pack-stage');if(!stage||state.screen!=='draft-screen')return;
+  const s=getComputedStyle(stage),caption=stage.querySelector('p'),vertical=parseFloat(s.paddingTop)+parseFloat(s.paddingBottom)+(caption?.offsetHeight||0)+(parseFloat(s.rowGap)||0),horizontal=parseFloat(s.paddingLeft)+parseFloat(s.paddingRight);
+  const fit=Math.max(.12,Math.min(1,(grid.clientHeight-vertical-16)/334,(grid.clientWidth-horizontal-16)/238));draft.style.setProperty('--pack-fit99',String(fit));
+ }
  renderDraft=function(){const result=baseDraft();draft.classList.toggle('scene-sealed99',Boolean(state.boosterSealed));fitPack();return result;};
  new ResizeObserver(fitPack).observe($('#draft-grid'));
  const baseScreen=showScreen;

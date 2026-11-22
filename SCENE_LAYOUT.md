@@ -1,4 +1,4 @@
-# Responsive menus and travel stops — v0.99
+# Responsive menus and travel stops — v0.100
 
 Outside combat, the game uses the visible viewport in screen pixels. It no longer
 shrinks a 1600×900 page into a letterbox. The title, loading screen, draft,
@@ -23,8 +23,11 @@ The opening glow cannot create a horizontal scrollbar or block input.
 Vey remains on the left on wide displays and becomes a compact greeting panel on
 narrow ones. Shop rows size to their content; long effects cannot overlap booster
 offers or counters. Continue stays in the sticky shop heading while offers scroll.
-Camp choices, the four-node path and receipt panels stack as needed. Their internal
-scroll areas start at the top on a new visit, without scrolling the document.
+Camp fits its header, compact four-node path, utility buttons and all three
+complete supply choices in one view without scrolling. Wide windows place the
+choices side by side; narrow portrait windows use three compact rows. Token
+effects and carried counts remain visible. Receipt panels stack as needed; their
+internal scroll area starts at the top on a new visit without scrolling the document.
 Camp retains its existing direct token choice; no extra confirmation is required.
 
 Collection, options, audio, controller, precon and counter-selection windows fit
@@ -42,3 +45,12 @@ receipt/reward progression, precon starts, nested Elixir/card details, controlle
 settings and repeated menu/combat camera changes. Additional checks cover real
 pack flights and resize cancellation, the title introduction, unchanged combat
 controls, immediate/controller receipt Continue and campaign/Endless routing.
+
+The v0.100 correction prevents the narrow draft media rule from assigning the
+sealed pack a 24px ribbon track. The sealed stage always gets the remaining
+height. Pack sizing runs after the scene becomes visible as well as on resize,
+so rewards opened after combat cannot retain a size calculated while hidden.
+Crimp seals and the idle sheen inset scale with the wrapper and printed elements.
+A dedicated regression checks original pack proportions, complete visibility and
+all three camp options without clipped text or scrolling at ten viewport sizes,
+including 320×568 and 667×375, with real openings and token choices.
