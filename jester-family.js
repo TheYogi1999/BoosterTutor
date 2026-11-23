@@ -175,8 +175,7 @@ function withJesterWard65(b,target,source,effect,done){
 }
 function notifySacrifice65(b,sources=havocSources65(b)){
  for(const source of sources)queueJester65(b,done=>openJesterChoice65({battle:b,title:'Havoc Jester · sacrifice trigger',instruction:'A permanent was sacrificed. Choose any creature or your life for 1 damage. Enemy Hexproof and Ward apply.',options:jesterTargetOptions65(b,false,source),accept:selected=>withJesterWard65(b,selected[0].target,'Havoc Jester',unit=>{
-  if(selected[0].target.side==='life'){state.playerHealth-=1;playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(1);}else if(unit?.owner==='enemy')damageFirstEnemy(1,unit);else if(unit)unit.damage=(unit.damage||0)+1;
-  if(unit&&hasCreatureKeyword(source,'deathtouch')){unit.deathtouchDamage=true;if(unit.owner==='enemy')unit.health=0;}gainLifelinkLife(source,'player',1,b);if(state.playerHealth<=0)endRun(false);
+  dealAbility66(source,selected[0].target,1,b);if(state.playerHealth<=0)endRun(false);
  },done)}));
 }
 const baseFamilySacrifice65=sacrificeRuleCreature;

@@ -134,7 +134,7 @@ function selectRuleChoice(key){const p=state.battle?.choice;if(!p||!choiceOption
 function confirmRuleChoice(){const p=state.battle?.choice;if(!p||p.selected.size!==p.steps[0].count)return;p.picks[p.steps.shift().kind]=[...p.selected];p.selected.clear();if(p.steps.length)return renderRuleChoice();state.battle.choice=null;$('#rule-dialog').close();commitRuleSpell(p);}
 function cancelRuleChoice(){if(state.battle)state.battle.choice=null;$('#rule-dialog').close();}
 function sacrificeRuleCreature(unit){
- const battle=state.battle;const index=battle.creatures.indexOf(unit);if(index<0)return false;battle.creatures.splice(index,1);if(!unit.isToken)battle.graveyard.push(unit.originalCard||unit.card);cleanupAttachments(new Set([unit.id]));battle.creatureDiedThisTurn=true;addLog(`${unit.card.name} is sacrificed.`);return true;
+ const battle=state.battle;const index=battle.creatures.indexOf(unit);if(index<0)return false;const witnesses=typeof tokenWitnesses103==='function'?tokenWitnesses103(battle):null;battle.creatures.splice(index,1);if(typeof tokenSacrificed103==='function')tokenSacrificed103(unit,battle,witnesses);if(!unit.isToken)battle.graveyard.push(unit.originalCard||unit.card);cleanupAttachments(new Set([unit.id]));battle.creatureDiedThisTurn=true;addLog(`${unit.card.name} is sacrificed.`);return true;
 }
 function commitRuleSpell(p){
  const battle=state.battle;if(!battle||battle.phase==='complete'||battle.hand[p.index]!==p.card||!paymentPlan(p.card))return false;
@@ -170,9 +170,9 @@ function commitRuleSpell(p){
 function resolveReviewedEffect(effect,target,context={}){
  const battle=state.battle;const unit=choiceTargetUnit(target,battle);
  if(effect.kind==='damage'){
-  if(target?.side==='life'){state.playerHealth-=effect.amount;if(effect.amount>0)playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(effect.amount);}
+  if(target?.side==='life'){const amount=typeof playerDamageAmount95==='function'?playerDamageAmount95(effect.amount,battle):effect.amount;state.playerHealth-=amount;if(amount>0)playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(amount);}
   else if(unit?.owner==='enemy')damageFirstEnemy(effect.amount,unit);
-  else if(unit){unit.damage=(unit.damage||0)+effect.amount;if(effect.amount>0)playSfx('player-hit');}
+  else if(unit){const amount=typeof damageAmount103==='function'?damageAmount103(effect.amount,unit,battle):effect.amount;unit.damage=(unit.damage||0)+amount;if(amount>0)playSfx('player-hit');}
  }
  if(effect.kind==='heal')state.playerHealth+=effect.amount;
  if(effect.kind==='draw')for(let n=0;n<effect.amount&&battle.phase!=='complete';n++)drawOneCard();

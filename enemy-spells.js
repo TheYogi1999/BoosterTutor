@@ -118,7 +118,8 @@ function resolveEnemySpell38(spell,battle=state.battle) {
  spell.manaRemaining-=ward;
  // Mark first: repeats, stale callbacks and source removal cannot apply the effect twice.
  finishEnemySpell38(spell,'resolved',battle);
- const amount=spell.intent==='rune'?2:3;
+ const raw=spell.intent==='rune'?2:3;
+ const amount=spell.intent==='drain'?raw:target&&typeof damageAmount103==='function'?damageAmount103(raw,target,battle):typeof playerDamageAmount95==='function'?playerDamageAmount95(raw,battle):raw;
  playSfx('player-hit');
  if(target) {
   target.damage=(target.damage||0)+amount;

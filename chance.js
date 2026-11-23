@@ -61,7 +61,7 @@ function beginCoinFlip55(source,summary,onResult,battle=state.battle){
  },null,battle,{kind:'coin',instruction:thumbs?'Krark’s Thumb: choose one of the two results. Heads wins.':'Heads wins. Tails loses.'});
 }
 function createTreasure55(count,battle=state.battle){
- for(let n=0;n<count;n++)battle.permanents.push({id:`treasure-${state.nextPermanentId++}`,card:{...CAMP_TOKEN_CARDS.treasure,campToken:true,battleToken:true,tokenKind:'treasure'},isToken:true,attachedTo:null});
+ for(let n=0;n<count;n++){const token={id:`treasure-${state.nextPermanentId++}`,card:{...CAMP_TOKEN_CARDS.treasure,campToken:true,battleToken:true,tokenKind:'treasure'},isToken:true,attachedTo:null};battle.permanents.push(token);if(typeof tokenCreated103==='function')tokenCreated103(token,battle);}
 }
 
 let visibleChanceChoice55=null;
@@ -113,6 +113,7 @@ function sacrificePermanent55(key,battle){
  if(target.side==='player')return sacrificeRuleCreature(unit);
  const zone=target.side==='land'?battle.lands:battle.permanents;const index=zone.indexOf(unit);if(index<0)return false;zone.splice(index,1);
  if(!unit.isToken&&!unit.card.campToken)battle.graveyard.push(unit.originalCard||unit.card);
+ if(typeof tokenSacrificed103==='function')tokenSacrificed103(unit,battle);
  syncCampTokens(battle);refreshPermanentEffects();syncMana(battle);addLog(`${unit.card.name} is sacrificed.`);return true;
 }
 function activateCoin55(id){

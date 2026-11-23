@@ -30,7 +30,7 @@ function lethalToEnemy60(source,target){return source.infect?Math.max(0,10-(targ
 function poisonOverflow60(source,target,amount,battle){
  dealCreatureDamage(source,target,'player',battle,amount,[]);
  battle.enemyCreatures=removeDeadCreatures(battle.enemyCreatures,'enemy');
- return amount;
+ return typeof damageAmount103==='function'?damageAmount103(amount,target,battle):amount;
 }
 const basePoisonResolve60=resolveReviewedEffect;
 resolveReviewedEffect=function(effect,target,context={}){

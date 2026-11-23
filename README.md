@@ -1,3 +1,9 @@
+## Nine reviewed combat legends and token engines (v0.103)
+
+Added **Primordial Ooze; Aurelia, the Warleader; Aurelia, the Law Above; Gisela, Blade of Goldnight; Adeline, Resplendent Cathar; Anzrag, the Quake-Mole; Zopandrel, Hunger Dominus; Roxanne, Starfall Savant; and Mirkwood Bats** to the playable pool, matching packs, shop and collection, with original-set local art and detailed English in-game rules.
+
+Includes additional combats with no extra main phase or mana refill, upkeep pay-or-damage choices, damage replacement/prevention, dynamic power, attacking Humans, Phyrexian sacrifice costs and visible Indestructible counters, lasting Meteorites and token-based life-loss triggers. All costs remain generic. Adeline adapts multiplayer opponents to monsters and respects the six-creature limit; Anzrag’s forced-block activation respects the existing monster-retaliation model. Full implementation, sources, adaptations and verification: [WARLEADERS.md](WARLEADERS.md).
+
 ## Snappy transitions and encounter receipts (v0.82)
 
 Screen changes use a **180 ms** fade/slide and dialog openings **140 ms**, with no logical navigation delay. After a completed encounter, visible cards from the hand, creatures, attached/free permanents, mana, Library and graveyard collect into the reward area over **300–384 ms**. The new receipt counts real bounty coins, wallet balance and level progression in **700 ms**. Its Continue button works immediately, including the controller's Y / Triangle / X shortcut. Reduced-motion and hidden-tab settings settle directly to the final values.

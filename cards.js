@@ -6374,6 +6374,273 @@ const BUNDLED_CARDS = [
       "rarity": "mythic",
       "uri": "https://scryfall.com/card/ltr/246/the-one-ring?utm_source=api"
     }
+  },
+  {
+    "id": "a53d8d6d-b8d3-4f71-a88a-5d639ce2925f",
+    "name": "Primordial Ooze",
+    "mana_cost": "{R}",
+    "cmc": 1.0,
+    "type_line": "Creature — Ooze",
+    "oracle_text": "This creature attacks each combat if able.\nAt the beginning of your upkeep, put a +1/+1 counter on this creature. Then you may pay {X}, where X is the number of +1/+1 counters on it. If you don't, tap this creature and it deals X damage to you.",
+    "power": "1",
+    "toughness": "1",
+    "color_identity": [
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/a46e47e1-8639-48f7-94c4-5f9e9666839a.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/a/4/a46e47e1-8639-48f7-94c4-5f9e9666839a.jpg?1783948053",
+    "uri": "https://scryfall.com/card/5ed/261/primordial-ooze?utm_source=api",
+    "verified": true,
+    "rarity": "uncommon",
+    "art_print": {
+      "id": "a46e47e1-8639-48f7-94c4-5f9e9666839a",
+      "set": "leg",
+      "set_name": "Legends",
+      "released_at": "1994-06-01",
+      "rarity": "uncommon",
+      "uri": "https://scryfall.com/card/leg/160/primordial-ooze?utm_source=api"
+    }
+  },
+  {
+    "id": "bc6ffc1c-575b-4116-83c9-d13b29886c35",
+    "name": "Aurelia, the Warleader",
+    "mana_cost": "{2}{R}{R}{W}{W}",
+    "cmc": 6.0,
+    "type_line": "Legendary Creature — Angel",
+    "oracle_text": "Flying, vigilance, haste\nWhenever Aurelia attacks for the first time each turn, untap all creatures you control. After this phase, there is an additional combat phase.",
+    "power": "3",
+    "toughness": "4",
+    "color_identity": [
+      "R",
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Vigilance",
+      "Haste"
+    ],
+    "image": "assets/cards/4ec18e35-05e4-4bfc-b32b-c3e71c95a71d.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/4/e/4ec18e35-05e4-4bfc-b32b-c3e71c95a71d.jpg?1783940113",
+    "uri": "https://scryfall.com/card/fdn/651/aurelia-the-warleader?utm_source=api",
+    "verified": true,
+    "rarity": "mythic",
+    "art_print": {
+      "id": "4ec18e35-05e4-4bfc-b32b-c3e71c95a71d",
+      "set": "gtc",
+      "set_name": "Gatecrash",
+      "released_at": "2013-02-01",
+      "rarity": "mythic",
+      "uri": "https://scryfall.com/card/gtc/143/aurelia-the-warleader?utm_source=api"
+    }
+  },
+  {
+    "id": "8f80c6e7-e9f9-4ca6-87f7-a52c96079e4a",
+    "name": "Aurelia, the Law Above",
+    "mana_cost": "{3}{R}{W}",
+    "cmc": 5.0,
+    "type_line": "Legendary Creature — Angel",
+    "oracle_text": "Flying, vigilance, haste\nWhenever a player attacks with three or more creatures, you draw a card.\nWhenever a player attacks with five or more creatures, Aurelia deals 3 damage to each of your opponents and you gain 3 life.",
+    "power": "4",
+    "toughness": "4",
+    "color_identity": [
+      "R",
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "Vigilance",
+      "Haste"
+    ],
+    "image": "assets/cards/8f80c6e7-e9f9-4ca6-87f7-a52c96079e4a.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/8/f/8f80c6e7-e9f9-4ca6-87f7-a52c96079e4a.jpg?1783912856",
+    "uri": "https://scryfall.com/card/mkm/188/aurelia-the-law-above?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "8f80c6e7-e9f9-4ca6-87f7-a52c96079e4a",
+      "set": "mkm",
+      "set_name": "Murders at Karlov Manor",
+      "released_at": "2024-02-09",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/mkm/188/aurelia-the-law-above?utm_source=api"
+    }
+  },
+  {
+    "id": "900b8908-ba51-472e-ab7a-43bd07f90577",
+    "name": "Gisela, Blade of Goldnight",
+    "mana_cost": "{4}{R}{W}{W}",
+    "cmc": 7.0,
+    "type_line": "Legendary Creature — Angel",
+    "oracle_text": "Flying, first strike\nIf a source would deal damage to an opponent or a permanent an opponent controls, that source deals double that damage to that player or permanent instead.\nIf a source would deal damage to you or a permanent you control, prevent half that damage, rounded up.",
+    "power": "5",
+    "toughness": "5",
+    "color_identity": [
+      "R",
+      "W"
+    ],
+    "keywords": [
+      "Flying",
+      "First strike",
+      "Double"
+    ],
+    "image": "assets/cards/7208fcb8-83e6-44ce-af9a-ca1566825018.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/2/7208fcb8-83e6-44ce-af9a-ca1566825018.jpg?1783940656",
+    "uri": "https://scryfall.com/card/mkc/211/gisela-blade-of-goldnight?utm_source=api",
+    "verified": true,
+    "rarity": "mythic",
+    "art_print": {
+      "id": "7208fcb8-83e6-44ce-af9a-ca1566825018",
+      "set": "avr",
+      "set_name": "Avacyn Restored",
+      "released_at": "2012-05-04",
+      "rarity": "mythic",
+      "uri": "https://scryfall.com/card/avr/209/gisela-blade-of-goldnight?utm_source=api"
+    }
+  },
+  {
+    "id": "1de30c12-2011-495a-be25-f7a46b23e142",
+    "name": "Adeline, Resplendent Cathar",
+    "mana_cost": "{1}{W}{W}",
+    "cmc": 3.0,
+    "type_line": "Legendary Creature — Human Knight",
+    "oracle_text": "Vigilance\nAdeline's power is equal to the number of creatures you control.\nWhenever you attack, for each opponent, create a 1/1 white Human creature token that's tapped and attacking that player or a planeswalker they control.",
+    "power": "*",
+    "toughness": "4",
+    "color_identity": [
+      "W"
+    ],
+    "keywords": [
+      "Vigilance"
+    ],
+    "image": "assets/cards/18092f68-b96e-4084-9eba-b240d2195d81.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/8/18092f68-b96e-4084-9eba-b240d2195d81.jpg?1783925668",
+    "uri": "https://scryfall.com/card/tdc/108/adeline-resplendent-cathar?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "18092f68-b96e-4084-9eba-b240d2195d81",
+      "set": "mid",
+      "set_name": "Innistrad: Midnight Hunt",
+      "released_at": "2021-09-24",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/mid/1/adeline-resplendent-cathar?utm_source=api"
+    }
+  },
+  {
+    "id": "70e9d8b8-4b32-4414-b32f-1f47523239c5",
+    "name": "Anzrag, the Quake-Mole",
+    "mana_cost": "{2}{R}{G}",
+    "cmc": 4.0,
+    "type_line": "Legendary Creature — Mole God",
+    "oracle_text": "Whenever Anzrag becomes blocked, untap each creature you control. After this phase, there is an additional combat phase.\n{3}{R}{R}{G}{G}: Anzrag must be blocked each combat this turn if able.",
+    "power": "8",
+    "toughness": "4",
+    "color_identity": [
+      "G",
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/70e9d8b8-4b32-4414-b32f-1f47523239c5.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/7/0/70e9d8b8-4b32-4414-b32f-1f47523239c5.jpg?1783912855",
+    "uri": "https://scryfall.com/card/mkm/186/anzrag-the-quake-mole?utm_source=api",
+    "verified": true,
+    "rarity": "mythic",
+    "art_print": {
+      "id": "70e9d8b8-4b32-4414-b32f-1f47523239c5",
+      "set": "mkm",
+      "set_name": "Murders at Karlov Manor",
+      "released_at": "2024-02-09",
+      "rarity": "mythic",
+      "uri": "https://scryfall.com/card/mkm/186/anzrag-the-quake-mole?utm_source=api"
+    }
+  },
+  {
+    "id": "fb419d9d-e06f-48c8-a4f8-a57f9be39e50",
+    "name": "Zopandrel, Hunger Dominus",
+    "mana_cost": "{5}{G}{G}",
+    "cmc": 7.0,
+    "type_line": "Legendary Creature — Phyrexian Horror",
+    "oracle_text": "Reach\nAt the beginning of each combat, double the power and toughness of each creature you control until end of turn.\n{G/P}{G/P}, Sacrifice two other creatures: Put an indestructible counter on Zopandrel. ({G/P} can be paid with either {G} or 2 life.)",
+    "power": "4",
+    "toughness": "6",
+    "color_identity": [
+      "G"
+    ],
+    "keywords": [
+      "Reach",
+      "Double"
+    ],
+    "image": "assets/cards/fb419d9d-e06f-48c8-a4f8-a57f9be39e50.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/f/b/fb419d9d-e06f-48c8-a4f8-a57f9be39e50.jpg?1783918004",
+    "uri": "https://scryfall.com/card/one/195/zopandrel-hunger-dominus?utm_source=api",
+    "verified": true,
+    "rarity": "mythic",
+    "art_print": {
+      "id": "fb419d9d-e06f-48c8-a4f8-a57f9be39e50",
+      "set": "one",
+      "set_name": "Phyrexia: All Will Be One",
+      "released_at": "2023-02-10",
+      "rarity": "mythic",
+      "uri": "https://scryfall.com/card/one/195/zopandrel-hunger-dominus?utm_source=api"
+    }
+  },
+  {
+    "id": "11fbe52f-febd-49fc-8391-28d3efe9c3eb",
+    "name": "Roxanne, Starfall Savant",
+    "mana_cost": "{3}{R}{G}",
+    "cmc": 5.0,
+    "type_line": "Legendary Creature — Cat Druid",
+    "oracle_text": "Whenever Roxanne enters or attacks, create a tapped colorless artifact token named Meteorite with \"When this token enters, it deals 2 damage to any target\" and \"{T}: Add one mana of any color.\"\nWhenever you tap an artifact token for mana, add one mana of any type that artifact token produced.",
+    "power": "4",
+    "toughness": "3",
+    "color_identity": [
+      "G",
+      "R"
+    ],
+    "keywords": [],
+    "image": "assets/cards/11fbe52f-febd-49fc-8391-28d3efe9c3eb.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/1/11fbe52f-febd-49fc-8391-28d3efe9c3eb.jpg?1783911786",
+    "uri": "https://scryfall.com/card/otj/228/roxanne-starfall-savant?utm_source=api",
+    "verified": true,
+    "rarity": "rare",
+    "art_print": {
+      "id": "11fbe52f-febd-49fc-8391-28d3efe9c3eb",
+      "set": "otj",
+      "set_name": "Outlaws of Thunder Junction",
+      "released_at": "2024-04-19",
+      "rarity": "rare",
+      "uri": "https://scryfall.com/card/otj/228/roxanne-starfall-savant?utm_source=api"
+    }
+  },
+  {
+    "id": "15f035df-784a-4dc8-b7f5-77139a4e6e99",
+    "name": "Mirkwood Bats",
+    "mana_cost": "{3}{B}",
+    "cmc": 4.0,
+    "type_line": "Creature — Bat",
+    "oracle_text": "Flying\nWhenever you create or sacrifice a token, each opponent loses 1 life.",
+    "power": "2",
+    "toughness": "3",
+    "color_identity": [
+      "B"
+    ],
+    "keywords": [
+      "Flying"
+    ],
+    "image": "assets/cards/15f035df-784a-4dc8-b7f5-77139a4e6e99.jpg",
+    "art": "https://cards.scryfall.io/art_crop/front/1/5/15f035df-784a-4dc8-b7f5-77139a4e6e99.jpg?1783916303",
+    "uri": "https://scryfall.com/card/ltr/95/mirkwood-bats?utm_source=api",
+    "verified": true,
+    "rarity": "common",
+    "art_print": {
+      "id": "15f035df-784a-4dc8-b7f5-77139a4e6e99",
+      "set": "ltr",
+      "set_name": "The Lord of the Rings: Tales of Middle-earth",
+      "released_at": "2023-06-23",
+      "rarity": "common",
+      "uri": "https://scryfall.com/card/ltr/95/mirkwood-bats?utm_source=api"
+    }
   }
 ];
 const CAMP_TOKEN_CARDS = {

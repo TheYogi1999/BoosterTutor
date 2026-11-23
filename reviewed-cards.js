@@ -31,7 +31,7 @@ ruleTargetOptions=function(kind,b=state.battle){
 function runCount66(card){return typeof runStatCount60==='function'?runStatCount60(card):0;}
 function snapshotSource66(u){return {...u,permanentKeywords:[...(u.permanentKeywords||[])],temporaryKeywords:[...(u.temporaryKeywords||[])]};}
 function dealAbility66(source,target,amount,b=state.battle){
- amount=Math.max(0,amount);const u=choiceTargetUnit(target,b);if(!amount)return;
+ const u=choiceTargetUnit(target,b);amount=target.side==='life'&&typeof playerDamageAmount95==='function'?playerDamageAmount95(amount,b):typeof damageAmount103==='function'?damageAmount103(amount,u,b):Math.max(0,amount);if(!amount)return;
  if(target.side==='life'){state.playerHealth-=amount;playSfx('player-hit');if(typeof animatePlayerDamage==='function')animatePlayerDamage(amount);}
  else if(u?.owner==='enemy'){u.health=Math.max(0,u.health-amount);if(hasCreatureKeyword(source,'deathtouch'))u.health=0;playSfx('enemy-hit');if(typeof showEnemyHit==='function'&&typeof enemyHitBox==='function')showEnemyHit(u,amount,enemyHitBox(u));}
  else if(u){u.damage=(u.damage||0)+amount;if(hasCreatureKeyword(source,'deathtouch'))u.deathtouchDamage=true;playSfx('player-hit');}
@@ -196,7 +196,7 @@ function confirmCreatureAbility66(){
   queueJester65(b,done=>withJesterWard65(b,target,u.card.name,()=>{if(u.card.name==='Visara the Dreadful'){b.resolvingSpellTarget=target;removeSpellTarget('destroy');}else dealAbility66(b.creatures.includes(u)?u:source,target,1,b);},done));renderBattle();
  }});
 }
-$('#creature-ability-confirm').addEventListener('click',confirmCreatureAbility66);$('#creature-ability-cancel').addEventListener('click',closeCreatureAbility66);$('#creature-ability-dialog').addEventListener('cancel',e=>{e.preventDefault();closeCreatureAbility66();});
+$('#creature-ability-confirm').addEventListener('click',()=>confirmCreatureAbility66());$('#creature-ability-cancel').addEventListener('click',closeCreatureAbility66);$('#creature-ability-dialog').addEventListener('cancel',e=>{e.preventDefault();closeCreatureAbility66();});
 $('#creature-row').addEventListener('click',e=>{const button=e.target.closest('[data-creature-ability66]');if(button)openCreatureAbility66(button.dataset.creatureAbility66);});
 const baseRescueResponses66=hasInstantResponse;
 hasInstantResponse=function(b){if(baseRescueResponses66(b))return true;const mana=b.mana+b.creatures.filter(u=>canTapForMana(u,b)).reduce((n,u)=>n+manaAmount66(u.card),0);return b.creatures.some(u=>ACTIVATED66.has(u.card.name)&&creatureAbilityReady66(u,b)||(u.card.name==='Shivan Dragon'&&creatureAlive(u)&&mana>=1&&!permanentActionBusy60(b)&&!jesterPending65(b)))||b.hand.some(c=>(isInstant(c)||hasFlash(c))&&canCastNow(c,b)&&mana>=Math.ceil(c.cmc||0));};
