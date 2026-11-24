@@ -1,0 +1,16 @@
+/* Card corners follow card size instead of a fixed 12px phone crop. */
+#start-screen .hero-card-face,#start-screen .title-card-back{border-radius:2% / 1.44%!important}
+#start-screen .hero-card-face img,#start-screen .title-card-back img{border-radius:inherit!important;object-fit:contain!important}
+.game-shell :is(.card-image-wrap,.hand-card,.player-card-frame,.permanent-card-frame,.foil-card-face){border-radius:4px!important}
+.game-shell :is(.card-image-wrap,.hand-card,.player-card-frame,.permanent-card-frame) img{border-radius:inherit!important}
+#drag-ghost,.card-flight,.zone-flight,.encounter-card-flight82{border-radius:4px!important}
+#drag-ghost img,.card-flight img,.zone-flight img{border-radius:inherit!important}
+.results-rain-face87{border-radius:2% / 1.44%;background-color:#151713;opacity:1}
+.hand-sway104{display:block;position:relative;width:100%;height:100%;transform-origin:50% 85%;animation:hand-sway104 var(--sway-duration104,6s) ease-in-out var(--sway-delay104,0s) infinite;will-change:translate,rotate;pointer-events:none}
+.hand-sway104>img,.hand-sway104>.foil-card-face{display:block;width:100%;height:100%;object-fit:contain}
+@keyframes hand-sway104{0%,100%{translate:0 0;rotate:-.28deg}50%{translate:0 -2px;rotate:.28deg}}
+/* The fan/hover transform remains on the button. Its hit area never moves. */
+.hand-card:is(:hover,:focus-visible,:active,.controller-focus,.targeting-card,.is-grabbed,.zone-arriving,.landing-destination) .hand-sway104,
+.drag-active .hand-sway104{animation:none;translate:0 0;rotate:0deg}
+.motion-paused104 .hand-sway104,html:has(dialog[open]) .hand-sway104{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.hand-sway104{animation:none!important;translate:0 0!important;rotate:0deg!important;will-change:auto}.screen-impact104{translate:none!important}}

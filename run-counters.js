@@ -6,6 +6,11 @@ const RUN_COUNTERS60 = {
  deathtouch:{name:'Deathtouch',price:24,symbol:'◆',description:'Any combat damage it deals to a monster is lethal.'},
  toxic:{name:'Toxic 1',price:18,symbol:'<svg class="toxic-vial94" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false"><path d="M9 3h6m-5 0v6l-4.5 9a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9V3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="m8.5 14-2 4a1 1 0 0 0 .9 1.5h9.2a1 1 0 0 0 .9-1.5l-2-4Z" fill="currentColor" opacity=".3"/><path d="m10 15 4 4m0-4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="11.5" r=".8" fill="currentColor"/></svg>',description:'Combat damage also gives the hit monster 1 poison counter.'},
  trample:{name:'Trample',price:15,symbol:'➶',description:'Excess combat damage reaches another legal monster.'},
+ reach:{name:'Reach',price:12,symbol:'↟',description:'Can attack Flying monsters and block their attacks.'},
+ 'first strike':{name:'First strike',price:19,symbol:'⚔',description:'Deal combat damage before creatures without First strike.'},
+ 'double strike':{name:'Double strike',price:30,symbol:'⚔⚔',description:'Deal damage in both the First strike and normal combat steps.'},
+ menace:{name:'Menace',price:16,symbol:'◆',description:'Needs two blockers. A lone monster cannot retaliate against this creature.'},
+ hexproof:{name:'Hexproof',price:24,symbol:'⬡',description:'Enemy spells cannot target this creature. Your own spells can still target it.'},
  vigilance:{name:'Vigilance',price:17,symbol:'◇',description:'Attacking does not tap this creature.'},
  mystery:{name:'Mystery',price:14,symbol:'?',description:'A random run counter. Revealed only when applied.'},
  haste:{name:'Haste',price:15,symbol:'ϟ',description:'Can attack and tap for mana on its first turn.'}
@@ -29,7 +34,10 @@ function runCounterMarkup60(card){const labels=runCounterLabels60(card);return l
 const baseRunStats60=parseStats;
 parseStats=function(card){const stats=baseRunStats60(card),n=runStatCount60(card);return {power:stats.power+n,toughness:stats.toughness+n};};
 const baseRunKeywords60=creatureKeywords;
-creatureKeywords=function(card){const result=baseRunKeywords60(card);for(const kind of activeRunCounters60(card))if(!['stats','toxic'].includes(kind))result[kind]=true;return result;};
+creatureKeywords=function(card){const result=baseRunKeywords60(card);for(const kind of activeRunCounters60(card))if(!['stats','toxic'].includes(kind))result[kind==='first strike'?'firstStrike':kind==='double strike'?'doubleStrike':kind]=true;return result;};
+// Persistent battle objects also receive newly bought keywords immediately.
+const baseLiveRunKeyword104=hasCreatureKeyword;
+hasCreatureKeyword=function(unit,keyword){return Boolean(unit?.owner!=='enemy'&&activeRunCounters60(unit?.card).includes(keyword)||baseLiveRunKeyword104(unit,keyword));};
 const baseRunDisplay60=displayKeywords;
 displayKeywords=function(card){return [...new Set([...baseRunDisplay60(card),...runCounterLabels60(card).filter(label=>!label.startsWith('+'))])];};
 const baseRunFacts60=cardFactsMarkup;

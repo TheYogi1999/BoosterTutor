@@ -121,6 +121,7 @@ const cardZoneEffects = (() => {
   };
   function clearShake(){if(!shake)return;const previous=shake;shake=null;previous.animation.cancel();combat.classList.remove('combat-hit-shake96');}
   function shakeScreen(amount){
+    if(typeof screenImpact104==='function')return screenImpact104('player',amount);
     clearShake();if(motion.matches||!visible())return;
     const a=Math.min(6,1.4+Math.sqrt(amount)*1.1);
     const offsets=[[0,0],[-a,a*.4],[a*.8,-a*.35],[-a*.6,a*.2],[a*.35,-a*.14],[-a*.16,a*.06],[0,0]];

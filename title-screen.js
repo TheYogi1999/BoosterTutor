@@ -27,6 +27,18 @@
   canvas.width = 1600; canvas.height = 900;
   const back = new Image(); back.src = 'assets/mtg-card-back.jpg';
   const center = {x:1155,y:438};
+  // Render in the actual viewport, then use a UNIFORM camera for the old
+  // logical composition. A portrait canvas must never stretch a 16:9 image.
+  function titleCamera104(){
+    const width=canvas.clientWidth||1600,height=canvas.clientHeight||900,dpr=Math.min(window.devicePixelRatio||1,1.5);
+    const pixelsX=Math.round(width*dpr),pixelsY=Math.round(height*dpr);
+    if(canvas.width!==pixelsX||canvas.height!==pixelsY){canvas.width=pixelsX;canvas.height=pixelsY;}
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.save();
+    const fan=screen.querySelector('.hero-card-stack'),scale=(fan?.clientWidth||690)/690;
+    const x=fan?fan.offsetLeft+fan.clientWidth*.5:width*.72,y=fan?fan.offsetTop+fan.clientHeight*.5:height*.49;
+    ctx.translate(x-center.x*scale,y-center.y*scale);ctx.scale(scale,scale);
+    canvas.dataset.cameraScale104=String(scale);
+  }
   const noise = n => {const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};
   const flyers = Array.from({length:30}, (_,i) => ({
     angle:i*2.39996,delay:noise(i+8)*.48,duration:1.65+noise(i+20)*.65,
@@ -57,7 +69,7 @@
     if(!ctx)return;
     const burst=still?0:Math.exp(-Math.pow((t-1.35)/.42,2));
     const arrive=still?1:Math.min(1,t/.65);
-    ctx.clearRect(0,0,1600,900);
+    titleCamera104();
     ctx.save();ctx.globalCompositeOperation='screen';
     // All light originates behind the cards, in the same logical 16:9 coordinates.
     const aura=ctx.createRadialGradient(center.x,center.y,20,center.x,center.y,530);
@@ -127,7 +139,7 @@
         ctx.drawImage(back,-width/2,-width*.697,width,width*1.394);ctx.restore();
       }
     }
-    ctx.restore();
+    ctx.restore();ctx.restore();
   }
   function tick(now) {
     frame=0;
@@ -192,5 +204,6 @@
   document.addEventListener('booster:title-intro-start',()=>{if(screen.classList.contains('active')){wasActive=false;sync();}});
   motion.addEventListener('change',()=>{wasActive=false;sync();});
   back.addEventListener('load',()=>{if(motion.matches)paint(0);});
+  new ResizeObserver(()=>{if(screen.classList.contains('active'))paint(time);}).observe(screen);
   sync();
 })();

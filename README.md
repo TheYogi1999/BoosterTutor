@@ -1,3 +1,7 @@
+## Portrait polish, additional run counters and motion (v0.104)
+
+The title animation keeps its proportions in portrait, card corners are smaller, and the receipt’s falling 3D cards are opaque. Added Reach, First strike, Double strike, Menace and Hexproof to the shop’s three random run-counter offers; Trample remains available. Hand artwork sways subtly while its hit areas stay fixed. Short, bounded impacts now cover enemy hits/defeats, large creatures and pack openings as well as player damage, with reduced-motion and input/scene cleanup. See [PRESENTATION_POLISH.md](PRESENTATION_POLISH.md) for behavior and validation.
+
 ## Nine reviewed combat legends and token engines (v0.103)
 
 Added **Primordial Ooze; Aurelia, the Warleader; Aurelia, the Law Above; Gisela, Blade of Goldnight; Adeline, Resplendent Cathar; Anzrag, the Quake-Mole; Zopandrel, Hunger Dominus; Roxanne, Starfall Savant; and Mirkwood Bats** to the playable pool, matching packs, shop and collection, with original-set local art and detailed English in-game rules.
