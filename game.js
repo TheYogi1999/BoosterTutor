@@ -21,7 +21,11 @@ const AVATARS = [
   { id: 'mage', name: 'Arcane Mage', symbol: '✦' },
   { id: 'ranger', name: 'Wild Scout', symbol: '➶' },
   { id: 'guardian', name: 'Iron Guardian', symbol: '⛨' },
-  { id: 'dragon', name: 'Ember Adept', symbol: '♨' }
+  { id: 'dragon', name: 'Ember Adept', symbol: '♨' },
+  { id: 'sage', name: 'Grove Sage', symbol: '❧' },
+  { id: 'seer', name: 'Astral Seer', symbol: '☾' },
+  { id: 'runeknight', name: 'Rune Knight', symbol: '⚔' },
+  { id: 'shaman', name: 'Wild Shaman', symbol: '◇' }
 ];
 const LAND_STAGES = [
   { name: 'Glacial Fortress', color: '#67b8d8', scene: 'fjord' },

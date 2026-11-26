@@ -34,10 +34,14 @@
     const pixelsX=Math.round(width*dpr),pixelsY=Math.round(height*dpr);
     if(canvas.width!==pixelsX||canvas.height!==pixelsY){canvas.width=pixelsX;canvas.height=pixelsY;}
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.save();
-    const fan=screen.querySelector('.hero-card-stack'),scale=(fan?.clientWidth||690)/690;
-    const x=fan?fan.offsetLeft+fan.clientWidth*.5:width*.72,y=fan?fan.offsetTop+fan.clientHeight*.5:height*.49;
+    // Bounding rectangles include the fan's translateY(-50%). offsetTop does
+    // not, and used to put the vortex half a fan-height below the cards.
+    const fan=screen.querySelector('.hero-card-stack'),bounds=canvas.getBoundingClientRect(),box=fan?.getBoundingClientRect();
+    const sx=width/(bounds.width||width),sy=height/(bounds.height||height),scale=box?box.width*sx/690:1;
+    const x=box?(box.left+box.width*.5-bounds.left)*sx:width*.72,y=box?(box.top+box.height*.44-bounds.top)*sy:height*.49;
     ctx.translate(x-center.x*scale,y-center.y*scale);ctx.scale(scale,scale);
     canvas.dataset.cameraScale104=String(scale);
+    canvas.dataset.focusX105=String(x);canvas.dataset.focusY105=String(y);
   }
   const noise = n => {const value=Math.sin(n*127.1+311.7)*43758.5453;return value-Math.floor(value);};
   const flyers = Array.from({length:30}, (_,i) => ({
@@ -53,6 +57,16 @@
   if(sparkContext){const glow=sparkContext.createRadialGradient(20,20,0,20,20,20);glow.addColorStop(0,'#fff2c4');glow.addColorStop(.12,'#fbd28cbb');glow.addColorStop(.4,'#e7a34e33');glow.addColorStop(1,'#e7a34e00');sparkContext.fillStyle=glow;sparkContext.fillRect(0,0,40,40);}
   let frame=0, previous=0, time=0, lastPaint=0, animations=[];
   let wasActive=false, hiddenAt=0;
+  let rain105=null;
+  function stopRain105(){rain105?.remove();rain105=null;}
+  function rainState105(t){
+    if(motion.matches||!screen.classList.contains('active'))return stopRain105();
+    if(document.hidden||t<3.25)return;
+    const scale=Math.min(1,Math.max(.55,canvas.clientWidth/900));
+    if(!rain105){rain105=createCardRain105({kind:'title',seed:105,sizeScale:scale});screen.querySelector('.title-stage').prepend(rain105);}
+    else resizeCardRain105(rain105,scale);
+  }
+  function pauseRain105(paused){if(rain105)for(const node of rain105.querySelectorAll('.card-rain-card105,.card-rain-body105'))node.style.animationPlayState=paused?'paused':'running';}
   const revealAt=[1.42,1.14,1.68];
   const tutorPrints=[
     {edition:'unh/51',image:'assets/cards/c3a5b25e-c5af-417e-8675-162ab18ac2b1.jpg'},
@@ -62,6 +76,7 @@
   function phase(value){if(screen.dataset.titlePhase!==value)screen.dataset.titlePhase=value;}
   function paint(t) {
     const still=motion.matches;
+    rainState105(t);
     if(!document.hidden&&screen.classList.contains('active')&&!still){
       cards.forEach((card,i)=>{if(t>=revealAt[i])card.classList.add('is-revealed');});
       phase(t<1.14?'opening':t<3.25?'revealing':'ready');
@@ -143,6 +158,7 @@
   }
   function tick(now) {
     frame=0;
+    if(motion.matches)stopRain105();
     if(document.hidden||!screen.classList.contains('active')||motion.matches)return;
     if(previous)time+=Math.min(.08,(now-previous)/1000);
     previous=now;
@@ -186,12 +202,13 @@
   }
   function sync() {
     const active=screen.classList.contains('active');
+    if(motion.matches)stopRain105();
     shell.classList.toggle('title-menu-active',active);
     cancelAnimationFrame(frame);frame=0;previous=0;
-    if(!active){animations.forEach(a=>a.cancel());wasActive=false;hiddenAt=0;ctx?.clearRect(0,0,1600,900);return;}
-    if(document.hidden){hiddenAt=performance.now();animations.forEach(a=>{if(a.playState==='running')a.pause();});return;}
-    if(!wasActive){time=0;lastPaint=0;intro();wasActive=true;}
-    else if(hiddenAt){animations.forEach(a=>{if(a.playState==='paused')a.play();});hiddenAt=0;}
+    if(!active){animations.forEach(a=>a.cancel());stopRain105();wasActive=false;hiddenAt=0;if(ctx){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);}return;}
+    if(document.hidden){hiddenAt=performance.now();animations.forEach(a=>{if(a.playState==='running')a.pause();});pauseRain105(true);return;}
+    if(!wasActive){stopRain105();time=0;lastPaint=0;intro();wasActive=true;}
+    else if(hiddenAt){animations.forEach(a=>{if(a.playState==='paused')a.play();});pauseRain105(false);hiddenAt=0;}
     if(motion.matches){cards.forEach(c=>c.classList.add('is-revealed'));phase('ready');paint(0);}
     else frame=requestAnimationFrame(tick);
   }
@@ -204,6 +221,6 @@
   document.addEventListener('booster:title-intro-start',()=>{if(screen.classList.contains('active')){wasActive=false;sync();}});
   motion.addEventListener('change',()=>{wasActive=false;sync();});
   back.addEventListener('load',()=>{if(motion.matches)paint(0);});
-  new ResizeObserver(()=>{if(screen.classList.contains('active'))paint(time);}).observe(screen);
+  new ResizeObserver(()=>{if(screen.classList.contains('active')&&!document.hidden)paint(time);}).observe(screen);
   sync();
 })();

@@ -1,3 +1,7 @@
+## More avatars, aligned title effects and consistent card depth (v0.105)
+
+Added **Grove Sage, Astral Seer, Rune Knight and Wild Shaman**, bringing the saved cosmetic avatar roster to eight. The title vortex follows the actual rendered card fan, and MTG-backed cards rain in the background after the intro finishes. Title and receipt rain now share a depth model: smaller cards are farther back and larger cards paint in front, with matching size, Z, DOM order and z-index. Hidden tabs, reduced motion, resizing and early Play retain their cleanup behavior. Details and verification: [DEPTH_SCENES.md](DEPTH_SCENES.md).
+
 ## Portrait polish, additional run counters and motion (v0.104)
 
 The title animation keeps its proportions in portrait, card corners are smaller, and the receipt’s falling 3D cards are opaque. Added Reach, First strike, Double strike, Menace and Hexproof to the shop’s three random run-counter offers; Trample remains available. Hand artwork sways subtly while its hit areas stay fixed. Short, bounded impacts now cover enemy hits/defeats, large creatures and pack openings as well as player damage, with reduced-motion and input/scene cleanup. See [PRESENTATION_POLISH.md](PRESENTATION_POLISH.md) for behavior and validation.
