@@ -1,0 +1,19 @@
+/* Forecast labels never intercept selecting, dragging or arrow-hover hit tests. */
+.game-shell .combat-arrows .route-damage{pointer-events:none;user-select:none}
+.game-shell .combat-arrows .route-damage rect{fill:#0b1924f5;stroke-width:1.2;filter:drop-shadow(0 2px 4px #0008)}
+.game-shell .combat-arrows .route-damage text{font:600 11px/1 var(--sans);fill:#fff1cc;letter-spacing:0}
+.game-shell .combat-arrows .route-damage .forecast-back109{font:500 10px/1 var(--sans);fill:#c6d9d7}
+.game-shell .combat-arrows .forecast-label109.route-ally rect{stroke:#e3c282}
+.game-shell .combat-arrows .forecast-label109.route-enemy rect{stroke:#df907e}
+.game-shell .combat-arrows .forecast-label109.route-block rect{stroke:#9cd8c8}
+.game-shell .combat-arrows .forecast-intent109 text{fill:#d6bba9}
+.game-shell .combat-arrows .forecast-intent109 rect{stroke:#b9937d;stroke-dasharray:3 2}
+.game-shell .combat-arrows .forecast-lethal109 rect{stroke:#ff9785!important;fill:#361b23f5;stroke-width:1.7}
+.game-shell .combat-arrows .forecast-lethal109 text{fill:#ffe3d3}
+.game-shell .combat-arrows .forecast-pending109 text{fill:#a9b7bc}
+.game-shell .combat-arrows .forecast-poison109 .forecast-line109{fill:#ceef9c}
+.forecast-label109{transition:opacity .12s,filter .12s}.forecast-label-dim109{opacity:.72}.forecast-label-focus109{filter:brightness(1.2)}
+@media(prefers-reduced-motion:reduce){.forecast-label109{transition:none}}
+html.battle-ui97 #creature-row [data-combat-danger109="dies"] .player-card-frame{outline:3px solid #ff8875!important;outline-offset:3px;box-shadow:0 0 14px #ff725c77!important}
+html.battle-ui97 #creature-row [data-combat-danger109="risk"] .player-card-frame,html.battle-ui97 #creature-row [data-combat-danger109="returns"] .player-card-frame{outline:3px dashed #edc276!important;outline-offset:3px;box-shadow:0 0 12px #e7ad5144!important}
+#player-health-label[data-combat-lethal109]{color:#ff9a89!important;text-shadow:0 0 12px #ff6d5a99}

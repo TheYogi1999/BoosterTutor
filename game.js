@@ -1714,9 +1714,10 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
   let damageToPlayer = 0;
   let damageToOpponent = 0;
   const enemyLifelinkEvents = [];
+  const playerDamageEvents = [];
   for (const firstStep of [true, false]) {
     if (typeof beforeCombatDamageStep95 === 'function') beforeCombatDamageStep95(battle);
-    const previousPlayerDamage = damageToPlayer, previousEnemyEvents = enemyLifelinkEvents.length;
+    const previousPlayerDamage = damageToPlayer, previousEnemyEvents = enemyLifelinkEvents.length, previousPlayerEvents = playerDamageEvents.length;
     const lureRetaliated = new Set();
     const exchanges = [];
     const overflow = [];
@@ -1735,6 +1736,7 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
           const raw = Math.max(0, attacker.power);
           const amount = typeof playerDamageAmount95 === 'function' ? playerDamageAmount95(raw,battle) : raw;
           damageToPlayer += amount;
+          playerDamageEvents.push({ source: attacker.id, damage: amount });
           if (amount && hasCreatureKeyword(attacker, 'lifelink')) enemyLifelinkEvents.push({ creature: attacker, damage: amount });
         } else damageToOpponent += damageFirstEnemy(Math.max(0, attacker.power));
         continue;
@@ -1766,14 +1768,14 @@ function resolveCombatDamage(attackers, assignments, attackingSide, onDamageStep
     battle.enemyCreatures = removeDeadCreatures(battle.enemyCreatures, 'enemy', false);
     if (typeof settleBattlefield103 === 'function') settleBattlefield103(battle);
     for (const hit of overflow) {
-      if (hit.side === 'enemy') { const amount=typeof playerDamageAmount95==='function'?playerDamageAmount95(hit.amount,battle):hit.amount; damageToPlayer += amount; if (amount&&hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:amount}); }
+      if (hit.side === 'enemy') { const amount=typeof playerDamageAmount95==='function'?playerDamageAmount95(hit.amount,battle):hit.amount; damageToPlayer += amount; playerDamageEvents.push({source:hit.source.id,damage:amount}); if (amount&&hasCreatureKeyword(hit.source, 'lifelink')) enemyLifelinkEvents.push({creature:hit.source,damage:amount}); }
       else { const next = battle.enemyCreatures.find(enemy=>!hit.blockedIds.includes(enemy.id) && canAttackEnemy(hit.source,enemy)); const dealt = next ? (typeof poisonOverflow60 === 'function' && (hit.source.infect || hit.source.toxic) ? poisonOverflow60(hit.source, next, hit.amount, battle) : damageFirstEnemy(hit.amount,next,hit.source)) : 0; damageToOpponent += dealt; gainLifelinkLife(hit.source,'player',dealt,battle); }
     }
     if (typeof afterCombatDamageStep95 === 'function') afterCombatDamageStep95(battle);
-    onDamageStep?.({firstStep,damageToPlayer:damageToPlayer-previousPlayerDamage,enemyLifelinkEvents:enemyLifelinkEvents.slice(previousEnemyEvents)});
+    onDamageStep?.({firstStep,damageToPlayer:damageToPlayer-previousPlayerDamage,enemyLifelinkEvents:enemyLifelinkEvents.slice(previousEnemyEvents),playerDamageEvents:playerDamageEvents.slice(previousPlayerEvents)});
     if (battle.phase === 'complete') break;
   }
-  return { damageToPlayer, damageToOpponent, enemyLifelinkEvents };
+  return { damageToPlayer, damageToOpponent, enemyLifelinkEvents, playerDamageEvents };
 }
 function attackTarget(battle, creature) {
   if (creature.attackTargetId) return battle.enemyCreatures.find(enemy => enemy.id === creature.attackTargetId && canAttackEnemy(creature,enemy)) || null;
@@ -2533,18 +2535,20 @@ function drawCombatArrows() {
       svg.append(group);
     }
     group.querySelector('title').textContent = title;
-    group.querySelector('text').textContent = route.damage;
+    if (!group.dataset.forecast109) group.querySelector('text').textContent = route.damage;
     for (const path of group.querySelectorAll('path')) set(path, 'd', curve);
     for (const [selector, point] of [['.route-source', from], ['.route-target', to]]) {
       const circle = group.querySelector(selector);
       set(circle, 'cx', round(point.x));
       set(circle, 'cy', round(point.y));
     }
-    set(group.querySelector('.route-damage'), 'transform', `translate(${round(label.x)},${round(label.y)})`);
+    const damageBadge = group.querySelector('.route-damage');
+    if (damageBadge) set(damageBadge, 'transform', `translate(${round(label.x)},${round(label.y)})`);
     retained.add(key);
   }
   for (const [key, group] of existing) if (!retained.has(key)) group.remove();
   if (typeof refreshArrowFocus70 === 'function') refreshArrowFocus70();
+  if (typeof decorateCombatArrows109 === 'function') decorateCombatArrows109(svg, battle);
 }
 
 function combatArrowDefinitions() {

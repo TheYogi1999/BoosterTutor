@@ -19,7 +19,7 @@ function forecastCombat106({mode=null,unitId=null,targetId=null}={}){
  if(original.phase==='enemy')return{available:false,reason:'Enemy actions are resolving. Preview your blocks after the response window.'};
  mode||=['blocks','damage'].includes(original.phase)?'blocks':'queued';
  const saved={...state},bindings=new Map(),random=Math.random,notes=[],events=[],jobs=[];
- let playerGain=0,enemyGain=0,draws=0,result,abilityTarget=null;const triggers=[];
+ let playerGain=0,enemyGain=0,draws=0,result,abilityTarget=null,damageSource=null;const triggers=[];
  const shadow=cloneForecastData106(state),b=shadow.battle;
  const before=[...b.creatures,...b.enemyCreatures].map(u=>({id:u.id,name:u.card.name,owner:u.owner,health:u.health,damage:u.damage||0,poison:u.poison60||0,card:u.originalCard||u.card}));
  const life=state.playerHealth,extra=b.extraCombats103||0;
@@ -40,10 +40,13 @@ function forecastCombat106({mode=null,unitId=null,targetId=null}={}){
   replace('drawOneCard',()=>{draws++;if(!b.deck.length){note('The attack would draw from an empty Library and lose the run.');b.phase='complete';return;}b.deck.pop();b.hand.push({name:'Unrevealed draw',type_line:'Unknown',cmc:0});});
   replace('endRun',()=>{b.phase='complete';});replace('winBattle',()=>{b.phase='complete';jobs.length=0;});
   const deal=dealCreatureDamage,link=gainLifelinkLife,direct=damageFirstEnemy,ability=dealAbility66;
+  const poison=addPoison60;
+  replace('addPoison60',(target,amount,battle)=>{const value=poison(target,amount,battle,false);if(value>0)events.push({source:damageSource?.id,target:target.id,damage:0,poison:value});return value;});
   replace('dealAbility66',(source,target,amount,battle)=>{const previous=abilityTarget;abilityTarget=target?.side==='life'?'life':target?.id;try{return ability(source,target,amount,battle);}finally{abilityTarget=previous;}});
   replace('dealCreatureDamage',(source,target,side,battle,amount,links=null)=>{
-   const collector=links||[],start=collector.length;deal(source,target,side,battle,amount,collector);
-   for(const event of collector.slice(start)){events.push({source:source.id,target:target.id,damage:event.damage,infect:Boolean(source.infect)});if(!links)gainLifelinkLife(source,side,event.damage,battle);}
+   const collector=links||[],start=collector.length,previous=damageSource;damageSource=source;
+   try{deal(source,target,side,battle,amount,collector);}finally{damageSource=previous;}
+   for(const event of collector.slice(start)){events.push({source:source.id,target:target.id,damage:source.infect&&target.owner==='enemy'?0:event.damage,infect:Boolean(source.infect)});if(!links)gainLifelinkLife(source,side,event.damage,battle);}
   });
   replace('gainLifelinkLife',(source,side,amount,battle)=>{if(abilityTarget&&amount>0)events.push({source:source.id,target:abilityTarget,damage:amount});const before=side==='player'?state.playerHealth:source.health;const value=link(source,side,amount,battle),gain=Math.max(0,(side==='player'?state.playerHealth:source.health)-before);if(side==='player')playerGain+=gain;else enemyGain+=gain;return value;});
   replace('damageFirstEnemy',(amount,explicit=null,source=null)=>{const target=explicit||attackTarget(b,source||{}),value=direct(amount,explicit,source);if(value&&target)events.push({source:source?.id,target:target.id,damage:value,infect:false});return value;});
@@ -52,7 +55,7 @@ function forecastCombat106({mode=null,unitId=null,targetId=null}={}){
    if(hasInvalidMenaceBlock(b))return{available:false,reason:'Menace needs two blockers. Add another blocker or remove the invalid assignment.'};
    const attackers=b.enemyCreatures.filter(u=>creatureCanAttack(u,b.turn)),assignments=new Map();
    for(const enemy of attackers){const blockers=enemyDefenders70(b,enemy);if(blockers.length)assignments.set(enemy.id,blockers);}
-   resolveCombatDamage(attackers,assignments,'enemy',step=>{state.playerHealth-=step.damageToPlayer;for(const event of step.enemyLifelinkEvents)gainLifelinkLife(event.creature,'enemy',event.damage,b);if(step.damageToPlayer)events.push({target:'life',damage:step.damageToPlayer});if(state.playerHealth<=0)b.phase='complete';});flush();
+   resolveCombatDamage(attackers,assignments,'enemy',step=>{state.playerHealth-=step.damageToPlayer;for(const event of step.enemyLifelinkEvents)gainLifelinkLife(event.creature,'enemy',event.damage,b);for(const event of step.playerDamageEvents||[])events.push({...event,target:'life'});if(state.playerHealth<=0)b.phase='complete';});flush();
   }else{
    if(b.phase==='main')beginCombat103(b,'player');
    const candidate=unitId?b.creatures.find(u=>u.id===unitId):null;
@@ -72,7 +75,7 @@ function forecastCombat106({mode=null,unitId=null,targetId=null}={}){
    }
   }
   const all=[...b.creatures,...b.enemyCreatures];
-  const rows=before.map(u=>{const after=all.find(v=>v.id===u.id),returned=!after&&all.some(v=>(v.originalCard||v.card)===u.card);return{id:u.id,name:u.name,owner:u.owner,created:Boolean(u.created),dead:!after,returned,damage:events.filter(e=>e.target===u.id).reduce((n,e)=>n+e.damage,0),poison:Math.max(0,(after?.poison60||0)-u.poison),remaining:after?u.owner==='enemy'?after.health:Math.max(0,after.toughness-(after.damage||0)):0};});
+  const rows=before.map(u=>{const after=all.find(v=>v.id===u.id),returned=!after&&all.some(v=>(v.originalCard||v.card)===u.card);return{id:u.id,name:u.name,owner:u.owner,created:Boolean(u.created),dead:!after,returned,damage:events.filter(e=>e.target===u.id).reduce((n,e)=>n+e.damage,0),poison:events.filter(e=>e.target===u.id).reduce((n,e)=>n+(e.poison||0),0),remaining:after?u.owner==='enemy'?after.health:Math.max(0,after.toughness-(after.damage||0)):0};});
   const requested=original.creatures.find(u=>unitId?u.id===unitId:u.willAttack);
   const wardTarget=original.enemyCreatures.find(e=>e.id===(targetId||requested?.attackTargetId||original.selectedEnemyTargetId));
   result={available:true,mode,rows,events,triggers,playerBefore:life,playerAfter:state.playerHealth,playerGain,enemyGain,draws,extraCombats:Math.max(0,(b.extraCombats103||0)-extra),notes,uncertain:notes.length>0,ward:wardTarget?wardCostText(wardTarget):'',wardAffordable:wardTarget?original.mana>=wardCost(wardTarget):true};

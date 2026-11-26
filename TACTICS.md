@@ -1,3 +1,15 @@
+## Arrow forecasts — v0.109
+
+Queued attack arrows show **dealt** damage and **back** damage separately. **KO** means the target is defeated by the combined queued plan; **DIES** means the indicated allied creature does not survive. Persist returns are distinguished, and unresolved trigger choices use an estimate marker and risk wording. Allied card frames receive a red outline for predicted death and an amber dashed outline for a return or uncertain risk. No card rules or abilities are obscured by a new overlay.
+
+Before the Block/Damage steps, enemy arrow numbers are **Intent** on the current board, before your pending attacks or spells; these do not create definitive allied-death warnings. During blocks, exact assignments, multiple blockers, Trample, prevention, poison and retaliation use the same dry run as Preview. A lethal combined enemy attack is labeled **LETHAL TOTAL** and highlights your life value. Pending choices or enemy actions show a waiting state instead of stale numbers. Protection, Lifelink, First/Double strike and damage replacement still follow the real resolver.
+
+The combat engine now includes per-attacker player-damage metadata in its damage-step callback and return value. This does not change damage, payment, timing or rewards. The forecast separately records poison additions, retaining poison on a defeated target and keeping Infect out of health-damage totals. Arrow annotations do not simulate guessed random outcomes.
+
+A keyed SVG label layer paints above every arrow stroke, retains focus highlighting and pointer transparency, and keeps small-screen labels readable. Candidate positions along each curve penalize label collisions and covering cards/HUD elements. Unchanged redraws and resizes reuse the forecast; battle rendering invalidates it, and a combat-state fingerprint catches direct changes. No gameplay RNG or storage is used.
+
+Validation: `node tests/arrow-forecast-browser.test.cjs` covers outgoing and retaliation damage, death outlines, First strike, lethal poison, nonmutating cached redraws, multiblock/Trample, Ring prevention, lethal incoming totals, resolving states, six simultaneous duels at seven sizes, click-through/withdraw and the full Preview dialog. Four additional rule cases cover per-source incoming damage, both Double strike steps, prevention, Infect and Toxic. The complete nonbrowser run passes 581 tests.
+
 # Combat planning, route choices and deck composition — v0.106
 
 ## Combat preview

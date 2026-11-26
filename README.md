@@ -1,3 +1,9 @@
+## Damage forecasts on combat arrows (v0.109)
+
+Attack arrows now show actual projected damage and retaliation from the existing combat dry run. **KO**, **DIES**, returning creatures and lethal incoming totals are labeled explicitly; endangered allied card frames glow red, or amber for returns/unresolved risk. Enemy arrows remain marked **Intent** until blocks are chosen. Poison is shown separately from life damage, including lethal poison and retaliation. Labels scale for readable phone text, sit above the arrow strokes and spread along curves to reduce overlap. The complete arrow layer remains transparent to card clicks and dragging.
+
+The resolver now exposes per-source player-damage events without changing combat outcomes. Forecasts are cached between unchanged redraws and never spend mana, award coins, reveal Library order or consume gameplay randomness. Validation: **581 rule tests**, plus arrow-specific browser checks at seven viewport sizes and the existing tactical/Immortal integration flow. See [TACTICS.md](TACTICS.md).
+
 ## Full-card upgrades and compact portrait phases (v0.108)
 
 Shop counter selection now fits the available window height: short landscape displays use a horizontal row of complete cards, with compact controls and scrolling confined to the gallery. Runesmith upgrades use a visual card picker with individual copy numbers, current stats and run seals, followed by a selected-card preview. Browsing/canceling remains free; confirmation upgrades exactly one copy. Portrait combat shows Main / Attack / Enemy / Block / Damage in a dedicated row, with full accessible descriptions and Extra for additional combats. Keyboard, touch and controller selection remain supported.
