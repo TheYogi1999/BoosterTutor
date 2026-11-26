@@ -1,3 +1,9 @@
+## Full-card upgrades and compact portrait phases (v0.108)
+
+Shop counter selection now fits the available window height: short landscape displays use a horizontal row of complete cards, with compact controls and scrolling confined to the gallery. Runesmith upgrades use a visual card picker with individual copy numbers, current stats and run seals, followed by a selected-card preview. Browsing/canceling remains free; confirmation upgrades exactly one copy. Portrait combat shows Main / Attack / Enemy / Block / Damage in a dedicated row, with full accessible descriptions and Extra for additional combats. Keyboard, touch and controller selection remain supported.
+
+Validated with `node tests/selection-layout-browser.test.cjs`: eight viewport sizes, full card aspect/visibility, safe-area fit, controller scrolling, cancellation, actual one-copy shop and forge upgrades, and portrait/extra-combat labels.
+
 ## More natural title-card arrivals (v0.107)
 
 The title rain now shuffles its entry order for every intro and spaces initial releases irregularly, 1.2–2.6 seconds apart instead of every 0.38 seconds. Cards still enter from above, with their existing fall speeds and 3D depth. Decorative randomness uses a separate browser seed and never consumes gameplay RNG; receipt rain is unchanged.
