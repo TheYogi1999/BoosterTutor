@@ -63,7 +63,12 @@
     if(motion.matches||!screen.classList.contains('active'))return stopRain105();
     if(document.hidden||t<3.25)return;
     const scale=Math.min(1,Math.max(.55,canvas.clientWidth/900));
-    if(!rain105){rain105=createCardRain105({kind:'title',seed:105,sizeScale:scale});screen.querySelector('.title-stage').prepend(rain105);}
+    if(!rain105){
+      const entropy=new Uint32Array(1);
+      if(globalThis.crypto?.getRandomValues)crypto.getRandomValues(entropy);
+      else entropy[0]=(Date.now()^Math.floor(performance.now()*1000))>>>0;
+      rain105=createCardRain105({kind:'title',seed:entropy[0],sizeScale:scale});screen.querySelector('.title-stage').prepend(rain105);
+    }
     else resizeCardRain105(rain105,scale);
   }
   function pauseRain105(paused){if(rain105)for(const node of rain105.querySelectorAll('.card-rain-card105,.card-rain-body105'))node.style.animationPlayState=paused?'paused':'running';}

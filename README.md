@@ -1,3 +1,7 @@
+## More natural title-card arrivals (v0.107)
+
+The title rain now shuffles its entry order for every intro and spaces initial releases irregularly, 1.2–2.6 seconds apart instead of every 0.38 seconds. Cards still enter from above, with their existing fall speeds and 3D depth. Decorative randomness uses a separate browser seed and never consumes gameplay RNG; receipt rain is unchanged.
+
 ## Combat previews, route choices and compact deck statistics (v0.106)
 
 Added **Preview** / **V** and creature-hover combat forecasts, including damage, deaths, Lifelink and Ward affordability. Choose normal fights, empowered patrols or small optional events after camp, with one confirmed trade per encounter and preserved Immortal battlefields. Deck/Library inspection now includes a compact mana curve and composition counts. Title rain starts above the screen and falls in gradually instead of appearing midair. English UI, generic mana, touch/controller navigation and fitted layouts remain supported. Behavior, limits and validation: [TACTICS.md](TACTICS.md).

@@ -12,8 +12,17 @@ function cardRainProfiles105(seed=1,count=12,sizeScale=1){
    flip,flipDelay:-flip*noise(i+121),direction,tilt:-22+noise(i+113)*44,art:noise(i+141)};
  });
 }
+function titleRainSchedule107(seed,count){
+ const noise=n=>{const v=Math.sin(n*173.3+seed)*43758.5453;return v-Math.floor(v);};
+ const order=Array.from({length:count},(_,i)=>i),delays=Array(count);
+ for(let i=count-1;i>0;i--){const j=Math.floor(noise(i+301)*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+ let next=.15+noise(401)*.45;
+ for(const index of order){delays[index]=next;next+=1.2+noise(index+501)*1.4;}
+ return delays;
+}
 function createCardRain105({kind='results',seed=1,art=[],sizeScale=1}={}){
  const receipt=kind==='results',rain=document.createElement('div');
+ const entryDelays=receipt?null:titleRainSchedule107(seed,12);
  rain.className=`card-rain105 ${receipt?'results-rain86':'title-rain105'}`;
  rain.setAttribute('aria-hidden','true');rain.inert=true;
  rain.dataset.sizeScale105=String(sizeScale);
@@ -24,7 +33,7 @@ function createCardRain105({kind='results',seed=1,art=[],sizeScale=1}={}){
   card.dataset.depth105=String(p.depth);card.dataset.rank105=String(p.rank);
   card.dataset.baseWidth105=String(p.width/sizeScale);
   card.style.cssText=`left:${p.left}%;width:${p.width}px;height:${p.height}px;z-index:${p.layer};--rain-half-width87:${p.width/2}px;--rain-wind86:${p.wind}px;--rain-start86:${p.start}deg;--rain-end86:${p.end}deg;--rain-depth87:${p.z}px;--rain-alpha86:1;--rain-flip-direction87:${p.direction};--rain-tilt87:${p.tilt}deg;--rain-flip-duration87:${p.flip}s;--rain-flip-delay87:${p.flipDelay}s;animation-duration:${p.duration}s;animation-delay:${p.delay}s`;
-  if(!receipt){card.style.animationDelay=p.index*.38+'s';card.style.animationFillMode='backwards';card.style.setProperty('--rain-entry-size106',p.height*1.4+30+'px');card.style.setProperty('--rain-start-y106','calc(-1 * var(--rain-entry-size106) - var(--scene-height99, 100dvh) * .1)');}
+  if(!receipt){card.style.animationDelay=entryDelays[p.index]+'s';card.style.animationFillMode='backwards';card.style.setProperty('--rain-entry-size106',p.height*1.4+30+'px');card.style.setProperty('--rain-start-y106','calc(-1 * var(--rain-entry-size106) - var(--scene-height99, 100dvh) * .1)');}
   const body=document.createElement('div');body.className=`card-rain-body105 ${receipt?'results-rain-body87':'title-rain-body105'}`;
   const faceCard=art.length?art[Math.floor(p.art*art.length)]:null;
   for(const [side,source] of [['back','assets/mtg-card-back.jpg'],['front',faceCard?.image||'assets/mtg-card-back.jpg']]){
