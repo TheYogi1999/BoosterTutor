@@ -87,7 +87,7 @@ function startPrecon71(id,restart=false){
   $('#precon-card-dialog').close();$('#game-modes-dialog').close();
   prepareNewRun71('precon');state.preconId71=id;
   state.pool=playableCards(BUNDLED_CARDS);state.landPool=FALLBACK_LANDS;
-  state.deck=mintPrecon71(id);recordSeenCards(state.deck.filter(c=>!isLand(c)));beginBattle(1);
+  state.deck=mintPrecon71(id);recordSeenCards(state.deck.filter(c=>!isLand(c)));if(typeof chooseRoute106==='function')chooseRoute106(1);else beginBattle(1);
   addLog(`${preconDefinition71(id).name} · prepared 24-card starter. No opening draft.`);
   return true;
  }finally{startingPrecon71=false;}

@@ -1,0 +1,56 @@
+#route-screen.active{display:grid!important;grid-template-rows:auto auto minmax(0,1fr) auto auto;gap:12px;overflow:hidden!important}
+#route-screen .route-heading106>div{min-width:0;flex:1}#route-screen .route-heading106 .eyebrow{display:block;font-size:10px;line-height:1.3;letter-spacing:1px}#route-screen .route-heading106>button{font-size:12px;padding:10px 14px;min-width:0;max-width:205px}
+#route-screen .route-tools106 .quiet-button{padding:5px 9px;font-size:12px;line-height:1.3;min-height:28px}
+.route-heading106{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.route-heading106 h2{font:500 clamp(25px,3vw,40px)/1.1 Georgia,serif;margin:8px 0}.route-heading106 p{font:13px/1.5 var(--sans);color:#bccbd0;margin:0;max-width:800px}.route-heading106>button{flex:none;min-height:42px}
+.route-tools106{display:flex;align-items:center;gap:12px;font:12px var(--sans);color:#dcc58f}.route-tools106 .quiet-button{padding:5px 9px;font-size:12px}
+#route-choices106{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;min-height:0}
+.route-choice106{min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;border:1px solid #bc9f6166;border-radius:8px;background:radial-gradient(ellipse at 50% 15%,#81714526,transparent 70%),#12232ce8;color:#dfdfd0;box-shadow:0 8px 24px #0004;text-align:center;font:14px/1.5 var(--sans)}
+.route-choice106 strong{font:500 clamp(20px,2.4vw,30px)/1.1 Georgia,serif;color:#f0d49d}.route-emblem106{font-size:clamp(32px,5vw,65px);color:#dcb675}.route-choice106.selected{border-color:#ffda97;box-shadow:0 0 0 1px #ffda97,0 0 28px #ca9d4426}.route-choice106:disabled{opacity:.45}
+#route-target106{width:100%;padding:9px;background:#14272e;color:#f0e1be;border:1px solid #bda47388}
+.deck-totals106{display:flex;flex-wrap:wrap;gap:5px 14px;color:#c3d0cf;font:12px/1.5 var(--sans)}.deck-totals106>b{color:#efd29a}.mana-curve106{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;height:61px;margin-top:4px}.mana-curve106>span{display:grid;grid-template-rows:13px minmax(0,1fr) 13px;align-items:end;text-align:center;min-width:0;font:10px/13px var(--sans);color:#c9d3d1}.mana-curve106 b{font-weight:500}.mana-curve106 i{display:block;width:100%;max-width:36px;justify-self:center;height:var(--curve-height106);min-height:1px;background:linear-gradient(#e6c48c,#7f9e9c);border-radius:2px 2px 0 0}.mana-curve106 small{font:10px/13px var(--sans)}
+#route-profile106,#deck-profile106{padding:10px 12px;border:1px solid #bba57740;border-radius:6px;background:#12232ba6}
+html.fixed-game #collection-dialog[open]:is([data-kind="deck"],[data-kind="library"]){display:flex;flex-direction:column;gap:9px;width:min(1120px,calc(100vw - 24px))!important;height:min(820px,calc(100dvh - 24px))!important;max-height:calc(100dvh - 24px)!important;padding:18px!important;transform:translate(-50%,-50%)!important;overflow:hidden!important}
+#collection-dialog #deck-profile106{flex:none}#collection-dialog #collection-note{margin:0;font-size:12px}#collection-dialog .collection-tools{flex:none}#collection-dialog #collection-grid{flex:1;min-height:0;max-height:none!important;overflow:auto}#collection-dialog>header{flex:none}
+html.fixed-game #combat-preview-dialog106{width:min(760px,calc(100vw - var(--safe-left102,0px) - var(--safe-right102,0px) - 24px))!important;height:auto!important;max-height:calc(100dvh - var(--safe-top102,0px) - var(--safe-bottom102,0px) - 24px)!important;padding:20px!important;transform:translate(-50%,-50%)!important;overflow:auto!important;box-sizing:border-box;background:#11232dfc;color:#e5e6da;border:1px solid #c5a96b88;border-radius:8px}
+#combat-preview-dialog106>header{display:flex;align-items:start;justify-content:space-between;gap:12px}#combat-preview-dialog106 h2{font:500 27px Georgia,serif;margin:8px 0 16px}
+#combat-preview-popover106{position:fixed;z-index:190;pointer-events:none;width:min(350px,calc(100vw - 16px));max-height:min(430px,calc(100dvh - 16px));overflow:hidden;box-sizing:border-box;padding:12px;border:1px solid #d1b676;border-radius:7px;color:#e5e4d8;background:#10222dfa;box-shadow:0 10px 35px #0009;font:12px/1.45 var(--sans)}
+.forecast-caption106{display:block;color:#f0d098;font-size:12px}.forecast-assumption106,.forecast-note106,.forecast-ward106{font:12px/1.5 var(--sans);color:#bfcfd0;margin:8px 0}.forecast-ward106{color:#d5bbef}.forecast-note106{color:#d1c5a9}.forecast-empty106{font:14px/1.6 var(--sans)}.forecast-totals106{display:flex;flex-wrap:wrap;gap:5px 14px;padding:10px 0;color:#c4ddc0;font:13px/1.5 var(--sans)}.forecast-totals106>b{color:#f1dfb4}.forecast-rows106>div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;padding:8px 0;border-top:1px solid #b6b58a33;font:13px/1.4 var(--sans)}.forecast-rows106 small{grid-column:1/-1;color:#aacaaf;font-size:12px}.forecast-rows106 .forecast-lethal106 small{color:#f3ab91}.forecast-rows106 b{font-weight:600;white-space:nowrap}.forecast-rows106 span{min-width:0}
+[hidden]#combat-preview-popover106,[hidden]#deck-profile106,[hidden]#route-target106{display:none!important}
+@media(orientation:portrait){#route-choices106{grid-template-columns:1fr;gap:8px}.route-choice106{display:grid;grid-template-columns:40px minmax(0,1fr);gap:5px 12px;padding:12px;text-align:left}.route-emblem106{grid-row:1/3;font-size:30px}.route-choice106 strong{font-size:21px}.route-choice106>span:last-child{font-size:12px}.route-heading106 h2{font-size:26px}.route-heading106 p{font-size:11px}.route-heading106>button{font-size:11px;padding:8px;max-width:120px}.mana-curve106{height:48px}.deck-totals106{font-size:10px;gap:3px 9px}#route-profile106{padding:7px}.route-tools106{gap:8px;font-size:11px}#route-screen.active{gap:8px}}
+@media(max-height:460px){#route-screen.active{gap:7px!important;padding:10px 16px!important}.route-heading106 h2{font-size:25px;margin:3px 0}.route-heading106 p{font-size:11px}.route-choice106{gap:7px;padding:9px;font-size:11px}.route-choice106 strong{font-size:19px}.route-emblem106{font-size:28px}.mana-curve106{height:38px;grid-template-rows:none}#route-profile106{padding:5px 9px}.deck-totals106{font-size:10px}.route-tools106 .quiet-button{padding:3px 8px}.forecast-rows106>div{font-size:12px}}
+
+.collection-filter-panel106{display:contents}#collection-filter-toggle106{display:none}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]) .collection-tools{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]) #collection-search{flex:1;min-width:90px;margin:0;height:32px}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]) #collection-filter-toggle106{display:block;padding:5px 10px}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]) .collection-filter-panel106{display:none;position:absolute;z-index:4;top:38px;left:0;right:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:10px;background:#12262ffc;border:1px solid #bfa574;border-radius:5px;max-height:40dvh;overflow:auto}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]).filters-open106 .collection-filter-panel106{display:grid}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]) .collection-filter-panel106 select{width:100%;min-width:0}
+#collection-dialog:is([data-kind="deck"],[data-kind="library"]) #collection-stats{font-size:10px;flex-basis:100%;margin:0}
+@media(max-height:460px){
+ #route-screen .route-heading106 p{display:none}#route-screen .route-heading106>button{font-size:10px;letter-spacing:1px;min-height:34px;padding:8px 10px;max-width:175px}#route-screen .route-tools106 .quiet-button{padding:4px 8px;font-size:10px;min-height:25px}#route-screen .route-emblem106{display:none}#route-screen .route-choice106{gap:5px;line-height:1.3}#route-screen .route-choice106 strong{font-size:18px}
+ html.fixed-game #collection-dialog[open]:is([data-kind="deck"],[data-kind="library"]){padding:10px!important;gap:5px}
+ #collection-dialog:is([data-kind="deck"],[data-kind="library"]) #collection-note{display:none}
+ #collection-dialog:is([data-kind="deck"],[data-kind="library"])>header h2{font-size:23px;margin:3px 0}
+ #collection-dialog:is([data-kind="deck"],[data-kind="library"])>header .eyebrow{font-size:9px}
+ #collection-dialog #deck-profile106{padding:4px 8px}
+ #collection-dialog:is([data-kind="deck"],[data-kind="library"]) #collection-stats{flex-basis:auto;max-width:55%;line-height:12px}
+}
+
+#route-screen .route-heading106>button{height:42px!important;min-height:42px!important;max-width:205px!important;padding:8px 14px!important;font:600 12px/18px var(--sans)!important;letter-spacing:1px!important;white-space:nowrap}
+#route-screen .route-tools106 .quiet-button{height:28px!important;min-height:28px!important;padding:4px 9px!important;font:500 12px/18px var(--sans)!important;letter-spacing:.5px}
+@media(max-height:460px){#route-screen .route-heading106>button{height:34px!important;min-height:34px!important;padding:6px 9px!important;font-size:10px!important;max-width:150px!important}#route-screen .route-tools106 .quiet-button{height:25px!important;min-height:25px!important;padding:3px 8px!important;font:500 10px/17px var(--sans)!important}}
+@media(orientation:portrait){#route-screen .route-heading106>button{max-width:125px!important;padding:7px 9px!important;font-size:10px!important}}
+#route-choices106{grid-template-columns:repeat(var(--route-columns106,3),minmax(0,1fr))}
+@media(orientation:portrait){
+ #route-screen .route-heading106{position:relative}#route-screen .route-heading106>button{position:absolute;top:0;right:0}
+ #route-screen .route-heading106>div{width:100%}#route-screen .route-heading106 .eyebrow{padding-right:130px;min-height:42px}
+ #route-screen .route-heading106 p{display:none}#route-choices106{grid-template-columns:1fr}
+}
+@media(orientation:portrait) and (max-height:660px){
+ #route-screen .route-choice106{display:flex;align-items:flex-start;gap:4px;padding:7px 9px;text-align:left}
+ #route-screen .route-emblem106{display:none}#route-screen .route-choice106 strong{font-size:19px;line-height:21px}
+ #route-screen .route-choice106>span:last-child{font-size:11px;line-height:14px}
+ #route-screen .route-heading106 h2{font-size:24px;margin:5px 0}
+}
+@media(max-height:460px){#route-screen:has(#route-target106:not([hidden])) #route-profile106 .mana-curve106{display:none}}

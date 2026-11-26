@@ -1785,6 +1785,7 @@ function eligibleAttacker(creature, battle) {
 function resolvePlayerAttacks(onlyIds = null, onComplete = null) {
   const battle = state.battle;
   if (!battle || battle.phase !== 'attack' || battle.diceRoll || battle.attackResolution55) return;
+  for (const creature of battle.creatures) if (creature.willAttack && !attackTarget(battle, creature)) creature.willAttack = false;
   const attackers = battle.creatures.filter(creature => eligibleAttacker(creature, battle) && creature.willAttack === true && attackTarget(battle, creature) && (!onlyIds || onlyIds.includes(creature.id)));
   battle.attackResolution55 = true;
   // Declare and tap the entire group before resolving attack triggers.
@@ -2317,7 +2318,7 @@ $('#journey-options').addEventListener('click', event => {
   const choice = event.target.closest('button');
   if (!choice) return;
   if (!choice.dataset.campToken || typeof grantCampToken !== 'function' || !grantCampToken(choice.dataset.campToken)) return;
-  beginBattle(state.node);
+  if(typeof chooseRoute106==='function')chooseRoute106(state.node);else beginBattle(state.node);
 });
 
 window.addEventListener('resize', hideCardPreview);

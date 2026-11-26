@@ -1,3 +1,7 @@
+## Combat previews, route choices and compact deck statistics (v0.106)
+
+Added **Preview** / **V** and creature-hover combat forecasts, including damage, deaths, Lifelink and Ward affordability. Choose normal fights, empowered patrols or small optional events after camp, with one confirmed trade per encounter and preserved Immortal battlefields. Deck/Library inspection now includes a compact mana curve and composition counts. Title rain starts above the screen and falls in gradually instead of appearing midair. English UI, generic mana, touch/controller navigation and fitted layouts remain supported. Behavior, limits and validation: [TACTICS.md](TACTICS.md).
+
 ## More avatars, aligned title effects and consistent card depth (v0.105)
 
 Added **Grove Sage, Astral Seer, Rune Knight and Wild Shaman**, bringing the saved cosmetic avatar roster to eight. The title vortex follows the actual rendered card fan, and MTG-backed cards rain in the background after the intro finishes. Title and receipt rain now share a depth model: smaller cards are farther back and larger cards paint in front, with matching size, Z, DOM order and z-index. Hidden tabs, reduced motion, resizing and early Play retain their cleanup behavior. Details and verification: [DEPTH_SCENES.md](DEPTH_SCENES.md).

@@ -24,6 +24,7 @@ function createCardRain105({kind='results',seed=1,art=[],sizeScale=1}={}){
   card.dataset.depth105=String(p.depth);card.dataset.rank105=String(p.rank);
   card.dataset.baseWidth105=String(p.width/sizeScale);
   card.style.cssText=`left:${p.left}%;width:${p.width}px;height:${p.height}px;z-index:${p.layer};--rain-half-width87:${p.width/2}px;--rain-wind86:${p.wind}px;--rain-start86:${p.start}deg;--rain-end86:${p.end}deg;--rain-depth87:${p.z}px;--rain-alpha86:1;--rain-flip-direction87:${p.direction};--rain-tilt87:${p.tilt}deg;--rain-flip-duration87:${p.flip}s;--rain-flip-delay87:${p.flipDelay}s;animation-duration:${p.duration}s;animation-delay:${p.delay}s`;
+  if(!receipt){card.style.animationDelay=p.index*.38+'s';card.style.animationFillMode='backwards';card.style.setProperty('--rain-entry-size106',p.height*1.4+30+'px');card.style.setProperty('--rain-start-y106','calc(-1 * var(--rain-entry-size106) - var(--scene-height99, 100dvh) * .1)');}
   const body=document.createElement('div');body.className=`card-rain-body105 ${receipt?'results-rain-body87':'title-rain-body105'}`;
   const faceCard=art.length?art[Math.floor(p.art*art.length)]:null;
   for(const [side,source] of [['back','assets/mtg-card-back.jpg'],['front',faceCard?.image||'assets/mtg-card-back.jpg']]){
@@ -37,5 +38,5 @@ function createCardRain105({kind='results',seed=1,art=[],sizeScale=1}={}){
 function resizeCardRain105(layer,sizeScale){
  if(layer.dataset.sizeScale105===String(sizeScale))return;
  layer.dataset.sizeScale105=String(sizeScale);
- for(const card of layer.children){const width=Number(card.dataset.baseWidth105)*sizeScale;card.style.width=width+'px';card.style.height=width*680/488+'px';card.style.setProperty('--rain-half-width87',width/2+'px');}
+ for(const card of layer.children){const width=Number(card.dataset.baseWidth105)*sizeScale;card.style.width=width+'px';card.style.height=width*680/488+'px';card.style.setProperty('--rain-half-width87',width/2+'px');card.style.setProperty('--rain-entry-size106',width*680/488*1.4+30+'px');}
 }
